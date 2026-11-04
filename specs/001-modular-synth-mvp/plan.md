@@ -181,3 +181,19 @@ red–green domain/timing/codec/audio/host tests, `make verify`, and the disposa
 `make smoke GRADLE_ARGS=-PqaSequencer TICKS=650` native fixture. Measure the existing DSP
 budgets with both four-channel rhythms and chained clocks; retain all prior native,
 multiplayer, listening, security and performance qualification gates. Record self-review.
+
+
+## Oscillator note selection
+
+Extend ModuleScreen with note/octave dropdowns, a preview, and explicit Set Note beneath
+Frequency. OscillatorNote owns the transient draft and matches frequency/revision acknowledgements;
+NoteDropdown owns bounded 12/9-option menus and keyboard/narration behavior. Use A4 = 440 Hz
+and scientific octaves 0–8, disable C0–D#/Eb0 below 20 Hz, and submit the full-precision Hz
+through the existing authoritative parameter path. Preserve arbitrary saved tuning, drafts
+across updates/resizing, and connected pitch precedence. No schema/protocol/DSP/dependency changes.
+
+Validate conversion/draft behavior with JUnit, exact parameter packet/NBT/server authorization
+with packaged GameTests, and actual mouse/keyboard/compact layout with the disposable
+`make smoke GRADLE_ARGS=-PqaDetune TICKS=600` fixture. Run `make verify`, inspect captured
+screenshots and record self-review in the ledger. Earlier listening, multiplayer, performance
+and release gates remain applicable; no commit, push or publication is implied.

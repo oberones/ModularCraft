@@ -58,6 +58,27 @@ still connected, the speaker now sounds continuously. Change oscillator pitch to
 for one octave up. Compare filter cutoff 8,000 Hz and 500 Hz, then resonance 0% and 75%.
 Reconnect the gain cable to return to envelope-controlled notes.
 
+### Tune an oscillator by note
+
+Under Frequency, choose a **Note** and **Octave**, check the Hz preview, then click
+**Set Note**. For example, A3 is 220 Hz, A4 is 440 Hz, and middle C is C4
+(approximately 261.626 Hz). Accidentals show both names, such as C#/Db.
+The selectors cover octaves 0–8; C0 through D#/Eb0 are below the oscillator's
+20 Hz minimum and cannot be applied. E0–B8 are supported.
+
+Choosing a note does not change the sound until Set Note is accepted by the server.
+The Frequency slider and numeric Apply remain available for arbitrary tuning; opening
+the panel never snaps an existing frequency to a note. The selectors start at the
+nearest supported note and preserve an unapplied selection through updates and resizing.
+Only the resulting Hz value is saved. Connected **Pitch In** still controls the sounding
+pitch; disconnect it to hear the saved manual frequency again.
+
+Use Tab to focus a selector, Enter or Space to open it, Up/Down or Home/End to choose,
+and Enter to confirm the selection. Escape closes a menu without choosing. Tab then
+moves to the next control; activate Set Note to apply. Mouse selection is also supported.
+For an RP-001 tuning variation, use the drone setup above and apply A3, A4, and C4,
+then return to A3. Listening acceptance remains separate from automated UI checks.
+
 ### Unison detune
 
 The Saw Oscillator panel includes **Detune (unison spread)**: **0–100 cents per side**,

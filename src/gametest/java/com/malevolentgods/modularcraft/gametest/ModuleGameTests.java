@@ -181,8 +181,18 @@ public final class ModuleGameTests {
 
   @GameTest(template = "empty", templateNamespace = ModularCraft.ID)
   public static void detuneControlPersistsAndRejectsInvalidStaleAndForeignEdits(GameTestHelper h) {
+    assertParameterEdits(h, Parameter.DETUNE, 25.125);
+  }
+
+  @GameTest(template = "empty", templateNamespace = ModularCraft.ID)
+  public static void noteFrequencyPersistsAndRejectsInvalidStaleAndForeignEdits(GameTestHelper h) {
+    assertParameterEdits(
+        h, Parameter.FREQUENCY, com.malevolentgods.modularcraft.domain.KeyboardState.frequency(60));
+  }
+
+  private static void assertParameterEdits(GameTestHelper h, Parameter parameter, double value) {
     UUID owner = UUID.randomUUID();
-    var player = FakePlayerFactory.get(h.getLevel(), new GameProfile(owner, "UnisonOwner"));
+    var player = FakePlayerFactory.get(h.getLevel(), new GameProfile(owner, "ParameterOwner"));
     BlockPos position = h.absolutePos(new BlockPos(1, 1, 1));
     h.getLevel()
         .setBlock(
@@ -190,22 +200,22 @@ public final class ModuleGameTests {
     var module = (ModuleEntity) h.getLevel().getBlockEntity(position);
     module.initialize(owner);
     player.setPos(position.getCenter());
-    h.assertTrue(module.state().value(Parameter.DETUNE) == 0, "Single saw by default");
+    h.assertTrue(module.state().value(parameter) == parameter.initial, "Default parameter");
     long revision = module.state().revision();
     var request =
         new com.malevolentgods.modularcraft.network.Messages.Control(
             module.state().id(),
             revision,
             com.malevolentgods.modularcraft.network.Messages.Action.PARAMETER,
-            Parameter.DETUNE,
-            25.125);
+            parameter,
+            value);
     var bytes =
         new net.minecraft.network.RegistryFriendlyByteBuf(
             io.netty.buffer.Unpooled.buffer(), h.getLevel().registryAccess());
     try {
       com.malevolentgods.modularcraft.network.Messages.Control.CODEC.encode(bytes, request);
       var decoded = com.malevolentgods.modularcraft.network.Messages.Control.CODEC.decode(bytes);
-      h.assertTrue(decoded.equals(request), "Detune edit packet roundtrips");
+      h.assertTrue(decoded.equals(request), "Parameter edit packet roundtrips");
       com.malevolentgods.modularcraft.game.ServerRuntime.enqueue(player, decoded);
     } finally {
       bytes.release();
@@ -213,18 +223,18 @@ public final class ModuleGameTests {
     h.runAfterDelay(
         3,
         () -> {
-          h.assertTrue(module.state().value(Parameter.DETUNE) == 25.125, "Server accepts spread");
+          h.assertTrue(module.state().value(parameter) == value, "Server accepts exact parameter");
           var saved = module.saveWithFullMetadata(h.getLevel().registryAccess());
           var restored =
               (ModuleEntity)
                   BlockEntity.loadStatic(
                       position, module.getBlockState(), saved, h.getLevel().registryAccess());
           h.assertTrue(
-              restored != null && restored.state().value(Parameter.DETUNE) == 25.125,
-              "Spread survives block NBT reload");
+              restored != null && restored.state().value(parameter) == value,
+              "Parameter survives block NBT reload");
           var guest =
               FakePlayerFactory.get(
-                  h.getLevel(), new GameProfile(UUID.randomUUID(), "UnisonGuest"));
+                  h.getLevel(), new GameProfile(UUID.randomUUID(), "ParameterGuest"));
           guest.setPos(position.getCenter());
           for (var actor : new net.minecraft.server.level.ServerPlayer[] {player, guest})
             com.malevolentgods.modularcraft.game.ServerRuntime.enqueue(
@@ -233,24 +243,23 @@ public final class ModuleGameTests {
                     module.state().id(),
                     module.state().revision(),
                     com.malevolentgods.modularcraft.network.Messages.Action.PARAMETER,
-                    Parameter.DETUNE,
-                    actor == player ? 101 : 50));
+                    parameter,
+                    actor == player ? parameter.min - 1 : parameter.initial));
           com.malevolentgods.modularcraft.game.ServerRuntime.enqueue(
               player,
               new com.malevolentgods.modularcraft.network.Messages.Control(
                   module.state().id(),
                   revision,
                   com.malevolentgods.modularcraft.network.Messages.Action.PARAMETER,
-                  Parameter.DETUNE,
+                  parameter,
                   75));
         });
     h.runAfterDelay(
         6,
         () -> {
           h.assertTrue(
-              module.state().value(Parameter.DETUNE) == 25.125
-                  && module.state().revision() == revision + 1,
-              "Invalid, stale and foreign edits preserve accepted spread/revision");
+              module.state().value(parameter) == value && module.state().revision() == revision + 1,
+              "Invalid, stale and foreign edits preserve accepted value/revision");
           h.succeed();
         });
   }

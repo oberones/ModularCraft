@@ -64,3 +64,10 @@ clients/server together. World/block v1, legacy detune migration and unknown-rec
 preservation remain compatible. Back up worlds before upgrades; new block registry entries
 make downgrading a world containing sequencers unsupported. No new dependencies. Native
 listening, multiplayer and all earlier qualification gates remain separately documented.
+
+
+Added Note and Octave dropdowns with a Hz preview and explicit Set Note to the oscillator
+panel. Concert tuning uses A4 = 440 Hz; E0–B8 fit the existing frequency range. Arbitrary
+Hz tuning remains available, and connected Pitch In retains precedence. Draft selections
+survive updates/resizing; the compact panel supports keyboard navigation. Only the resulting
+Frequency is saved, with no schema, protocol, dependency or DSP changes.

@@ -328,3 +328,22 @@ Velocity expression, pitch bend, polyphony and recording remain excluded. MIDI s
   Existing audio, latency, allocation, resource and release gates apply. Native visuals,
   listening and two-client timing have distinct evidence; no presets, manual step editing,
   probability, swing, clock division, variable gates, pitch sequencing or MIDI clock.
+
+
+### Oscillator note entry
+
+- **ON-001 — Controls:** Add Note and Octave dropdowns with enharmonic labels, a Hz preview,
+  and explicit Set Note below Frequency. Use equal temperament, A4 = 440 Hz and scientific
+  octaves 0–8. Preserve the 20–8,000 Hz bounds: E0–B8 are valid; lower selections cannot apply.
+- **ON-002 — Drafts:** Initialize to the nearest supported note without changing saved Hz.
+  Selection is transient until explicitly submitted; retain drafts across server updates and
+  resizing. A matching newer revision acknowledges the submitted frequency without discarding
+  a subsequently changed selection. Provide mouse/keyboard/narrated controls and compact layout.
+- **ON-003 — Compatibility:** Submit full-precision Hz through the existing authoritative
+  Frequency edit. Keep slider/numeric entry, permission/revision checks, pitch-input precedence,
+  smoothing, world v1 and network/snapshot v5 unchanged. Store no note/octave parameter.
+- **ON-004 — Acceptance:** Verify concert pitches, bounds, draft/acknowledgement behavior,
+  exact packet and NBT persistence, rejected edits and keyboard override/disconnect. Exercise
+  actual controls and normal/compact screenshots in the disposable oscillator fixture.
+  README's RP-001 tuning variation is the listening reference; human listening and multiplayer
+  acceptance remain distinct from automated checks.

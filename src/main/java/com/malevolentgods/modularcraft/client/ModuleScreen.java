@@ -2,16 +2,21 @@ package com.malevolentgods.modularcraft.client;
 
 import com.malevolentgods.modularcraft.domain.ModuleKind;
 import com.malevolentgods.modularcraft.domain.ModuleState;
+import com.malevolentgods.modularcraft.domain.OscillatorNote;
 import com.malevolentgods.modularcraft.domain.Parameter;
 import com.malevolentgods.modularcraft.network.Messages;
+import java.util.ArrayList;
 import java.util.EnumMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractSliderButton;
+import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
@@ -21,7 +26,12 @@ public final class ModuleScreen extends Screen {
   private ModuleState state;
   private boolean editable, gate;
   private String status;
-  private int left, top, panelWidth;
+  private int left, top, panelWidth, panelHeight, rowHeight, headerHeight;
+  private boolean compact;
+  private final OscillatorNote note;
+  private NoteDropdown noteChoice, octaveChoice;
+  private Button setNote;
+  private final List<AbstractWidget> editing = new ArrayList<>();
   private long renewed;
   private final Map<Parameter, EditBox> fields = new EnumMap<>(Parameter.class);
   private final Map<Parameter, ValueSlider> sliders = new EnumMap<>(Parameter.class);
@@ -34,6 +44,10 @@ public final class ModuleScreen extends Screen {
     this.state = state;
     this.editable = editable;
     this.status = status;
+    note =
+        state.kind() == ModuleKind.OSCILLATOR
+            ? new OscillatorNote(state.value(Parameter.FREQUENCY))
+            : null;
   }
 
   public UUID identity() {
@@ -44,14 +58,17 @@ public final class ModuleScreen extends Screen {
     state = accepted;
     editable = canEdit;
     status = message;
+    if (note != null) note.accept(state.value(Parameter.FREQUENCY), state.revision());
     for (Parameter p : fields.keySet()) {
       EditBox field = fields.get(p);
       if (!field.isFocused()) field.setValue(format(state.value(p)));
+      if (!editable) sliders.get(p).dirty = false;
       sliders.get(p).accepted(state.value(p));
     }
     if (enabled != null)
       enabled.setMessage(
           Component.translatable(state.enabled() ? "modularcraft.disable" : "modularcraft.enable"));
+    updateEditing();
     if (!editable) release();
   }
 
@@ -67,10 +84,20 @@ public final class ModuleScreen extends Screen {
   protected void init() {
     fields.clear();
     sliders.clear();
+    editing.clear();
+    enabled = null;
+    compact = note != null && height < 280;
+    rowHeight = compact ? 34 : 38;
+    headerHeight = compact ? 26 : 30;
+    panelHeight =
+        headerHeight
+            + state.kind().parameters.size() * rowHeight
+            + (note == null ? 0 : compact ? 42 : 48)
+            + (note == null ? 70 : compact ? 56 : 74);
     panelWidth = Math.min(420, width - 16);
     left = (width - panelWidth) / 2;
-    top = Math.max(6, (height - (state.kind().parameters.size() * 38 + 100)) / 2);
-    int row = top + 30;
+    top = Math.max(6, (height - panelHeight) / 2);
+    int row = top + headerHeight;
     for (Parameter p : state.kind().parameters) {
       EditBox field = new EditBox(font, left + panelWidth - 138, row + 13, 76, 18, label(p));
       field.setMaxLength(16);
@@ -90,7 +117,14 @@ public final class ModuleScreen extends Screen {
               .build();
       apply.active = editable;
       addRenderableWidget(apply);
-      row += 38;
+      editing.add(field);
+      editing.add(slider);
+      editing.add(apply);
+      row += rowHeight;
+      if (p == Parameter.FREQUENCY && note != null) {
+        initNotes(row);
+        row += compact ? 42 : 48;
+      }
     }
     if (state.kind() == ModuleKind.ENVELOPE) {
       Button hold =
@@ -99,6 +133,7 @@ public final class ModuleScreen extends Screen {
               .build();
       hold.active = editable;
       addRenderableWidget(hold);
+      editing.add(hold);
     } else if (state.kind() == ModuleKind.SPEAKER) {
       enabled =
           Button.builder(
@@ -111,20 +146,110 @@ public final class ModuleScreen extends Screen {
               .build();
       enabled.active = editable;
       addRenderableWidget(enabled);
+      editing.add(enabled);
     }
     addRenderableWidget(
         Button.builder(
                 Component.translatable("modularcraft.local_audio"),
                 button -> minecraft.setScreen(new AudioSettingsScreen(this)))
-            .bounds(left + 10, row + 28, 150, 20)
+            .bounds(left + 10, row + (compact ? 8 : 28), 150, 20)
             .build());
     addRenderableWidget(
         Button.builder(Component.translatable("gui.done"), button -> onClose())
-            .bounds(left + panelWidth - 90, row + 28, 80, 20)
+            .bounds(left + panelWidth - 90, row + (compact ? 8 : 28), 80, 20)
             .build());
   }
 
+  private void initNotes(int row) {
+    int choiceWidth = (panelWidth - 108) / 2;
+    noteChoice =
+        new NoteDropdown(
+            left + 10,
+            row,
+            choiceWidth,
+            height,
+            "modularcraft.note.letter",
+            12,
+            OscillatorNote::name,
+            value -> {
+              note.select(value, note.octave());
+              updateEditing();
+            });
+    octaveChoice =
+        new NoteDropdown(
+            left + 16 + choiceWidth,
+            row,
+            choiceWidth,
+            height,
+            "modularcraft.note.octave",
+            9,
+            Integer::toString,
+            value -> {
+              note.select(note.semitone(), value);
+              updateEditing();
+            });
+    setNote =
+        Button.builder(
+                Component.translatable("modularcraft.note.set"),
+                button -> {
+                  if (!editable || !note.valid()) return;
+                  double frequency = note.submit(state.revision());
+                  ClientRuntime.send(
+                      state, Messages.Action.PARAMETER, Parameter.FREQUENCY, frequency);
+                  status = "awaiting";
+                })
+            .bounds(left + panelWidth - 86, row, 76, 18)
+            .build();
+    setNote.setTooltip(Tooltip.create(Component.translatable("modularcraft.note.help")));
+    for (AbstractWidget widget : List.of(noteChoice, octaveChoice, setNote)) {
+      editing.add(widget);
+      addRenderableWidget(widget);
+    }
+    updateEditing();
+  }
+
+  private void updateEditing() {
+    for (AbstractWidget widget : editing) widget.active = editable;
+    for (EditBox field : fields.values()) field.setEditable(editable);
+    if (noteChoice != null) {
+      noteChoice.value(note.semitone());
+      octaveChoice.value(note.octave());
+      setNote.active = editable && note.valid();
+      if (!editable) {
+        noteChoice.close();
+        octaveChoice.close();
+      }
+    }
+  }
+
+  private NoteDropdown popup() {
+    if (noteChoice != null && noteChoice.expanded()) return noteChoice;
+    if (octaveChoice != null && octaveChoice.expanded()) return octaveChoice;
+    return null;
+  }
+
+  @Override
+  public boolean mouseClicked(double x, double y, int button) {
+    NoteDropdown menu = popup();
+    if (menu != null) {
+      menu.clickOption(x, y, button);
+      return true;
+    }
+    return super.mouseClicked(x, y, button);
+  }
+
+  @Override
+  public boolean mouseScrolled(double x, double y, double horizontal, double vertical) {
+    NoteDropdown menu = popup();
+    if (menu != null) {
+      menu.scroll(vertical);
+      return true;
+    }
+    return super.mouseScrolled(x, y, horizontal, vertical);
+  }
+
   private void apply(Parameter p, String text) {
+    if (!editable) return;
     try {
       double value = p.validate(Double.parseDouble(text));
       ClientRuntime.send(state, Messages.Action.PARAMETER, p, value);
@@ -166,6 +291,14 @@ public final class ModuleScreen extends Screen {
 
   @Override
   public boolean keyPressed(int key, int scan, int modifiers) {
+    NoteDropdown menu = popup();
+    if (menu != null) {
+      if (key == GLFW.GLFW_KEY_TAB) menu.close();
+      else {
+        menu.keyPressed(key, scan, modifiers);
+        return true;
+      }
+    }
     if (key == GLFW.GLFW_KEY_SPACE
         && state.kind() == ModuleKind.ENVELOPE
         && !(getFocused() instanceof EditBox)) {
@@ -203,13 +336,9 @@ public final class ModuleScreen extends Screen {
   public void renderBackground(GuiGraphics graphics, int mouseX, int mouseY, float partial) {
     super.renderBackground(graphics, mouseX, mouseY, partial);
     graphics.fill(
-        left,
-        top,
-        left + panelWidth,
-        Math.min(height - 4, top + state.kind().parameters.size() * 38 + 100),
-        0xf018212a);
+        left, top, left + panelWidth, Math.min(height - 4, top + panelHeight), 0xf018212a);
     graphics.drawString(font, title, left + 10, top + 10, 0xffd9edf1);
-    int row = top + 30;
+    int row = top + headerHeight;
     for (Parameter p : state.kind().parameters) {
       graphics.drawString(
           font,
@@ -226,14 +355,32 @@ public final class ModuleScreen extends Screen {
           left + 10,
           row,
           0xffa6c7cf);
-      row += 38;
+      row += rowHeight;
+      if (p == Parameter.FREQUENCY && note != null) {
+        Component preview =
+            note.valid()
+                ? Component.translatable(
+                    "modularcraft.note.preview",
+                    OscillatorNote.name(note.semitone()) + note.octave(),
+                    format(note.frequency()))
+                : Component.translatable("modularcraft.note.range");
+        graphics.drawString(
+            font, preview, left + 10, row + 23, note.valid() ? 0xffa6c7cf : 0xffe2c88c);
+        row += compact ? 42 : 48;
+      }
     }
-    graphics.drawString(
-        font,
-        Component.translatable("modularcraft.error." + status),
-        left + 10,
-        Math.min(height - 12, row + 53),
-        0xffe2c88c);
+    Component message = Component.translatable("modularcraft.error." + status);
+    int statusY = Math.min(height - 12, row + (compact ? 34 : 53));
+    if (note != null)
+      graphics.drawWordWrap(font, message, left + 10, statusY, panelWidth - 20, 0xffe2c88c);
+    else graphics.drawString(font, message, left + 10, statusY, 0xffe2c88c);
+  }
+
+  @Override
+  public void render(GuiGraphics graphics, int mouseX, int mouseY, float partial) {
+    super.render(graphics, mouseX, mouseY, partial);
+    NoteDropdown menu = popup();
+    if (menu != null) menu.renderPopup(graphics, font, mouseX, mouseY);
   }
 
   private final class ValueSlider extends AbstractSliderButton {

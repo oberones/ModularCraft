@@ -141,11 +141,18 @@ fixture. Run `make test TEST='*Midi*Test'` for deterministic input, fake-provide
 preferences and snapshot tests. Physical controller procedures are in [acceptance.md](acceptance.md).
 
 
-Unison detune probe: `make smoke GRADLE_ARGS=-PqaDetune TICKS=300` opens the oscillator
-in a fresh RP-001 world, checks exact 25.125-cent entry, slider maximum, invalid negative
-entry rejection, and return to zero against server-accepted values. It captures four
-`detune-*.png` images in the managed instance's `screenshots/`. Unit regressions use
-`make test TEST='*DetuneTest'`; the full suite includes maximum-spread DSP allocation/timing.
+Oscillator probe: `make smoke GRADLE_ARGS=-PqaDetune TICKS=600` opens the oscillator
+in a fresh RP-001 world. It checks exact 25.125-cent entry, slider maximum, invalid negative
+entry rejection, and return to zero, then exercises the note/octave dropdowns with mouse
+and keyboard input. Assertions cover no edit before Set Note, full-precision C#/Db4 and C4
+frequency acceptance, arbitrary Hz entry, invalid C0, permission loss, Escape/Tab navigation,
+unapplied drafts across server updates and resizing, and widget bounds down to 320×240.
+It captures `detune-*.png` and `notes-*.png` at normal and compact GUI sizes in the fresh
+instance's `screenshots/`. Use at least 600 ticks for the complete probe.
+Unit regressions use `make test TEST='*OscillatorNoteTest'` and `make test TEST='*DetuneTest'`;
+the full suite includes keyboard pitch precedence, persistence, and maximum-spread DSP
+allocation/timing. These synthetic checks do not establish listening or multiplayer acceptance.
+
 
 
 ### Euclidean sequencer probe

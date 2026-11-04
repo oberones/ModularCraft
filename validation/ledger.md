@@ -422,3 +422,26 @@ Source `c2ac2f0` plus this uncommitted feature. [Evidence and self-review](seque
 Runtime JAR SHA-256: `750d473afbe8a54862f4a747432fdd8ee65a2dd6d740a7df5d3572d61868cd03`.
 Minecraft 1.21.1, NeoForge 21.1.218, Java 21 and dependencies remain pinned.
 No commit, push or publication.
+
+
+## Oscillator note and octave controls — 2026-11-04
+
+Base `b58caec` plus this uncommitted change. [Evidence and self-review](detune/notes-review.md),
+[results](detune/notes-results.json), [compact panel](detune/notes-compact.png).
+
+- **PASS — implementation:** chromatic Note/Octave dropdowns, A4 = 440 Hz preview and explicit
+  Set Note, E0–B8 limits, full-precision server edits, retained drafts, permission gating,
+  keyboard/narrated controls and compact layout. Hz tuning remains available.
+- **PASS — compatibility:** only Frequency is persisted; world v1, protocol/snapshot v5,
+  dependency pins, CV precedence and DSP remain unchanged. No migration is needed.
+- **PASS — verification:** `make verify`; 115 JUnit, 16 packaged GameTests, 12 launcher
+  tests, formatting/static checks and artifact inspection. Red–green evidence linked above.
+- **PASS — native functional/visual probe:** `make smoke GRADLE_ARGS=-PqaDetune TICKS=600`,
+  exact accepted frequencies, arbitrary Hz, invalid range, permission loss, drafts,
+  Escape/Tab navigation, normal/compact screenshots and minimum-size control bounds.
+- **PENDING — listening, spoken narrator audition and two-client acceptance.** Existing
+  security, platform and release gates remain open. Native performance acceptance remains
+  **FAIL/unqualified**: one underrun and 3.293 ms maximum server work in this smoke run.
+
+Runtime JAR SHA-256: `b85ddc3828d8b6c464e388beb4463098584b0d40ae68cec287305adf108e28df`.
+Manual worlds preserved. No commit, push or publication.

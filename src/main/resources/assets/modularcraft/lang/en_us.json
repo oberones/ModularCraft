@@ -171,5 +171,12 @@
   "modularcraft.error.reloading": "Resources reloading. Playback will resume at the current musical position.",
   "modularcraft.error.settings_read": "Could not read local settings. Check the config file permissions.",
   "modularcraft.error.settings_write": "Could not save local settings. Check the config directory permissions.",
-  "modularcraft.error.throttled": "Edit rate limited: 20/s per player, 200/s per world. Wait and retry refreshed values."
+  "modularcraft.error.throttled": "Edit rate limited: 20/s per player, 200/s per world. Wait and retry refreshed values.",
+  "modularcraft.note.letter": "Note: %s ▾",
+  "modularcraft.note.octave": "Octave: %s ▾",
+  "modularcraft.note.set": "Set Note",
+  "modularcraft.note.preview": "Selected: %s = %s Hz",
+  "modularcraft.note.range": "Below 20 Hz. Choose E0 or higher.",
+  "modularcraft.note.help": "Sets manual frequency (A4 = 440 Hz). Connected Pitch In controls the sounding pitch.",
+  "modularcraft.note.menu_help": "Up/Down selects; Home/End jumps; Enter confirms; Escape cancels. Tab moves to the next control."
 }

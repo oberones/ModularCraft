@@ -26,8 +26,13 @@ class KeyboardAudioTest {
   }
 
   private static PatchSnapshot patch(boolean connected, boolean gate, int note) {
+    return patch(connected, gate, note, 220);
+  }
+
+  private static PatchSnapshot patch(boolean connected, boolean gate, int note, double manualHz) {
     ModuleState keyboard = module(0, ModuleKind.KEYBOARD);
-    ModuleState oscillator = module(1, ModuleKind.OSCILLATOR);
+    ModuleState oscillator =
+        module(1, ModuleKind.OSCILLATOR).withValue(Parameter.FREQUENCY, manualHz);
     ModuleState speaker = module(2, ModuleKind.SPEAKER).runtime(true, true);
     List<Cable> cables =
         new ArrayList<>(
@@ -88,6 +93,20 @@ class KeyboardAudioTest {
     double[] samples = render(after);
     Assertions.assertTrue(
         MeasurementTest.power(samples, 220) > MeasurementTest.power(samples, 440));
+  }
+
+  @Test
+  void noteTunedFrequencyResumesExactlyAfterDisconnectingKeyboard() {
+    double middleC = KeyboardState.frequency(60);
+    RenderGraph connected = new RenderGraph(List.of(patch(true, true, 69, middleC)));
+    double[] held = render(connected);
+    Assertions.assertTrue(
+        MeasurementTest.power(held, 440) > 100 * MeasurementTest.power(held, middleC));
+    RenderGraph disconnected = new RenderGraph(List.of(patch(false, false, 69, middleC)));
+    disconnected.adopt(connected);
+    double[] restored = render(disconnected);
+    Assertions.assertTrue(
+        MeasurementTest.power(restored, middleC) > 100 * MeasurementTest.power(restored, 440));
   }
 
   @Test

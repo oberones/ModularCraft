@@ -1,0 +1,29 @@
+{
+  "date": "2026-11-04",
+  "base_commit": "b58caec",
+  "runtime_sha256": "b85ddc3828d8b6c464e388beb4463098584b0d40ae68cec287305adf108e28df",
+  "junit": {
+    "tests": 115,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "packaged_gametests": 16,
+  "launcher_tests": 12,
+  "verify": "PASS",
+  "native_probe": "PASS",
+  "native_instance": "run/make/smoke-mbhotspr",
+  "native_command": "make smoke GRADLE_ARGS=-PqaDetune TICKS=600",
+  "screenshots_reviewed": [
+    "notes-normal.png",
+    "notes-menu.png",
+    "notes-range.png",
+    "notes-compact.png",
+    "notes-narrow.png"
+  ],
+  "native_underruns": 1,
+  "native_max_server_work_ns": 3292625,
+  "listening": "PENDING",
+  "multiplayer": "PENDING",
+  "native_performance_acceptance": "FAIL / existing gate remains open"
+}
