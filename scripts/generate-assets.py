@@ -83,7 +83,7 @@ for i in range(34):d.rect(12+i,48-i,7,7,'#111b25');d.rect(14+i,49-i,3,4,'#65d7e5
 d.rect(39,10,12,14,'#84999f');d.rect(43,4,4,11,'#e2c88c');d.rect(6,45,15,12,'#84999f');d.save('patching_tool','item')
 p=ASSETS/'models/item/patching_tool.json';p.write_text(json.dumps({'parent':'minecraft:item/handheld','textures':{'layer0':'modularcraft:item/patching_tool'}},indent=2)+'\n')
 lang={'tab.modularcraft':'ModularCraft Instruments','block.modularcraft.keyboard':'Keyboard','block.modularcraft.oscillator':'Saw Oscillator','block.modularcraft.filter':'Low-Pass Filter','block.modularcraft.envelope':'Envelope Generator','block.modularcraft.speaker':'Amplifier / Speaker','item.modularcraft.patching_tool':'Patching Tool','key.modularcraft.mute':'Mute ModularCraft','key.modularcraft.settings':'ModularCraft Audio Settings','key.categories.modularcraft':'ModularCraft','modularcraft.local_audio':'ModularCraft Audio','modularcraft.local_volume':'Local volume: %s%%','modularcraft.volume_help':'Minecraft Master + Records also apply','modularcraft.apply':'Apply','modularcraft.enable':'Enable speaker','modularcraft.disable':'Disable speaker','modularcraft.hold_gate':'Hold Gate (or Space)','modularcraft.mute':'Mute locally','modularcraft.unmute':'Unmute locally','modularcraft.recover':'Resynchronize audio','modularcraft.selected':'Selected %s at %s, %s, %s. Choose an input.','modularcraft.tool_help':'Ports are on the lower front face. Right-click air to cancel.','modularcraft.port_hint':'%s · Click to patch; Shift-click an input to remove.','modularcraft.gain_warning':'Removing Gain In makes connected audio a sustained drone.'}
-for key,label in {'frequency':'Frequency','level':'Level','cutoff':'Cutoff','resonance':'Resonance','amount':'Envelope Amount','attack':'Attack','decay':'Decay','sustain':'Sustain','release':'Release','volume':'Volume','octave':'Octave'}.items():lang['parameter.modularcraft.'+key]=label
+for key,label in {'frequency':'Frequency','detune':'Detune (unison spread)','level':'Level','cutoff':'Cutoff','resonance':'Resonance','amount':'Envelope Amount','attack':'Attack','decay':'Decay','sustain':'Sustain','release':'Release','volume':'Volume','octave':'Octave'}.items():lang['parameter.modularcraft.'+key]=label
 for key,label in {'audio_out':'AO → Audio Out','audio_in':'AI ← Audio In','envelope_out':'CO → Envelope Out','cutoff_in':'CI ← Cutoff Control In','gain_in':'GI ← Gain Control In','cv_out':'CV → Pitch CV Out','pitch_in':'PI ← Pitch CV In','gate_out':'GO → Gate Out','gate_in':'GT ← Gate In'}.items():lang['port.modularcraft.'+key]=label
 lang.update({'modularcraft.octave_down':'Octave −','modularcraft.octave_up':'Octave +',
 'modularcraft.octave':'Octave %s','modularcraft.keyboard_state':'Note %s · Gate %s',
@@ -108,7 +108,7 @@ errors={
 'midi_timeout':'MIDI timed out. Refresh; if still unavailable, restart Minecraft.',
 'keyboard_busy':'Keyboard in use. Wait until the other player releases it.',
 'keyboard_overload':'Keyboard input overloaded. Close and reopen the panel.',
-'pitch_connected':'Pitch follows CV. Disconnect Pitch In to use Frequency.',
+'pitch_connected':'CV sets pitch; Detune adds unison spread.',
 'permission':'Only the owner or an operator within six blocks may edit. Move closer or ask the owner.',
 'range':'Use a finite value in the displayed range; stay within six blocks.',
 'quarantined':'Stored data is quarantined. Back up the world and restore it with a compatible version.',

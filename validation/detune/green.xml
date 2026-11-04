@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.malevolentgods.modularcraft.DetuneTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-11-04T21:11:20.176Z" hostname="Calliope.local" time="0.145">
+  <properties/>
+  <testcase name="extremeMidiUnisonRemainsFiniteAndWithinSelectedLevel()" classname="com.malevolentgods.modularcraft.DetuneTest" time="0.036"/>
+  <testcase name="liveSpreadChangesPreserveContinuityAndReturnToSingleSaw()" classname="com.malevolentgods.modularcraft.DetuneTest" time="0.002"/>
+  <testcase name="zeroSpreadRetainsSingleSawOutput()" classname="com.malevolentgods.modularcraft.DetuneTest" time="0.001"/>
+  <testcase name="currentNetworkCannotOmitTheDetuneControl()" classname="com.malevolentgods.modularcraft.DetuneTest" time="0.0"/>
+  <testcase name="spreadProducesCenterAndBothSidePitchesForManualAndMidiInput()" classname="com.malevolentgods.modularcraft.DetuneTest" time="0.069"/>
+  <testcase name="fractionalSpreadAndCvDisconnectKeepUnison()" classname="com.malevolentgods.modularcraft.DetuneTest" time="0.03"/>
+  <testcase name="storedDetuneAndSnapshotsRoundtripAndOldNetworkIsRefused()" classname="com.malevolentgods.modularcraft.DetuneTest" time="0.001"/>
+  <testcase name="spreadDefaultsToZeroAndRejectsInvalidOrForeignEdits()" classname="com.malevolentgods.modularcraft.DetuneTest" time="0.002"/>
+  <testcase name="legacyWorldAndBlockRecordsMigrateOnlyTheExactOldControlSet()" classname="com.malevolentgods.modularcraft.DetuneTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

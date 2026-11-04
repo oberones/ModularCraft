@@ -11,7 +11,8 @@ public enum Parameter {
   SUSTAIN(0, 100, 70, "%"),
   RELEASE(.001, 10, .300, "s"),
   VOLUME(0, 100, 10, "%"),
-  OCTAVE(1, 7, 4, "");
+  OCTAVE(1, 7, 4, ""),
+  DETUNE(0, 100, 0, "cents");
   public final double min, max, initial;
   public final String unit;
 

@@ -20,6 +20,82 @@ public final class ModuleGameTests {
   private ModuleGameTests() {}
 
   @GameTest(template = "empty", templateNamespace = ModularCraft.ID)
+  public static void detuneControlPersistsAndRejectsInvalidStaleAndForeignEdits(GameTestHelper h) {
+    UUID owner = UUID.randomUUID();
+    var player = FakePlayerFactory.get(h.getLevel(), new GameProfile(owner, "UnisonOwner"));
+    BlockPos position = h.absolutePos(new BlockPos(1, 1, 1));
+    h.getLevel()
+        .setBlock(
+            position, ModularCraft.MODULES.get(ModuleKind.OSCILLATOR).get().defaultBlockState(), 3);
+    var module = (ModuleEntity) h.getLevel().getBlockEntity(position);
+    module.initialize(owner);
+    player.setPos(position.getCenter());
+    h.assertTrue(module.state().value(Parameter.DETUNE) == 0, "Single saw by default");
+    long revision = module.state().revision();
+    var request =
+        new com.malevolentgods.modularcraft.network.Messages.Control(
+            module.state().id(),
+            revision,
+            com.malevolentgods.modularcraft.network.Messages.Action.PARAMETER,
+            Parameter.DETUNE,
+            25.125);
+    var bytes =
+        new net.minecraft.network.RegistryFriendlyByteBuf(
+            io.netty.buffer.Unpooled.buffer(), h.getLevel().registryAccess());
+    try {
+      com.malevolentgods.modularcraft.network.Messages.Control.CODEC.encode(bytes, request);
+      var decoded = com.malevolentgods.modularcraft.network.Messages.Control.CODEC.decode(bytes);
+      h.assertTrue(decoded.equals(request), "Detune edit packet roundtrips");
+      com.malevolentgods.modularcraft.game.ServerRuntime.enqueue(player, decoded);
+    } finally {
+      bytes.release();
+    }
+    h.runAfterDelay(
+        3,
+        () -> {
+          h.assertTrue(module.state().value(Parameter.DETUNE) == 25.125, "Server accepts spread");
+          var saved = module.saveWithFullMetadata(h.getLevel().registryAccess());
+          var restored =
+              (ModuleEntity)
+                  BlockEntity.loadStatic(
+                      position, module.getBlockState(), saved, h.getLevel().registryAccess());
+          h.assertTrue(
+              restored != null && restored.state().value(Parameter.DETUNE) == 25.125,
+              "Spread survives block NBT reload");
+          var guest =
+              FakePlayerFactory.get(
+                  h.getLevel(), new GameProfile(UUID.randomUUID(), "UnisonGuest"));
+          guest.setPos(position.getCenter());
+          for (var actor : new net.minecraft.server.level.ServerPlayer[] {player, guest})
+            com.malevolentgods.modularcraft.game.ServerRuntime.enqueue(
+                actor,
+                new com.malevolentgods.modularcraft.network.Messages.Control(
+                    module.state().id(),
+                    module.state().revision(),
+                    com.malevolentgods.modularcraft.network.Messages.Action.PARAMETER,
+                    Parameter.DETUNE,
+                    actor == player ? 101 : 50));
+          com.malevolentgods.modularcraft.game.ServerRuntime.enqueue(
+              player,
+              new com.malevolentgods.modularcraft.network.Messages.Control(
+                  module.state().id(),
+                  revision,
+                  com.malevolentgods.modularcraft.network.Messages.Action.PARAMETER,
+                  Parameter.DETUNE,
+                  75));
+        });
+    h.runAfterDelay(
+        6,
+        () -> {
+          h.assertTrue(
+              module.state().value(Parameter.DETUNE) == 25.125
+                  && module.state().revision() == revision + 1,
+              "Invalid, stale and foreign edits preserve accepted spread/revision");
+          h.succeed();
+        });
+  }
+
+  @GameTest(template = "empty", templateNamespace = ModularCraft.ID)
   public static void midiOrderedPitchesAndClosedSessionCannotReviveIt(GameTestHelper h) {
     UUID owner = UUID.randomUUID();
     var player = FakePlayerFactory.get(h.getLevel(), new GameProfile(owner, "MidiKeyboard"));

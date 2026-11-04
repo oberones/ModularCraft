@@ -145,7 +145,7 @@ A player can leave, reload the world, and return to the same module settings and
 
 | Module | Adjustable controls: range; default | Ports and behavior |
 | --- | --- | --- |
-| Saw Oscillator | Frequency: 20–8,000 Hz; 220 Hz. Level: 0–100%; 50%. | One Pitch CV In accepting Keyboard CV Out and one Audio Out carrying a bipolar saw signal with a peak magnitude no greater than the selected level. It runs continuously while its patch is active. Zero level is silence. |
+| Saw Oscillator | Frequency: 20–8,000 Hz; 220 Hz. Detune (unison spread): 0–100 cents per side; 0 cents. Level: 0–100%; 50%. | One Pitch CV In accepting Keyboard CV Out and one Audio Out carrying a bipolar saw signal with a peak magnitude no greater than the selected level. Nonzero Detune mixes three saws at the selected base frequency (manual or CV) and at `baseHz * 2^(±cents/1200)`, each at one third of Level. Fractional cents are allowed; 100 cents per side is one semitone above/below center. Zero Detune restores the original single saw. Mix and pitch changes use 10 ms ramps. It runs continuously while its patch is active. Zero level is silence. |
 | Low-Pass Filter | Cutoff: 20–20,000 Hz; 5,000 Hz. Resonance: 0–95%; 0%. Envelope Amount: 0–100%; 0%. | One Audio In, one Cutoff Control In, one Audio Out. Higher cutoff passes more upper harmonics; higher resonance increases emphasis near cutoff. No self-oscillation is required. Unconnected audio is silence; unconnected control is zero. |
 | Envelope Generator | Attack: 0.001–10 s; 0.010 s. Decay: 0.001–10 s; 0.200 s. Sustain: 0–100%; 70%. Release: 0.001–10 s; 0.300 s. Momentary manual Gate; released. | One Gate In accepting Keyboard Gate Out and one Envelope Out carrying a unipolar 0–100% control signal. The manual gate and redstone at the block drive the same ADSR behavior. It emits no audio. |
 | Keyboard | Octave: integers 1–7; 4. Twelve momentary chromatic keys C–B; released. | CV Out (1 V/octave, 0 V = C4) and Gate Out (0/1). Concert tuning, last-note priority, retrigger on new active notes; no audio. See KB-001–KB-006 and MI-001–MI-006. |
@@ -225,7 +225,7 @@ Criteria are acceptance targets, not measured results. The plan supplies impleme
 - **KB-002 — Performance**: Monophonic most-recent-held input wins. New active notes and return to an earlier held note retrigger linear attack from the current envelope level. Changing octave transposes held GUI notes and retriggers; absolute MIDI notes are unaffected. Manual/redstone sources retain priority over keyboard retriggering while held; all three gate sources are OR-combined. Gate is 0/1. Last pitch remains after release; fresh activation resets pitch to C in selected octave.
 - **KB-003 — Pitch**: Pitch CV is 1 V/octave, 0 V = C4; equal temperament, A4 = 440 Hz. Pitch input overrides oscillator Frequency while connected and restores the saved Frequency when disconnected. Preserve phase with 10 ms pitch smoothing. Typed ports prohibit implicit pitch/gate/control conversions; existing cable and capacity limits apply.
 - **KB-004 — Authority/lifecycle**: Server validates owner/operator, range, loaded module, revision, inspection session, monotonically increasing input sequence and existing traffic budgets. First eligible note obtains exclusive session lease; renew at 200 ms, expire at 750 ms. Ordinary releases preserve preceding queued presses and bypass edit throttling. Emergency cleanup, overload, focus loss, close, unload, permission/range loss, dimension change and disconnect clear held performance; stale sessions cannot revive it. Short accepted taps preserve receive-time spacing on the sample timeline (minimum one millisecond), using the existing 40 ms lead. Late recovery enters current state without replaying notes.
-- **KB-005 — Compatibility**: Persist octave and cables, never held inputs/gates or last played pitch. Keep world-save version 1 and unknown-record preservation. Network and snapshot version 3 (MIDI extension) require matching clients/server. No new dependencies.
+- **KB-005 — Compatibility**: Persist octave and cables, never held inputs/gates or last played pitch. Keep world-save version 1 and unknown-record preservation. Network and snapshot version 4 (unison extension) require matching clients/server. No new dependencies.
 - **KB-006 — RP-003**: RP-001 with all default settings, plus Keyboard CV → Oscillator Pitch In and Keyboard Gate → Envelope Gate In; keyboard octave 4 and no envelope redstone. Press H for A4 (440 Hz), overlap A/S, return to A, transpose while held, release and hear a tail at the retained pitch. Disconnect CV and confirm the saved 220 Hz oscillator setting returns. Validate with the existing SC-003/SC-004 timing limits; native multiplayer and listening need separate evidence.
 
 Velocity expression, pitch bend, polyphony, sequencers and recording remain excluded. MIDI sustain is specified below.
@@ -262,7 +262,7 @@ Velocity expression, pitch bend, polyphony, sequencers and recording remain excl
   failures require Refresh/reselection, overflow invalidates the session and requires reopen.
   A stalled provider never creates additional workers or blocks game/audio threads.
 - **MI-005 — Authority/compatibility**: Relative/absolute pitch mode is explicit in bounded
-  v3 packets; v3 snapshots permit 0–127. Reject old peers and malformed modes/ranges.
+  v4 packets; v4 snapshots permit 0–127. Reject old peers and malformed modes/ranges.
   Retain all KB-004 authorization, ordering, timing and traffic limits; ignore device
   timestamps. Save schema stays v1; no MIDI holds, pedals, device handles or pitch mode
   are saved in worlds. No dependencies or platform claims are added.
@@ -272,3 +272,24 @@ Velocity expression, pitch bend, polyphony, sequencers and recording remain excl
   protocol rejection and persistence. Extend RP-003 with native synthetic MIDI, screenshots,
   real-controller focus/unplug/pedal tests and SC-003/SC-004 measurements. Synthetic input
   does not establish hardware, listening or multiplayer acceptance.
+
+
+### Unison spread extension (2026-11-04)
+
+- **UN-001**: The Detune control is symmetric three-voice mono unison spread, not a fine
+  offset of the center pitch. Use the MU-001 contract; expose a slider and fractional
+  numeric entry. Level 0 remains silent. Zero spread preserves/restores the single saw.
+- **UN-002**: Apply spread to manual Frequency or connected keyboard/MIDI pitch, including
+  held/released notes and CV disconnection. Preserve phase/history and ramp frequencies
+  and single/unison blend over 10 ms. Three voices maximum; no audio-thread allocation,
+  exponentiation, locks or I/O. Finite output stays within the selected Level ceiling.
+- **UN-003**: Old world/block Frequency/Level-only oscillator records migrate to Detune 0;
+  reject/preserve all other malformed or unknown records. Require matching v4 peers and
+  complete v4 snapshots; no silent network fallback. Retain ownership, range, revision,
+  interaction and traffic validation. Record roundtrips, rejection and server integration.
+- **UN-004**: RP-001 drone variation uses all defaults except removing the gain cable and
+  comparing Detune 0/12.5/25/100; restore Detune 0 and the gain cable afterward. RP-003 holds
+  A4 and repeats these spreads. At 100 cents, manual 220 Hz yields side voices near
+  207.652/233.082 Hz; A4 doubles each frequency. Verify center/side spectral components,
+  transitions, finite MIDI extremes and the zero-spread reference. Native listening is
+  required separately, including return to zero and repeated enable/disable edits.

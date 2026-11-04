@@ -171,3 +171,15 @@ Use RP-003 at conservative speaker volume, then perform the following:
 
 Physical MIDI, unplug reporting, listening and multiplayer remain PENDING until measured.
 Windows/Linux device qualification is outside the current macOS-first acceptance claim.
+
+
+## Unison spread audition
+
+Use the README's RP-001 drone variation and RP-003 A4 variation, recording artifact hash,
+backend/device and capture/listening conditions. Compare 0/12.5/25/100 cents: one center saw
+at zero, audible beating/three-voice spread otherwise, no center transpose, conservative
+level. Repeat slider/numeric edits and return to zero; listen for clicks, stuck voices or
+unexpected attenuation after settling at zero. Confirm MIDI and released-note tails retain
+the selected spread; disconnect CV to restore the saved center frequency. Save/restart and
+confirm spread persists, while speakers restart disabled. Repeat with two clients under
+SC-003/004. Automated spectral/UI checks do not establish this listening/timing acceptance.

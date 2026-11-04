@@ -1,0 +1,52 @@
+{
+  "date": "2026-11-04",
+  "source": "b438683 plus uncommitted detune changes",
+  "runtime_sha256": "8661df364c777d7f9b972e43312ff2fc016c187162707f83a42457952f376d2e",
+  "environment": {
+    "os": "macOS 26.6.2 (25G83)",
+    "architecture": "arm64",
+    "java_toolchain": 21,
+    "minecraft": "1.21.1",
+    "neoforge": "21.1.218"
+  },
+  "verify": {
+    "command": "make verify",
+    "status": "PASS",
+    "junit": 91,
+    "gametests": 13,
+    "launcher_tests": 12
+  },
+  "native": {
+    "command": "make smoke GRADLE_ARGS=-PqaDetune TICKS=300",
+    "status": "PASS",
+    "instance": "run/make/smoke-ht8vxjec",
+    "accepted_spread": {
+      "120": 25.125,
+      "160": 100,
+      "200": 100,
+      "240": 0
+    },
+    "numeric_entry": "PASS",
+    "slider": "PASS",
+    "invalid_entry_preserves_accepted_value": "PASS",
+    "zero_reset": "PASS",
+    "screenshot_inspection": "PASS at 854x480",
+    "underruns": 1,
+    "max_audio_block_ns": 1171792,
+    "max_server_work_ns": 3326250,
+    "audio_failed": false
+  },
+  "dsp": {
+    "fixture": "64 modules / 96 cables / 8 speakers / 4 oscillators; 48 kHz / 128 frames",
+    "warmup_blocks": 5000,
+    "measured_blocks": 10000,
+    "zero_spread_p95_ms": 0.184917,
+    "maximum_spread_p95_ms": 0.27525,
+    "steady_allocated_bytes": 0
+  },
+  "pending": [
+    "human listening",
+    "two-client timing",
+    "prior release/security/performance gates"
+  ]
+}

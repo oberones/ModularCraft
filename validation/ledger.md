@@ -365,3 +365,28 @@ Source `b4f7377` plus existing uncommitted work and this two-screen correction.
 
 Existing manual worlds and unrelated changes were preserved. Earlier release/security/
 performance/listening gates remain unchanged. No commit, push or publication.
+
+## Saw oscillator unison detune — 2026-11-04
+
+Source `b438683` plus this uncommitted feature. [Evidence and self-review](detune/red-green.md),
+[machine-readable results](detune/results.json), [native panel](detune/fractional.png).
+
+- **PASS — behavior:** Detune (unison spread), 0–100 cents per side, fractional entry,
+  three normalized mono saws at nonzero spread, original center saw at zero. Keyboard/MIDI
+  sets the center; pitch/mix transitions take 10 ms and retain phase/history.
+- **PASS — compatibility:** old Frequency/Level-only world/block records gain Detune 0;
+  complete current records roundtrip and malformed/unknown records remain preserved.
+  World/block schema stays v1; network/snapshot v4 requires matching clients/server.
+- **PASS — red–green and full verification:** 91 JUnit, 13 packaged GameTests, 12 launcher
+  tests, formatting/static analysis and artifact inspection. Dedicated-server integration
+  covers accepted/rejected edits, packet roundtrip and block NBT reload.
+- **PASS — packaged native UI:** disposable 300-tick fixture checks exact entry, slider,
+  invalid input and zero reset; inspected screenshots show readable controls at 854×480.
+- **PASS — bounded DSP measurement:** existing 64-module/96-cable/eight-speaker fixture
+  p95 0.185 ms at zero spread, 0.275 ms at maximum spread, zero steady allocated bytes.
+- **PENDING — listening/physical MIDI audition/two-client acceptance**, all earlier
+  security/release/performance gates. Smoke observed one underrun and a 3.326 ms maximum
+  server-work sample; it does not establish long-duration or multiplayer qualification.
+
+Runtime JAR SHA-256: `8661df364c777d7f9b972e43312ff2fc016c187162707f83a42457952f376d2e`.
+Manual worlds preserved; no commit, push or publication.

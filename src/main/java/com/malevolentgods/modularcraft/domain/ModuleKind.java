@@ -5,7 +5,9 @@ import java.util.List;
 import java.util.Map;
 
 public enum ModuleKind {
-  OSCILLATOR(List.of(Parameter.FREQUENCY, Parameter.LEVEL), List.of(Port.AUDIO_OUT, Port.PITCH_IN)),
+  OSCILLATOR(
+      List.of(Parameter.FREQUENCY, Parameter.DETUNE, Parameter.LEVEL),
+      List.of(Port.AUDIO_OUT, Port.PITCH_IN)),
   FILTER(
       List.of(Parameter.CUTOFF, Parameter.RESONANCE, Parameter.AMOUNT),
       List.of(Port.AUDIO_IN, Port.CUTOFF_IN, Port.AUDIO_OUT)),

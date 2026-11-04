@@ -161,7 +161,35 @@ class MeasurementTest {
 
   @Test
   void fixedLoadDspBenchmarkAndNoSteadyAllocation() {
-    RenderGraph graph = new RenderGraph(loadFixture());
+    benchmark(loadFixture());
+  }
+
+  @Test
+  void maximumUnisonSpreadDspBenchmarkAndNoSteadyAllocation() {
+    benchmark(
+        loadFixture().stream()
+            .map(
+                p ->
+                    new PatchSnapshot(
+                        p.id(),
+                        p.revision(),
+                        p.sequence(),
+                        p.sample(),
+                        p.modules().stream()
+                            .map(
+                                m ->
+                                    m.kind() == ModuleKind.OSCILLATOR
+                                        ? m.withValue(Parameter.DETUNE, 100)
+                                        : m)
+                            .toList(),
+                        p.cables(),
+                        p.envelopes(),
+                        p.keyboards()))
+            .toList());
+  }
+
+  private static void benchmark(List<PatchSnapshot> patches) {
+    RenderGraph graph = new RenderGraph(patches);
     var listener = new RenderGraph.Listener("minecraft:overworld", 8, 66, 8, 0, 1);
     float[] samples = new float[256];
     for (int i = 0; i < 5000; i++) graph.process(96000 + i * 128L, listener, samples);
@@ -180,6 +208,8 @@ class MeasurementTest {
     System.out.println(
         "64 module / 96 cable / 8 speaker DSP p95 ms="
             + p95
+            + ", detune="
+            + patches.getFirst().modules().getFirst().value(Parameter.DETUNE)
             + ", measured allocation bytes="
             + allocation);
     Assertions.assertTrue(

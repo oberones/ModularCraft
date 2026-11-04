@@ -24,22 +24,19 @@ public final class RenderGraph {
 
   private static final class Node {
     final ModuleState module;
-    final Oscillator oscillator = new Oscillator();
+    UnisonSaw oscillator;
     final Filter filter = new Filter();
     final Smoother[] parameters = new Smoother[Parameter.values().length];
     final Smoother left = new Smoother(0), right = new Smoother(0);
     Envelope envelope;
     int audio = -1, control = -1, pitch = -1;
-    Smoother frequency;
 
-    Node(ModuleState module, Envelope.Checkpoint checkpoint, long sample) {
+    Node(ModuleState module, Envelope.Checkpoint checkpoint) {
       this.module = module;
       for (Parameter p : module.kind().parameters)
         parameters[p.ordinal()] = new Smoother(module.value(p));
       if (checkpoint != null) envelope = new Envelope(checkpoint);
       else envelope = new Envelope();
-      if (module.kind() == ModuleKind.OSCILLATOR)
-        oscillator.phase(sample * module.value(Parameter.FREQUENCY) / 48000.0);
     }
 
     double next(Parameter parameter) {
@@ -69,7 +66,7 @@ public final class RenderGraph {
     Map<UUID, Integer> indices = new HashMap<>();
     for (int i = 0; i < nodes.length; i++) {
       ModuleState m = ordered.get(i);
-      nodes[i] = new Node(m, checkpoints.get(m.id()), sample);
+      nodes[i] = new Node(m, checkpoints.get(m.id()));
       indices.put(m.id(), i);
     }
     Map<UUID, KeyboardState> keyboards = new HashMap<>();
@@ -92,7 +89,7 @@ public final class RenderGraph {
                       KeyboardState.note((int) source.value(Parameter.OCTAVE), 0), false));
           hz = KeyboardState.frequency(key.note());
         }
-        n.frequency = new Smoother(hz);
+        n.oscillator = new UnisonSaw(hz, n.module.value(Parameter.DETUNE), sample);
       }
   }
 
@@ -101,12 +98,7 @@ public final class RenderGraph {
     for (Node node : nodes)
       for (Node old : previous.nodes)
         if (node.module.id().equals(old.module.id())) {
-          node.oscillator.copyFrom(old.oscillator);
-          if (node.frequency != null) {
-            double target = node.frequency.current();
-            node.frequency.reset(old.frequency.current());
-            node.frequency.target(target);
-          }
+          if (node.oscillator != null) node.oscillator.adopt(old.oscillator);
           node.filter.copyFrom(old.filter);
           for (Parameter p : node.module.kind().parameters) {
             node.parameters[p.ordinal()].reset(old.parameters[p.ordinal()].current());
@@ -157,8 +149,7 @@ public final class RenderGraph {
         double audio = n.audio < 0 ? 0 : signals[n.audio];
         double control = n.control < 0 ? 0 : signals[n.control];
         switch (n.module.kind()) {
-          case OSCILLATOR ->
-              signals[i] = n.oscillator.next(n.frequency.next(), n.next(Parameter.LEVEL) / 100);
+          case OSCILLATOR -> signals[i] = n.oscillator.next(n.next(Parameter.LEVEL) / 100);
           case KEYBOARD -> signals[i] = 0;
           case ENVELOPE -> signals[i] = n.envelope.value(sample + frame);
           case FILTER -> {

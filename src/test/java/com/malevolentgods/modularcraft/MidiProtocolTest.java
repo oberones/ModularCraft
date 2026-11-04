@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test;
 
 class MidiProtocolTest {
   @Test
-  void snapshotThreeCarriesFullRangeWhileWorldOneIsUnchanged() {
+  void snapshotFourCarriesFullRangeWhileWorldOneIsUnchanged() {
     ModuleState keyboard =
         ModuleState.create(UUID.randomUUID(), UUID.randomUUID(), ModuleKind.KEYBOARD, 0, 0, 0);
     WorldState world = new WorldState();
@@ -32,7 +32,7 @@ class MidiProtocolTest {
               Map.of(),
               Map.of(keyboard.id(), new KeyboardState(note, true)));
       byte[] encoded = StateCodec.encode(snapshot);
-      Assertions.assertEquals(3, encoded[5]);
+      Assertions.assertEquals(4, encoded[5]);
       Assertions.assertEquals(snapshot, StateCodec.decode(encoded));
       encoded[5] = 2;
       Assertions.assertThrows(IllegalArgumentException.class, () -> StateCodec.decode(encoded));

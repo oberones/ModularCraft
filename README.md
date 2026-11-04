@@ -47,7 +47,7 @@ Default RP-001 settings, including every parameter:
 
 | Module | Settings |
 |---|---|
-| Oscillator | Frequency 220 Hz; Level 50% |
+| Oscillator | Frequency 220 Hz; Detune 0 cents; Level 50% |
 | Filter | Cutoff 5,000 Hz; Resonance 0%; Envelope Amount 0% |
 | Envelope | Attack 0.010 s; Decay 0.200 s; Sustain 70%; Release 0.300 s |
 | Speaker | Volume 10%; Enabled on after step 5 |
@@ -58,6 +58,22 @@ still connected, the speaker now sounds continuously. Change oscillator pitch to
 for one octave up. Compare filter cutoff 8,000 Hz and 500 Hz, then resonance 0% and 75%.
 Reconnect the gain cable to return to envelope-controlled notes.
 
+### Unison detune
+
+The Saw Oscillator panel includes **Detune (unison spread)**: **0–100 cents per side**,
+with a slider and exact numeric entry (fractional cents are supported). At **0**, it plays
+one saw. Above zero, it blends three saws: the center pitch, one below it, and one above
+it, each at one third of the selected Level. The output remains mono. **100 cents** is
+one semitone on each side; **10–25 cents** produces a narrower beating/chorus effect.
+Pitch and blend changes take 10 ms. Returning to zero restores the center saw alone.
+
+For an RP-001 detune variation, use all listed defaults, remove the speaker's gain cable
+for a drone, and compare Detune **0**, **12.5**, **25**, and **100** cents. The center stays
+at 220 Hz while the side voices spread symmetrically in musical pitch. At 100 cents they
+are approximately 207.652 and 233.082 Hz. Reset Detune to 0 and reconnect the gain cable.
+On RP-003, try the same settings while holding A4: the center stays at 440 Hz and the
+side voices follow keyboard or MIDI notes. Detune is saved per oscillator.
+
 ## Brightness sweep: RP-002
 
 Keep all three RP-001 cables and add **Envelope Out → Filter Cutoff Control In**.
@@ -65,7 +81,7 @@ Set every module as follows:
 
 | Module | Settings |
 |---|---|
-| Oscillator | Frequency 220 Hz; Level 50% |
+| Oscillator | Frequency 220 Hz; Detune 0 cents; Level 50% |
 | Filter | Cutoff 500 Hz; Resonance 0%; Envelope Amount 50% |
 | Envelope | Attack 0.500 s; Decay 0.500 s; Sustain 30%; Release 1.000 s |
 | Speaker | Volume 10%; Enabled on |
@@ -96,8 +112,8 @@ current envelope level. Releasing all inputs lowers Gate and lets the release ta
 at the last pitch. Closing the panel or losing window focus releases held notes.
 
 Press **H** in octave 4 to hear A4 = 440 Hz. CV uses 1 V/octave, with 0 V = C4;
-connected CV determines exact equal-tempered oscillator pitch. Its saved Frequency setting
-is restored when Pitch In is disconnected. The keyboard emits no audio or velocity.
+connected CV determines the center pitch. Detune adds unison spread around that pitch.
+The saved Frequency setting becomes the center again when Pitch In is disconnected. The keyboard emits no audio or velocity.
 Manual/redstone envelope gates remain OR-combined with Gate In; while either is held,
 keyboard note changes change pitch without restarting the envelope.
 
@@ -143,7 +159,7 @@ across device reopen; it adds no installed dependencies and never keeps notes fr
 MIDI shares the existing traffic limits, including renewals, so dense controller/arpeggiator
 streams can be rejected. Queue overflow stops the session and requires reopening the panel.
 Only supported notes/pedal/reset messages consume the MIDI queue. All clients and the server
-must use protocol **3**; existing world saves remain version **1**. Physical MIDI devices,
+must use protocol **4**; existing world saves remain version **1**. Physical MIDI devices,
 listening, and multiplayer timing still need the acceptance procedure below.
 
 ## Patching, permissions, and saved work
@@ -180,8 +196,10 @@ Unknown or corrupt records are quarantined and preserved, including connected af
 components. Do not edit the save to guess missing values. Back up the entire world, use
 a compatible mod version or restore a known-good backup, and retain the original data
 for recovery. The global registry is `data/modularcraft.dat`; per-module data is also in
-its owning block entity. World-save schema remains version 1; existing patches load unchanged. Network and
-performance-snapshot protocol is version 2: update both server and clients together.
+its owning block entity. World-save schema remains version 1; older oscillators receive Detune 0 without changing
+their saved Frequency or Level. Back up the world before upgrading; restore that backup
+if downgrading, since older builds cannot interpret the new control. Network and
+performance-snapshot protocol is version 4: update both server and clients together.
 
 ## Troubleshooting
 

@@ -24,7 +24,7 @@ L1 coefficient normalization bounds oscillator peaks at the selected level.
 
 ## Budgets and ordering
 
-Retain every SS-003 quota. Version 1 world saves; version 3 network/snapshots; edits 4 KiB, snapshots 32 KiB,
+Retain every SS-003 quota. Version 1 world saves; version 4 network/snapshots; edits 4 KiB, snapshots 32 KiB,
 world storage 2 MiB. 20 edits/s/player, 200/world; queues 64/player, 256/world.
 Cleanup and gate release bypass ordinary throttling. Outbound 128 KiB/s/listener,
 2 MiB/s/server. One preparation worker, eight pending jobs, 1,024 client events,
@@ -55,6 +55,43 @@ server plus native singleplayer/two-client procedures in `docs/acceptance.md`.
 TDD and each evidence class are tracked separately in `validation/ledger.md`.
 No public release, commit, or push is authorized. Required hardware/human gates stay
 PENDING until actually observed; builds never substitute for listening acceptance.
+
+## Saw detune extension
+
+Add one oscillator control, Detune, in cents, 0..100 with default 0 and fractional
+numeric entry. It is symmetric unison spread: a center saw at the manual/CV pitch plus
+saws at `baseHz * 2^(-cents/1200)` and `baseHz * 2^(cents/1200)`. Nonzero spread mixes
+each at one third of Level. Zero spread uses only the center voice, preserving the
+original sound, including after returning from unison. Smooth the mix and all frequency
+targets over 480 samples (10 ms), retain phases/history across graph changes, and prepare
+pitch ratios off the audio thread. When enabling unison from zero, side voices inherit
+the center phase/history. No stereo widening or extra ports; Audio Out remains mono.
+Do not clamp effective side pitches to the base Frequency limits.
+
+Keep world schema 1: migrate only the exact legacy oscillator Frequency/Level parameter
+set to Detune 0 in stored world/block records. Preserve other malformed/unknown records.
+Network/snapshot v4 requires all three controls and matching peers; append the enum value
+to retain existing control ordinals. No dependencies or ownership changes. At most three
+voices per oscillator, with side DSP skipped at settled zero spread; existing graph/module/
+traffic caps stay fixed. Include maximum spread in the existing DSP load measurement.
+
+| Principle | Detune design and evidence |
+|---|---|
+| I | Existing logical-server edit path, disposable packaged integration/native fixtures |
+| II | Finite 0..100 validation, stale/unauthorized edits and malformed codec tests |
+| III | Observe new behavior tests failing before implementation, then full automated checks |
+| IV | Immutable parameter state, graph-preparation pitch calculation, existing audio ownership |
+| V | Three-voice spread contract, unchanged CV semantics, RP-001/RP-003 detune variations |
+| VI | Measured center/side pitches, 10 ms phase-continuous edits, normalized finite output |
+| VII | Three voices/oscillator, inactive side DSP skipped, unchanged quotas, load measurement |
+| VIII | Exact legacy save migration, repeatable roundtrips, v4 peer refusal and backup guidance |
+| IX | Existing pinned toolchain/dependencies, packaged artifact checks |
+| X | Localized slider/numeric control, units/range, native screenshot and audition procedure |
+
+Test new defaults/bounds, old record migration, persistence, snapshot refusal, server edits,
+manual and keyboard/MIDI pitch, disconnected CV, and live graph transitions. Run `make verify`
+and a disposable native detune UI probe. Listening and two-client timing stay PENDING until
+observed; retain every earlier release gate. Record explicit self-review in the ledger.
 
 SC-005: four patches of 16 modules/24 cables/two speakers, exact spec topology.
 Each patch uses a 4x4 grid at two-block spacing; origins (0,0), (8,0), (0,8), (8,8).
@@ -97,7 +134,7 @@ listening pass or two-client timing qualification. Record results in validation/
 Implement MI-001–006 with the existing Java 21 `javax.sound.midi` API and no dependency changes.
 The client owns local device preferences, a bounded asynchronous adapter, and combined GUI/MIDI
 priority. The logical server accepts relative GUI or absolute MIDI notes through its existing
-session/revision/permission checks. Network/snapshot v3 expands pitch to 0–127; world v1 remains
+session/revision/permission checks. Network/snapshot v4 carries expanded pitch to 0–127; world v1 remains
 unchanged. Native input providers are initially qualified on macOS only when actual evidence
 exists. Detailed ownership, failure and timing contracts are in `docs/architecture.md`.
 
@@ -110,7 +147,7 @@ exists. Detailed ownership, failure and timing contracts are in `docs/architectu
 | V composition | Existing CV/gate ports, fixed gate, monophonic sustain/fallback; RP-003 extension |
 | VI timing | Existing server receive/sample ordering and smoothing; SC-003/004 retained, no hardware timing claim |
 | VII bounds | One worker, four task slots, one input/helper, 64 ports, two bounded 256-event queues, 64/tick, 2,061 holds; timeout/overflow tests |
-| VIII persistence | Only local device/channel preferences; world v1 preserved, protocol/snapshot v3 refuses older peers |
+| VIII persistence | Only local device/channel preferences; world v1 preserved, protocol/snapshot v4 refuses older peers |
 | IX dependencies | Built-in Java Sound only; all dependency and host pins retained |
 | X controls | Opt-in device/channel, Refresh, Release Notes, localized diagnostics, local mute, guide and screenshots |
 

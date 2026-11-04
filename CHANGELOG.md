@@ -40,3 +40,13 @@ Fixed macOS MIDI input becoming silent after leaving and reopening the keyboard 
 Each native connection now uses a fresh, bounded Java helper process; closing reaps it even
 when the Java Sound reader fails to stop. One client worker handles lifecycle and input
 polling, with no new dependencies or changes to notes, channels, saves or networking.
+
+
+Added **unison spread Detune** to the Saw Oscillator: 0–100 cents per side with fractional
+numeric entry. Nonzero spread mixes three normalized saw voices around the manual or
+keyboard/MIDI center pitch; zero restores the original single saw. Pitch and mix edits
+ramp over 10 ms, with phase/history preserved and inactive side DSP skipped at zero.
+Legacy world/block oscillator records migrate to Detune 0; other unknown/invalid records
+retain quarantine protection. World schema stays v1; network/snapshot v4 requires updating
+clients and server together. Back up worlds before upgrading and restore the backup for
+downgrade. Listening and multiplayer qualification remain separate from automated checks.

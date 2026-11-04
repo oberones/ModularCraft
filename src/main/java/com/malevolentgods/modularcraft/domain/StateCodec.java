@@ -95,7 +95,7 @@ public final class StateCodec {
     out.writeBoolean(runtime && m.enabled());
   }
 
-  private static ModuleState module(DataInputStream in) throws IOException {
+  private static ModuleState module(DataInputStream in, boolean stored) throws IOException {
     UUID id = uuid(in), owner = uuid(in);
     ModuleKind kind = ModuleKind.valueOf(in.readUTF());
     String dim = in.readUTF();
@@ -107,6 +107,11 @@ public final class StateCodec {
     for (int i = 0; i < n; i++)
       if (values.put(Parameter.valueOf(in.readUTF()), in.readDouble()) != null)
         throw new IllegalArgumentException("duplicate_parameter");
+    // Only legacy stored saws have this exact two-control schema. Network v4 must be complete.
+    if (stored
+        && kind == ModuleKind.OSCILLATOR
+        && values.keySet().equals(java.util.Set.of(Parameter.FREQUENCY, Parameter.LEVEL)))
+      values.put(Parameter.DETUNE, 0.0);
     return new ModuleState(
         id, owner, kind, dim, x, y, z, revision, values, in.readBoolean(), in.readBoolean());
   }
@@ -128,7 +133,7 @@ public final class StateCodec {
 
   public static ModuleState moduleBytes(byte[] bytes) {
     try (DataInputStream in = input(bytes, 4096)) {
-      ModuleState m = module(in);
+      ModuleState m = module(in, true);
       end(in);
       return m;
     } catch (IOException e) {
@@ -187,7 +192,7 @@ public final class StateCodec {
         try (DataInputStream record = input(raw, 4096)) {
           int type = record.readUnsignedByte();
           if (type == 1) {
-            ModuleState m = module(record);
+            ModuleState m = module(record, true);
             end(record);
             if (rawModules.containsKey(m.id()))
               throw new IllegalArgumentException("duplicate_identity");
@@ -250,7 +255,7 @@ public final class StateCodec {
         MAX_PATCH,
         out -> {
           out.writeInt(MAGIC);
-          out.writeShort(3);
+          out.writeShort(4);
           uuid(out, p.id());
           out.writeLong(p.revision());
           out.writeLong(p.sequence());
@@ -287,13 +292,13 @@ public final class StateCodec {
 
   public static PatchSnapshot decode(byte[] bytes) {
     try (DataInputStream in = input(bytes, MAX_PATCH)) {
-      if (in.readInt() != MAGIC || in.readUnsignedShort() != 3)
+      if (in.readInt() != MAGIC || in.readUnsignedShort() != 4)
         throw new IllegalArgumentException("protocol");
       UUID id = uuid(in);
       long revision = in.readLong(), sequence = in.readLong(), sample = in.readLong();
       List<ModuleState> modules = new ArrayList<>();
       int n = count(in, 16);
-      for (int i = 0; i < n; i++) modules.add(module(in));
+      for (int i = 0; i < n; i++) modules.add(module(in, false));
       List<Cable> cables = new ArrayList<>();
       n = count(in, 24);
       for (int i = 0; i < n; i++) cables.add(cable(in));

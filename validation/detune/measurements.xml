@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.malevolentgods.modularcraft.MeasurementTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-11-04T21:11:20.454Z" hostname="Calliope.local" time="6.528">
+  <properties/>
+  <testcase name="sawFilterBandEnergyMeetsMu009AndExtremesAreFinite()" classname="com.malevolentgods.modularcraft.MeasurementTest" time="0.053"/>
+  <testcase name="maximumUnisonSpreadDspBenchmarkAndNoSteadyAllocation()" classname="com.malevolentgods.modularcraft.MeasurementTest" time="3.737"/>
+  <testcase name="fixedLoadDspBenchmarkAndNoSteadyAllocation()" classname="com.malevolentgods.modularcraft.MeasurementTest" time="2.506"/>
+  <testcase name="sawDcAndAliasResidualAgainstOversampledReference()" classname="com.malevolentgods.modularcraft.MeasurementTest" time="0.23"/>
+  <system-out><![CDATA[MU-009 2-8 kHz attenuation dB=-30.4302240725257
+64 module / 96 cable / 8 speaker DSP p95 ms=0.27525, detune=100.0, measured allocation bytes=0
+64 module / 96 cable / 8 speaker DSP p95 ms=0.184917, detune=0.0, measured allocation bytes=0
+alias 54.931641 Hz: -70.779 dB; DC 0.000000000
+alias 219.726563 Hz: -65.616 dB; DC 0.000000000
+alias 879.638672 Hz: -61.597 dB; DC -0.000000000
+alias 3520.019531 Hz: -49.686 dB; DC 0.000000000
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

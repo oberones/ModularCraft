@@ -82,11 +82,11 @@ with a minimum 48-sample separation and 1,920-sample lead. Cleanup bypasses edit
 queue overload releases and invalidates the affected session. Subsequent snapshots cannot
 rewind pending performance timestamps. Renewal never starts/retriggers a note.
 
-Pitch CV and gate have separate port roles. Snapshot v3 carries keyboard MIDI note numbers
+Pitch CV and gate have separate port roles. Snapshot v4 carries keyboard MIDI note numbers
 0–127 and gate booleans; CV = (note−60)/12 V and Hz = 440×2^((note−69)/12). Server-side
 external gates feed analytic envelope checkpoints. RenderGraph resolves pitch cables into
 smoothed frequency targets, preserves oscillator phase, and leaves envelope control routing
-unchanged. World v1 persists octave only, using existing named records; network v3 rejects
+unchanged. World v1 persists octave only, using existing named records; network v4 rejects
 old peers. Snapshot recovery restores current pitch/gate, not historical note events.
 
 
@@ -143,8 +143,31 @@ keeps server-receive scheduling (minimum 48 samples between accepted events, 1,9
 lead), existing revision/permission/range checks, and the 20/player and 200/world edit budgets.
 MIDI device timestamps are ignored; sample-accurate hardware-input timing is not claimed.
 
-Network/snapshot v3 deliberately refuses older peers/snapshots; world v1 and saved octave
+Network/snapshot v4 deliberately refuses older peers/snapshots; world v1 and saved octave
 remain unchanged. The SHA-256 of the device name/vendor/description/version is a local
 selection descriptor, not a hardware identity. Only unique matches restore automatically;
 explicit selection can distinguish duplicate ports for the current focused session. Device
 and channel preferences are stored with the existing listener settings, never in world data.
+
+
+## Oscillator unison spread
+
+Detune is a persistent, server-validated 0..100-cent-per-side control. The graph prepares
+three frequency targets: center, center / 2^(cents/1200), center * 2^(cents/1200), after
+resolving manual versus keyboard/MIDI pitch. `UnisonSaw` owns three independent PolyBLEP
+phases/decimators, three frequency ramps and a blend ramp. Exponentiation and allocation
+occur only during graph preparation. Audio adoption transfers state without mutating the
+old graph; all targets ramp over 480 samples. Center pitch is unchanged by Detune.
+
+Zero spread selects the original center voice; nonzero selects an equal three-voice mix.
+The blend is a convex combination, preserving the existing Level ceiling. Side processing
+is skipped at settled zero; enabling spread then inherits center phase/history. Each
+oscillator has at most three voices, with no new graph ports, stereo routing or queues.
+The existing 64-module fixed-load benchmark also measures all four oscillators at maximum
+spread. Native performance/listening/two-client gates remain distinct.
+
+World schema v1 and block schema v1 accept only the exact legacy Frequency/Level key set
+as a migration to Detune 0. Other incomplete/extra/non-finite records retain rejection or
+opaque quarantine. The complete named control set is written on next save, and repeated
+loads are stable. Snapshot/network v4 refuses older formats and does not apply this stored
+record migration. Existing parameter ordinals are retained by appending DETUNE.

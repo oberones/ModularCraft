@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.malevolentgods.modularcraft.DetuneTest" tests="8" skipped="0" failures="8" errors="0" timestamp="2026-11-04T21:07:00.564Z" hostname="Calliope.local" time="0.014">
+  <properties/>
+  <testcase name="extremeMidiUnisonRemainsFiniteAndWithinSelectedLevel()" classname="com.malevolentgods.modularcraft.DetuneTest" time="0.009">
+    <failure message="java.lang.IllegalArgumentException: No enum constant com.malevolentgods.modularcraft.domain.Parameter.DETUNE" type="java.lang.IllegalArgumentException">java.lang.IllegalArgumentException: No enum constant com.malevolentgods.modularcraft.domain.Parameter.DETUNE
+	at java.base/java.lang.Enum.valueOf(Enum.java:293)
+	at com.malevolentgods.modularcraft.domain.Parameter.valueOf(Parameter.java:3)
+	at com.malevolentgods.modularcraft.DetuneTest.detune(DetuneTest.java:30)
+	at com.malevolentgods.modularcraft.DetuneTest.patch(DetuneTest.java:36)
+	at com.malevolentgods.modularcraft.DetuneTest.extremeMidiUnisonRemainsFiniteAndWithinSelectedLevel(DetuneTest.java:147)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+</failure>
+  </testcase>
+  <testcase name="liveSpreadChangesPreserveContinuityAndReturnToSingleSaw()" classname="com.malevolentgods.modularcraft.DetuneTest" time="0.001">
+    <failure message="java.lang.IllegalArgumentException: No enum constant com.malevolentgods.modularcraft.domain.Parameter.DETUNE" type="java.lang.IllegalArgumentException">java.lang.IllegalArgumentException: No enum constant com.malevolentgods.modularcraft.domain.Parameter.DETUNE
+	at java.base/java.lang.Enum.valueOf(Enum.java:293)
+	at com.malevolentgods.modularcraft.domain.Parameter.valueOf(Parameter.java:3)
+	at com.malevolentgods.modularcraft.DetuneTest.detune(DetuneTest.java:30)
+	at com.malevolentgods.modularcraft.DetuneTest.patch(DetuneTest.java:36)
+	at com.malevolentgods.modularcraft.DetuneTest.liveSpreadChangesPreserveContinuityAndReturnToSingleSaw(DetuneTest.java:127)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+</failure>
+  </testcase>
+  <testcase name="zeroSpreadRetainsSingleSawOutput()" classname="com.malevolentgods.modularcraft.DetuneTest" time="0.0">
+    <failure message="java.lang.IllegalArgumentException: No enum constant com.malevolentgods.modularcraft.domain.Parameter.DETUNE" type="java.lang.IllegalArgumentException">java.lang.IllegalArgumentException: No enum constant com.malevolentgods.modularcraft.domain.Parameter.DETUNE
+	at java.base/java.lang.Enum.valueOf(Enum.java:293)
+	at com.malevolentgods.modularcraft.domain.Parameter.valueOf(Parameter.java:3)
+	at com.malevolentgods.modularcraft.DetuneTest.detune(DetuneTest.java:30)
+	at com.malevolentgods.modularcraft.DetuneTest.patch(DetuneTest.java:36)
+	at com.malevolentgods.modularcraft.DetuneTest.zeroSpreadRetainsSingleSawOutput(DetuneTest.java:92)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+</failure>
+  </testcase>
+  <testcase name="spreadProducesCenterAndBothSidePitchesForManualAndMidiInput()" classname="com.malevolentgods.modularcraft.DetuneTest" time="0.0">
+    <failure message="java.lang.IllegalArgumentException: No enum constant com.malevolentgods.modularcraft.domain.Parameter.DETUNE" type="java.lang.IllegalArgumentException">java.lang.IllegalArgumentException: No enum constant com.malevolentgods.modularcraft.domain.Parameter.DETUNE
+	at java.base/java.lang.Enum.valueOf(Enum.java:293)
+	at com.malevolentgods.modularcraft.domain.Parameter.valueOf(Parameter.java:3)
+	at com.malevolentgods.modularcraft.DetuneTest.detune(DetuneTest.java:30)
+	at com.malevolentgods.modularcraft.DetuneTest.patch(DetuneTest.java:36)
+	at com.malevolentgods.modularcraft.DetuneTest.spreadProducesCenterAndBothSidePitchesForManualAndMidiInput(DetuneTest.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+</failure>
+  </testcase>
+  <testcase name="fractionalSpreadAndCvDisconnectKeepUnison()" classname="com.malevolentgods.modularcraft.DetuneTest" time="0.001">
+    <failure message="java.lang.IllegalArgumentException: No enum constant com.malevolentgods.modularcraft.domain.Parameter.DETUNE" type="java.lang.IllegalArgumentException">java.lang.IllegalArgumentException: No enum constant com.malevolentgods.modularcraft.domain.Parameter.DETUNE
+	at java.base/java.lang.Enum.valueOf(Enum.java:293)
+	at com.malevolentgods.modularcraft.domain.Parameter.valueOf(Parameter.java:3)
+	at com.malevolentgods.modularcraft.DetuneTest.detune(DetuneTest.java:30)
+	at com.malevolentgods.modularcraft.DetuneTest.patch(DetuneTest.java:36)
+	at com.malevolentgods.modularcraft.DetuneTest.fractionalSpreadAndCvDisconnectKeepUnison(DetuneTest.java:115)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+</failure>
+  </testcase>
+  <testcase name="storedDetuneAndSnapshotsRoundtripAndOldNetworkIsRefused()" classname="com.malevolentgods.modularcraft.DetuneTest" time="0.0">
+    <failure message="java.lang.IllegalArgumentException: No enum constant com.malevolentgods.modularcraft.domain.Parameter.DETUNE" type="java.lang.IllegalArgumentException">java.lang.IllegalArgumentException: No enum constant com.malevolentgods.modularcraft.domain.Parameter.DETUNE
+	at java.base/java.lang.Enum.valueOf(Enum.java:293)
+	at com.malevolentgods.modularcraft.domain.Parameter.valueOf(Parameter.java:3)
+	at com.malevolentgods.modularcraft.DetuneTest.detune(DetuneTest.java:30)
+	at com.malevolentgods.modularcraft.DetuneTest.patch(DetuneTest.java:36)
+	at com.malevolentgods.modularcraft.DetuneTest.storedDetuneAndSnapshotsRoundtripAndOldNetworkIsRefused(DetuneTest.java:155)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+</failure>
+  </testcase>
+  <testcase name="spreadDefaultsToZeroAndRejectsInvalidOrForeignEdits()" classname="com.malevolentgods.modularcraft.DetuneTest" time="0.0">
+    <failure message="java.lang.IllegalArgumentException: No enum constant com.malevolentgods.modularcraft.domain.Parameter.DETUNE" type="java.lang.IllegalArgumentException">java.lang.IllegalArgumentException: No enum constant com.malevolentgods.modularcraft.domain.Parameter.DETUNE
+	at java.base/java.lang.Enum.valueOf(Enum.java:293)
+	at com.malevolentgods.modularcraft.domain.Parameter.valueOf(Parameter.java:3)
+	at com.malevolentgods.modularcraft.DetuneTest.detune(DetuneTest.java:30)
+	at com.malevolentgods.modularcraft.DetuneTest.spreadDefaultsToZeroAndRejectsInvalidOrForeignEdits(DetuneTest.java:69)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+</failure>
+  </testcase>
+  <testcase name="legacyWorldAndBlockRecordsMigrateOnlyTheExactOldControlSet()" classname="com.malevolentgods.modularcraft.DetuneTest" time="0.001">
+    <failure message="java.lang.IllegalArgumentException: No enum constant com.malevolentgods.modularcraft.domain.Parameter.DETUNE" type="java.lang.IllegalArgumentException">java.lang.IllegalArgumentException: No enum constant com.malevolentgods.modularcraft.domain.Parameter.DETUNE
+	at java.base/java.lang.Enum.valueOf(Enum.java:293)
+	at com.malevolentgods.modularcraft.domain.Parameter.valueOf(Parameter.java:3)
+	at com.malevolentgods.modularcraft.DetuneTest.detune(DetuneTest.java:30)
+	at com.malevolentgods.modularcraft.DetuneTest.legacyWorldAndBlockRecordsMigrateOnlyTheExactOldControlSet(DetuneTest.java:175)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+</failure>
+  </testcase>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

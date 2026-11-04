@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.malevolentgods.modularcraft.DetuneTest" tests="8" skipped="0" failures="4" errors="0" timestamp="2026-11-04T21:07:21.740Z" hostname="Calliope.local" time="0.085">
+  <properties/>
+  <testcase name="extremeMidiUnisonRemainsFiniteAndWithinSelectedLevel()" classname="com.malevolentgods.modularcraft.DetuneTest" time="0.036"/>
+  <testcase name="liveSpreadChangesPreserveContinuityAndReturnToSingleSaw()" classname="com.malevolentgods.modularcraft.DetuneTest" time="0.005">
+    <failure message="org.opentest4j.AssertionFailedError: expected: &lt;true&gt; but was: &lt;false&gt;" type="org.opentest4j.AssertionFailedError">org.opentest4j.AssertionFailedError: expected: &lt;true&gt; but was: &lt;false&gt;
+	at app//org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
+	at app//org.junit.jupiter.api.AssertionFailureBuilder.buildAndThrow(AssertionFailureBuilder.java:132)
+	at app//org.junit.jupiter.api.AssertTrue.failNotTrue(AssertTrue.java:63)
+	at app//org.junit.jupiter.api.AssertTrue.assertTrue(AssertTrue.java:36)
+	at app//org.junit.jupiter.api.AssertTrue.assertTrue(AssertTrue.java:31)
+	at app//org.junit.jupiter.api.Assertions.assertTrue(Assertions.java:183)
+	at app//com.malevolentgods.modularcraft.DetuneTest.liveSpreadChangesPreserveContinuityAndReturnToSingleSaw(DetuneTest.java:135)
+	at java.base@21.0.12.1/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base@21.0.12.1/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base@21.0.12.1/java.util.ArrayList.forEach(ArrayList.java:1596)
+</failure>
+  </testcase>
+  <testcase name="zeroSpreadRetainsSingleSawOutput()" classname="com.malevolentgods.modularcraft.DetuneTest" time="0.002"/>
+  <testcase name="spreadProducesCenterAndBothSidePitchesForManualAndMidiInput()" classname="com.malevolentgods.modularcraft.DetuneTest" time="0.015">
+    <failure message="org.opentest4j.AssertionFailedError: expected: &lt;true&gt; but was: &lt;false&gt;" type="org.opentest4j.AssertionFailedError">org.opentest4j.AssertionFailedError: expected: &lt;true&gt; but was: &lt;false&gt;
+	at app//org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
+	at app//org.junit.jupiter.api.AssertionFailureBuilder.buildAndThrow(AssertionFailureBuilder.java:132)
+	at app//org.junit.jupiter.api.AssertTrue.failNotTrue(AssertTrue.java:63)
+	at app//org.junit.jupiter.api.AssertTrue.assertTrue(AssertTrue.java:36)
+	at app//org.junit.jupiter.api.AssertTrue.assertTrue(AssertTrue.java:31)
+	at app//org.junit.jupiter.api.Assertions.assertTrue(Assertions.java:183)
+	at app//com.malevolentgods.modularcraft.DetuneTest.spreadProducesCenterAndBothSidePitchesForManualAndMidiInput(DetuneTest.java:108)
+	at java.base@21.0.12.1/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base@21.0.12.1/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base@21.0.12.1/java.util.ArrayList.forEach(ArrayList.java:1596)
+</failure>
+  </testcase>
+  <testcase name="fractionalSpreadAndCvDisconnectKeepUnison()" classname="com.malevolentgods.modularcraft.DetuneTest" time="0.012"/>
+  <testcase name="storedDetuneAndSnapshotsRoundtripAndOldNetworkIsRefused()" classname="com.malevolentgods.modularcraft.DetuneTest" time="0.012">
+    <failure message="org.opentest4j.AssertionFailedError: Expected java.lang.IllegalArgumentException to be thrown, but nothing was thrown." type="org.opentest4j.AssertionFailedError">org.opentest4j.AssertionFailedError: Expected java.lang.IllegalArgumentException to be thrown, but nothing was thrown.
+	at app//org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:152)
+	at app//org.junit.jupiter.api.AssertThrows.assertThrows(AssertThrows.java:73)
+	at app//org.junit.jupiter.api.AssertThrows.assertThrows(AssertThrows.java:35)
+	at app//org.junit.jupiter.api.Assertions.assertThrows(Assertions.java:3128)
+	at app//com.malevolentgods.modularcraft.DetuneTest.storedDetuneAndSnapshotsRoundtripAndOldNetworkIsRefused(DetuneTest.java:167)
+	at java.base@21.0.12.1/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base@21.0.12.1/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base@21.0.12.1/java.util.ArrayList.forEach(ArrayList.java:1596)
+</failure>
+  </testcase>
+  <testcase name="spreadDefaultsToZeroAndRejectsInvalidOrForeignEdits()" classname="com.malevolentgods.modularcraft.DetuneTest" time="0.002"/>
+  <testcase name="legacyWorldAndBlockRecordsMigrateOnlyTheExactOldControlSet()" classname="com.malevolentgods.modularcraft.DetuneTest" time="0.001">
+    <failure message="java.lang.IllegalArgumentException: parameters" type="java.lang.IllegalArgumentException">java.lang.IllegalArgumentException: parameters
+	at com.malevolentgods.modularcraft.domain.ModuleState.&lt;init&gt;(ModuleState.java:31)
+	at com.malevolentgods.modularcraft.domain.StateCodec.module(StateCodec.java:111)
+	at com.malevolentgods.modularcraft.domain.StateCodec.moduleBytes(StateCodec.java:131)
+	at com.malevolentgods.modularcraft.DetuneTest.legacyWorldAndBlockRecordsMigrateOnlyTheExactOldControlSet(DetuneTest.java:174)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+</failure>
+  </testcase>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

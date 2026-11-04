@@ -8,7 +8,7 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.common.NeoForge;
 
-/** Observes the real native adapter without synthesizing input or claiming a listening test. */
+/** Exercises native adapters in disposable fixtures without claiming listening acceptance. */
 @Mod(value = "modularcraft_tests", dist = Dist.CLIENT)
 public final class NativeProbe {
   private int ticks;
@@ -21,6 +21,7 @@ public final class NativeProbe {
           ticks++;
           if (Boolean.getBoolean("modularcraft.qa.cables")) captureCables();
           if (Boolean.getBoolean("modularcraft.qa.keyboard")) keyboard();
+          if (Boolean.getBoolean("modularcraft.qa.detune")) detune();
           if (ticks == 1)
             System.out.println(
                 "MODULARCRAFT_QA artifact="
@@ -48,6 +49,54 @@ public final class NativeProbe {
           if (ticks == Integer.getInteger("modularcraft.qa.ticks", 1200))
             Minecraft.getInstance().stop();
         });
+  }
+
+  // Minecraft owns this borrowed client and its framebuffer.
+  @SuppressWarnings("PMD.CloseResource")
+  private void detune() {
+    if (ticks < 90 || ticks > 260) return;
+    Minecraft mc = Minecraft.getInstance();
+    if (!(mc.screen instanceof com.malevolentgods.modularcraft.client.ModuleScreen screen))
+      throw new IllegalStateException("Oscillator panel did not open through server inspection");
+    int panel = Math.min(420, screen.width - 16);
+    int left = (screen.width - panel) / 2;
+    int top = Math.max(6, (screen.height - 214) / 2);
+    int rowY = top + 30 + 38 + 20;
+    if (ticks == 100 || ticks == 180 || ticks == 220) {
+      var fields =
+          screen.children().stream()
+              .filter(net.minecraft.client.gui.components.EditBox.class::isInstance)
+              .map(net.minecraft.client.gui.components.EditBox.class::cast)
+              .toList();
+      if (fields.size() != 3) throw new IllegalStateException("Expected three oscillator controls");
+      fields.get(1).setValue(ticks == 100 ? "25.125" : ticks == 180 ? "-1" : "0");
+      screen.mouseClicked(left + panel - 35, rowY, 0);
+      screen.mouseReleased(left + panel - 35, rowY, 0);
+    }
+    if (ticks == 140) {
+      screen.mouseClicked(left + panel - 151, rowY, 0);
+      screen.mouseReleased(left + panel - 151, rowY, 0);
+    }
+    if (ticks == 120 || ticks == 160 || ticks == 200 || ticks == 240) {
+      double expected = ticks == 120 ? 25.125 : ticks == 240 ? 0 : 100;
+      double accepted =
+          ClientRuntime.patches().stream()
+              .flatMap(p -> p.modules().stream())
+              .filter(m -> m.id().equals(screen.identity()))
+              .findFirst()
+              .orElseThrow()
+              .value(com.malevolentgods.modularcraft.domain.Parameter.DETUNE);
+      if (accepted != expected)
+        throw new IllegalStateException("Detune expected " + expected + " got " + accepted);
+      System.out.println("MODULARCRAFT_QA detune tick=" + ticks + " accepted=" + accepted);
+    }
+    if (ticks == 90 || ticks == 120 || ticks == 160 || ticks == 240)
+      Screenshot.grab(
+          mc.gameDirectory,
+          "detune-" + ticks + ".png",
+          mc.getMainRenderTarget(),
+          message -> System.out.println("MODULARCRAFT_QA " + message.getString()));
+    if (ticks == 260) screen.onClose();
   }
 
   // Minecraft owns this borrowed client and its framebuffer.

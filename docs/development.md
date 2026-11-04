@@ -139,3 +139,10 @@ GUI overlap, octave acknowledgement, mouse and close assertions and captures the
 It uses no physical MIDI input and does not change local device preferences outside the fresh
 fixture. Run `make test TEST='*Midi*Test'` for deterministic input, fake-provider lifecycle,
 preferences and snapshot tests. Physical controller procedures are in [acceptance.md](acceptance.md).
+
+
+Unison detune probe: `make smoke GRADLE_ARGS=-PqaDetune TICKS=300` opens the oscillator
+in a fresh RP-001 world, checks exact 25.125-cent entry, slider maximum, invalid negative
+entry rejection, and return to zero against server-accepted values. It captures four
+`detune-*.png` images in the managed instance's `screenshots/`. Unit regressions use
+`make test TEST='*DetuneTest'`; the full suite includes maximum-spread DSP allocation/timing.

@@ -26,7 +26,7 @@ public final class NativeFixture {
   private static final List<BlockPos> ENVELOPES = new ArrayList<>();
   private static ServerPlayer performer;
   private static int ticks;
-  private static BlockPos cableOrigin, keyboardPosition;
+  private static BlockPos cableOrigin, keyboardPosition, oscillatorPosition;
 
   public NativeFixture() {
     if (!Boolean.getBoolean("modularcraft.qa")) return;
@@ -47,6 +47,12 @@ public final class NativeFixture {
                 .inspect(
                     performer,
                     (ModuleEntity) performer.serverLevel().getBlockEntity(keyboardPosition),
+                    true);
+          if (ticks == 60 && oscillatorPosition != null)
+            ServerRuntime.get(event.getServer())
+                .inspect(
+                    performer,
+                    (ModuleEntity) performer.serverLevel().getBlockEntity(oscillatorPosition),
                     true);
           if (keyboardPosition == null && ticks >= 20 && (ticks - 20) % 40 == 0) {
             boolean on = ((ticks - 20) / 40) % 2 == 0;
@@ -106,6 +112,8 @@ public final class NativeFixture {
         modules.add(entity);
         if (kind == ModuleKind.ENVELOPE) ENVELOPES.add(pos);
         if (kind == ModuleKind.KEYBOARD) keyboardPosition = pos;
+        if (kind == ModuleKind.OSCILLATOR && Boolean.getBoolean("modularcraft.qa.detune"))
+          oscillatorPosition = pos;
       }
       if (patchCount == 4) {
         set(runtime, player, modules.getFirst(), Parameter.FREQUENCY, (patch + 1) * 110);
@@ -148,6 +156,7 @@ public final class NativeFixture {
     }
     player.teleportTo(originX + 7, y + 2, originZ - 2);
     if (keyboardPosition != null) player.connection.teleport(originX + 2.5, y, originZ - 5, 0, 8);
+    if (oscillatorPosition != null) player.connection.teleport(originX + .5, y, originZ - 3, 0, 8);
     if (cableVisuals) {
       cableOrigin = new BlockPos(originX, y, originZ);
       player.setGameMode(GameType.SPECTATOR);
