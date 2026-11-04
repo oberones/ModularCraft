@@ -1,0 +1,156 @@
+package com.malevolentgods.modularcraft.dsp;
+
+import com.malevolentgods.modularcraft.domain.Cable;
+import com.malevolentgods.modularcraft.domain.Graph;
+import com.malevolentgods.modularcraft.domain.ModuleKind;
+import com.malevolentgods.modularcraft.domain.ModuleState;
+import com.malevolentgods.modularcraft.domain.Parameter;
+import com.malevolentgods.modularcraft.domain.PatchSnapshot;
+import com.malevolentgods.modularcraft.domain.Port;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
+/**
+ * Prepared off audio thread. No allocation, I/O, locks or Minecraft objects in process/adopt. Each
+ * source is evaluated once per sample and shared by all destinations.
+ */
+public final class RenderGraph {
+  public record Listener(
+      String dimension, double x, double y, double z, double yaw, double volume) {}
+
+  private static final class Node {
+    final ModuleState module;
+    final Oscillator oscillator = new Oscillator();
+    final Filter filter = new Filter();
+    final Smoother[] parameters = new Smoother[Parameter.values().length];
+    final Smoother left = new Smoother(0), right = new Smoother(0);
+    Envelope envelope;
+    int audio = -1, control = -1;
+
+    Node(ModuleState module, Envelope.Checkpoint checkpoint, long sample) {
+      this.module = module;
+      for (Parameter p : module.kind().parameters)
+        parameters[p.ordinal()] = new Smoother(module.value(p));
+      if (checkpoint != null) envelope = new Envelope(checkpoint);
+      else envelope = new Envelope();
+      if (module.kind() == ModuleKind.OSCILLATOR)
+        oscillator.phase(sample * module.value(Parameter.FREQUENCY) / 48000.0);
+    }
+
+    double next(Parameter parameter) {
+      return parameters[parameter.ordinal()].next();
+    }
+  }
+
+  private final Node[] nodes;
+  private final double[] signals;
+
+  public RenderGraph(List<PatchSnapshot> patches) {
+    if (patches.size() > 4) throw new IllegalArgumentException("active_patches");
+    List<ModuleState> modules = new ArrayList<>();
+    List<Cable> cables = new ArrayList<>();
+    Map<UUID, Envelope.Checkpoint> checkpoints = new HashMap<>();
+    long sample = 0;
+    for (PatchSnapshot patch : patches) {
+      modules.addAll(patch.modules());
+      cables.addAll(patch.cables());
+      checkpoints.putAll(patch.envelopes());
+      sample = Math.max(sample, patch.sample());
+    }
+    if (modules.size() > 64) throw new IllegalArgumentException("active_modules");
+    List<ModuleState> ordered = Graph.compile(modules, cables);
+    nodes = new Node[ordered.size()];
+    signals = new double[nodes.length];
+    Map<UUID, Integer> indices = new HashMap<>();
+    for (int i = 0; i < nodes.length; i++) {
+      ModuleState m = ordered.get(i);
+      nodes[i] = new Node(m, checkpoints.get(m.id()), sample);
+      indices.put(m.id(), i);
+    }
+    for (Cable c : cables) {
+      Node n = nodes[indices.get(c.destination())];
+      if (c.input() == Port.AUDIO_IN) n.audio = indices.get(c.source());
+      else n.control = indices.get(c.source());
+    }
+  }
+
+  /** Transfer continuous state at the audio block boundary, without mutating the old graph. */
+  public void adopt(RenderGraph previous) {
+    for (Node node : nodes)
+      for (Node old : previous.nodes)
+        if (node.module.id().equals(old.module.id())) {
+          node.oscillator.copyFrom(old.oscillator);
+          node.filter.copyFrom(old.filter);
+          for (Parameter p : node.module.kind().parameters) {
+            node.parameters[p.ordinal()].reset(old.parameters[p.ordinal()].current());
+            node.parameters[p.ordinal()].target(node.module.value(p));
+          }
+          node.left.reset(old.left.current());
+          node.right.reset(old.right.current());
+          break;
+        }
+  }
+
+  public boolean sameTopology(RenderGraph previous) {
+    if (nodes.length != previous.nodes.length) return false;
+    for (int i = 0; i < nodes.length; i++)
+      if (!nodes[i].module.id().equals(previous.nodes[i].module.id())
+          || nodes[i].audio != previous.nodes[i].audio
+          || nodes[i].control != previous.nodes[i].control) return false;
+    return true;
+  }
+
+  /** Writes 128 interleaved stereo float frames before shared DC blocking/limiting. */
+  public void process(long sample, Listener listener, float[] stereo) {
+    process(sample, listener, stereo, 128);
+  }
+
+  public void process(long sample, Listener listener, float[] stereo, int frames) {
+    for (Node n : nodes)
+      if (n.module.kind() == ModuleKind.SPEAKER) {
+        double dx = n.module.x() + .5 - listener.x,
+            dy = n.module.y() + .5 - listener.y,
+            dz = n.module.z() + .5 - listener.z;
+        double yaw = Math.toRadians(listener.yaw);
+        double pan =
+            Output.pan(
+                -Math.cos(yaw) * dx - Math.sin(yaw) * dz, -Math.sin(yaw) * dx + Math.cos(yaw) * dz);
+        double gain =
+            n.module.enabled() && n.module.dimension().equals(listener.dimension)
+                ? Output.distance(Math.sqrt(dx * dx + dy * dy + dz * dz)) * listener.volume
+                : 0;
+        n.left.target(gain * Math.sqrt((1 - pan) * .5));
+        n.right.target(gain * Math.sqrt((1 + pan) * .5));
+      }
+    for (int frame = 0; frame < frames; frame++) {
+      double left = 0, right = 0;
+      for (int i = 0; i < nodes.length; i++) {
+        Node n = nodes[i];
+        double audio = n.audio < 0 ? 0 : signals[n.audio];
+        double control = n.control < 0 ? 0 : signals[n.control];
+        switch (n.module.kind()) {
+          case OSCILLATOR ->
+              signals[i] =
+                  n.oscillator.next(n.next(Parameter.FREQUENCY), n.next(Parameter.LEVEL) / 100);
+          case ENVELOPE -> signals[i] = n.envelope.value(sample + frame);
+          case FILTER -> {
+            double cutoff =
+                Filter.cutoff(n.next(Parameter.CUTOFF), control, n.next(Parameter.AMOUNT) / 100);
+            double value = n.filter.next(audio, cutoff, n.next(Parameter.RESONANCE));
+            signals[i] = n.audio < 0 ? 0 : value;
+          }
+          case SPEAKER -> {
+            signals[i] = audio * n.next(Parameter.VOLUME) / 100 * (n.control < 0 ? 1 : control);
+            left += signals[i] * n.left.next();
+            right += signals[i] * n.right.next();
+          }
+        }
+      }
+      stereo[frame * 2] = (float) left;
+      stereo[frame * 2 + 1] = (float) right;
+    }
+  }
+}

@@ -1,0 +1,296 @@
+{
+  "sourceBaseline": "28f5d5c6ee52d62eb55ad2d1b98c64fc1e1d6acb",
+  "sourceState": "uncommitted development candidate",
+  "junit": [
+    {
+      "suite": "com.malevolentgods.modularcraft.AudioRuntimeTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "testsObserved": [
+        "futureGraphDoesNotPlayEarlyAndOutputIsBounded()",
+        "clockMidpointCompensationAndHourDrift()",
+        "preparationHandoffOverflowFailsSilent()"
+      ],
+      "measurements": ""
+    },
+    {
+      "suite": "com.malevolentgods.modularcraft.CoreTest",
+      "tests": 16,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "testsObserved": [
+        "modulationAndResonanceExact()",
+        "stageEditsApplyOnNextEntryAndCheckpointSeeks()",
+        "nonFiniteAndRangeRejected()",
+        "typedPorts()",
+        "filterResonanceAndAttenuation()",
+        "graphOrderAndCycles()",
+        "outputIsFiniteProtectedAndDcBlocked()",
+        "transportHourAndPause()",
+        "exactDistanceCurve()",
+        "retriggerAndInterruptedStagesHaveFullDuration()",
+        "repeatedEffectiveGateDoesNotRetrigger()",
+        "ordinaryTransitionsAreTenMilliseconds()",
+        "authorityStaleAndUnloadPreserveComposition()",
+        "envelopeLinearAndSampleExact()",
+        "occupiedInputAndDifferentOwnersAreRejectedAtomically()",
+        "oscillatorTracksPitchForSixtySeconds()"
+      ],
+      "measurements": ""
+    },
+    {
+      "suite": "com.malevolentgods.modularcraft.EditInboxTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "testsObserved": [
+        "keyReleaseSupersedesOlderPendingPressButAllowsNewPress()",
+        "parameterUpdatesCoalesceAndCleanupBypassesFullOrdinaryQueue()"
+      ],
+      "measurements": ""
+    },
+    {
+      "suite": "com.malevolentgods.modularcraft.IntegrationCoreTest",
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "testsObserved": [
+        "stableBoundedEventOrdering()",
+        "worldRoundtripClearsPerformanceAndRetainsUnknownBytes()",
+        "referencePatchHasHeadroomAndReleaseSilence()",
+        "capacitiesAcrossUnloadedModulesAndActiveSplits()",
+        "disconnectedGainIsDroneButMissingAudioIsSilence()",
+        "fuzzNeverAcceptsMalformedSnapshot()",
+        "perPlayerAndWorldThrottlesNeverBlockRelease()",
+        "patchCodecRoundtripsAndRejectsTrailingOrHugeInput()"
+      ],
+      "measurements": ""
+    },
+    {
+      "suite": "com.malevolentgods.modularcraft.MeasurementTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "testsObserved": [
+        "sawFilterBandEnergyMeetsMu009AndExtremesAreFinite()",
+        "fixedLoadDspBenchmarkAndNoSteadyAllocation()",
+        "sawDcAndAliasResidualAgainstOversampledReference()"
+      ],
+      "measurements": "MU-009 2-8 kHz attenuation dB=-30.4302240725257\n64 module / 96 cable / 8 speaker DSP p95 ms=0.180125, measured allocation bytes=0\nalias 54.931641 Hz: -70.779 dB; DC 0.000000000\nalias 219.726563 Hz: -65.616 dB; DC 0.000000000\nalias 879.638672 Hz: -61.597 dB; DC -0.000000000\nalias 3520.019531 Hz: -49.686 dB; DC 0.000000000"
+    },
+    {
+      "suite": "com.malevolentgods.modularcraft.SceneTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "testsObserved": [
+        "aggregateWorldAndOwnerLimitsAlsoApplyToInactivePatches()",
+        "rejectsDuplicateIdentitiesAndForeignDimensionsBeforeReplacement()"
+      ],
+      "measurements": ""
+    },
+    {
+      "suite": "com.malevolentgods.modularcraft.TrafficTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "testsObserved": [
+        "recoveryCannotExceedListenerOrServerTrafficCaps()"
+      ],
+      "measurements": ""
+    }
+  ],
+  "totalTests": 35,
+  "totalFailures": 0,
+  "gameTests": {
+    "count": 7,
+    "status": "PASS",
+    "log": "validation/final-automated.log"
+  },
+  "redGreen": [
+    {
+      "log": "validation/core-red.log",
+      "sha256": "a320c8b4ef9628aacbc6c740414d31f16ff9b019d74d0e30c875dfe80a778295",
+      "expectedFailure": "16 DSP/domain/transport behavioral expectations initially failed",
+      "observed": true,
+      "summary": [
+        "> Task :test FAILED",
+        "CoreTest > modulationAndResonanceExact() FAILED",
+        "org.opentest4j.AssertionFailedError at CoreTest.java:80",
+        "CoreTest > stageEditsApplyOnNextEntryAndCheckpointSeeks() FAILED",
+        "org.opentest4j.AssertionFailedError at CoreTest.java:70",
+        "CoreTest > nonFiniteAndRangeRejected() FAILED",
+        "org.opentest4j.AssertionFailedError at CoreTest.java:24",
+        "CoreTest > typedPorts() FAILED",
+        "org.opentest4j.AssertionFailedError at CoreTest.java:34",
+        "CoreTest > filterResonanceAndAttenuation() FAILED",
+        "org.opentest4j.AssertionFailedError at CoreTest.java:87",
+        "CoreTest > graphOrderAndCycles() FAILED",
+        "org.opentest4j.AssertionFailedError at CoreTest.java:126",
+        "CoreTest > outputIsFiniteProtectedAndDcBlocked() FAILED",
+        "org.opentest4j.AssertionFailedError at CoreTest.java:103",
+        "CoreTest > transportHourAndPause() FAILED"
+      ]
+    },
+    {
+      "log": "validation/integration-core-red.log",
+      "sha256": "31ce892946cf87b7eff0c30a5253b52cae4e0927aa297db013367df7446e13da",
+      "expectedFailure": "6 graph/codec/runtime behavior failures",
+      "observed": true,
+      "summary": [
+        "> Task :test FAILED",
+        "IntegrationCoreTest > stableBoundedEventOrdering() FAILED",
+        "org.opentest4j.AssertionFailedError at IntegrationCoreTest.java:77",
+        "IntegrationCoreTest > worldRoundtripClearsPerformanceAndRetainsUnknownBytes() FAILED",
+        "org.opentest4j.AssertionFailedError at IntegrationCoreTest.java:61",
+        "IntegrationCoreTest > referencePatchHasHeadroomAndReleaseSilence() FAILED",
+        "org.opentest4j.AssertionFailedError at IntegrationCoreTest.java:37",
+        "IntegrationCoreTest > disconnectedGainIsDroneButMissingAudioIsSilence() FAILED",
+        "org.opentest4j.AssertionFailedError at IntegrationCoreTest.java:43",
+        "IntegrationCoreTest > perPlayerAndWorldThrottlesNeverBlockRelease() FAILED",
+        "org.opentest4j.AssertionFailedError at IntegrationCoreTest.java:87",
+        "IntegrationCoreTest > patchCodecRoundtripsAndRejectsTrailingOrHugeInput() FAILED",
+        "24 tests completed, 6 failed",
+        "FAILURE: Build failed with an exception.",
+        "Execution failed for task ':test'.",
+        "BUILD FAILED in 2s"
+      ]
+    },
+    {
+      "log": "validation/host-red.log",
+      "sha256": "cdc7f7fe643cd85cddc46318990a46634b7bb290d903075b0a4f03881a768e73",
+      "expectedFailure": "2 block identity/permission and persistence failures",
+      "observed": true,
+      "summary": [
+        "[20:17:34] [main/ERROR] [minecraft/Settings]: Failed to load properties from file: server.properties",
+        "[20:17:35] [Server thread/ERROR] [minecraft/LogTestReporter]: modulesaveroundtripandreplacement failed at -7384364, -60, 7688595! pending_entity",
+        "[20:17:35] [Server thread/ERROR] [minecraft/LogTestReporter]: placedidentityandpermissions failed at -7384354, -60, 7688595! Nearby owner can edit",
+        "[20:17:35] [Server thread/INFO] [minecraft/GameTestServer]: 2 required tests failed :(",
+        "> Task :runGameTestServer FAILED",
+        "FAILURE: Build failed with an exception.",
+        "Execution failed for task ':runGameTestServer'.",
+        "BUILD FAILED in 10s"
+      ]
+    },
+    {
+      "log": "validation/audio-runtime-red.log",
+      "sha256": "2c1e0788734853c988d149ed249d10dfbd7013bc2be6c17781e4d3d6e41fd799",
+      "expectedFailure": "3 audio handoff/scheduling/clock failures",
+      "observed": true,
+      "summary": [
+        "> Task :test FAILED",
+        "AudioRuntimeTest > futureGraphDoesNotPlayEarlyAndOutputIsBounded() FAILED",
+        "org.opentest4j.AssertionFailedError at AudioRuntimeTest.java:17",
+        "AudioRuntimeTest > clockMidpointCompensationAndHourDrift() FAILED",
+        "org.opentest4j.AssertionFailedError at AudioRuntimeTest.java:11",
+        "AudioRuntimeTest > preparationHandoffOverflowFailsSilent() FAILED",
+        "org.opentest4j.AssertionFailedError at AudioRuntimeTest.java:25",
+        "27 tests completed, 3 failed",
+        "FAILURE: Build failed with an exception.",
+        "Execution failed for task ':test'.",
+        "BUILD FAILED in 2s"
+      ]
+    },
+    {
+      "log": "validation/alias-red.log",
+      "sha256": "119d33e790942c0798a0868c60b457dedbf093daca7ee0412d097ad1dbc838f2",
+      "expectedFailure": "48 kHz PolyBLEP failed the -35 dB alias threshold near 880 Hz",
+      "observed": true,
+      "summary": [
+        "MeasurementTest > sawDcAndAliasResidualAgainstOversampledReference() FAILED",
+        "org.opentest4j.AssertionFailedError at MeasurementTest.java:44",
+        "3 tests completed, 1 failed",
+        "> Task :test FAILED",
+        "FAILURE: Build failed with an exception.",
+        "Execution failed for task ':test'.",
+        "BUILD FAILED in 4s"
+      ]
+    },
+    {
+      "log": "validation/host-regression-red.log",
+      "sha256": "c08e1d6ed9df61a9002a03106f8066448a0302129bba0e8e51ffd09ea27b3142",
+      "expectedFailure": "Trailing malformed edit data was accepted",
+      "observed": true,
+      "summary": [
+        "[22:41:31] [Server thread/ERROR] [minecraft/LogTestReporter]: editpacketsrejecttrailingdata failed at 3813279, -60, -14117260! Trailing edit bytes are malformed, not accepted state",
+        "[22:41:31] [Server thread/INFO] [minecraft/GameTestServer]: 1 required tests failed :(",
+        "> Task :runGameTestServer FAILED",
+        "FAILURE: Build failed with an exception.",
+        "Execution failed for task ':runGameTestServer'.",
+        "BUILD FAILED in 9s"
+      ]
+    },
+    {
+      "log": "validation/inbox-red.log",
+      "sha256": "bf333c0557c38e0f0784143969a367d0f76d5e4f4c971aaa54de70b025cb4513",
+      "expectedFailure": "2 cleanup-priority and queue-coalescing failures",
+      "observed": true,
+      "summary": [
+        "> Task :test FAILED",
+        "EditInboxTest > keyReleaseSupersedesOlderPendingPressButAllowsNewPress() FAILED",
+        "org.opentest4j.AssertionFailedError at EditInboxTest.java:9",
+        "EditInboxTest > parameterUpdatesCoalesceAndCleanupBypassesFullOrdinaryQueue() FAILED",
+        "org.opentest4j.AssertionFailedError at EditInboxTest.java:17",
+        "2 tests completed, 2 failed",
+        "FAILURE: Build failed with an exception.",
+        "Execution failed for task ':test'.",
+        "BUILD FAILED in 2s"
+      ]
+    },
+    {
+      "log": "validation/placement-red.log",
+      "sha256": "47bd0e71e3808b2347aea0e234d5a78aadf736e8d8de3ba5e6300270810804c7",
+      "expectedFailure": "Copied item NBT could override the placer identity/owner",
+      "observed": true,
+      "summary": [
+        "[23:20:20] [Server thread/ERROR] [minecraft/LogTestReporter]: copieditemdatacannotchooseplacedidentityorowner failed at 5847564, -60, 7533894! Portable NBT cannot choose identity or owner",
+        "[23:20:20] [Server thread/INFO] [minecraft/GameTestServer]: 1 required tests failed :(",
+        "> Task :runGameTestServer FAILED",
+        "FAILURE: Build failed with an exception.",
+        "Execution failed for task ':runGameTestServer'.",
+        "BUILD FAILED in 9s"
+      ]
+    },
+    {
+      "log": "validation/scene-red.log",
+      "sha256": "178daaa71eff96c03bb6eff264fec9584d3ce7b7e53b47cf738b5eaaafdd4dc4",
+      "expectedFailure": "2 aggregate scene identity/dimension/quota failures",
+      "observed": true,
+      "summary": [
+        "> Task :test FAILED",
+        "SceneTest > aggregateWorldAndOwnerLimitsAlsoApplyToInactivePatches() FAILED",
+        "org.opentest4j.AssertionFailedError at SceneTest.java:34",
+        "SceneTest > rejectsDuplicateIdentitiesAndForeignDimensionsBeforeReplacement() FAILED",
+        "org.opentest4j.AssertionFailedError at SceneTest.java:16",
+        "2 tests completed, 2 failed",
+        "FAILURE: Build failed with an exception.",
+        "Execution failed for task ':test'.",
+        "BUILD FAILED in 2s"
+      ]
+    },
+    {
+      "log": "validation/traffic-red.log",
+      "sha256": "cb7b7fce7dcef992b1f7b7dcb95c6c2615958ef8791badaf695059470b4fa78f",
+      "expectedFailure": "Recovery messages could bypass outbound byte quotas",
+      "observed": true,
+      "summary": [
+        "> Task :test FAILED",
+        "TrafficTest > recoveryCannotExceedListenerOrServerTrafficCaps() FAILED",
+        "org.opentest4j.AssertionFailedError at TrafficTest.java:14",
+        "1 test completed, 1 failed",
+        "FAILURE: Build failed with an exception.",
+        "Execution failed for task ':test'.",
+        "BUILD FAILED in 2s"
+      ]
+    }
+  ],
+  "nativeQualification": "See ledger; offline results do not prove acoustic timing, multiplayer, listening, or 30-minute load."
+}

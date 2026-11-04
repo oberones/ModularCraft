@@ -1,251 +1,192 @@
 ---
-
-description: "Task list template for feature implementation"
+description: "TDD task list for secure, reliable Minecraft modular synthesis"
 ---
 
 # Tasks: [FEATURE NAME]
 
 **Input**: Design documents from `/specs/[###-feature-name]/`
-**Prerequisites**: plan.md (required), spec.md (required for user stories), research.md, data-model.md, contracts/
+**Prerequisites**: plan.md and spec.md; research.md, data-model.md, contracts/ as applicable
+**Constitution**: `.specify/memory/constitution.md` (record reviewed version)
 
-**Tests**: The examples below include test tasks. Tests are OPTIONAL - only include them if explicitly requested in the feature specification.
+**Tests**: TDD is REQUIRED for every new or changed executable behavior. Each production
+change depends on an observed, relevant failing test. Include regression tests for fixes,
+then green and refactor validation. Documentation-only changes use consistency/link checks;
+build/configuration changes use reproducible validation appropriate to their effect.
 
-**Organization**: Tasks are grouped by user story to enable independent implementation and testing of each story.
+**Organization**: Group tasks by independently testable user story. Security, lifecycle,
+persistence and musical acceptance belong with the affected behavior, not final polish.
+All generated tasks MUST trace to requirements and Constitution Check gates C1–C10.
 
 ## Format: `[ID] [P?] [Story] Description`
 
-- **[P]**: Can run in parallel (different files, no dependencies)
-- **[Story]**: Which user story this task belongs to (e.g., US1, US2, US3)
-- Include exact file paths in descriptions
+- **[P]**: Different files and no dependency on incomplete work; a dependent implementation
+  MUST NOT run in parallel with the test that establishes its red result.
+- **[Story]**: Story identifier (US1, US2, US3); omit for shared setup and final checks.
+- Include exact file paths, dependencies, commands/procedures and evidence destinations.
+- Record PASS / FAIL / BLOCKED / PENDING honestly; N/A requires a scope rationale.
 
 ## Path Conventions
 
-- **Single project**: `src/`, `tests/` at repository root
-- **Web app**: `backend/src/`, `frontend/src/`
-- **Mobile**: `api/src/`, `ios/src/` or `android/src/`
-- Paths shown below assume single project - adjust based on plan.md structure
+- Java production/tests: use the exact packages/source sets from plan.md.
+- Pure Java tests MUST NOT require a running Minecraft client.
+- GameTests/equivalent: use the selected loader's integration source set.
+- Fixtures/evidence: use planned paths for reference patches, save fixtures and results.
+- Paths below are examples, not a prescribed package or test-framework choice.
 
-<!-- 
-  ============================================================================
-  IMPORTANT: The tasks below are SAMPLE TASKS for illustration purposes only.
-  
-  The /speckit.tasks command MUST replace these with actual tasks based on:
-  - User stories from spec.md (with their priorities P1, P2, P3...)
-  - Feature requirements from plan.md
-  - Entities from data-model.md
-  - Endpoints from contracts/
-  
-  Tasks MUST be organized by user story so each story can be:
-  - Implemented independently
-  - Tested independently
-  - Delivered as an MVP increment
-  
-  DO NOT keep these sample tasks in the generated tasks.md file.
-  ============================================================================
--->
+<!-- Replace all SAMPLE TASKS below with feature-specific tasks and actual paths.
+Do not build unused infrastructure. Foundation behavior also requires red–green–refactor.
+The examples demonstrate dependency ordering, not a mandatory module catalog. -->
 
 ## Phase 1: Setup (Shared Infrastructure)
 
-**Purpose**: Project initialization and basic structure
+**Purpose**: Establish reproducible tools before changing behavior.
 
-- [ ] T001 Create project structure per implementation plan
-- [ ] T002 Initialize [language] project with [framework] dependencies
-- [ ] T003 [P] Configure linting and formatting tools
-
----
+- [ ] T001 Record exact compatibility/toolchain versions and budgets in specs/[feature]/plan.md
+- [ ] T002 Configure pinned build/test tools, dependency locks and verification in [build files]
+- [ ] T003 [P] Configure formatting/static analysis and least-privilege CI in [config/CI paths]
+- [ ] T004 Verify baseline build/test commands and record results in [evidence path]
 
 ## Phase 2: Foundational (Blocking Prerequisites)
 
-**Purpose**: Core infrastructure that MUST be complete before ANY user story can be implemented
+**Purpose**: Only shared behavior required by the selected stories; all relevant design
+and compatibility questions MUST be resolved before implementation starts.
 
-**⚠️ CRITICAL**: No user story work can begin until this phase is complete
+- [ ] T005 Write domain/codec boundary tests and record expected failures in [test/evidence paths]
+- [ ] T006 Implement minimal validated domain contracts in [Java paths] (depends on T005 red)
+- [ ] T007 Write owning-thread/dedicated-server/lifecycle tests; record red in [test/evidence paths]
+- [ ] T008 Implement required host adapters and bounded ownership in [Java paths] (depends on T007 red)
+- [ ] T009 Refactor and run foundation suites; record green and review in [evidence path]
 
-Examples of foundational tasks (adjust based on your project):
+**Checkpoint**: Shared contracts and tests pass; no unsupported assumptions or open safety gates.
 
-- [ ] T004 Setup database schema and migrations framework
-- [ ] T005 [P] Implement authentication/authorization framework
-- [ ] T006 [P] Setup API routing and middleware structure
-- [ ] T007 Create base models/entities that all stories depend on
-- [ ] T008 Configure error handling and logging infrastructure
-- [ ] T009 Setup environment configuration management
+## Phase 3: User Story 1 - [Title] (Priority: P1) — MVP
 
-**Checkpoint**: Foundation ready - user story implementation can now begin in parallel
+**Goal**: [Player/musical outcome]
+**Independent Test**: [Reproducible scenario and measurable outcome]
 
----
+### Tests for User Story 1 (REQUIRED for behavior changes)
 
-## Phase 3: User Story 1 - [Title] (Priority: P1) 🎯 MVP
-
-**Goal**: [Brief description of what this story delivers]
-
-**Independent Test**: [How to verify this story works on its own]
-
-### Tests for User Story 1 (OPTIONAL - only if tests requested) ⚠️
-
-> **NOTE: Write these tests FIRST, ensure they FAIL before implementation**
-
-- [ ] T010 [P] [US1] Contract test for [endpoint] in tests/contract/test_[name].py
-- [ ] T011 [P] [US1] Integration test for [user journey] in tests/integration/test_[name].py
+- [ ] T010 [P] [US1] Write signal/transport/graph behavior tests in [Java test path]
+- [ ] T011 [P] [US1] Write hostile-input/permission/lifecycle integration tests in [host test path]
+- [ ] T012 [US1] Run T010–T011, confirm expected failures and record red in [evidence path]
 
 ### Implementation for User Story 1
 
-- [ ] T012 [P] [US1] Create [Entity1] model in src/models/[entity1].py
-- [ ] T013 [P] [US1] Create [Entity2] model in src/models/[entity2].py
-- [ ] T014 [US1] Implement [Service] in src/services/[service].py (depends on T012, T013)
-- [ ] T015 [US1] Implement [endpoint/feature] in src/[location]/[file].py
-- [ ] T016 [US1] Add validation and error handling
-- [ ] T017 [US1] Add logging for user story 1 operations
+- [ ] T013 [US1] Implement minimal pure synthesis/domain behavior in [Java path] (depends on T012)
+- [ ] T014 [US1] Integrate validated host/network/save/UI behavior in [Java paths] (depends on T012)
+- [ ] T015 [US1] Run green suites and refactor; record results in [evidence path]
+- [ ] T016 [US1] Add reference patch/docs in [fixture/doc paths]; execute applicable native/listening acceptance and record status in [evidence path]
 
-**Checkpoint**: At this point, User Story 1 should be fully functional and testable independently
-
----
+**Checkpoint**: Story behavior, abuse/failure handling, and applicable musical acceptance
+have evidence. Pending native/listening work remains explicitly pending.
 
 ## Phase 4: User Story 2 - [Title] (Priority: P2)
 
-**Goal**: [Brief description of what this story delivers]
+**Goal**: [Outcome]
+**Independent Test**: [Scenario and thresholds]
 
-**Independent Test**: [How to verify this story works on its own]
+### Tests for User Story 2 (REQUIRED for behavior changes)
 
-### Tests for User Story 2 (OPTIONAL - only if tests requested) ⚠️
-
-- [ ] T018 [P] [US2] Contract test for [endpoint] in tests/contract/test_[name].py
-- [ ] T019 [P] [US2] Integration test for [user journey] in tests/integration/test_[name].py
+- [ ] T017 [P] [US2] Write behavior/regression tests in [Java test path]
+- [ ] T018 [P] [US2] Write affected integration/migration/boundary tests in [host test path]
+- [ ] T019 [US2] Run T017–T018 and record expected red in [evidence path]
 
 ### Implementation for User Story 2
 
-- [ ] T020 [P] [US2] Create [Entity] model in src/models/[entity].py
-- [ ] T021 [US2] Implement [Service] in src/services/[service].py
-- [ ] T022 [US2] Implement [endpoint/feature] in src/[location]/[file].py
-- [ ] T023 [US2] Integrate with User Story 1 components (if needed)
+- [ ] T020 [US2] Implement tested behavior and bounded failure handling in [Java paths] (depends on T019)
+- [ ] T021 [US2] Refactor and run green/regression suites in [test paths]; record [evidence path]
+- [ ] T022 [US2] Update reference patches/docs and complete affected native/listening checks in [fixture/doc/evidence paths]
 
-**Checkpoint**: At this point, User Stories 1 AND 2 should both work independently
-
----
+**Checkpoint**: Stories 1 and 2 remain independently testable; shared contracts still pass.
 
 ## Phase 5: User Story 3 - [Title] (Priority: P3)
 
-**Goal**: [Brief description of what this story delivers]
+**Goal**: [Outcome]
+**Independent Test**: [Scenario and thresholds]
 
-**Independent Test**: [How to verify this story works on its own]
+### Tests for User Story 3 (REQUIRED for behavior changes)
 
-### Tests for User Story 3 (OPTIONAL - only if tests requested) ⚠️
-
-- [ ] T024 [P] [US3] Contract test for [endpoint] in tests/contract/test_[name].py
-- [ ] T025 [P] [US3] Integration test for [user journey] in tests/integration/test_[name].py
+- [ ] T023 [P] [US3] Write behavior and affected safety/integration tests in [test paths]
+- [ ] T024 [US3] Run tests and record expected red in [evidence path]
 
 ### Implementation for User Story 3
 
-- [ ] T026 [P] [US3] Create [Entity] model in src/models/[entity].py
-- [ ] T027 [US3] Implement [Service] in src/services/[service].py
-- [ ] T028 [US3] Implement [endpoint/feature] in src/[location]/[file].py
+- [ ] T025 [US3] Implement tested behavior and compatibility handling in [Java paths] (depends on T024)
+- [ ] T026 [US3] Refactor, run green/regressions, update fixtures/docs and record applicable native/listening evidence in [paths]
 
-**Checkpoint**: All user stories should now be independently functional
+**Checkpoint**: Retained stories meet their acceptance cases; list any unverified acceptance.
 
----
-
-[Add more user story phases as needed, following the same pattern]
-
----
+[Add or remove story phases as required; keep IDs sequential and dependencies explicit.]
 
 ## Phase N: Polish & Cross-Cutting Concerns
 
-**Purpose**: Improvements that affect multiple user stories
+**Purpose**: Consolidate evidence and verify combined behavior; do not postpone feature safety.
 
-- [ ] TXXX [P] Documentation updates in docs/
-- [ ] TXXX Code cleanup and refactoring
-- [ ] TXXX Performance optimization across all stories
-- [ ] TXXX [P] Additional unit tests (if requested) in tests/unit/
-- [ ] TXXX Security hardening
-- [ ] TXXX Run quickstart.md validation
-
----
+- [ ] T027 Run complete formatting/static/build/resource and test gates; record [evidence path]
+- [ ] T028 Exercise aggregate load, long transport runs, overload and repeated unload/reload; compare plan budgets in [evidence path]
+- [ ] T029 Qualify packaged dedicated server/native client and two-client shared playback where applicable; record [evidence path]
+- [ ] T030 Measure and audition affected reference patches, local mute and recovery; record [audio/evidence paths]
+- [ ] T031 Review dependency/license/security inventory, rebuild provenance and compatibility/migration notes in [release paths]
+- [ ] T032 Recheck C1–C10, quickstart and documentation; record reviewer decision and all pending/blocked acceptance in [review path]
 
 ## Dependencies & Execution Order
 
 ### Phase Dependencies
 
-- **Setup (Phase 1)**: No dependencies - can start immediately
-- **Foundational (Phase 2)**: Depends on Setup completion - BLOCKS all user stories
-- **User Stories (Phase 3+)**: All depend on Foundational phase completion
-  - User stories can then proceed in parallel (if staffed)
-  - Or sequentially in priority order (P1 → P2 → P3)
-- **Polish (Final Phase)**: Depends on all desired user stories being complete
+- Setup enables repeatable commands and MUST precede behavior implementation.
+- Foundational work depends on Setup and blocks only stories that actually need it.
+- Story implementation depends on its relevant observed red evidence.
+- Final qualification depends on the selected completed stories and packaged artifact.
 
 ### User Story Dependencies
 
-- **User Story 1 (P1)**: Can start after Foundational (Phase 2) - No dependencies on other stories
-- **User Story 2 (P2)**: Can start after Foundational (Phase 2) - May integrate with US1 but should be independently testable
-- **User Story 3 (P3)**: Can start after Foundational (Phase 2) - May integrate with US1/US2 but should be independently testable
+[Record the actual story dependency graph. Do not claim independence where shared APIs,
+files or contracts require sequential implementation.]
 
 ### Within Each User Story
 
-- Tests (if included) MUST be written and FAIL before implementation
-- Models before services
-- Services before endpoints
-- Core implementation before integration
-- Story complete before moving to next priority
+1. Specify contracts, numeric acceptance and reference patches where relevant.
+2. Write meaningful tests; observe the intended failure and save evidence.
+3. Implement the minimum behavior with validation, ownership, bounds and cleanup.
+4. Run green suites, refactor, then repeat affected regression checks.
+5. Validate host and musical behavior; update docs and evidence status.
 
 ### Parallel Opportunities
 
-- All Setup tasks marked [P] can run in parallel
-- All Foundational tasks marked [P] can run in parallel (within Phase 2)
-- Once Foundational phase completes, all user stories can start in parallel (if team capacity allows)
-- All tests for a user story marked [P] can run in parallel
-- Models within a story marked [P] can run in parallel
-- Different user stories can be worked on in parallel by different team members
-
----
+Independent fixture/test or documentation work may run in parallel. Implementation
+requires its red evidence and stable prerequisite contracts. Integration and combined
+resource/performance checks MUST run after their component changes are available.
 
 ## Parallel Example: User Story 1
 
-```bash
-# Launch all tests for User Story 1 together (if tests requested):
-Task: "Contract test for [endpoint] in tests/contract/test_[name].py"
-Task: "Integration test for [user journey] in tests/integration/test_[name].py"
-
-# Launch all models for User Story 1 together:
-Task: "Create [Entity1] model in src/models/[entity1].py"
-Task: "Create [Entity2] model in src/models/[entity2].py"
+```text
+Independent: T010 signal contract tests and T011 host-boundary tests in separate files.
+Then: T012 records the intended failures.
+Then: T013/T014 implement behavior in dependency order; parallelize only if contracts permit.
+Then: T015 verifies/refactors; T016 records player and musical acceptance.
 ```
-
----
 
 ## Implementation Strategy
 
 ### MVP First (User Story 1 Only)
 
-1. Complete Phase 1: Setup
-2. Complete Phase 2: Foundational (CRITICAL - blocks all stories)
-3. Complete Phase 3: User Story 1
-4. **STOP and VALIDATE**: Test User Story 1 independently
-5. Deploy/demo if ready
+Complete the minimum setup/foundation, then deliver Story 1 through red–green–refactor
+and applicable host/music acceptance. MVP scope reduces features; it does not waive safety.
 
 ### Incremental Delivery
 
-1. Complete Setup + Foundational → Foundation ready
-2. Add User Story 1 → Test independently → Deploy/Demo (MVP!)
-3. Add User Story 2 → Test independently → Deploy/Demo
-4. Add User Story 3 → Test independently → Deploy/Demo
-5. Each story adds value without breaking previous stories
+Add one independently useful story at a time and retain earlier regressions. Refresh
+aggregate resource and compatibility evidence when a change affects those contracts.
 
 ### Parallel Team Strategy
 
-With multiple developers:
-
-1. Team completes Setup + Foundational together
-2. Once Foundational is done:
-   - Developer A: User Story 1
-   - Developer B: User Story 2
-   - Developer C: User Story 3
-3. Stories complete and integrate independently
-
----
+Assign work only when contracts, test prerequisites and file ownership permit it. A
+shared graph/transport or save-schema change requires coordinated integration evidence.
 
 ## Notes
 
-- [P] tasks = different files, no dependencies
-- [Story] label maps task to specific user story for traceability
-- Each user story should be independently completable and testable
-- Verify tests fail before implementing
-- Commit after each task or logical group
-- Stop at any checkpoint to validate story independently
-- Avoid: vague tasks, same file conflicts, cross-story dependencies that break independence
+- Tests verify observable behavior; coverage percentages alone do not establish correctness.
+- Performance improvements MUST preserve musical behavior or explicitly version its change.
+- Pure tests, GameTests, native gameplay, listening and hosted CI are distinct evidence.
+- Required FAIL/BLOCKED/PENDING checks prevent the corresponding completion/release claim.
+- Commit/publish actions follow explicit project authorization; task completion is not authorization.

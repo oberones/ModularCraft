@@ -1,0 +1,2001 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<verification-metadata xmlns="https://schema.gradle.org/dependency-verification" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://schema.gradle.org/dependency-verification https://schema.gradle.org/dependency-verification/dependency-verification-1.3.xsd">
+   <configuration>
+      <verify-metadata>true</verify-metadata>
+      <verify-signatures>false</verify-signatures>
+   </configuration>
+   <components>
+      <component group="ca.weblite" name="java-objc-bridge" version="1.1">
+         <artifact name="java-objc-bridge-1.1.jar">
+            <sha256 value="77e34a13bccffc6c8b1a0e3ed46ddb0ea7dd56f2104ecdfacaaec9e4054ac332" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="java-objc-bridge-1.1.pom">
+            <sha256 value="88cdde69b8948da316e137acd843bfdb955c3685c87b5a7eca0da67338af896a" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="com.electronwill.night-config" name="core" version="3.8.3">
+         <artifact name="core-3.8.3.jar">
+            <sha256 value="971dc88c1c22085611ee1c300f5bbf8595938178e819befbb5e98c3cbd272b79" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="core-3.8.3.module">
+            <sha256 value="31343685663ca186a1d244124108fddfe1ff3aa7f4cf5cb6098fe6603270a2c7" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="com.electronwill.night-config" name="toml" version="3.8.3">
+         <artifact name="toml-3.8.3.jar">
+            <sha256 value="ccb92882264bf071e3916ab122fe5ea3e211b8ebf199201698a1324f151f928f" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="toml-3.8.3.module">
+            <sha256 value="2981d7579568d4275416f5e263a9c8e71161761030fd5d04edef0c02780e92fc" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="com.fasterxml" name="oss-parent" version="56">
+         <artifact name="oss-parent-56.pom">
+            <sha256 value="fd491f78857424106d2e3d605bcd799b53d31a565cdc868463ca7e875db45a50" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="com.fasterxml.jackson" name="jackson-bom" version="2.16.0">
+         <artifact name="jackson-bom-2.16.0.pom">
+            <sha256 value="5aaa28874405bf04fba8e2c57159227824461ba6f7d552abdb8e8d3a0ba6f8bf" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="com.fasterxml.jackson" name="jackson-parent" version="2.16">
+         <artifact name="jackson-parent-2.16.pom">
+            <sha256 value="8bf6142812148a2abf6850b272f0af4c3d8ff1121ed604c402f3f38c9e6546ab" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="com.github.oowekyala.ooxml" name="nice-xml-messages" version="3.1">
+         <artifact name="nice-xml-messages-3.1.jar">
+            <sha256 value="0b4ceb5b8362d43c9c6c49b1bd57f1c5da54d3c5c7c305fa39c0a04462bb4799" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="nice-xml-messages-3.1.pom">
+            <sha256 value="ad0aa36596cc4c0247fea54d5acc1e47b2b8d81e744c3c89e5dacb531d62a670" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="com.github.oshi" name="oshi-core" version="6.4.10">
+         <artifact name="oshi-core-6.4.10.jar">
+            <sha256 value="fef001a7a13515c273f30915915580782afbc45273cc07aa15994e51563ef310" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="oshi-core-6.4.10.pom">
+            <sha256 value="438efdd000c04fa63d40931145c48954281b2dbf30c2340c98e1be8c7ccea9d0" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="com.github.oshi" name="oshi-parent" version="6.4.10">
+         <artifact name="oshi-parent-6.4.10.pom">
+            <sha256 value="d69b90b20e8b2c1d2ee68c92a5344b90bd38cb00ee67395ed2720064e93b597e" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="com.google.code.findbugs" name="jsr305" version="3.0.2">
+         <artifact name="jsr305-3.0.2.jar">
+            <sha256 value="766ad2a0783f2687962c8ad74ceecc38a28b9f72a2d085ee438b7813e928d0c7" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="jsr305-3.0.2.pom">
+            <sha256 value="19889dbdf1b254b2601a5ee645b8147a974644882297684c798afe5d63d78dfe" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="com.google.code.gson" name="gson" version="2.10">
+         <artifact name="gson-2.10.pom">
+            <sha256 value="ac69d9f254260caeab3998eaad60f355599c25121e195156bfdffc8a355fc6bd" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="com.google.code.gson" name="gson" version="2.10.1">
+         <artifact name="gson-2.10.1.jar">
+            <sha256 value="4241c14a7727c34feea6507ec801318a3d4a90f070e4525681079fb94ee4c593" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="gson-2.10.1.pom">
+            <sha256 value="d2b115634f5c085db4b9c9ffc2658e89e231fdbfbe2242121a1cd95d4d948dd7" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="com.google.code.gson" name="gson" version="2.11.0">
+         <artifact name="gson-2.11.0.jar">
+            <sha256 value="57928d6e5a6edeb2abd3770a8f95ba44dce45f3b23b7a9dc2b309c581552a78b" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="gson-2.11.0.pom">
+            <sha256 value="c0e547bea998888e6e25c5886a90e762272bc88b5275343dd2c05ded6ca2e360" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="com.google.code.gson" name="gson" version="2.8.9">
+         <artifact name="gson-2.8.9.pom">
+            <sha256 value="afded6e6a690fbf3ad4ae65ada397f0a90a5f630b303d1b741b9c97926fdd4de" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="com.google.code.gson" name="gson-parent" version="2.10">
+         <artifact name="gson-parent-2.10.pom">
+            <sha256 value="fb53ac0b06c19116ca61ac344b4dfe8a7c29cc4f81b353ce889493a5039004fb" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="com.google.code.gson" name="gson-parent" version="2.10.1">
+         <artifact name="gson-parent-2.10.1.pom">
+            <sha256 value="4248e0882426c615182385d6086c3ef3262e769957189e29306280b85482b833" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="com.google.code.gson" name="gson-parent" version="2.11.0">
+         <artifact name="gson-parent-2.11.0.pom">
+            <sha256 value="8acb1f3b72a6f026916ac0735bad9aab0293d527edb7b365327def13a9367b7a" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="com.google.code.gson" name="gson-parent" version="2.8.9">
+         <artifact name="gson-parent-2.8.9.pom">
+            <sha256 value="b16e026e63427c1972ad0fc68703ec379b1576e411ba49c32fa9a31ab0bbcffb" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="com.google.errorprone" name="error_prone_annotations" version="2.18.0">
+         <artifact name="error_prone_annotations-2.18.0.jar">
+            <sha256 value="9e6814cb71816988a4fd1b07a993a8f21bb7058d522c162b1de849e19bea54ae" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="error_prone_annotations-2.18.0.pom">
+            <sha256 value="920135797dcca5917b5a5c017642a58d340a4cd1bcd12f56f892a5663bd7bddc" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="com.google.errorprone" name="error_prone_annotations" version="2.21.1">
+         <artifact name="error_prone_annotations-2.21.1.jar">
+            <sha256 value="d1f3c66aa91ac52549e00ae3b208ba4b9af7d72d68f230643553beb38e6118ac" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="error_prone_annotations-2.21.1.pom">
+            <sha256 value="f598880feefaea9d674dc41db13ab37004bf03776b5bb21c04dede8e920c1f12" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="com.google.errorprone" name="error_prone_annotations" version="2.27.0">
+         <artifact name="error_prone_annotations-2.27.0.jar">
+            <sha256 value="24c923372c58e35d0b9f16a028929bb9aedc77521867c274f2bd0735df5ba1f5" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="error_prone_annotations-2.27.0.pom">
+            <sha256 value="4ca5a35d61235e16549ac346d1e34551cdf0fe27e84aa57e03cbeb255ea4e5da" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="com.google.errorprone" name="error_prone_annotations" version="2.36.0">
+         <artifact name="error_prone_annotations-2.36.0.jar">
+            <sha256 value="77440e270b0bc9a249903c5a076c36a722c4886ca4f42675f2903a1c53ed61a5" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="error_prone_annotations-2.36.0.pom">
+            <sha256 value="d79cfd37c85f76d6b754c7501ee1dc8447b7b2642c2382d778252166bd331e9c" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="com.google.errorprone" name="error_prone_parent" version="2.18.0">
+         <artifact name="error_prone_parent-2.18.0.pom">
+            <sha256 value="47f22e99c7bf466391def16f8377985e5d3ba6f5bbcf65853644805513e15fad" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="com.google.errorprone" name="error_prone_parent" version="2.21.1">
+         <artifact name="error_prone_parent-2.21.1.pom">
+            <sha256 value="32bb0b5ff241fd6ba1feea448aebb9cedef1699be73cb6f319365387b82bf92c" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="com.google.errorprone" name="error_prone_parent" version="2.27.0">
+         <artifact name="error_prone_parent-2.27.0.pom">
+            <sha256 value="fa81829d049559df6927f9c9a6fd6bbd09f8b50e6d4736ae72c8300b6c3d7654" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="com.google.errorprone" name="error_prone_parent" version="2.36.0">
+         <artifact name="error_prone_parent-2.36.0.pom">
+            <sha256 value="3a4cfc8a6bed61eb48e969796fc31ea0d270b63e670599946a61883adb7094dc" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="com.google.googlejavaformat" name="google-java-format" version="1.25.2">
+         <artifact name="google-java-format-1.25.2-all-deps.jar">
+            <sha256 value="25157797a0a972c2290b5bc71530c4f7ad646458025e3484412a6e5a9b8c9aa6" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="google-java-format-1.25.2.pom">
+            <sha256 value="59685c6e06b70bae2c596dc50660e4a9c32c9700eb8475da3cfcc9a5589d4704" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="com.google.googlejavaformat" name="google-java-format-parent" version="1.25.2">
+         <artifact name="google-java-format-parent-1.25.2.pom">
+            <sha256 value="25500efa1ef711ed9137d90906b133868ba068beec48af94090bf14c12969066" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="com.google.guava" name="failureaccess" version="1.0.1">
+         <artifact name="failureaccess-1.0.1.jar">
+            <sha256 value="a171ee4c734dd2da837e4b16be9df4661afab72a41adaf31eb84dfdaf936ca26" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="failureaccess-1.0.1.pom">
+            <sha256 value="e96042ce78fecba0da2be964522947c87b40a291b5fd3cd672a434924103c4b9" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="com.google.guava" name="failureaccess" version="1.0.2">
+         <artifact name="failureaccess-1.0.2.jar">
+            <sha256 value="8a8f81cf9b359e3f6dfa691a1e776985c061ef2f223c9b2c80753e1b458e8064" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="failureaccess-1.0.2.pom">
+            <sha256 value="19ebc6f4bdb4edbb3d07b6ee994f846b54ef295582a9b5634719ffa9f31d03b2" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="com.google.guava" name="guava" version="31.1-jre">
+         <artifact name="guava-31.1-jre.pom">
+            <sha256 value="9193d07bf4f660108d7358e58b27d21b44e34e80d6734e98e21916376f270de2" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="com.google.guava" name="guava" version="32.1.2-jre">
+         <artifact name="guava-32.1.2-jre.jar">
+            <sha256 value="bc65dea7cfd9e4dacf8419d8af0e741655857d27885bb35d943d7187fc3a8fce" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="guava-32.1.2-jre.pom">
+            <sha256 value="3f208596d71e0839b253a490af49a36ef7fdb451be90a42ab1df9e96cfd31660" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="com.google.guava" name="guava" version="32.1.3-jre">
+         <artifact name="guava-32.1.3-jre.jar">
+            <sha256 value="6d4e2b5a118aab62e6e5e29d185a0224eed82c85c40ac3d33cf04a270c3b3744" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="guava-32.1.3-jre.module">
+            <sha256 value="f5fff7642c12e7627bc14289fd267e2602c17f9590e23522c3e63107f61c2942" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="com.google.guava" name="guava" version="33.4.0-jre">
+         <artifact name="guava-33.4.0-jre.jar">
+            <sha256 value="b918c98a7e44dbe94ebd9fe3e40cddaadb5a93e6a78eb6008b42df237241e538" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="guava-33.4.0-jre.module">
+            <sha256 value="820e817e86c493aa7affd6cbb991ee60925b6c8b74541f742cb22070f6f20459" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="com.google.guava" name="guava-parent" version="26.0-android">
+         <artifact name="guava-parent-26.0-android.pom">
+            <sha256 value="f8698ab46ca996ce889c1afc8ca4f25eb8ac6b034dc898d4583742360016cc04" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="com.google.guava" name="guava-parent" version="31.1-jre">
+         <artifact name="guava-parent-31.1-jre.pom">
+            <sha256 value="4439626783b44ad25ef05ff07621dd4bb796cc4eb4f2966a4a461fea4130e0fc" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="com.google.guava" name="guava-parent" version="32.1.2-jre">
+         <artifact name="guava-parent-32.1.2-jre.pom">
+            <sha256 value="88e9cb007335ab5fdb314a6e3c987734ec2308c9a063ff747c7469189d0a92bf" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="com.google.guava" name="listenablefuture" version="9999.0-empty-to-avoid-conflict-with-guava">
+         <artifact name="listenablefuture-9999.0-empty-to-avoid-conflict-with-guava.jar">
+            <sha256 value="b372a037d4230aa57fbeffdef30fd6123f9c0c2db85d0aced00c91b974f33f99" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="listenablefuture-9999.0-empty-to-avoid-conflict-with-guava.pom">
+            <sha256 value="18d4b1db26153d4e55079ce1f76bb1fe05cdb862ef9954a88cbcc4ff38b8679b" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="com.google.j2objc" name="j2objc-annotations" version="2.8">
+         <artifact name="j2objc-annotations-2.8.jar">
+            <sha256 value="f02a95fa1a5e95edb3ed859fd0fb7df709d121a35290eff8b74dce2ab7f4d6ed" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="j2objc-annotations-2.8.pom">
+            <sha256 value="37f87798b18385113c918bfa9e1276fe50735ef8fa849b5800c519d54dbf11f8" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="com.google.j2objc" name="j2objc-annotations" version="3.0.0">
+         <artifact name="j2objc-annotations-3.0.0.jar">
+            <sha256 value="88241573467ddca44ffd4d74aa04c2bbfd11bf7c17e0c342c94c9de7a70a7c64" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="j2objc-annotations-3.0.0.pom">
+            <sha256 value="23b3d039e168ad89dd114698e6dd7be383f4a2c577b8877d82c73a6515e74a17" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="com.ibm.icu" name="icu4j" version="73.2">
+         <artifact name="icu4j-73.2.jar">
+            <sha256 value="29280822f4b0796acef1f79b90b1d0c1edd86c10e876a848e04b8a6298a16bf9" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="icu4j-73.2.pom">
+            <sha256 value="57cda0e48b8765c5e5e69aea8adf0ab08e6d886837199b6d9f4a7ef62a6b99ba" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="com.machinezoo.noexception" name="noexception" version="1.7.1">
+         <artifact name="noexception-1.7.1.jar">
+            <sha256 value="3d70aaea3904918587a21bdf99ab6ade9ab1dd0eaf6119344ba513f60f575816" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="noexception-1.7.1.pom">
+            <sha256 value="54929708377b26d83271a38e91f9c07d4a992e0c83c1b567f1a2d2599795029d" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="com.mojang" name="authlib" version="6.0.54">
+         <artifact name="authlib-6.0.54.jar">
+            <sha256 value="319ea7b53b5e52f62ad3e2b81e9db7f0751240edac548bd74f5f19e35dc21a3b" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="authlib-6.0.54.module">
+            <sha256 value="a3fbfd1695e6ef5307b7a4ce288306859766c1ffd238c85d7eeb60cc945babdf" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="com.mojang" name="blocklist" version="1.0.10">
+         <artifact name="blocklist-1.0.10.jar">
+            <sha256 value="830bfd639c8db49236bbd8e45d3a2b8c96c56ff654a10118654958a6235d4c44" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="blocklist-1.0.10.pom">
+            <sha256 value="73b4aa393e9df66471acdd43e46d3fd84a3ccfd22b9ca8104588f52df26139d3" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="com.mojang" name="brigadier" version="1.3.10">
+         <artifact name="brigadier-1.3.10.jar">
+            <sha256 value="c8ee4136e474ac7723ca2b432ec8d1a2bc88ef7d1ec57c314ba9e33cdc83dd75" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="brigadier-1.3.10.pom">
+            <sha256 value="39bf2bf7d278987faa42f698ba22f7ae65a12c77fa428ca5d23ccc7779563f9d" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="com.mojang" name="datafixerupper" version="8.0.16">
+         <artifact name="datafixerupper-8.0.16.jar">
+            <sha256 value="ffc138bc2596c291781b0d5e211ccac51f0f2345f27fc2742f335cedf7e2870d" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="datafixerupper-8.0.16.module">
+            <sha256 value="1004a7c99d09653f528ed6ac884808a7245264a33d6f3c6a3f8c092c35df20c9" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="com.mojang" name="logging" version="1.1.1">
+         <artifact name="logging-1.1.1.module">
+            <sha256 value="d24d0f25ce70e7187c4d63dfe5ae36261e06420449c023137c97a4f2cbb2a440" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="com.mojang" name="logging" version="1.2.7">
+         <artifact name="logging-1.2.7.jar">
+            <sha256 value="3dc3190204bac5f4184d8405bfe1f724f73a6a15a0d3f36ec7f69e6872c1a76c" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="logging-1.2.7.module">
+            <sha256 value="b3e0fdff2406e4aae6bec3b3367a0c7067f7414983a99745f908166d9f8e98a2" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="com.mojang" name="patchy" version="2.2.10">
+         <artifact name="patchy-2.2.10.jar">
+            <sha256 value="16d70e7968b45caffc81576268eb000f473fb60bf257182d3447dea8ec919d5a" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="patchy-2.2.10.pom">
+            <sha256 value="b0c8a5c15f27ed880083bbe05cfae2d595442831db7a7f088ed93ed0a4d0dd7c" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="com.mojang" name="text2speech" version="1.17.9">
+         <artifact name="text2speech-1.17.9.jar">
+            <sha256 value="c2a95b499e76fada7dd63e9b0ec797b678d411c2b0ee6f37f4dc674662bfb0af" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="text2speech-1.17.9.module">
+            <sha256 value="da8a76db15384b53736e3e86e0f3edfa0615e30e16a7c6816db9709f6f034373" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="com.nothome" name="javaxdelta" version="2.0.1">
+         <artifact name="javaxdelta-2.0.1.jar">
+            <sha256 value="a661dfcb749053fc26eada2a0a8e619a8ead1ca9eda29e1698687aa2cdd80152" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="javaxdelta-2.0.1.pom">
+            <sha256 value="93bbe8babc70e175d406ac689b90e689f4915c6e39e738eb6406fa5b529ce36c" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="com.puppycrawl.tools" name="checkstyle" version="10.21.2">
+         <artifact name="checkstyle-10.21.2.jar">
+            <sha256 value="4e83c0e76c4cf9dcceaa7e777ada8673344dea64156c28eb5e54e95977c23fa7" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="checkstyle-10.21.2.pom">
+            <sha256 value="0450fd8a0b52f51152329cf74281385b9dbabd5d21089f0c95ea1f918f074918" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="commons-beanutils" name="commons-beanutils" version="1.10.0">
+         <artifact name="commons-beanutils-1.10.0.jar">
+            <sha256 value="b6e8dbf5d4a7fd66edbc7106886909c097dc7e0768ca78cc1055955d6ff877a1" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="commons-beanutils-1.10.0.pom">
+            <sha256 value="ce73db811c20b1b0c11ea8d24f88f46a78243e199647e0824609e50cf81ef469" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="commons-codec" name="commons-codec" version="1.15">
+         <artifact name="commons-codec-1.15.jar">
+            <sha256 value="b3e9f6d63a790109bf0d056611fbed1cf69055826defeb9894a71369d246ed63" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="commons-codec-1.15.pom">
+            <sha256 value="c86ee198a35a3715487860f419cbf642e7e4d9e8714777947dbe6a4e3a20ab58" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="commons-codec" name="commons-codec" version="1.16.0">
+         <artifact name="commons-codec-1.16.0.jar">
+            <sha256 value="56595fb20b0b85bc91d0d503dad50bb7f1b9afc0eed5dffa6cbb25929000484d" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="commons-codec-1.16.0.pom">
+            <sha256 value="6cb5957819df393956fd311a3a0c3f5eec1ebc49ba5b2d09f3f44e6167fa3e74" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="commons-collections" name="commons-collections" version="3.2.2">
+         <artifact name="commons-collections-3.2.2.jar">
+            <sha256 value="eeeae917917144a68a741d4c0dff66aa5c5c5fd85593ff217bced3fc8ca783b8" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="commons-collections-3.2.2.pom">
+            <sha256 value="d5d81fcc288c0d8c711c302007cada4aa9a226ed1a112d4baa64cb1d6322170b" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="commons-io" name="commons-io" version="2.11.0">
+         <artifact name="commons-io-2.11.0.pom">
+            <sha256 value="2e016fd7e3244b5f2c20acad834d93aa4790486ee1e4564641361a3e831eef59" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="commons-io" name="commons-io" version="2.15.1">
+         <artifact name="commons-io-2.15.1.jar">
+            <sha256 value="a58af12ee1b68cfd2ebb0c27caef164f084381a00ec81a48cc275fd7ea54e154" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="commons-io-2.15.1.pom">
+            <sha256 value="171a1af82b6759eb5740b3b8809aca80113deaf1153036f2f4445901dfd3f91d" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="commons-logging" name="commons-logging" version="1.2">
+         <artifact name="commons-logging-1.2.jar">
+            <sha256 value="daddea1ea0be0f56978ab3006b8ac92834afeefbd9b7e4e6316fca57df0fa636" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="commons-logging-1.2.pom">
+            <sha256 value="c91ab5aa570d86f6fd07cc158ec6bc2c50080402972ee9179fe24100739fbb20" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="cpw.mods" name="bootstraplauncher" version="2.0.2">
+         <artifact name="bootstraplauncher-2.0.2.jar">
+            <sha256 value="d3f29309140540570fd6c709509706aa8fb133c1c8aef24491688f1a3f4e1d49" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="bootstraplauncher-2.0.2.module">
+            <sha256 value="98d0df226928a8ad6b569961afd7ff8f5451b6e4567c6108d51c7694a461122f" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="cpw.mods" name="modlauncher" version="11.0.5">
+         <artifact name="modlauncher-11.0.5.jar">
+            <sha256 value="fd9b9fc7cf043d2264ea0113eac6b258f0a71fece5b00e831bfbdf9726c78a24" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="modlauncher-11.0.5.module">
+            <sha256 value="3ef211f9e2cd89167c89330437ebee1d58aca2fefa0d4ace8a55e2acef1ee2ab" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="cpw.mods" name="securejarhandler" version="3.0.8">
+         <artifact name="securejarhandler-3.0.8.jar">
+            <sha256 value="945c63d6deafc821616b0380c23867d9b8c2852438f8a6df72732ab933fc587d" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="securejarhandler-3.0.8.module">
+            <sha256 value="cf219ee9c1b4ad81bb301e5a8f08c98c1f8686896ff61622ebef3ce5cd8ac83a" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="de.siegmar" name="fastcsv" version="2.0.0">
+         <artifact name="fastcsv-2.0.0.jar">
+            <sha256 value="665d52cb6f35ca236919be9ac81653c208628507f91d6bf13479bc11496db616" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="fastcsv-2.0.0.module">
+            <sha256 value="a6edced6c1a0014e9cdd17f230f1b13c0fdafa164ffec8d22828f31fe166c134" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="gradle.plugin.org.jetbrains.gradle.plugin.idea-ext" name="gradle-idea-ext" version="1.2">
+         <artifact name="gradle-idea-ext-1.2.jar">
+            <sha256 value="662ae536d84e7b8447d10c246e83170a7f1fc14726ca80cd7a50947dfe58958f" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="gradle-idea-ext-1.2.pom">
+            <sha256 value="6379d92e203cb66af14629749483aef3f6530b8ec835e125d04fb59885c0b2d5" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="info.picocli" name="picocli" version="4.7.6">
+         <artifact name="picocli-4.7.6.jar">
+            <sha256 value="ed441183f309b93f104ca9e071e314a4062a893184e18a3c7ad72ec9cba12ba0" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="picocli-4.7.6.pom">
+            <sha256 value="2d2248cccf487ad9ce208dec751745df15cd1e1924a4cc3d36841b5f1990c6fb" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="io.codechicken" name="DiffPatch" version="2.0.0.36">
+         <artifact name="DiffPatch-2.0.0.36-all.jar">
+            <sha256 value="30d1ff26c112bf3a488e1e5a32a345f75ff0ef985c3315b2d987d607e7038580" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="DiffPatch-2.0.0.36.module">
+            <sha256 value="5f1c27885c5b675f682a346f34403b4fe8d26c9652816d7e02d5dc5e995b98af" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="io.fabric8" name="kubernetes-client-bom" version="5.12.4">
+         <artifact name="kubernetes-client-bom-5.12.4.pom">
+            <sha256 value="d232392a89c3efdc85ab299c5a94e8b9dd35bc02f340ce8446ff659aa15913a0" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="io.github.llamalad7" name="mixinextras-neoforge" version="0.5.0">
+         <artifact name="mixinextras-neoforge-0.5.0.jar">
+            <sha256 value="9c617719248f8b89847348fc7ea5e705739c147ae5e172551264d225bc9f2507" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="mixinextras-neoforge-0.5.0.pom">
+            <sha256 value="6e4d152c0f10acd56dc7f606df83ed14f156f49ad28c8abcacff0657e5faa11c" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="io.netty" name="netty-bom" version="4.1.104.Final">
+         <artifact name="netty-bom-4.1.104.Final.pom">
+            <sha256 value="5a65e06a159d20d3b4800624a570c646dbee710b2b539b3449a268558c289e9c" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="io.netty" name="netty-buffer" version="4.1.97.Final">
+         <artifact name="netty-buffer-4.1.97.Final.jar">
+            <sha256 value="a4393f5b395486cc74d0325c9b41311abb9513ba0fd7ef8cf46e9345c3bffbea" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="netty-buffer-4.1.97.Final.pom">
+            <sha256 value="6a7d8cb376452fdd4f8588410acc04aca3968d21fbd9267e1a55632811bda819" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="io.netty" name="netty-codec" version="4.1.97.Final">
+         <artifact name="netty-codec-4.1.97.Final.jar">
+            <sha256 value="bcc96737a0f912fcf031cf8c45ebda352a90a40437db0832caad3d5a63618b38" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="netty-codec-4.1.97.Final.pom">
+            <sha256 value="fb9f9476e733f09760c9d1860d25dee624e4a942e611623933b577807dbf413d" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="io.netty" name="netty-common" version="4.1.97.Final">
+         <artifact name="netty-common-4.1.97.Final.jar">
+            <sha256 value="a8aca0c8e9347acc75c885ecc749195d9775369aa520b9276f2d1128210a6c17" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="netty-common-4.1.97.Final.pom">
+            <sha256 value="1316ecf6ad1bcdd145d746b84d71f19b02e992bb8ec3fae4cac2925ab30ef1f1" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="io.netty" name="netty-handler" version="4.1.97.Final">
+         <artifact name="netty-handler-4.1.97.Final.jar">
+            <sha256 value="bd4771d19149cbc9c7464ed2d58035d79cdfed7adb59d38718b0d8e7a3dcc2de" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="netty-handler-4.1.97.Final.pom">
+            <sha256 value="7faf19535d42b3d74126d368bc3f040e836c62b022e48627f4b2583aff3ca4f7" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="io.netty" name="netty-parent" version="4.1.97.Final">
+         <artifact name="netty-parent-4.1.97.Final.pom">
+            <sha256 value="8be274418b1bd42b1e31a0d8904042fb2d26eeb74b7affc349810df536d1a7ef" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="io.netty" name="netty-resolver" version="4.1.97.Final">
+         <artifact name="netty-resolver-4.1.97.Final.jar">
+            <sha256 value="38a018c6d9fb2cb11b72881354782b45080bbd20b9a0ad6cde28b80d431ed0b1" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="netty-resolver-4.1.97.Final.pom">
+            <sha256 value="efaddacf559eb7312354cf6c39f9ef3699887f83c087d4eb9cbbaa1fdb248e0b" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="io.netty" name="netty-transport" version="4.1.97.Final">
+         <artifact name="netty-transport-4.1.97.Final.jar">
+            <sha256 value="197fd2d6c6b4afe677d9e95bf2e36b49a0bcabdfce0583683fb73f29a3f5a407" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="netty-transport-4.1.97.Final.pom">
+            <sha256 value="51a47f9c090f0231ae6f2714925bb8191a3fd3b08bb8b50bb841ad3a6266f703" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="io.netty" name="netty-transport-classes-epoll" version="4.1.97.Final">
+         <artifact name="netty-transport-classes-epoll-4.1.97.Final.jar">
+            <sha256 value="ee65fa17fe65f18fd22269f92bddad85bfb3a263cf65eba01e116a2f30b86ff5" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="netty-transport-classes-epoll-4.1.97.Final.pom">
+            <sha256 value="cf38c35a6155b76c4205e1d93cc32a2a92dfb93cb6e3d62249b62cc962e04c48" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="io.netty" name="netty-transport-native-epoll" version="4.1.97.Final">
+         <artifact name="netty-transport-native-epoll-4.1.97.Final-linux-aarch_64.jar">
+            <sha256 value="93b5fe8f3829dcb5e033d8d40d59159366ff4cf8266c903bbd6a4aeed9e59bac" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="netty-transport-native-epoll-4.1.97.Final-linux-x86_64.jar">
+            <sha256 value="1e83fc9f82e5415cdbb688c6a5c6bbbd7d198e9fdd6fdf64b3dc5d54dd1acfd0" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="netty-transport-native-epoll-4.1.97.Final.pom">
+            <sha256 value="aca078176e58c0b3ac3258da081e6f9a9866028ceb62cfbb364f2510ac642283" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="io.netty" name="netty-transport-native-unix-common" version="4.1.97.Final">
+         <artifact name="netty-transport-native-unix-common-4.1.97.Final.jar">
+            <sha256 value="412fe140257c2dda5a5e15bee911298bd61928d03ee6be4db588e82c196c5dc6" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="netty-transport-native-unix-common-4.1.97.Final.pom">
+            <sha256 value="4b553d355e5721dafd810f9ef87f418d968b73d90905be7fd045d7f91bcb45c7" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="it.unimi.dsi" name="fastutil" version="8.3.1">
+         <artifact name="fastutil-8.3.1.jar">
+            <sha256 value="1ee5da1ebfdc86ab9574be3cc290769f319df901ae95932a118889b7c63636b9" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="fastutil-8.3.1.pom">
+            <sha256 value="7d795db0ceb8fe69f8acbfef65353e8530dcda52b52fb61080e40c98677f0db4" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="it.unimi.dsi" name="fastutil" version="8.5.12">
+         <artifact name="fastutil-8.5.12.jar">
+            <sha256 value="b5543ee08d062d551cf0a5c9bc0fb70588b0382079029ba48941fa9c9be8a5d4" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="fastutil-8.5.12.pom">
+            <sha256 value="b1842528c6d9ae50a47b57f084a2e7738ef2b8f3bd5c9f25cb0341bc6dedabe9" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="jakarta.platform" name="jakarta.jakartaee-bom" version="9.1.0">
+         <artifact name="jakarta.jakartaee-bom-9.1.0.pom">
+            <sha256 value="df98e0266219fdbb82562826d79a3a20776a8ba02aa787f0f0765a538654c8a4" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="jakarta.platform" name="jakartaee-api-parent" version="9.1.0">
+         <artifact name="jakartaee-api-parent-9.1.0.pom">
+            <sha256 value="a7702c487026802784b5797b62330a8b8d6592bf0f4737b25c67a5eac82659c0" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="net.covers1624" name="Quack" version="0.4.10.101">
+         <artifact name="Quack-0.4.10.101.jar">
+            <sha256 value="22afc1694fd7ff99d71fce3544d54c3bd81df71ef1a83e96ced1daba19cf68e6" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="Quack-0.4.10.101.pom">
+            <sha256 value="8795c3416f0614d99163c49186a3372033a1f6721212fb4f5a61c890439ec7e8" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="net.fabricmc" name="sponge-mixin" version="0.15.2+mixin.0.8.7">
+         <artifact name="sponge-mixin-0.15.2+mixin.0.8.7.jar">
+            <sha256 value="1d45cfe3ae4a2eab38dc74276803748cf799088986260d6d912e50ddb35d15c5" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="sponge-mixin-0.15.2+mixin.0.8.7.pom">
+            <sha256 value="608f327590a46e626be56526877bc70e426771ee58e26a0882c9bf1068a998a0" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="net.java.dev.jna" name="jna" version="5.14.0">
+         <artifact name="jna-5.14.0.jar">
+            <sha256 value="34ed1e1f27fa896bca50dbc4e99cf3732967cec387a7a0d5e3486c09673fe8c6" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="jna-5.14.0.pom">
+            <sha256 value="e04e25951501df25adc7b1dcdb6c53373c94897b84d3e14921292763ee07ae3d" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="net.java.dev.jna" name="jna-platform" version="5.14.0">
+         <artifact name="jna-platform-5.14.0.jar">
+            <sha256 value="ae4caceb3840730c2537f9b7fb55a01baba580286b4122951488bcee558c2449" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="jna-platform-5.14.0.pom">
+            <sha256 value="6cba0e04f9eecb16486000793bb27e103b0f4d0485e0554e2b4c0aed13d2ed16" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="net.jodah" name="typetools" version="0.6.3">
+         <artifact name="typetools-0.6.3.jar">
+            <sha256 value="408300867804be05d1083cc0287dd3a21295a9e76090e288013ba5a4182dc96d" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="typetools-0.6.3.pom">
+            <sha256 value="b4106bdd827f868a7f1bfc7635eabafa41e476dca120b6f73248d7c899c11f75" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="net.minecraftforge" name="mergetool" version="1.1.7">
+         <artifact name="mergetool-1.1.7-fatjar.jar">
+            <sha256 value="2fbb74386cc9f9f4e816d2b5167ed9274c0864eae532d658e34587b2a47857e8" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="mergetool-1.1.7.module">
+            <sha256 value="3baa6fc1adf9363b9636b34cf5c1df3131309f238022f83ec87d9bab627a0a4f" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="net.minecraftforge" name="srgutils" version="0.4.15">
+         <artifact name="srgutils-0.4.15.jar">
+            <sha256 value="f6bdebb7fae108329acddfc812f237c7f6328a98e3f282a105edfc161d0215e3" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="srgutils-0.4.15.module">
+            <sha256 value="c118768ef5b59d9baea1474019b2e850e4bfb8e9ec0f82bc6076da4ef3eb8155" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="net.minecrell" name="terminalconsoleappender" version="1.3.0">
+         <artifact name="terminalconsoleappender-1.3.0.jar">
+            <sha256 value="1afea1bca095068f7f4483f061feed94753be34233ddb0df9ec380fc14d5a985" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="terminalconsoleappender-1.3.0.module">
+            <sha256 value="ec65b16cc92b904961baf2ec64014100eb7b1c95e45108f0d8b826636eb46a82" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="net.neoforged" name="AutoRenamingTool" version="2.0.17">
+         <artifact name="AutoRenamingTool-2.0.17-all.jar">
+            <sha256 value="e977ee4422efb51eb54cc99f939833cef769de8b4aa1043294ce5400c60f3b1f" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="AutoRenamingTool-2.0.17.jar">
+            <sha256 value="db39a2c95f8299d23bf3bc81b7c17fcd2693081b7d3fe68f2c7d11ab1ff3cdde" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="AutoRenamingTool-2.0.17.module">
+            <sha256 value="8bc07180f90fa50244516905ca0e88e9931808e3874bbb8009b4042145b9776d" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="net.neoforged" name="AutoRenamingTool" version="2.0.3">
+         <artifact name="AutoRenamingTool-2.0.3-all.jar">
+            <sha256 value="43fcb978664ba04fc0b3b1b1a14eccabb4bc87b7a415e0eb8bdd1c2f12324321" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="AutoRenamingTool-2.0.3.module">
+            <sha256 value="12cfdde4162dd1bc497843dedd175afe727eebc7aba58a23b5ce842d349941fd" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="net.neoforged" name="DevLaunch" version="1.0.2">
+         <artifact name="DevLaunch-1.0.2.jar">
+            <sha256 value="366adc4e95ab9b32c8e33b9f449529c8937c6fc021ee0c6b25419ea2bb703740" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="DevLaunch-1.0.2.module">
+            <sha256 value="30a811979ec04fccbd1f78d4b1c387913acd08c52ebd0c97f87db08b0e61fddc" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="net.neoforged" name="JarJarFileSystems" version="0.4.1">
+         <artifact name="JarJarFileSystems-0.4.1.jar">
+            <sha256 value="d9f88af1223ff23395c64ff0b0fe367563288a37bd38709bf667b6b39944bfab" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="JarJarFileSystems-0.4.1.module">
+            <sha256 value="999743c5d6fe9a0e3aefb54bb7a4e4685d9ca758a551da7de6a2e0a1fd2bc5de" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="net.neoforged" name="JarJarMetadata" version="0.4.1">
+         <artifact name="JarJarMetadata-0.4.1.jar">
+            <sha256 value="05d7b89f09c6de1a9b61d0e786c8fd808aed044babf321653e14abd6740d5546" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="JarJarMetadata-0.4.1.module">
+            <sha256 value="9d63e4446491b4cff6cb9032c48872de48820fb34086473d716e56fbbe8be81d" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="net.neoforged" name="JarJarSelector" version="0.4.1">
+         <artifact name="JarJarSelector-0.4.1.jar">
+            <sha256 value="f34bab02a5e967650dc52b7cb37a200051a7078f7d1868597699d78697da2400" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="JarJarSelector-0.4.1.module">
+            <sha256 value="fe7f076ff5a2adae05cfc9429149f8c0203b49a3943f93955564ea439b7ae323" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="net.neoforged" name="accesstransformers" version="10.0.1">
+         <artifact name="accesstransformers-10.0.1.jar">
+            <sha256 value="89fb0dc3d68f8a5961f309ee110dad7d2c1094ba204595602b71e02e104838a1" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="accesstransformers-10.0.1.module">
+            <sha256 value="b3df09600aba72f2ac3ed1ba9f896fd7094aec0a774e50cdfaa10725118b2ed9" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="net.neoforged" name="accesstransformers" version="13.0.1">
+         <artifact name="accesstransformers-13.0.1.jar">
+            <sha256 value="d7354d343b276466d68856d93a78e90838eb2e729fb1a10d9425dbcb186f5a22" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="accesstransformers-13.0.1.module">
+            <sha256 value="fa146c44dd3452b2dc8254c8e3fdea5701697d9048855be7f727f27ed29f2f4b" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="net.neoforged" name="bus" version="8.0.5">
+         <artifact name="bus-8.0.5.jar">
+            <sha256 value="705e24f37752809499a5cd0c7dd31eaabf3d933c5d3b2060168e94e9ef62593a" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="bus-8.0.5.module">
+            <sha256 value="d888226def6220cb2f27a3ab6fb4732370a5ec957de013a4fe283dd4cf7e4f02" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="net.neoforged" name="coremods" version="7.0.3">
+         <artifact name="coremods-7.0.3.jar">
+            <sha256 value="d24c0d3e31af23cac36a0f9f98654b875f678b27ddccd8b28d331c1878a6de4a" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="coremods-7.0.3.module">
+            <sha256 value="c782f89319daf0818fab6910de20dc74edf35d587a83bf8bacbbb84559db8e64" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="net.neoforged" name="mergetool" version="2.0.0">
+         <artifact name="mergetool-2.0.0-api.jar">
+            <sha256 value="0260881294d8b218afe3d673f084d3745a55c28b35205d07d5e62d7f22202a00" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="mergetool-2.0.0.module">
+            <sha256 value="e1ea0d62fccefa0bb0476f568baf2fb181737a86e03a65670dce2a67a64d0251" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="net.neoforged" name="mergetool" version="2.0.3">
+         <artifact name="mergetool-2.0.3-api.jar">
+            <sha256 value="e13e61c0437d6db17e7b3581ff261292015dcd9e11683f5a365b4b9a5c192283" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="mergetool-2.0.3-fatjar.jar">
+            <sha256 value="3dbd19d9489348e838b1bedcf7ffd6d9810dac40543f3c34d3bcf6e39e674922" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="mergetool-2.0.3.module">
+            <sha256 value="e9d6d181a84450c49d400e96336125c940aeff782084033a7c4790193d5ec687" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="net.neoforged" name="minecraft-dependencies" version="1.21.1">
+         <artifact name="minecraft-dependencies-1.21.1.module">
+            <sha256 value="211b1f95714cf1fb6f4a45612dd4bf731fb09795c30d4fb5f23c9fada6173332" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="net.neoforged" name="moddev-gradle" version="2.0.148">
+         <artifact name="moddev-gradle-2.0.148.jar">
+            <sha256 value="e4cab1e28fcede52101ffc5bb5052fe8a4dd41b699992c52c8ec1c267e306017" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="moddev-gradle-2.0.148.module">
+            <sha256 value="3da580b67d64f685b39eec65b3f30fc5d3cc8afaa1b3a4fd5a85202eb469d892" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="net.neoforged" name="neoforge" version="21.1.218">
+         <artifact name="neoforge-21.1.218-moddev-config.json">
+            <sha256 value="fc5e5155cb2866801a0205499175217911188f342421ea609c4584833844a432" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="neoforge-21.1.218-sources.jar">
+            <sha256 value="0585399bfe575190f38ce57d33f6e4898384412aacb148c5e59f30c58b7cd783" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="neoforge-21.1.218-universal.jar">
+            <sha256 value="0a7e482f83762b79d42aa0a907f82413b70b178c69237c88c505436b2913fcf2" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="neoforge-21.1.218-userdev.jar">
+            <sha256 value="08610e4b6a65b5049e52704b4c0182133bc54dd94514ec49c680120801a6aa0d" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="neoforge-21.1.218.module">
+            <sha256 value="f21723f7ccf93a9481334e0b426af53abd1478d5ecf6dbdf00f02bee4d4cebe5" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="net.neoforged" name="neoform" version="1.21.1-20240808.144430">
+         <artifact name="neoform-1.21.1-20240808.144430.module">
+            <sha256 value="c697a0da4423ac17b9a5f891782a4bfd65143a39a3773de43cb54c67ba7d5747" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="neoform-1.21.1-20240808.144430.zip">
+            <sha256 value="3fcdf0f0d115774cfceaf206a05a6dc964e2189bfd00f5b5f863e37f4b7733c7" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="net.neoforged" name="neoform-runtime" version="2.0.31">
+         <artifact name="neoform-runtime-2.0.31-all.jar">
+            <sha256 value="6f5b0aae7e423efeea21cb848c5096e76fc4eec40256cbefdcfaa1583b197c07" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="neoform-runtime-2.0.31.module">
+            <sha256 value="9eba955203d8762243150bf95cfd5cc0c49197b337fe66d4a9e3d823dfa007d3" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="net.neoforged" name="srgutils" version="1.0.0">
+         <artifact name="srgutils-1.0.0.jar">
+            <sha256 value="16663ae2504a0522cca386af6c11281d3fde61d25b6bd2690d7200e900b26c36" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="srgutils-1.0.0.module">
+            <sha256 value="b61858027750ced016bdf8914009ba399fb8ea5cdd3e4d5241876236ac8ec29c" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="net.neoforged.accesstransformers" name="at-modlauncher" version="10.0.1">
+         <artifact name="at-modlauncher-10.0.1.jar">
+            <sha256 value="2a4b447c6944a2b89e383c1eed9a26bb5cc60330a5bb26ef0a912a38d52df935" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="at-modlauncher-10.0.1.module">
+            <sha256 value="c7fa624126b4adccdc3f15429a883e4b8a9ecb429e48068c411ae30740f16405" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="net.neoforged.accesstransformers" name="at-parser" version="13.0.1">
+         <artifact name="at-parser-13.0.1.jar">
+            <sha256 value="4576507635fd434a47668bd13ab11209ba036cab682616b3e1082637939fb2fc" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="at-parser-13.0.1.module">
+            <sha256 value="1353f0f38944a564a4860933981b539ace996fbb3c013f0f46921f1a20f4e0b5" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="net.neoforged.fancymodloader" name="earlydisplay" version="4.0.42">
+         <artifact name="earlydisplay-4.0.42.jar">
+            <sha256 value="6410270f0749c4d4666ad9259a97f4066cd2c8cdb88b70b017145df6cf1502ec" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="earlydisplay-4.0.42.module">
+            <sha256 value="08442b10f16527d11f0a685d28b27b10517447fa3e0039a527021227996eec88" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="net.neoforged.fancymodloader" name="loader" version="4.0.42">
+         <artifact name="loader-4.0.42.jar">
+            <sha256 value="182fcee7ed6e2be4c815bd08d2c766d355c58ab1e227b6ffd84ed26a0f71b6d6" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="loader-4.0.42.module">
+            <sha256 value="6790ed0172ce29d0e074a4aad35905f502e7619651907e88e0f20ef050e99876" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="net.neoforged.installertools" name="binarypatcher" version="4.0.12">
+         <artifact name="binarypatcher-4.0.12.jar">
+            <sha256 value="0ba74c89a9b1f2e32df8150b4dd90904584e4343c79fc5d66706588d2a5b6ae4" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="binarypatcher-4.0.12.module">
+            <sha256 value="401053ca0719f61e9e9fb59dd2a4de77cfa96eff76526d4c2c632064e944d0ff" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="net.neoforged.installertools" name="cli-utils" version="2.1.4">
+         <artifact name="cli-utils-2.1.4.module">
+            <sha256 value="9218678f5d7346f91b6a1d54bea46cfa8686c4957d356ff14f03096313eb2988" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="net.neoforged.installertools" name="cli-utils" version="4.0.12">
+         <artifact name="cli-utils-4.0.12.jar">
+            <sha256 value="e8e2c41f0b058689acfbacd4204a7e32ec5d0b28e02c4020f788003ca26e77a5" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="cli-utils-4.0.12.module">
+            <sha256 value="5dca342e58e7e0ef7cc0e9aa1064817a6eda665be83ef27be768f31ef39eb02f" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="net.neoforged.installertools" name="installertools" version="2.1.2">
+         <artifact name="installertools-2.1.2-fatjar.jar">
+            <sha256 value="9fe7c6df17299f661b9cd07fc1c4e85493b63efae6bb9da0255a97d9d0a87c60" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="installertools-2.1.2.module">
+            <sha256 value="ac592cdfb16e7acdf17f6dd4d4f01e8b2dd5398c3851d78e73866105d052d0ba" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="net.neoforged.installertools" name="installertools" version="4.0.12">
+         <artifact name="installertools-4.0.12-fatjar.jar">
+            <sha256 value="ba3e9d27d9f5145f829ac94124e3d97b80f027949d690b430305734526f143db" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="installertools-4.0.12.module">
+            <sha256 value="3a195fc2c2f0463a22d1028be7f6bd7fec0cfd08596c6d2772aef726dfdc6776" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="net.neoforged.javadoctor" name="gson-io" version="2.0.17">
+         <artifact name="gson-io-2.0.17.jar">
+            <sha256 value="de40a10adb58105e84864dff41e3ef490d87411afa390d86a940c74a6bf69821" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="gson-io-2.0.17.module">
+            <sha256 value="1b3ab04934a62bc1d576707dfbb2604ebf0fd741814f11e2e8005b02e1acfe59" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="net.neoforged.javadoctor" name="spec" version="2.0.17">
+         <artifact name="spec-2.0.17.jar">
+            <sha256 value="67d6fdde98770e91e82303fde1ce5560f12081b733da07bfa7bac71968a93dff" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="spec-2.0.17.module">
+            <sha256 value="4e1559a3eb4f2f3cdec3fc2ca639259d71a55811bedd8ed1e13fd1c0e171ee7c" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="net.neoforged.jst" name="jst-cli-bundle" version="2.0.11">
+         <artifact name="jst-cli-bundle-2.0.11.jar">
+            <sha256 value="1e058f87f6c3de0d13d76d6d14a7698a749e7268521a95298f764228ebee88db" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="jst-cli-bundle-2.0.11.module">
+            <sha256 value="3c4450922f41f9c9ce16b6090ad12dcbc76689d9d6acbfd71b9f9187630f6a2f" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="net.neoforged.moddev" name="net.neoforged.moddev.gradle.plugin" version="2.0.148">
+         <artifact name="net.neoforged.moddev.gradle.plugin-2.0.148.pom">
+            <sha256 value="39600c18afe266b9fc74ffd2aa90c36d1adf9a1fb85266b56fc4ff5c14c5e6ff" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="net.sf.jopt-simple" name="jopt-simple" version="5.0.4">
+         <artifact name="jopt-simple-5.0.4.jar">
+            <sha256 value="df26cc58f235f477db07f753ba5a3ab243ebe5789d9f89ecf68dd62ea9a66c28" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="jopt-simple-5.0.4.pom">
+            <sha256 value="6a67763b76afcd9c80b95e5c5e24782d18cc1b0e3d9b454ad3f8754c76b76815" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="net.sf.jopt-simple" name="jopt-simple" version="6.0-alpha-3">
+         <artifact name="jopt-simple-6.0-alpha-3.jar">
+            <sha256 value="d440ceb839d6adb5cfa81aa321813d60255e68a3e9ca564c91126599310abde5" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="jopt-simple-6.0-alpha-3.pom">
+            <sha256 value="c1302d655f8030faa4cd16004c52c65f7f5caf65db01953dfc25d243db61abe4" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="net.sf.saxon" name="Saxon-HE" version="12.5">
+         <artifact name="Saxon-HE-12.5.jar">
+            <sha256 value="98c3a91e6e5aaf9b3e2b37601e04b214a6e67098493cdd8232fcb705fddcb674" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="Saxon-HE-12.5.pom">
+            <sha256 value="e0f3a8551db88b657e7856635b714eb630456405eeb2b161790eb28f18769ad7" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="net.sourceforge.pmd" name="pmd" version="7.10.0">
+         <artifact name="pmd-7.10.0.pom">
+            <sha256 value="86e48c284a312378549b2e77b45d7c06280e1c68df091c91a96f2b98caeca32d" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="net.sourceforge.pmd" name="pmd-ant" version="7.10.0">
+         <artifact name="pmd-ant-7.10.0.jar">
+            <sha256 value="1cdc31017d5a67ba7b8ab2a58936f6254d06f0bab021aded79c4cf6531ee9192" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="pmd-ant-7.10.0.pom">
+            <sha256 value="acc0181b72ff9f3f70db9b8e133e6231f761a43dac99cb9befd42c8fbf3029ce" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="net.sourceforge.pmd" name="pmd-core" version="7.10.0">
+         <artifact name="pmd-core-7.10.0.jar">
+            <sha256 value="c62ea25ef2d92606185c4a9973e50c98c13cd65fcc664fed20136e8018fbe86d" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="pmd-core-7.10.0.pom">
+            <sha256 value="c8e5753b36bc16af8589b56a8f8ea331a6040a0fdcae96871578af9e167718c2" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="net.sourceforge.pmd" name="pmd-java" version="7.10.0">
+         <artifact name="pmd-java-7.10.0.jar">
+            <sha256 value="6cda9bd2bbcb49e44111a80144be9fd179e1a3e7abe08162efb74507e1254b63" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="pmd-java-7.10.0.pom">
+            <sha256 value="6dc8cfa6d5c36144dc99d706105d327698cfc95e80750dcd42e71a85a2a18150" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.antlr" name="antlr4-master" version="4.13.1">
+         <artifact name="antlr4-master-4.13.1.pom">
+            <sha256 value="dbcfc979b80528fc0cb453fcb68dbc9d2b0603a7be2cdce99ab2fc6871469d18" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.antlr" name="antlr4-master" version="4.13.2">
+         <artifact name="antlr4-master-4.13.2.pom">
+            <sha256 value="0adda026685873f651360178bffc446ceee4833081739e3ae9d6e8f07e8d902a" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.antlr" name="antlr4-master" version="4.9.3">
+         <artifact name="antlr4-master-4.9.3.pom">
+            <sha256 value="565cc054d3badf50ca0a0717dae311268a2d6709fdddc90ac4a43c62d01935b9" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.antlr" name="antlr4-runtime" version="4.13.1">
+         <artifact name="antlr4-runtime-4.13.1.jar">
+            <sha256 value="54665d2838cc66458343468efc539e454fc95b46a8a04b13c6ac43fc9be63505" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="antlr4-runtime-4.13.1.pom">
+            <sha256 value="19226b17bfa38f99ea226b22e97420e2a8ede09a97420fb1acf186d9ada46571" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.antlr" name="antlr4-runtime" version="4.13.2">
+         <artifact name="antlr4-runtime-4.13.2.jar">
+            <sha256 value="dd3e8a13a2d669bf84fb8d834de35ce4875f27157698d206241ec8488aadcaf7" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="antlr4-runtime-4.13.2.pom">
+            <sha256 value="03ce07a2796c511b0c94dc14fd86ccdd6e3828c57967ad2383de304e0d11ba79" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.antlr" name="antlr4-runtime" version="4.9.3">
+         <artifact name="antlr4-runtime-4.9.3.jar">
+            <sha256 value="131a6594969bc4f321d652ea2a33bc0e378ca312685ef87791b2c60b29d01ea5" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="antlr4-runtime-4.9.3.pom">
+            <sha256 value="4f7e44e4ea0629fa3a759b1116feb9fb28814e95f791e1eeedd20c12889d7aa4" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.apache" name="apache" version="13">
+         <artifact name="apache-13.pom">
+            <sha256 value="ff513db0361fd41237bef4784968bc15aae478d4ec0a9496f811072ccaf3841d" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.apache" name="apache" version="16">
+         <artifact name="apache-16.pom">
+            <sha256 value="9f85ff2fd7d6cb3097aa47fb419ee7f0ebe869109f98aba9f4eca3f49e74a40e" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.apache" name="apache" version="18">
+         <artifact name="apache-18.pom">
+            <sha256 value="7831307285fd475bbc36b20ae38e7882f11c3153b1d5930f852d44eda8f33c17" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.apache" name="apache" version="19">
+         <artifact name="apache-19.pom">
+            <sha256 value="91f7a33096ea69bac2cbaf6d01feb934cac002c48d8c8cfa9c240b40f1ec21df" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.apache" name="apache" version="21">
+         <artifact name="apache-21.pom">
+            <sha256 value="af10c108da014f17cafac7b52b2b4b5a3a1c18265fa2af97a325d9143537b380" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.apache" name="apache" version="23">
+         <artifact name="apache-23.pom">
+            <sha256 value="bc10624e0623f36577fac5639ca2936d3240ed152fb6d8d533ab4d270543491c" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.apache" name="apache" version="25">
+         <artifact name="apache-25.pom">
+            <sha256 value="e68fc19a48cec582a6732fd0b10dbfe9feca25060963def89e547f8a3759d379" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.apache" name="apache" version="29">
+         <artifact name="apache-29.pom">
+            <sha256 value="3e49037174820bbd0df63420a977255886398954c2a06291fa61f727ac35b377" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.apache" name="apache" version="30">
+         <artifact name="apache-30.pom">
+            <sha256 value="63dd4a393a9c0dfcb314efe83871a41d243bc8d200cbc7f2d197f30da78239d8" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.apache" name="apache" version="31">
+         <artifact name="apache-31.pom">
+            <sha256 value="555d0c9eaa69c042aff924927b9381e8f8174136d355eead445224452e6291cc" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.apache" name="apache" version="33">
+         <artifact name="apache-33.pom">
+            <sha256 value="d78bd8524c5f8380a190a6525686629a95dfe512df21111383a6d8c0923a4415" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.apache" name="apache" version="6">
+         <artifact name="apache-6.pom">
+            <sha256 value="12edb5096e13f40c362d0bd40902589fa9586505123fa26799ce50b116fa5bb3" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.apache.commons" name="commons-compress" version="1.18">
+         <artifact name="commons-compress-1.18.jar">
+            <sha256 value="5f2df1e467825e4cac5996d44890c4201c000b43c0b23cffc0782d28a0beb9b0" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="commons-compress-1.18.pom">
+            <sha256 value="672c5fe92bd3eab43e8d53338cad5ca073b6529de4eb2b38859a3eaa6c9e8119" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.apache.commons" name="commons-compress" version="1.26.0">
+         <artifact name="commons-compress-1.26.0.jar">
+            <sha256 value="051aceb8bbcc62d0f5b2b8ac72c53767f9c59bfbd050151e65bef6f51c8ed9c9" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="commons-compress-1.26.0.pom">
+            <sha256 value="c1c9681f88d9421730c4da6176492bbaa54052a2326df9e40bc34f4c405227af" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.apache.commons" name="commons-lang3" version="3.14.0">
+         <artifact name="commons-lang3-3.14.0.jar">
+            <sha256 value="7b96bf3ee68949abb5bc465559ac270e0551596fa34523fddf890ec418dde13c" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="commons-lang3-3.14.0.pom">
+            <sha256 value="110438863bad37c28f906bf87016e38c7a8c758ba321e09d11dc5a2363a8e79e" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.apache.commons" name="commons-lang3" version="3.17.0">
+         <artifact name="commons-lang3-3.17.0.jar">
+            <sha256 value="6ee731df5c8e5a2976a1ca023b6bb320ea8d3539fbe64c8a1d5cb765127c33b4" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="commons-lang3-3.17.0.pom">
+            <sha256 value="351c6e4940e939b1f330df47f60f13ba383db81ee008181af541f3a2a6d2a56c" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.apache.commons" name="commons-lang3" version="3.8.1">
+         <artifact name="commons-lang3-3.8.1.jar">
+            <sha256 value="dac807f65b07698ff39b1b07bfef3d87ae3fd46d91bbf8a2bc02b2a831616f68" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="commons-lang3-3.8.1.pom">
+            <sha256 value="ec8e09f75411685205bd0d9d7872cc3622e67c76df44a0a227b278bea04458d5" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.apache.commons" name="commons-lang3" version="3.9">
+         <artifact name="commons-lang3-3.9.jar">
+            <sha256 value="de2e1dcdcf3ef917a8ce858661a06726a9a944f28e33ad7f9e08bea44dc3c230" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="commons-lang3-3.9.pom">
+            <sha256 value="a4022429b98425b430181915721279a52f610f34648bdac487d4cacbbe8dfeb5" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.apache.commons" name="commons-parent" version="34">
+         <artifact name="commons-parent-34.pom">
+            <sha256 value="3a2e69d06d641d1f3b293126dc9e2e4ea6563bf8c36c87e0ab6fa4292d04b79c" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.apache.commons" name="commons-parent" version="39">
+         <artifact name="commons-parent-39.pom">
+            <sha256 value="87cd27e1a02a5c3eb6d85059ce98696bb1b44c2b8b650f0567c86df60fa61da7" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.apache.commons" name="commons-parent" version="45">
+         <artifact name="commons-parent-45.pom">
+            <sha256 value="9c88623ecfa91f012c673ee4622c0eeb4367e5e0d222d960f76cd208b1a4fda6" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.apache.commons" name="commons-parent" version="47">
+         <artifact name="commons-parent-47.pom">
+            <sha256 value="8a8ecb570553bf9f1ffae211a8d4ca9ee630c17afe59293368fba7bd9b42fcb7" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.apache.commons" name="commons-parent" version="48">
+         <artifact name="commons-parent-48.pom">
+            <sha256 value="1e1f7de9370a7b7901f128f1dacd1422be74e3f47f9558b0f79e04c0637ca0b4" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.apache.commons" name="commons-parent" version="52">
+         <artifact name="commons-parent-52.pom">
+            <sha256 value="75dbe8f34e98e4c3ff42daae4a2f9eb4cbcd3b5f1047d54460ace906dbb4502e" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.apache.commons" name="commons-parent" version="58">
+         <artifact name="commons-parent-58.pom">
+            <sha256 value="2d4b12e18899063abd7c75278b5fa97a3729d80878ceecb6a40d946e9c0d5590" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.apache.commons" name="commons-parent" version="64">
+         <artifact name="commons-parent-64.pom">
+            <sha256 value="6f19638994e8357b4ed734696f992057efaafa1235673998133299798e2ccddb" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.apache.commons" name="commons-parent" version="65">
+         <artifact name="commons-parent-65.pom">
+            <sha256 value="6cf3495fc2e6ac913a2b7f2e03fb5908fb3f229fb06d3358dc45678d5af3e36e" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.apache.commons" name="commons-parent" version="66">
+         <artifact name="commons-parent-66.pom">
+            <sha256 value="48fd6dc846e56b1f408660d163e75300f9e384bb63be482a8082a21d72a8db9c" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.apache.commons" name="commons-parent" version="73">
+         <artifact name="commons-parent-73.pom">
+            <sha256 value="4ed44560b07f8448479dfd1e83a422ba4e83e60b36e51b2871ac502a6d5c1bea" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.apache.commons" name="commons-parent" version="78">
+         <artifact name="commons-parent-78.pom">
+            <sha256 value="022d202e655edd04f2a10ecbe453d92977924d38380a4ca8c359f1817a80320e" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.apache.commons" name="commons-text" version="1.3">
+         <artifact name="commons-text-1.3.jar">
+            <sha256 value="8185b3a5311092d83ed1f184c2d093b3105d726bbd76867c32b3511542bb99a8" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="commons-text-1.3.pom">
+            <sha256 value="deeb2ba9701e495dc31d32633eb86b94b24b0a96e0dc67fb87e7062f153027aa" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.apache.geronimo.genesis" name="genesis" version="2.0">
+         <artifact name="genesis-2.0.pom">
+            <sha256 value="b9ed2f9dd434631158d77308ee5648622c229ccece1722c5e377a4296923dae6" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.apache.geronimo.genesis" name="genesis-default-flava" version="2.0">
+         <artifact name="genesis-default-flava-2.0.pom">
+            <sha256 value="08e6e146f4e245266dff9dd800b12875dd2367d3f67a34ab660a126c811215f8" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.apache.geronimo.genesis" name="genesis-java5-flava" version="2.0">
+         <artifact name="genesis-java5-flava-2.0.pom">
+            <sha256 value="e7c5358bbbbc27daa5b327f63bc12650a75ddc9f9ac6d4bfa12789be1f2c29db" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.apache.httpcomponents" name="httpclient" version="4.5.13">
+         <artifact name="httpclient-4.5.13.jar">
+            <sha256 value="6fe9026a566c6a5001608cf3fc32196641f6c1e5e1986d1037ccdbd5f31ef743" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="httpclient-4.5.13.pom">
+            <sha256 value="78eb9ada74929fcd63d07adc4f49236841a45cc29d5f817bf45801f513fd7e6c" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.apache.httpcomponents" name="httpcomponents-client" version="4.5.13">
+         <artifact name="httpcomponents-client-4.5.13.pom">
+            <sha256 value="9cba594c08db7271d0c20e9845d622bb39e69583910b45e7d5df82f6058d4dd9" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.apache.httpcomponents" name="httpcomponents-core" version="4.4.14">
+         <artifact name="httpcomponents-core-4.4.14.pom">
+            <sha256 value="209ed931cb57998252dfe027caa9c03ada620613642329679131165f8b1cbad1" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.apache.httpcomponents" name="httpcomponents-core" version="4.4.16">
+         <artifact name="httpcomponents-core-4.4.16.pom">
+            <sha256 value="f2d75a2c2d423ad18539bf21656d56f88a4091944a662fcaf159d5ae283db7f7" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.apache.httpcomponents" name="httpcomponents-parent" version="11">
+         <artifact name="httpcomponents-parent-11.pom">
+            <sha256 value="a901f87b115c55070c7ee43efff63e20e7b02d30af2443ae292bf1f4e532d3aa" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.apache.httpcomponents" name="httpcomponents-parent" version="12">
+         <artifact name="httpcomponents-parent-12.pom">
+            <sha256 value="4209f09593212987c29d6801917309dd5e6f71b53b2b1d0e0f0efb984ad11fa1" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.apache.httpcomponents" name="httpcore" version="4.4.14">
+         <artifact name="httpcore-4.4.14.jar">
+            <sha256 value="f956209e450cb1d0c51776dfbd23e53e9dd8db9a1298ed62b70bf0944ba63b28" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="httpcore-4.4.14.pom">
+            <sha256 value="55716398a978f10203f9e25c8aefc0580daf7f0907c6ed0aead81ec5fb6b7fd8" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.apache.httpcomponents" name="httpcore" version="4.4.16">
+         <artifact name="httpcore-4.4.16.jar">
+            <sha256 value="6c9b3dd142a09dc468e23ad39aad6f75a0f2b85125104469f026e52a474e464f" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="httpcore-4.4.16.pom">
+            <sha256 value="3cbad849b35dacfe6cec31adada2c623c026c3261141b0d26eec7e399c6cd7fa" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.apache.httpcomponents.client5" name="httpclient5" version="5.1.3">
+         <artifact name="httpclient5-5.1.3.jar">
+            <sha256 value="28c759254f4e35319e078bb6ffea75676608dc12cb243b24fb3c8732522977fe" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="httpclient5-5.1.3.pom">
+            <sha256 value="1988ab3d1bdae0f51f22c83dc97b88fa07561adb6244679d8b8f7146cdd13aaf" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.apache.httpcomponents.client5" name="httpclient5-parent" version="5.1.3">
+         <artifact name="httpclient5-parent-5.1.3.pom">
+            <sha256 value="a27b1413aece92a3aa4774915f7589e0c6179d728d2ac6a295d758ee4fa24cc5" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.apache.httpcomponents.core5" name="httpcore5" version="5.1.3">
+         <artifact name="httpcore5-5.1.3.jar">
+            <sha256 value="f2bf2f2c7772169c9e30699719667ad30f9b46c4e9d7841907deb2d12d9923fe" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="httpcore5-5.1.3.pom">
+            <sha256 value="7fc2b8045809f3f27ac9d4d9e99b9d34621b6371cf93c7313ecd84a5af0e9bae" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.apache.httpcomponents.core5" name="httpcore5-h2" version="5.1.3">
+         <artifact name="httpcore5-h2-5.1.3.jar">
+            <sha256 value="d0e78ba15aa8ebe77982b660ac4b09a95d6e035dbdbea762577dc1c8e2935807" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="httpcore5-h2-5.1.3.pom">
+            <sha256 value="2bc0317a148edc9aefea3ec1535394efced3d137d62f7ff5656d0b03f94c0786" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.apache.httpcomponents.core5" name="httpcore5-parent" version="5.1.3">
+         <artifact name="httpcore5-parent-5.1.3.pom">
+            <sha256 value="a67538865ae0f3744b21e91ca47d461054737c552d1ff29da714c860c992d5bb" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.apache.logging" name="logging-parent" version="1">
+         <artifact name="logging-parent-1.pom">
+            <sha256 value="34b2bf4f531a809168961672ff419d1abf96725b8dfe52980f00c8c4eb134bd6" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.apache.logging" name="logging-parent" version="10.5.0">
+         <artifact name="logging-parent-10.5.0.pom">
+            <sha256 value="9e0939cc02977e9ff528e766063e0f3224d36e893ba4c921f0920db48f3ac6a9" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.apache.logging.log4j" name="log4j" version="2.22.1">
+         <artifact name="log4j-2.22.1.pom">
+            <sha256 value="ed989b6fb09a256ebd4cfdcc219688ba1c3d6de4b4f3b514542d16563dc29097" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.apache.logging.log4j" name="log4j" version="2.8.1">
+         <artifact name="log4j-2.8.1.pom">
+            <sha256 value="78d4abedfb7fdd01f3276a0d17a5eaedce9e99b9d2ee83bb9fc8a609e177729a" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.apache.logging.log4j" name="log4j-api" version="2.22.1">
+         <artifact name="log4j-api-2.22.1.jar">
+            <sha256 value="5d7beae7ff15d8516d6517121d7f12a79a6ac180df64b5fcec55d5be21056e53" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="log4j-api-2.22.1.pom">
+            <sha256 value="6d57547771394b3ee18f9ed3effa2159719e2f3634627863d05023ba9fd8e18b" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.apache.logging.log4j" name="log4j-bom" version="2.22.1">
+         <artifact name="log4j-bom-2.22.1.pom">
+            <sha256 value="9f152371e36b8b2ea6eb2c9bd1882760069f36180a6f28177e6a48c2814c0f23" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.apache.logging.log4j" name="log4j-core" version="2.22.1">
+         <artifact name="log4j-core-2.22.1.jar">
+            <sha256 value="46dccecac556623d8e2ce8648496824a82951d139062a4e61148aff1a25ed18d" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="log4j-core-2.22.1.pom">
+            <sha256 value="1cf7f648fed43f0bfac3328d93fc823c7499078fd7904e18b6549bb1078a9c52" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.apache.logging.log4j" name="log4j-core" version="2.8.1">
+         <artifact name="log4j-core-2.8.1.pom">
+            <sha256 value="6efbf3a19b80fb812392ac99a113138f1e909d85dfa44c0813c1c69737b82c52" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.apache.logging.log4j" name="log4j-slf4j2-impl" version="2.22.1">
+         <artifact name="log4j-slf4j2-impl-2.22.1.jar">
+            <sha256 value="1920cd69d8682c7ef249bb407a3d0685723aa1785867cf4c53258da6bf14da97" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="log4j-slf4j2-impl-2.22.1.pom">
+            <sha256 value="0ee5520d052dd8af104dea3aae575ec468e69b1376edee6776a18538dfd9c0fe" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.apache.maven" name="maven" version="3.8.5">
+         <artifact name="maven-3.8.5.pom">
+            <sha256 value="62cfa52d5364d21e7cfff6b5e0bff1b8ce264ed362b0a64abb162cff1dc19073" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.apache.maven" name="maven-artifact" version="3.8.5">
+         <artifact name="maven-artifact-3.8.5.jar">
+            <sha256 value="91172bc294d6eab02fc9f45f4ea01fd0e418962d128cf489abea7b6957d988ee" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="maven-artifact-3.8.5.pom">
+            <sha256 value="176b9c417beb35fe5d815df91f62f1ac6cbe969a4423447caac8fc0bb9233d5e" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.apache.maven" name="maven-parent" version="34">
+         <artifact name="maven-parent-34.pom">
+            <sha256 value="1a8faf7a6a2b848acb26a959954ee115c0d79dbe75a6206fb3b8c7c2f45a237f" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.apache.maven" name="maven-parent" version="35">
+         <artifact name="maven-parent-35.pom">
+            <sha256 value="d2edd4077c0abc9cc8202883c459503180424636cb39a83031ec1112394b2576" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.apache.maven.doxia" name="doxia" version="1.12.0">
+         <artifact name="doxia-1.12.0.pom">
+            <sha256 value="2d02a0bd64f331b767cee7455b3193c6fb82110143a119858abc968798a5fc29" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.apache.maven.doxia" name="doxia-core" version="1.12.0">
+         <artifact name="doxia-core-1.12.0.jar">
+            <sha256 value="5e49cd827bebbcea5829d3b3883d17ad1ce15ebd6394aeb50ad50d7dfd939fcd" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="doxia-core-1.12.0.pom">
+            <sha256 value="b0388f748a0885e13e7c2c453921f8bb9dd4fb5b1905be745685476cf3456ea3" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.apache.maven.doxia" name="doxia-logging-api" version="1.12.0">
+         <artifact name="doxia-logging-api-1.12.0.jar">
+            <sha256 value="985306162c0a9f4c309d46109447f30f02bf6fc9bc16a3e039d59e1dabd0192f" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="doxia-logging-api-1.12.0.pom">
+            <sha256 value="9dd99b4350223846585310694c446318b1692ba746ed717376d59619a27123b4" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.apache.maven.doxia" name="doxia-module-xdoc" version="1.12.0">
+         <artifact name="doxia-module-xdoc-1.12.0.jar">
+            <sha256 value="e8731ba00a4edd34b20eff9e4a729c2045c62cb796c3e491692607de4476ab01" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="doxia-module-xdoc-1.12.0.pom">
+            <sha256 value="fb69d95be4b55af2f3b0a9b68e3e8e62063e69594c1fcebe705a5a4db0996d25" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.apache.maven.doxia" name="doxia-modules" version="1.12.0">
+         <artifact name="doxia-modules-1.12.0.pom">
+            <sha256 value="ab8ff6bb4793cfba59b14fb383ff351a349b1091d071c66b1fcbca728d505bdc" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.apache.maven.doxia" name="doxia-sink-api" version="1.12.0">
+         <artifact name="doxia-sink-api-1.12.0.jar">
+            <sha256 value="5dca6aaaa9e70d8a0766e143ddcf9db09de5fde0fbcc78cb635d74e764dfcca5" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="doxia-sink-api-1.12.0.pom">
+            <sha256 value="26b51fddb69b5ca6e044cda28b8d1c1a37b6fafd0cfb9bfb15a919de57c671d5" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.apache.xbean" name="xbean" version="3.7">
+         <artifact name="xbean-3.7.pom">
+            <sha256 value="ea717132de8404b62fc9097a1f3215c705d525d457be9a5f12653adc68c33ab7" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.apache.xbean" name="xbean-reflect" version="3.7">
+         <artifact name="xbean-reflect-3.7.jar">
+            <sha256 value="104e5e9bb5a669f86722f32281960700f7ec8e3209ef51b23eb9b6d23d1629cb" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="xbean-reflect-3.7.pom">
+            <sha256 value="9795c15322c5d19af336eebd9e164fa7d5897c4b004a7d66e21635a173e748a9" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.apiguardian" name="apiguardian-api" version="1.1.2">
+         <artifact name="apiguardian-api-1.1.2.jar">
+            <sha256 value="b509448ac506d607319f182537f0b35d71007582ec741832a1f111e5b5b70b38" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="apiguardian-api-1.1.2.module">
+            <sha256 value="e08028131375b357d1d28734e9a4fb4216da84b240641cb3ef7e7c7d628223fc" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.checkerframework" name="checker-qual" version="3.33.0">
+         <artifact name="checker-qual-3.33.0.jar">
+            <sha256 value="e316255bbfcd9fe50d165314b85abb2b33cb2a66a93c491db648e498a82c2de1" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="checker-qual-3.33.0.module">
+            <sha256 value="e8521d75625d41272c767d262a153ac163cc505b66644a2ef705fa8949ffb4e5" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.checkerframework" name="checker-qual" version="3.37.0">
+         <artifact name="checker-qual-3.37.0.jar">
+            <sha256 value="e4ce1376cc2735e1dde220b62ad0913f51297704daad155a33f386bc5db0d9f7" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="checker-qual-3.37.0.module">
+            <sha256 value="7258a769dcaa26b98154d229d85cc72e5b3666b0bcb637d2daf16ec498956638" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.checkerframework" name="checker-qual" version="3.48.3">
+         <artifact name="checker-qual-3.48.3.jar">
+            <sha256 value="443685b1b232803baaf803c15d6f5a425473c6f7b81c5f276dfcf93288e389a5" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="checker-qual-3.48.3.module">
+            <sha256 value="127bbc5513e41ccfe6b3cb6faa7801423349a95414367acb7cf7629767549e59" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.checkerframework" name="checker-qual" version="3.48.4">
+         <artifact name="checker-qual-3.48.4.jar">
+            <sha256 value="e1baf9f682dbca23fbe90667a4b32fe348a5118b4fd0d42a63b73d50b2bb0f3f" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="checker-qual-3.48.4.module">
+            <sha256 value="81f1f011f010d9133efd322f03ff25f603f01becd3d383a1ca2c1fd61b121d2a" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.codehaus.groovy" name="groovy-bom" version="3.0.19">
+         <artifact name="groovy-bom-3.0.19.pom">
+            <sha256 value="13e3ce73ed4bf9fc6ee2b540d8555687f6acb707f849239414c8277d431deca1" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.codehaus.plexus" name="plexus" version="5.1">
+         <artifact name="plexus-5.1.pom">
+            <sha256 value="a343e44ff5796aed0ea60be11454c935ce20ab1c5f164acc8da574482dcbc7e9" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.codehaus.plexus" name="plexus-classworlds" version="2.6.0">
+         <artifact name="plexus-classworlds-2.6.0.jar">
+            <sha256 value="52f77c5ec49f787c9c417ebed5d6efd9922f44a202f217376e4f94c0d74f3549" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="plexus-classworlds-2.6.0.pom">
+            <sha256 value="469a6c59f92effa62c0797ce7d52d2c03cf8ee1034b923c360dd78a9f505a7ba" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.codehaus.plexus" name="plexus-component-annotations" version="2.1.0">
+         <artifact name="plexus-component-annotations-2.1.0.jar">
+            <sha256 value="bde3617ce9b5bcf9584126046080043af6a4b3baea40a3b153f02e7bbc32acac" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="plexus-component-annotations-2.1.0.pom">
+            <sha256 value="0670b605255f7dc9a454daaec7912918ccf1b5475cbfca374363b51fcfd4ea00" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.codehaus.plexus" name="plexus-container-default" version="2.1.0">
+         <artifact name="plexus-container-default-2.1.0.jar">
+            <sha256 value="6dceb1246b188153bdcb6f962d543d51ddb672cca07cad94a78fbabc9edf0a39" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="plexus-container-default-2.1.0.pom">
+            <sha256 value="8b8c20e630bdcc795cc985024c4c1045c147be116052c2c975e30c608f7f3b45" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.codehaus.plexus" name="plexus-containers" version="2.1.0">
+         <artifact name="plexus-containers-2.1.0.pom">
+            <sha256 value="94d5aedb3c46023265396527cf8ce7fc944b7bd79e4ebab907386418eb5a08d7" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.codehaus.plexus" name="plexus-utils" version="3.3.0">
+         <artifact name="plexus-utils-3.3.0.jar">
+            <sha256 value="76d174792540e2775af94d03d10fb2d3c776e2cd0ac0ebf427d3e570072bb9ce" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="plexus-utils-3.3.0.pom">
+            <sha256 value="79c9792073fdee3cdbebd61a76ba8c2dd11624a9f85d128bae56bda19e20475c" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.eclipse.ee4j" name="project" version="1.0.7">
+         <artifact name="project-1.0.7.pom">
+            <sha256 value="205c039a42cbae3556efbeb04a483eb3a3cf9550bd75bf84260dc8f28218f105" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.eclipse.jetty" name="jetty-bom" version="9.4.53.v20231009">
+         <artifact name="jetty-bom-9.4.53.v20231009.pom">
+            <sha256 value="faf973a19874266cd0865b0299eba9f167cbb07075dd4fedbe3d6156357e9dd5" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.javassist" name="javassist" version="3.28.0-GA">
+         <artifact name="javassist-3.28.0-GA.jar">
+            <sha256 value="57d0a9e9286f82f4eaa851125186997f811befce0e2060ff0a15a77f5a9dd9a7" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="javassist-3.28.0-GA.pom">
+            <sha256 value="c36a7c13da3a4852aa881bdf9db60b9e4d1af146ec2afb5398f96d5983f6d5dd" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.jcraft" name="jorbis" version="0.0.17">
+         <artifact name="jorbis-0.0.17.jar">
+            <sha256 value="e067f29a3701426b67ed973036949c6e58ca5bb53eef7240b2e71e286d252a9e" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="jorbis-0.0.17.pom">
+            <sha256 value="18de3b0d932af99832db4d832f683507fbdd5a0b0c24dd680e84ce6f57182e24" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.jetbrains" name="annotations" version="24.1.0">
+         <artifact name="annotations-24.1.0.jar">
+            <sha256 value="27a770dc7ce50500918bb8c3c0660c98290630ec796b5e3cf6b90f403b3033c6" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="annotations-24.1.0.pom">
+            <sha256 value="2e37fd7020a4364b9e5d9f77c5b6742a3bea927dd560ca1e390dc815c9c50820" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.jline" name="jline-parent" version="3.20.0">
+         <artifact name="jline-parent-3.20.0.pom">
+            <sha256 value="7178c600202c4bc26ec7a4b62255eef36f7056cad2a5e6239c574beea5c210ca" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.jline" name="jline-reader" version="3.20.0">
+         <artifact name="jline-reader-3.20.0.jar">
+            <sha256 value="acd1c94d1e228aa7b7962f69b21ed3a9fd828eb3a63e4baf9086954e626af1f0" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="jline-reader-3.20.0.pom">
+            <sha256 value="d9f17edd721c02a131720376d6c07878782eb6b6fafeb5ff42404ab57143e136" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.jline" name="jline-terminal" version="3.20.0">
+         <artifact name="jline-terminal-3.20.0.jar">
+            <sha256 value="12125170e795519ba6dc8010c070b53c76aae92b485c1e37530e54ab5dd08d43" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="jline-terminal-3.20.0.pom">
+            <sha256 value="10ca3bcf5178f18507f210a63ad9637896853343ad1c1291a019a116f216a548" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.joml" name="joml" version="1.10.5">
+         <artifact name="joml-1.10.5.jar">
+            <sha256 value="cac9f22f83a7aa33eebda73c16ff5261e3cb4911b6bafcf4c79ea486099d0c9a" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="joml-1.10.5.pom">
+            <sha256 value="4dca8c1e135445b1f24079afb69e7478b999235400076a66b77c0439ccbeca06" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.junit" name="junit-bom" version="5.10.0">
+         <artifact name="junit-bom-5.10.0.pom">
+            <sha256 value="e006dd8894f9fc7b75fc32bb12fe5ed8be65667d5b454f99e2e0b8c5bb8d30b3" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.junit" name="junit-bom" version="5.10.1">
+         <artifact name="junit-bom-5.10.1.pom">
+            <sha256 value="21c4b0286f4b20069577ff4b20978a85c100ac8a46b6f1c8672fbaab337bc3f2" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.junit" name="junit-bom" version="5.11.0">
+         <artifact name="junit-bom-5.11.0.pom">
+            <sha256 value="e67459d4882424ac6374f40db1c8f4a2e88946b340ba072c80be932a2be4644d" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.junit" name="junit-bom" version="5.11.2">
+         <artifact name="junit-bom-5.11.2.pom">
+            <sha256 value="f48e88538aac145eb3ae0345a9ebd055b28f329a35dce8d1e9281325ca9b0ea2" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.junit" name="junit-bom" version="5.11.4">
+         <artifact name="junit-bom-5.11.4.module">
+            <sha256 value="a9a4f27be94e99b9d570162d246a80f686d277d5d31aeb5481047cf51daf46e4" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.junit" name="junit-bom" version="5.7.2">
+         <artifact name="junit-bom-5.7.2.pom">
+            <sha256 value="cd14aaa869991f82021c585d570d31ff342bcba58bb44233b70193771b96487b" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.junit" name="junit-bom" version="5.9.3">
+         <artifact name="junit-bom-5.9.3.pom">
+            <sha256 value="4d0329cd9e72f2420e5ca15724cbfe6ffa6e5fd2888361516271190fdc342ed7" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.junit.jupiter" name="junit-jupiter" version="5.11.4">
+         <artifact name="junit-jupiter-5.11.4.jar">
+            <sha256 value="aa880e4afba87d447357e4c1fc098c5cb1d200cb9403496c00d3b35a5bd0e8db" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="junit-jupiter-5.11.4.module">
+            <sha256 value="a3c353ed7516ae1835eab95a087f4f09a5b0cc7d0b8b039fe77a039b8ab52103" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.junit.jupiter" name="junit-jupiter-api" version="5.11.4">
+         <artifact name="junit-jupiter-api-5.11.4.jar">
+            <sha256 value="ab83ef9e51ac4597d59d26b4b58812129550e2f579a404c8af7d09f5ce5b4293" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="junit-jupiter-api-5.11.4.module">
+            <sha256 value="a6ea2fefb3aa5868fd7a780ae1da1162e76dda3760b48015c2a419d2372ff3cb" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.junit.jupiter" name="junit-jupiter-engine" version="5.11.4">
+         <artifact name="junit-jupiter-engine-5.11.4.jar">
+            <sha256 value="cdf8ac59f3fad774ca738ad03890950eeb91833ef0e8908753177edd26f1581c" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="junit-jupiter-engine-5.11.4.module">
+            <sha256 value="db91163a8af005a32798565dd67537725189590deab6da03b31dbdda45686a18" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.junit.jupiter" name="junit-jupiter-params" version="5.11.4">
+         <artifact name="junit-jupiter-params-5.11.4.jar">
+            <sha256 value="02a6e015de7ce94ac7f256e7fa05b8091dea861fe79a555a7993313d0f6c7d96" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="junit-jupiter-params-5.11.4.module">
+            <sha256 value="58865b8b4b998b9ab19c13f8e413b7e1d4819374dd5df69760c4c0b0bc4e9895" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.junit.platform" name="junit-platform-commons" version="1.11.4">
+         <artifact name="junit-platform-commons-1.11.4.jar">
+            <sha256 value="9edd969b0d0670c54105bc91ae79bd1c6f503e12115faba82073b84c86bbc334" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="junit-platform-commons-1.11.4.module">
+            <sha256 value="0b9e2625c8f468b3cd4132cc0a805f89fe41f852d1adfff75f3eb1465ca1cb6b" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.junit.platform" name="junit-platform-engine" version="1.11.4">
+         <artifact name="junit-platform-engine-1.11.4.jar">
+            <sha256 value="b1dd998f64f9acadc15966d9cd3d08074662677b3e390f0a38fcbf0bb4c72330" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="junit-platform-engine-1.11.4.module">
+            <sha256 value="bf6ce1fb5951dc6c7de36adeef6aeaf78ef82d63831c5ccebce388da9fc5fe25" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.junit.platform" name="junit-platform-launcher" version="1.11.4">
+         <artifact name="junit-platform-launcher-1.11.4.jar">
+            <sha256 value="d7430bd029e7fcced53ee445e4d2d1a8a1e043ea4c4df43b6335a857f79761ae" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="junit-platform-launcher-1.11.4.module">
+            <sha256 value="60c4533209ba587b1cda7d72c087f351a3231f9b91c94f3f76394b0e22341cc4" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.lwjgl" name="lwjgl" version="3.3.3">
+         <artifact name="lwjgl-3.3.3-natives-macos-arm64.jar">
+            <sha256 value="50ac9ca09e59f051dcacf4dc0b2145e9e916e6ab14633b75694231bfe59314a8" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="lwjgl-3.3.3-natives-macos.jar">
+            <sha256 value="0294ee4e2dd7ef6befaffafc0bb99a2a89b76070b5cd8302f3d75624b6786d03" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="lwjgl-3.3.3.jar">
+            <sha256 value="dc9c7b2d48e8396d68895f8902ffa01e46253de44dfe927533ff09457ebfeec4" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="lwjgl-3.3.3.pom">
+            <sha256 value="831d466fc01629452b46137311e15823c096c7d6fae95298c647b9fbf5d681f4" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.lwjgl" name="lwjgl-freetype" version="3.3.3">
+         <artifact name="lwjgl-freetype-3.3.3-natives-macos-arm64.jar">
+            <sha256 value="18bd938d2abb9d0ea36a5d491790ec78e38908b459216a750f7bc1f85e3513fd" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="lwjgl-freetype-3.3.3-natives-macos-patch.jar">
+            <sha256 value="87e9c8490ebd7bd1bf8853401a0f2046494c1762cbfec59248173740e71d6878" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="lwjgl-freetype-3.3.3.jar">
+            <sha256 value="e1a7ab07106349d9a8a68f6860b7b73b353c502b81e662aca77f931c6fdd3de8" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="lwjgl-freetype-3.3.3.pom">
+            <sha256 value="40803c7dddb2d9553bb4f9e737fda1fc83cf131925c11db80a05bed2e7ec82df" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.lwjgl" name="lwjgl-glfw" version="3.3.3">
+         <artifact name="lwjgl-glfw-3.3.3-natives-macos-arm64.jar">
+            <sha256 value="b9451d67bc17c906fb8282a5522f258b022f30569e0b62da001d590a17b45e19" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="lwjgl-glfw-3.3.3-natives-macos.jar">
+            <sha256 value="a89b55362aec9e5a3bbd1364601bb85b147db6bae68891ca9a232d6cfb2d55ec" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="lwjgl-glfw-3.3.3.jar">
+            <sha256 value="bedc757fd2b1b255146db26b74b9cbd1fcf5644b89b47b104fa721c741604259" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="lwjgl-glfw-3.3.3.pom">
+            <sha256 value="7c9b8f586ac4cf7e9eb2f367ae9854ccaee2d8d7f62e2387c49d2c1afaed8ab3" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.lwjgl" name="lwjgl-jemalloc" version="3.3.3">
+         <artifact name="lwjgl-jemalloc-3.3.3-natives-macos-arm64.jar">
+            <sha256 value="63956ea246ff64aaa9ce0e1d6e3ccad686cfbf937d1fcd6cb8d5f44f6382160c" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="lwjgl-jemalloc-3.3.3-natives-macos.jar">
+            <sha256 value="2024daa5c6aa4078664148b7390fb8b231f2370ea0e17d407894dba7e9e564ec" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="lwjgl-jemalloc-3.3.3.jar">
+            <sha256 value="e99e31269e6678a4bfc62ef24c50a481c01cbdd004861ece9a59ba12768c6516" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="lwjgl-jemalloc-3.3.3.pom">
+            <sha256 value="209b8c7d7f9c1972d5c8d5f9ce19a3516ff9071443d0df8a866da1343bd2e3a9" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.lwjgl" name="lwjgl-openal" version="3.3.3">
+         <artifact name="lwjgl-openal-3.3.3-natives-macos-arm64.jar">
+            <sha256 value="3992463a16a8df19f63117b0883ead0ed928dd4df017f55b5e4e12b7a270489a" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="lwjgl-openal-3.3.3-natives-macos.jar">
+            <sha256 value="8264ae32ac9f413c4f4501863c5f6e7576a6fdabdc5d052d3281bbacc3377f1d" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="lwjgl-openal-3.3.3.jar">
+            <sha256 value="ae0e82767cacf08921f578fba9d84753ddeb00ceada0510a2b4a882be28fbf95" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="lwjgl-openal-3.3.3.pom">
+            <sha256 value="7fa6a211bbe4e45b82987537d6437a7b5294334ed3ac16cb844955ef43d5e70f" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.lwjgl" name="lwjgl-opengl" version="3.3.3">
+         <artifact name="lwjgl-opengl-3.3.3-natives-macos-arm64.jar">
+            <sha256 value="f1b3f1de83f973abae3a4bc32db5b229ae5d55cc80dbbc5f7c841812fe20b5fe" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="lwjgl-opengl-3.3.3-natives-macos.jar">
+            <sha256 value="4c1073d0e5ae99966d0ef1d6a7795758476d247d930fdc5ec1865e38cb847cce" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="lwjgl-opengl-3.3.3.jar">
+            <sha256 value="5062da750e5f7ec89e27e8b67b7d40fa8c4b16890159e35f828116ce6c8eca1e" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="lwjgl-opengl-3.3.3.pom">
+            <sha256 value="443925b5642ad318d49dfae97bae9cdd09e49025b302a94b0107fc8889be6cdd" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.lwjgl" name="lwjgl-stb" version="3.3.3">
+         <artifact name="lwjgl-stb-3.3.3-natives-macos-arm64.jar">
+            <sha256 value="b1f65875fd9ddd28097be6076029e2b8fab5ebc1626e21cef761611dfca715c2" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="lwjgl-stb-3.3.3-natives-macos.jar">
+            <sha256 value="32937a352db4bac3e92aa1bbdae2988a958e4b907ab5b557764cba82db20ba97" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="lwjgl-stb-3.3.3.jar">
+            <sha256 value="0cff7aa46ea9d70fcc20857015293ea80fbf21adcac34600c84da9b81a44ca93" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="lwjgl-stb-3.3.3.pom">
+            <sha256 value="8d1da43f798875c579ca8907f79ae4fc3ead155425ea9555c6faaab13d50e49d" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.lwjgl" name="lwjgl-tinyfd" version="3.3.3">
+         <artifact name="lwjgl-tinyfd-3.3.3-natives-macos-arm64.jar">
+            <sha256 value="6f7d979414651e343dc8b8b3faade0e2d9e4fdf99d565d5623e12d40dbae4a22" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="lwjgl-tinyfd-3.3.3-natives-macos.jar">
+            <sha256 value="4465dd46fdf9309c0ce64c3529a0da6792fb6711c3281e8c5dba935e6a9bfc3c" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="lwjgl-tinyfd-3.3.3.jar">
+            <sha256 value="ee0515054ee19a3f4088426fee9d879eb2ee657b07e5064e4e2c851f6adcf14b" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="lwjgl-tinyfd-3.3.3.pom">
+            <sha256 value="2c1bd119f41e65a544613f91e7160e006b81916e73a6ef75f549242cc4f3bef2" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.lz4" name="lz4-java" version="1.8.0">
+         <artifact name="lz4-java-1.8.0.jar">
+            <sha256 value="d74a3334fb35195009b338a951f918203d6bbca3d1d359033dc33edd1cadc9ef" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="lz4-java-1.8.0.pom">
+            <sha256 value="0db8adb51e132454a5c406debb2f1a0df81f93dd59fbe20cb947102994689034" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.mockito" name="mockito-bom" version="4.11.0">
+         <artifact name="mockito-bom-4.11.0.pom">
+            <sha256 value="d8531a746c988f7f68ed5f188cdea945006aea993ec5df9e524e0d27d61491da" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.openjdk.nashorn" name="nashorn-core" version="15.4">
+         <artifact name="nashorn-core-15.4.jar">
+            <sha256 value="6f816e84dfd63a81d4eaa7829c08337bbaff3ec683ff3bf6bbd90d017a00dc6f" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="nashorn-core-15.4.pom">
+            <sha256 value="69a9f7b9e47eccf47bbcee721ad4fb039ca7d9b650174e6d8602aadb77e5ac23" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.opentest4j" name="opentest4j" version="1.3.0">
+         <artifact name="opentest4j-1.3.0.jar">
+            <sha256 value="48e2df636cab6563ced64dcdff8abb2355627cb236ef0bf37598682ddf742f1b" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="opentest4j-1.3.0.module">
+            <sha256 value="48bf1d6c8b5dc94f74652bd17900f654deb714350248cf5e8fca27b9090c8e0d" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.ow2" name="ow2" version="1.5.1">
+         <artifact name="ow2-1.5.1.pom">
+            <sha256 value="321ddbb7ee6fe4f53dea6b4cd6db74154d6bfa42391c1f763b361b9f485acf05" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.ow2.asm" name="asm" version="9.5">
+         <artifact name="asm-9.5.pom">
+            <sha256 value="2c9cceb951cc6586de8d9a16c672ad3e4c30b9c323028d7a3c3366560d5627b1" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.ow2.asm" name="asm" version="9.7.1">
+         <artifact name="asm-9.7.1.jar">
+            <sha256 value="8cadd43ac5eb6d09de05faecca38b917a040bb9139c7edeb4cc81c740b713281" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="asm-9.7.1.pom">
+            <sha256 value="7229b03b30a73ee91008072d9e4569a51d8547fae8c50f527841aef4c1b0baa8" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.ow2.asm" name="asm" version="9.8">
+         <artifact name="asm-9.8.jar">
+            <sha256 value="876eab6a83daecad5ca67eb9fcabb063c97b5aeb8cf1fca7a989ecde17522051" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="asm-9.8.pom">
+            <sha256 value="c1367c3bb383d7619e7f797e38df7513885f2eef04ae7b5908f68222657b5baa" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.ow2.asm" name="asm" version="9.9.1">
+         <artifact name="asm-9.9.1.jar">
+            <sha256 value="6f3828a215c920059a5efa2fb55c233d6c54ec5cadca99ce1b1bdd10077c7ddd" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="asm-9.9.1.pom">
+            <sha256 value="aca68dee9ba2f6cd90ffde728efdc7e3ebfcf59f3f41fbfe248d2d01d5b866af" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.ow2.asm" name="asm-analysis" version="9.5">
+         <artifact name="asm-analysis-9.5.jar">
+            <sha256 value="39f1cf1791335701c3b02cae7b2bc21057ec9a55b2240789cb6d552b2b2c62fa" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="asm-analysis-9.5.pom">
+            <sha256 value="2a29950910f99df7b19a5037eb3dc39beace9ca3a07855a63791e6dab3eb43a3" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.ow2.asm" name="asm-analysis" version="9.8">
+         <artifact name="asm-analysis-9.8.jar">
+            <sha256 value="e640732fbcd3c6271925a504f125e38384688f4dfbbf92c8622dfcee0d09edb9" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="asm-analysis-9.8.pom">
+            <sha256 value="c5747e25c72e1b07d5263c75c78ad61a626dd2458fafcafc23f81d3253ee42ed" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.ow2.asm" name="asm-commons" version="9.5">
+         <artifact name="asm-commons-9.5.pom">
+            <sha256 value="8a6e460eedf8cc7b85d33c756213e6a5f7875f4a8383d535d199f3211ec2355c" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.ow2.asm" name="asm-commons" version="9.8">
+         <artifact name="asm-commons-9.8.jar">
+            <sha256 value="3301a1c1cb4c59fcc5292648dac1d7c5aed4c0f067dfbe88873b8cdfe77404f4" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="asm-commons-9.8.pom">
+            <sha256 value="f793e78f01f703717d09472e56cdf212fe298970c882e2116e8e549fb6d140c2" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.ow2.asm" name="asm-commons" version="9.9.1">
+         <artifact name="asm-commons-9.9.1.jar">
+            <sha256 value="c2319e014ce7199f2b7f7d56d6bb991863168c3f4b6cd6c9f542a4937ef7ef88" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="asm-commons-9.9.1.pom">
+            <sha256 value="def70fa7d3a4bb71660bc661523329579a4bc31ccc96c42d3a5c3b9f76a6b649" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.ow2.asm" name="asm-tree" version="9.5">
+         <artifact name="asm-tree-9.5.pom">
+            <sha256 value="a72aaaf8dd051899fa089e783ec7d4827ac4d7d1876201c6deecbaa94a0dc956" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.ow2.asm" name="asm-tree" version="9.8">
+         <artifact name="asm-tree-9.8.jar">
+            <sha256 value="14b7880cb7c85eed101e2710432fc3ffb83275532a6a894dc4c4095d49ad59f1" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="asm-tree-9.8.pom">
+            <sha256 value="7149e7faa0e191296f879aeed9209c8942d398f0698d2cca1a9c628f2e2a8f77" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.ow2.asm" name="asm-tree" version="9.9.1">
+         <artifact name="asm-tree-9.9.1.jar">
+            <sha256 value="0f3555096b720b820bbacab0b515589bee0200bee099bda14c561738ae837ba1" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="asm-tree-9.9.1.pom">
+            <sha256 value="67fee446ba512871300738f0f956f61a500a852f6861ff70f0a3c7bf0c0fa405" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.ow2.asm" name="asm-util" version="9.5">
+         <artifact name="asm-util-9.5.jar">
+            <sha256 value="c467f1bb3c08888f47243e2d475209b34a772d627e44fca06752e18bb038bd74" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="asm-util-9.5.pom">
+            <sha256 value="ad7ef390a46f8be68fcfa8ea101c9d7391f198ca9be1b2cb151d083b5fc1292f" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.ow2.asm" name="asm-util" version="9.8">
+         <artifact name="asm-util-9.8.jar">
+            <sha256 value="8ba0460ecb28fd0e2980e5f3ef3433a513a457bc077f81a53bdc75b587a08d15" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="asm-util-9.8.pom">
+            <sha256 value="24d0970e171e2917b83a8f0f05d50a1cdb5c82e508555b52dbcc9d3361c4f0ec" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.pcollections" name="pcollections" version="4.0.2">
+         <artifact name="pcollections-4.0.2.jar">
+            <sha256 value="2bbeef5797a241300c4f7513cd546239629ed7deda4fc0c31df90bb95f5f13ef" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="pcollections-4.0.2.module">
+            <sha256 value="4ecd32923f33def1eb0d24b80f9c82d2f4fcce8cb7a1a512783e8b1e1ee61c95" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.reflections" name="reflections" version="0.10.2">
+         <artifact name="reflections-0.10.2.jar">
+            <sha256 value="938a2d08fe54050d7610b944d8ddc3a09355710d9e6be0aac838dbc04e9a2825" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="reflections-0.10.2.pom">
+            <sha256 value="b6caa3eb7d35bd756ed6eb0a2a81868b8d3c0f6f42244feae41760ac66306d87" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.slf4j" name="jul-to-slf4j" version="1.7.36">
+         <artifact name="jul-to-slf4j-1.7.36.jar">
+            <sha256 value="9e641fb142c5f0b0623d6222c09ea87523a41bf6bed48ac79940724010b989de" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="jul-to-slf4j-1.7.36.pom">
+            <sha256 value="99ff5340c4642a30829d3d98253f123e7a3ef573483164477c88d89d7e6586b7" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.slf4j" name="slf4j-api" version="2.0.9">
+         <artifact name="slf4j-api-2.0.9.jar">
+            <sha256 value="0818930dc8d7debb403204611691da58e49d42c50b6ffcfdce02dadb7c3c2b6c" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="slf4j-api-2.0.9.pom">
+            <sha256 value="9c3a654f9d0aa1a34b3178ebe53a89c76792e1d81fc1e9739cbe9b1610523385" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.slf4j" name="slf4j-bom" version="2.0.9">
+         <artifact name="slf4j-bom-2.0.9.pom">
+            <sha256 value="eaef4584807d812c6a0b6cf839d5e47f50c754327719b9ce081e271d15da6243" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.slf4j" name="slf4j-parent" version="1.7.36">
+         <artifact name="slf4j-parent-1.7.36.pom">
+            <sha256 value="bb388d37fbcdd3cde64c3cede21838693218dc451f04040c5df360a78ed7e812" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.slf4j" name="slf4j-parent" version="2.0.9">
+         <artifact name="slf4j-parent-2.0.9.pom">
+            <sha256 value="c307f0424141f1c500ae5cf0d3868e4866cb219ed5e399b66c5a07c61ea21fd5" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.sonatype.oss" name="oss-parent" version="7">
+         <artifact name="oss-parent-7.pom">
+            <sha256 value="b51f8867c92b6a722499557fc3a1fdea77bdf9ef574722fe90ce436a29559454" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.sonatype.oss" name="oss-parent" version="9">
+         <artifact name="oss-parent-9.pom">
+            <sha256 value="fb40265f982548212ff82e362e59732b2187ec6f0d80182885c14ef1f982827a" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.tukaani" name="xz" version="1.10">
+         <artifact name="xz-1.10.jar">
+            <sha256 value="95c63c1a55b22dd6453890a419cc1a640f790bbf7d8ae82db1e30aefefb08888" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="xz-1.10.pom">
+            <sha256 value="ef608b83c3bb6c8e3e6b3beaa38842ba15963b46495e4af91b0746c8b750f3b9" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.tukaani" name="xz" version="1.8">
+         <artifact name="xz-1.8.pom">
+            <sha256 value="f29e75cb88eb4acbf7e5aa5c09ed55eac2cbae601d63a9f375231f45452c1013" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.vineflower" name="vineflower" version="1.10.1">
+         <artifact name="vineflower-1.10.1.jar">
+            <sha256 value="b9b208e50793b64657a6b6292067526613f549de7405f9243624b02f4276e409" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="vineflower-1.10.1.pom">
+            <sha256 value="e4f320cb82c6fe0cf525c25dccdbfb40257d0fa994ccafa2dfb728663d6b8f62" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="org.xmlresolver" name="xmlresolver" version="5.2.2">
+         <artifact name="xmlresolver-5.2.2-data.jar">
+            <sha256 value="173904bdbd783ba0fac92c5bcc05da5d09f0ce7eed24346666ea0a239461f9b4" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="xmlresolver-5.2.2.jar">
+            <sha256 value="efc92bd7ed32b3e57095e0b3e872051ccfbbdcc980831ef33e89e38161a85222" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="xmlresolver-5.2.2.module">
+            <sha256 value="1b04eb39cfec8fd5f8e0ab6a5521b299a6d44f36b7a3c571fba96be53a76e805" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+      <component group="trove" name="trove" version="1.0.2">
+         <artifact name="trove-1.0.2.jar">
+            <sha256 value="ad68a86cfd0255a2bc0525ce11ec49640caea7e34ff91eb89c3193dcccd77f05" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="trove-1.0.2.pom">
+            <sha256 value="83f2682bd3ded1fe417b7e98e7ac86510cd747378eae7e3a5d1d35c7c7f0d2ea" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+      </component>
+   </components>
+</verification-metadata>

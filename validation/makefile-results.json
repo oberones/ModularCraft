@@ -1,0 +1,73 @@
+{
+  "date": "2026-11-04",
+  "status": "PASS",
+  "pythonLauncherTests": 12,
+  "packagedGameTests": 7,
+  "nativeRecoveryCycles": 20,
+  "runtimeJarSha256": "83057484e55b534de4870164957fbc11652e1e30d1ee63de9bef7affd7a9b567",
+  "records": [
+    {
+      "file": "makefile-red.log",
+      "sha256": "1815da38ec4f690818e498bd06da25485b0bd5d0c60282f6444225d5a881fa61",
+      "expectedRed": true,
+      "observations": [
+        "Ran 8 tests in 0.010s",
+        "FAILED (failures=8)"
+      ]
+    },
+    {
+      "file": "makefile-verify.log",
+      "sha256": "a6e971d28153ceaf6b20def939c9dce45d3d3b5b8f1cc692ec486e3133c141bc",
+      "expectedRed": false,
+      "observations": [
+        "Ran 8 tests in 0.025s",
+        "BUILD SUCCESSFUL in 5s",
+        "MODULARCRAFT_TEST_ARTIFACT union:${PROJECT}/run/make/gametest/mods/modularcraft-0.1.0.jar%23128!/",
+        "[09:02:02] [Server thread/INFO] [minecraft/GameTestServer]: All 7 required tests passed :)",
+        "BUILD SUCCESSFUL in 8s"
+      ]
+    },
+    {
+      "file": "makefile-native.log",
+      "sha256": "38b203f078c129c5541a421a2bfba6d8e468ea75165173cbf6df83713be2a15e",
+      "expectedRed": false,
+      "observations": [
+        "BUILD SUCCESSFUL in 894ms",
+        "MODULARCRAFT_QA artifact=union:${PROJECT}/run/make/smoke-recovery-ngses55k/mods/modularcraft-0.1.0.jar%23187!/",
+        "MODULARCRAFT_QA cleanup cycle=20 channels=0 timers=0",
+        "BUILD SUCCESSFUL in 34s"
+      ]
+    },
+    {
+      "file": "makefile-green.log",
+      "sha256": "e0fb9e10ef84b7f46faa61ccd1230d54bbe79e3dec92726a9d10d6c9ed951aed",
+      "expectedRed": false,
+      "observations": [
+        "Ran 12 tests in 0.056s",
+        "OK"
+      ]
+    },
+    {
+      "file": "makefile-ci-red.log",
+      "sha256": "8261c324179f7361240a2dfc22761a95c9f86b5089ffc7a8adaf9f5b5f99158b",
+      "expectedRed": true,
+      "observations": [
+        "Ran 12 tests in 0.053s",
+        "FAILED (failures=1)"
+      ]
+    },
+    {
+      "file": "makefile-ci.log",
+      "sha256": "333aac145b6935003deac4f582b06e20e4aee16aaea76e337de317d7b9b31ded",
+      "expectedRed": false,
+      "observations": [
+        "Ran 12 tests in 0.057s",
+        "\"./gradlew\" --offline --no-daemon --dependency-verification strict check build runtimeArtifact",
+        "BUILD SUCCESSFUL in 5s",
+        "[09:22:13] [Server thread/INFO] [minecraft/GameTestServer]: All 7 required tests passed :)",
+        "BUILD SUCCESSFUL in 10s"
+      ]
+    }
+  ],
+  "limits": "Tooling validation only; earlier outstanding musical/native/multiplayer/security release gates remain open."
+}

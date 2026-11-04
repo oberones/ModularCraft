@@ -1,0 +1,19 @@
+{
+  "host": "Apple MacBook Pro Mac14,9",
+  "processor": "Apple M2 Pro, 12 cores",
+  "memoryGiB": 16,
+  "os": "macOS 26.6.2 (25G83)",
+  "toolchain": "Eclipse Temurin 21.0.12.1+1-LTS arm64",
+  "gradle": "8.13",
+  "minecraft": "1.21.1",
+  "neoforge": "21.1.218",
+  "nativeDeviceObserved": "Scarlett 18i8 USB",
+  "automatedDsp": {
+    "sampleRate": 48000,
+    "blockFrames": 128,
+    "modules": 64,
+    "cables": 96,
+    "speakers": 8
+  },
+  "nativeAcceptance": "Packaged singleplayer and headless GameTest server observed; two-client captures, normal dedicated multiplayer server, 30-minute comparative load and formal listening acceptance pending"
+}

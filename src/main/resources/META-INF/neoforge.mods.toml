@@ -1,0 +1,23 @@
+modLoader="javafml"
+loaderVersion="[4,)"
+license="MIT"
+[[mods]]
+modId="modularcraft"
+version="0.1.0"
+displayName="ModularCraft"
+authors="Malevolent Gods"
+description='''Build and play a shared modular synthesizer from four instrument blocks.'''
+[[dependencies.modularcraft]]
+modId="neoforge"
+type="required"
+versionRange="[21.1.218]"
+ordering="NONE"
+side="BOTH"
+[[dependencies.modularcraft]]
+modId="minecraft"
+type="required"
+versionRange="[1.21.1]"
+ordering="NONE"
+side="BOTH"
+[[mixins]]
+config="modularcraft.mixins.json"

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.malevolentgods.modularcraft.MeasurementTest" tests="3" skipped="0" failures="1" errors="0" timestamp="2026-11-04T03:26:27.506Z" hostname="Calliope.local" time="2.059">
+  <properties/>
+  <testcase name="sawFilterBandEnergyMeetsMu009AndExtremesAreFinite()" classname="com.malevolentgods.modularcraft.MeasurementTest" time="0.06"/>
+  <testcase name="fixedLoadDspBenchmarkAndNoSteadyAllocation()" classname="com.malevolentgods.modularcraft.MeasurementTest" time="1.828"/>
+  <testcase name="sawDcAndAliasResidualAgainstOversampledReference()" classname="com.malevolentgods.modularcraft.MeasurementTest" time="0.17">
+    <failure message="org.opentest4j.AssertionFailedError: Alias residual at 879.638671875 = -32.768612243607286 ==&gt; expected: &lt;true&gt; but was: &lt;false&gt;" type="org.opentest4j.AssertionFailedError">org.opentest4j.AssertionFailedError: Alias residual at 879.638671875 = -32.768612243607286 ==&gt; expected: &lt;true&gt; but was: &lt;false&gt;
+	at app//org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
+	at app//org.junit.jupiter.api.AssertionFailureBuilder.buildAndThrow(AssertionFailureBuilder.java:132)
+	at app//org.junit.jupiter.api.AssertTrue.failNotTrue(AssertTrue.java:63)
+	at app//org.junit.jupiter.api.AssertTrue.assertTrue(AssertTrue.java:36)
+	at app//org.junit.jupiter.api.Assertions.assertTrue(Assertions.java:214)
+	at app//com.malevolentgods.modularcraft.MeasurementTest.sawDcAndAliasResidualAgainstOversampledReference(MeasurementTest.java:44)
+	at java.base@21.0.12.1/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base@21.0.12.1/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base@21.0.12.1/java.util.ArrayList.forEach(ArrayList.java:1596)
+</failure>
+  </testcase>
+  <system-out><![CDATA[MU-009 2-8 kHz attenuation dB=-30.338580891818033
+64 module / 96 cable / 8 speaker DSP p95 ms=0.137375, measured allocation bytes=0
+alias 54.931641 Hz: -44.636 dB; DC 0.000000000
+alias 219.726563 Hz: -38.698 dB; DC 0.000000000
+alias 879.638672 Hz: -32.769 dB; DC -0.000000000
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

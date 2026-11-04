@@ -1,0 +1,15 @@
+# Instrument artwork
+
+All SVG, PNG, model JSON, and item art in this project was authored for ModularCraft
+by the implementation agent on 2026-11-03. No Minecraft textures, third-party images,
+Blender models, generated images, or downloaded fonts were copied. License: MIT,
+matching the repository. `scripts/generate-assets.py` is the editable procedural
+source; SVGs are editable drawings; deterministic PNGs and Minecraft block/item JSON
+are the shipped outputs. Regenerate with `python3 scripts/generate-assets.py`.
+
+The charcoal steel housings share fasteners and ventilation; saw trace, low-pass
+response, ADSR curve, and speaker grille identify the four modules independently of
+color. Port labels AO/AI/CO/CI/GI and cable arrowheads supplement audio/control colors.
+Full port names are displayed by the patching-tool HUD. The upper panel is decorative;
+right-click opens the functional parameter editor. Native visual acceptance is separate
+from asset generation and remains tracked in `validation/ledger.md`.

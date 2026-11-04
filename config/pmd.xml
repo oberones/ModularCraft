@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<ruleset name="ModularCraft" xmlns="http://pmd.sourceforge.net/ruleset/2.0.0">
+  <description>Correctness checks for bounded and explicit resource ownership.</description>
+  <rule ref="category/java/errorprone.xml/EmptyCatchBlock"/>
+  <rule ref="category/java/errorprone.xml/ReturnFromFinallyBlock"/>
+  <rule ref="category/java/errorprone.xml/BrokenNullCheck"/>
+  <rule ref="category/java/errorprone.xml/CloseResource"/>
+</ruleset>

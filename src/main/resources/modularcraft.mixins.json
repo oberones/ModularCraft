@@ -1,0 +1,1 @@
+{"required":true,"minVersion":"0.8","package":"com.malevolentgods.modularcraft.client.mixin","compatibilityLevel":"JAVA_21","client":["SoundManagerAccess","SoundEngineAccess","ChannelAccess","SoundLifecycle","IntegratedPause"],"injectors":{"defaultRequire":1}}

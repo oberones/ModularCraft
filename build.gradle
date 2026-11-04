@@ -1,0 +1,136 @@
+plugins {
+    id 'java-library'
+    id 'checkstyle'
+    id 'pmd'
+    id 'net.neoforged.moddev' version '2.0.148'
+}
+group = 'com.malevolentgods.modularcraft'
+version = '0.1.0'
+base { archivesName = 'modularcraft' }
+java { toolchain.languageVersion = JavaLanguageVersion.of(21); withSourcesJar() }
+repositories { mavenCentral() }
+sourceSets {
+    gametest {
+        compileClasspath += sourceSets.main.output
+        runtimeClasspath += sourceSets.main.output
+    }
+}
+configurations {
+    gametestImplementation.extendsFrom implementation
+    gametestRuntimeOnly.extendsFrom runtimeOnly
+}
+neoForge {
+    version = '21.1.218'
+    addModdingDependenciesTo(sourceSets.gametest)
+    runs {
+        client {
+            client(); gameDirectory = file(providers.gradleProperty('clientRunDir').getOrElse('run/client'))
+            if (project.hasProperty('qa')) {
+                systemProperty 'modularcraft.qa', 'true'
+                systemProperty 'modularcraft.qa.load', providers.gradleProperty('qaLoad').getOrElse('false')
+                systemProperty 'modularcraft.qa.ticks', providers.gradleProperty('qaTicks').getOrElse('1200')
+                systemProperty 'modularcraft.qa.cycles', providers.gradleProperty('qaCycles').getOrElse('false')
+                programArguments.addAll('--quickPlaySingleplayer', 'ModularCraft-QA')
+            }
+        }
+        server {
+            server(); programArgument '--nogui'
+            gameDirectory = file(providers.gradleProperty('serverRunDir').getOrElse('run/server'))
+        }
+        gameTestServer {
+            type = 'gameTestServer'
+            gameDirectory = file(providers.gradleProperty('gameTestRunDir').getOrElse('run/gametest'))
+            systemProperty 'modularcraft.packaged', project.hasProperty('packaged').toString()
+            sourceSet = sourceSets.gametest
+            systemProperty 'neoforge.enabledGameTestNamespaces', 'modularcraft'
+        }
+    }
+    mods {
+        if (!project.hasProperty("packaged")) modularcraft { sourceSet sourceSets.main }
+        modularcraft_tests { sourceSet sourceSets.gametest }
+    }
+}
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.11.4'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.11.4'
+}
+checkstyle { toolVersion = '10.21.2'; configFile = file('config/checkstyle/checkstyle.xml') }
+pmd { toolVersion = '7.10.0'; consoleOutput = true; ruleSets = []; ruleSetFiles = files('config/pmd.xml') }
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    options.compilerArgs += ['-Xlint:all,-processing,-deprecation', '-Werror']
+}
+tasks.withType(Test).configureEach { useJUnitPlatform(); maxHeapSize = '1G' }
+tasks.withType(AbstractArchiveTask).configureEach { preserveFileTimestamps = false; reproducibleFileOrder = true }
+tasks.named('jar') { from('LICENSE', 'THIRD_PARTY_NOTICES.md') }
+tasks.register('runtimeArtifact') {
+    dependsOn tasks.named('jar')
+    def artifact = tasks.named('jar', Jar).flatMap { it.archiveFile }
+    def descriptor = layout.buildDirectory.file('runtime-artifact.json')
+    inputs.file(artifact)
+    outputs.file(descriptor)
+    doLast {
+        descriptor.get().asFile.text = groovy.json.JsonOutput.toJson(
+            [jar: project.relativePath(artifact.get().asFile)]) + '\n'
+    }
+}
+dependencyLocking { lockAllConfigurations() }
+configurations { formatter }
+dependencies { formatter 'com.google.googlejavaformat:google-java-format:1.25.2:all-deps' }
+tasks.register('formatJava', JavaExec) {
+    classpath = configurations.formatter
+    mainClass = 'com.google.googlejavaformat.java.Main'
+    args '--replace'
+    args fileTree('src').matching { include '**/*.java' }.files.sort()
+}
+tasks.register('formatCheck', JavaExec) {
+    classpath = configurations.formatter
+    mainClass = 'com.google.googlejavaformat.java.Main'
+    args '--dry-run', '--set-exit-if-changed'
+    args fileTree('src').matching { include '**/*.java' }.files.sort()
+}
+tasks.named('check') { dependsOn 'formatCheck' }
+['formatJava', 'formatCheck'].each { taskName ->
+    tasks.named(taskName, JavaExec) {
+        javaLauncher = javaToolchains.launcherFor { languageVersion = JavaLanguageVersion.of(21) }
+        jvmArgs(['api', 'file', 'parser', 'tree', 'util', 'code'].collect {
+            "--add-exports=jdk.compiler/com.sun.tools.javac.${it}=ALL-UNNAMED"
+        })
+    }
+}
+tasks.named('formatCheck') { mustRunAfter 'formatJava' }
+tasks.named('sourcesJar') {
+    from('art') { into 'art' }
+    from('scripts/generate-assets.py') { into 'scripts' }
+    from('docs') { into 'docs' }
+    from('README.md', 'LICENSE', 'THIRD_PARTY_NOTICES.md')
+    from('validation') { include '*.md', '*.json'; into 'validation' }
+}
+tasks.register('projectSources', Zip) {
+    archiveBaseName = 'modularcraft'
+    archiveClassifier = 'project'
+    destinationDirectory = layout.buildDirectory.dir('libs')
+    from('.') {
+        include 'src/**', 'art/**', 'config/**', 'docs/**', 'scripts/**', 'gradle/**',
+            '.github/**', 'specs/**', '.specify/memory/constitution.md',
+            'validation/*.md', 'validation/*.json', 'validation/*.xml',
+            'Makefile', 'build.gradle', 'settings.gradle', 'gradle.properties', 'gradle.lockfile',
+            'gradlew', 'gradlew.bat', '.gitignore', 'AGENTS.md', 'README.md',
+            'CHANGELOG.md', 'LICENSE', 'THIRD_PARTY_NOTICES.md'
+        exclude '**/__pycache__/**', '**/.DS_Store'
+    }
+}
+tasks.named('assemble') { dependsOn 'projectSources' }
+tasks.register('dependencyInventory') {
+    doLast {
+        def entries = []
+        configurations.findAll { it.canBeResolved && !it.name.startsWith('neoForm') }.each { configuration ->
+            configuration.resolvedConfiguration.resolvedArtifacts.each { artifact ->
+                def id = artifact.moduleVersion.id
+                entries << [configuration: configuration.name, group: id.group, name: id.name, version: id.version,
+                    file: artifact.file.name, sha256: java.security.MessageDigest.getInstance('SHA-256').digest(artifact.file.bytes).encodeHex().toString()]
+            }
+        }
+        file('validation/dependencies.json').text = groovy.json.JsonOutput.prettyPrint(groovy.json.JsonOutput.toJson(entries.unique().sort { "${it.group}:${it.name}:${it.version}:${it.configuration}" })) + '\n'
+    }
+}

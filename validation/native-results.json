@@ -1,0 +1,73 @@
+{
+  "environment": "environment.json",
+  "observations": [
+    {
+      "log": "native-rp1.log",
+      "sha256": "84dbf1cde5339ce583237bb12d8b6f6cd51f00d8206155bb1761cd5f4b5d34a9",
+      "completedSuccessfully": true,
+      "fixture": [],
+      "lastClientStats": null,
+      "lastServerStats": "MODULARCRAFT_QA server lastNs=22709 maxNs=10601250",
+      "recoveryCyclesObserved": 0,
+      "artifactOrigin": null,
+      "gameTestResult": []
+    },
+    {
+      "log": "native-load.log",
+      "sha256": "eff9a0f20836e368c8b5d887d3183e1d28f522ec6c796f0883a34d81a704c1c4",
+      "completedSuccessfully": true,
+      "fixture": [],
+      "lastClientStats": "MODULARCRAFT_QA client p95BlockNs=213875 blocks=22414 underruns=1 maxBlockNs=4778875 peak=1.0 maxQueued=12 failed=false",
+      "lastServerStats": "MODULARCRAFT_QA server lastNs=84250 maxNs=5912917",
+      "recoveryCyclesObserved": 0,
+      "artifactOrigin": null,
+      "gameTestResult": []
+    },
+    {
+      "log": "packaged-client.log",
+      "sha256": "eb188b887252bfbf1be99c25df646be4ee8581a25b4a779cc67747d701c38d38",
+      "completedSuccessfully": true,
+      "fixture": [
+        "MODULARCRAFT_QA artifact=union:${PROJECT}/run/packaged-client/mods/modularcraft-0.1.0.jar%23187!/"
+      ],
+      "lastClientStats": "MODULARCRAFT_QA client p95BlockNs=26334 blocks=17074 underruns=0 maxBlockNs=290084 peak=0.023645533248782158 maxQueued=12 failed=false",
+      "lastServerStats": "MODULARCRAFT_QA server lastNs=29542 maxNs=3984208",
+      "recoveryCyclesObserved": 20,
+      "artifactOrigin": null,
+      "gameTestResult": []
+    },
+    {
+      "log": "packaged-final-client.log",
+      "sha256": "ba2cb6085a33f7533dbd6a1945982412044526f7e9a4e3383235e9dadc41d315",
+      "completedSuccessfully": true,
+      "fixture": [
+        "MODULARCRAFT_QA artifact=union:${PROJECT}/run/packaged-final/mods/modularcraft-0.1.0.jar%23187!/"
+      ],
+      "lastClientStats": "MODULARCRAFT_QA client p95BlockNs=26834 blocks=17074 underruns=0 maxBlockNs=3974917 peak=0.026825034990906715 maxQueued=12 failed=false",
+      "lastServerStats": "MODULARCRAFT_QA server lastNs=23834 maxNs=2468416",
+      "recoveryCyclesObserved": 20,
+      "artifactOrigin": null,
+      "gameTestResult": []
+    },
+    {
+      "log": "packaged-final-server.log",
+      "sha256": "30c638aec95c60ffeec8349bd38a15f1dd2a71e0a55d016ba6cce43031e497c5",
+      "completedSuccessfully": true,
+      "fixture": [],
+      "lastClientStats": null,
+      "lastServerStats": null,
+      "recoveryCyclesObserved": 0,
+      "artifactOrigin": "MODULARCRAFT_TEST_ARTIFACT union:${PROJECT}/run/packaged-final-server/mods/modularcraft-0.1.0.jar%23128!/",
+      "gameTestResult": [
+        "[23:52:11] [Server thread/INFO] [minecraft/GameTestServer]: All 7 required tests passed :)"
+      ]
+    }
+  ],
+  "limitations": [
+    "Not an acoustic capture",
+    "Recovery counters reset for each output instance",
+    "Not two clients",
+    "One-minute workloads only",
+    "No formal human or device timing acceptance"
+  ]
+}
