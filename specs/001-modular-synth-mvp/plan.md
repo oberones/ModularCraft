@@ -24,7 +24,7 @@ L1 coefficient normalization bounds oscillator peaks at the selected level.
 
 ## Budgets and ordering
 
-Retain every SS-003 quota. Version 1 world saves; version 4 network/snapshots; edits 4 KiB, snapshots 32 KiB,
+Retain every SS-003 quota. Version 1 world saves; version 5 network/snapshots; edits 4 KiB, snapshots 32 KiB,
 world storage 2 MiB. 20 edits/s/player, 200/world; queues 64/player, 256/world.
 Cleanup and gate release bypass ordinary throttling. Outbound 128 KiB/s/listener,
 2 MiB/s/server. One preparation worker, eight pending jobs, 1,024 client events,
@@ -70,7 +70,7 @@ Do not clamp effective side pitches to the base Frequency limits.
 
 Keep world schema 1: migrate only the exact legacy oscillator Frequency/Level parameter
 set to Detune 0 in stored world/block records. Preserve other malformed/unknown records.
-Network/snapshot v4 requires all three controls and matching peers; append the enum value
+Network/snapshot v5 requires all three controls and matching peers; append the enum value
 to retain existing control ordinals. No dependencies or ownership changes. At most three
 voices per oscillator, with side DSP skipped at settled zero spread; existing graph/module/
 traffic caps stay fixed. Include maximum spread in the existing DSP load measurement.
@@ -84,7 +84,7 @@ traffic caps stay fixed. Include maximum spread in the existing DSP load measure
 | V | Three-voice spread contract, unchanged CV semantics, RP-001/RP-003 detune variations |
 | VI | Measured center/side pitches, 10 ms phase-continuous edits, normalized finite output |
 | VII | Three voices/oscillator, inactive side DSP skipped, unchanged quotas, load measurement |
-| VIII | Exact legacy save migration, repeatable roundtrips, v4 peer refusal and backup guidance |
+| VIII | Exact legacy save migration, repeatable roundtrips, v5 peer refusal and backup guidance |
 | IX | Existing pinned toolchain/dependencies, packaged artifact checks |
 | X | Localized slider/numeric control, units/range, native screenshot and audition procedure |
 
@@ -134,7 +134,7 @@ listening pass or two-client timing qualification. Record results in validation/
 Implement MI-001–006 with the existing Java 21 `javax.sound.midi` API and no dependency changes.
 The client owns local device preferences, a bounded asynchronous adapter, and combined GUI/MIDI
 priority. The logical server accepts relative GUI or absolute MIDI notes through its existing
-session/revision/permission checks. Network/snapshot v4 carries expanded pitch to 0–127; world v1 remains
+session/revision/permission checks. Network/snapshot v5 carries expanded pitch to 0–127; world v1 remains
 unchanged. Native input providers are initially qualified on macOS only when actual evidence
 exists. Detailed ownership, failure and timing contracts are in `docs/architecture.md`.
 
@@ -147,7 +147,7 @@ exists. Detailed ownership, failure and timing contracts are in `docs/architectu
 | V composition | Existing CV/gate ports, fixed gate, monophonic sustain/fallback; RP-003 extension |
 | VI timing | Existing server receive/sample ordering and smoothing; SC-003/004 retained, no hardware timing claim |
 | VII bounds | One worker, four task slots, one input/helper, 64 ports, two bounded 256-event queues, 64/tick, 2,061 holds; timeout/overflow tests |
-| VIII persistence | Only local device/channel preferences; world v1 preserved, protocol/snapshot v4 refuses older peers |
+| VIII persistence | Only local device/channel preferences; world v1 preserved, protocol/snapshot v5 refuses older peers |
 | IX dependencies | Built-in Java Sound only; all dependency and host pins retained |
 | X controls | Opt-in device/channel, Refresh, Release Notes, localized diagnostics, local mute, guide and screenshots |
 
@@ -163,3 +163,21 @@ preferences, server scheduling and all musical/authority contracts. This maps co
 I/IV/VII to process isolation and bounded cleanup, IX to the same JDK/no new dependencies,
 and III/VI/X to reconnect regressions, unchanged timing acceptance and recovery guidance.
 Physical timing qualification remains separate from helper lifecycle evidence.
+
+
+## Euclidean sequencer extension
+
+Implement EU-001–008 using immutable prepared channel settings and a shared pure-Java
+sample-domain control DAG. Extend the existing module/parameter/port registration and v1
+named save records; network/snapshot v5 carries sequence checkpoints and envelope baseline
+gates. Server components advance autonomous clocks independently of audible activation,
+while clients render exact edges between ticks. Control source identity includes output port.
+Use the existing ownership, quota and 40 ms scheduling contracts; apply the 1,024-per-patch /
+4,096-per-tick transition limits with deterministic suspension on overload.
+
+Keep client-only editor, visual projection and face overlay separate from audio ownership.
+Use original generated artwork, cached ring geometry and 32-block visibility. Exercise
+red–green domain/timing/codec/audio/host tests, `make verify`, and the disposable
+`make smoke GRADLE_ARGS=-PqaSequencer TICKS=650` native fixture. Measure the existing DSP
+budgets with both four-channel rhythms and chained clocks; retain all prior native,
+multiplayer, listening, security and performance qualification gates. Record self-review.

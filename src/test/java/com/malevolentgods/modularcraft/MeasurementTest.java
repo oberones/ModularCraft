@@ -188,7 +188,7 @@ class MeasurementTest {
             .toList());
   }
 
-  private static void benchmark(List<PatchSnapshot> patches) {
+  static void benchmark(List<PatchSnapshot> patches) {
     RenderGraph graph = new RenderGraph(patches);
     var listener = new RenderGraph.Listener("minecraft:overworld", 8, 66, 8, 0, 1);
     float[] samples = new float[256];
@@ -199,7 +199,7 @@ class MeasurementTest {
     long thread = Thread.currentThread().threadId(), before = bean.getThreadAllocatedBytes(thread);
     for (int i = 0; i < times.length; i++) {
       long start = System.nanoTime();
-      graph.process(96000 + i * 128L, listener, samples);
+      graph.process(96000 + (5000L + i) * 128L, listener, samples);
       times[i] = System.nanoTime() - start;
     }
     long allocation = bean.getThreadAllocatedBytes(thread) - before;
@@ -209,7 +209,11 @@ class MeasurementTest {
         "64 module / 96 cable / 8 speaker DSP p95 ms="
             + p95
             + ", detune="
-            + patches.getFirst().modules().getFirst().value(Parameter.DETUNE)
+            + patches.getFirst().modules().stream()
+                .filter(m -> m.kind() == ModuleKind.OSCILLATOR)
+                .findFirst()
+                .orElseThrow()
+                .value(Parameter.DETUNE)
             + ", measured allocation bytes="
             + allocation);
     Assertions.assertTrue(

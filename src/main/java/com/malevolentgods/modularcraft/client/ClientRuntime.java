@@ -67,6 +67,12 @@ public final class ClientRuntime {
   private static String dimension = "";
   private static long lastPing, lastRoster, lastSequence, lastRecovery;
   private static boolean paused;
+  private static long pauseSample;
+
+  public static long visualSample() {
+    return paused ? pauseSample : clock.sample(System.nanoTime());
+  }
+
   private static volatile String diagnostic = "ready";
 
   // Borrowed Minecraft singleton/world; its lifecycle belongs to the host.
@@ -109,6 +115,7 @@ public final class ClientRuntime {
           }
         });
     NeoForge.EVENT_BUS.addListener(CableRenderer::render);
+    NeoForge.EVENT_BUS.addListener(SequencerRenderer::render);
     NeoForge.EVENT_BUS.addListener(CableRenderer::hud);
     Messages.patchReceiver = ClientRuntime::receive;
     Messages.rosterReceiver = ClientRuntime::roster;
@@ -124,7 +131,13 @@ public final class ClientRuntime {
                     .findFirst()
                     .orElseThrow();
             Minecraft mc = Minecraft.getInstance();
-            if (module.kind() == ModuleKind.KEYBOARD) {
+            if (module.kind() == ModuleKind.EUCLIDEAN_SEQUENCER) {
+              if (message.open())
+                mc.setScreen(new SequencerScreen(module, message.editable(), message.status()));
+              else if (mc.screen instanceof SequencerScreen screen
+                  && screen.identity().equals(module.id()))
+                screen.accept(module, message.editable(), message.status());
+            } else if (module.kind() == ModuleKind.KEYBOARD) {
               KeyboardState note =
                   snapshot
                       .keyboards()
@@ -227,6 +240,7 @@ public final class ClientRuntime {
       }
     staging.clear();
     if (!clock.ready()) clock.observe(lastRoster, lastRoster, Math.max(0, roster.sample() - 1920));
+    SequencerVisuals.accept(patches.values());
     prepare(roster.sample(), roster.sequence());
   }
 
@@ -298,6 +312,7 @@ public final class ClientRuntime {
     if (Minecraft.getInstance().screen instanceof KeyboardScreen screen) screen.suspendInput(true);
     MIDI.target("", null, -1, false);
     CableRenderer.clear();
+    SequencerVisuals.clear();
     stopAudio();
     patches.clear();
     staging.clear();
@@ -328,6 +343,7 @@ public final class ClientRuntime {
     long now = System.nanoTime();
     if (mc.isPaused()) {
       if (!paused) {
+        pauseSample = clock.sample(now);
         paused = true;
         stopAudio();
       }

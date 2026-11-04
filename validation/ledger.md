@@ -390,3 +390,35 @@ Source `b438683` plus this uncommitted feature. [Evidence and self-review](detun
 
 Runtime JAR SHA-256: `8661df364c777d7f9b972e43312ff2fc016c187162707f83a42457952f376d2e`.
 Manual worlds preserved; no commit, push or publication.
+
+## Four-channel Euclidean sequencer — 2026-11-04
+
+Source `c2ac2f0` plus this uncommitted feature. [Evidence and self-review](sequencer/review.md),
+[machine-readable results](sequencer/results.json), [native editor](sequencer/editor.png),
+[block and cables](sequencer/north.png).
+
+- **PASS — implementation:** four independent steps/hits/rotation/mute channels; 10 ms
+  triggers, internal/external clock and reset, exact sample-timed envelope integration,
+  transport, next-edge edits, checkpoint recovery and bounded overload suspension.
+- **PASS — compatibility/authority:** world/block v1, validated module-specific parameter
+  counts, existing migration/quarantine and graph/permission/revision bounds. Network and
+  snapshots now require v5; saves contain settings/cables, never running state/playheads.
+- **PASS — full verification:** `make verify`; 108 JUnit, 15 packaged GameTests, 12 launcher
+  tests, formatting/static analysis and six-module artifact inspection. Red–green logs and
+  an explicit self-review are recorded in the linked evidence.
+- **PASS — native functional/visual probe:** `make smoke GRADLE_ARGS=-PqaSequencer TICKS=650`;
+  exact entry, mute/stop/resume, compact scrolling, all four orientations, cables and 20
+  native audio cleanup cycles. Final screenshots were inspected. Manual worlds preserved.
+- **PASS — synthetic DSP/allocation:** four maximum patches, 64 modules/96 cables/eight
+  speakers, 300 BPM and maximum detune: p95 0.240 ms/block (four channels), 0.216 ms/block
+  (clock/reset chains), zero measured steady allocation. Retained target is <1 ms/block.
+- **FAIL — native performance acceptance:** final probe observed one audio underrun and
+  13.640 ms maximum server work against the <2 ms target. Sampled steady work was lower;
+  this does not establish sustained-load qualification or erase the observed maximum.
+- **PENDING — human RP-004 listening, two-client timing/late join and 30-minute sequencer
+  load qualification**. Existing security, other-platform, hosted-CI and release gates
+  remain unchanged; this feature is not a release-acceptance claim.
+
+Runtime JAR SHA-256: `750d473afbe8a54862f4a747432fdd8ee65a2dd6d740a7df5d3572d61868cd03`.
+Minecraft 1.21.1, NeoForge 21.1.218, Java 21 and dependencies remain pinned.
+No commit, push or publication.

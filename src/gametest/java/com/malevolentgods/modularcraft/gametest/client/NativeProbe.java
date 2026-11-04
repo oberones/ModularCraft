@@ -22,6 +22,7 @@ public final class NativeProbe {
           if (Boolean.getBoolean("modularcraft.qa.cables")) captureCables();
           if (Boolean.getBoolean("modularcraft.qa.keyboard")) keyboard();
           if (Boolean.getBoolean("modularcraft.qa.detune")) detune();
+          if (Boolean.getBoolean("modularcraft.qa.sequencer")) sequencer();
           if (ticks == 1)
             System.out.println(
                 "MODULARCRAFT_QA artifact="
@@ -49,6 +50,112 @@ public final class NativeProbe {
           if (ticks == Integer.getInteger("modularcraft.qa.ticks", 1200))
             Minecraft.getInstance().stop();
         });
+  }
+
+  // Minecraft owns this borrowed client and framebuffer.
+  @SuppressWarnings("PMD.CloseResource")
+  private void sequencer() {
+    Minecraft mc = Minecraft.getInstance();
+    if (ticks >= 90 && ticks <= 210) {
+      if (!(mc.screen instanceof com.malevolentgods.modularcraft.client.SequencerScreen screen))
+        throw new IllegalStateException("Sequencer editor did not open");
+      if (ticks == 100) {
+        var fields =
+            screen.children().stream()
+                .filter(net.minecraft.client.gui.components.EditBox.class::isInstance)
+                .map(net.minecraft.client.gui.components.EditBox.class::cast)
+                .toList();
+        if (fields.size() != 13)
+          throw new IllegalStateException("Expected tempo and twelve numeric channel controls");
+        var field = fields.get(1);
+        field.setValue("7");
+        screen.setFocused(field);
+        field.setFocused(true);
+        screen.keyPressed(org.lwjgl.glfw.GLFW.GLFW_KEY_ENTER, 0, 0);
+      }
+      if (ticks == 130) {
+        var module =
+            ClientRuntime.patches().stream()
+                .flatMap(p -> p.modules().stream())
+                .filter(m -> m.id().equals(screen.identity()))
+                .findFirst()
+                .orElseThrow();
+        if (module.value(com.malevolentgods.modularcraft.domain.Parameter.A_STEPS) != 7)
+          throw new IllegalStateException("Sequencer numeric edit rejected");
+        System.out.println("MODULARCRAFT_QA sequencer accepted A steps=7");
+      }
+      if (ticks == 150 || ticks == 180 || ticks == 190 || ticks == 210) {
+        var buttons =
+            screen.children().stream()
+                .filter(net.minecraft.client.gui.components.Button.class::isInstance)
+                .map(net.minecraft.client.gui.components.Button.class::cast)
+                .toList();
+        var button =
+            ticks == 190
+                ? buttons.get(1)
+                : ticks == 210
+                    ? buttons.get(0)
+                    : buttons.stream()
+                        .filter(
+                            b ->
+                                b.getMessage()
+                                    .getString()
+                                    .equals(ticks == 150 ? "Mute channel" : "Unmute channel"))
+                        .findFirst()
+                        .orElseThrow();
+        screen.mouseClicked(button.getX() + 4, button.getY() + 4, 0);
+        screen.mouseReleased(button.getX() + 4, button.getY() + 4, 0);
+      }
+      if (ticks == 170 || ticks == 200) {
+        var seq = com.malevolentgods.modularcraft.client.SequencerVisuals.get(screen.identity());
+        if (seq == null || seq.running() != (ticks == 170))
+          throw new IllegalStateException("Sequencer transport state mismatch");
+        System.out.println("MODULARCRAFT_QA sequencer tick=" + ticks + " running=" + seq.running());
+      }
+    }
+    if (ticks == 212) {
+      mc.options.guiScale().set(4);
+      mc.resizeDisplay();
+    }
+    if (ticks == 214
+        && mc.screen instanceof com.malevolentgods.modularcraft.client.SequencerScreen screen)
+      for (int i = 0; i < 3; i++) screen.keyPressed(org.lwjgl.glfw.GLFW.GLFW_KEY_PAGE_DOWN, 0, 0);
+    if (ticks == 216
+        && mc.screen instanceof com.malevolentgods.modularcraft.client.SequencerScreen screen) {
+      long visible =
+          screen.children().stream()
+              .filter(net.minecraft.client.gui.components.EditBox.class::isInstance)
+              .map(net.minecraft.client.gui.components.EditBox.class::cast)
+              .filter(w -> w.visible)
+              .count();
+      if (visible < 4)
+        throw new IllegalStateException("Compact sequencer controls are inaccessible");
+    }
+    if (ticks == 218) {
+      mc.options.guiScale().set(2);
+      mc.resizeDisplay();
+    }
+    if (ticks == 220 && mc.screen != null) mc.screen.onClose();
+    if (ticks == 216
+        || ticks == 90
+        || ticks == 130
+        || ticks == 170
+        || ticks == 240
+        || ticks == 280
+        || ticks == 320
+        || ticks == 360)
+      Screenshot.grab(
+          mc.gameDirectory,
+          "sequencer-" + ticks + ".png",
+          mc.getMainRenderTarget(),
+          message -> System.out.println("MODULARCRAFT_QA " + message.getString()));
+    if (ticks >= 410 && ticks <= 600 && ticks % 10 == 0) {
+      ClientRuntime.recover("resync");
+      if (com.malevolentgods.modularcraft.client.AudioOutput.channels() != 0
+          || com.malevolentgods.modularcraft.client.AudioOutput.timers() != 0)
+        throw new IllegalStateException("Sequencer native cleanup leaked resources");
+      System.out.println("MODULARCRAFT_QA sequencer cleanup=" + ((ticks - 410) / 10 + 1));
+    }
   }
 
   // Minecraft owns this borrowed client and its framebuffer.
@@ -201,7 +308,8 @@ public final class NativeProbe {
         && ClientRuntime.patches().stream()
             .anyMatch(p -> p.keyboards().values().stream().anyMatch(k -> k.gate())))
       throw new IllegalStateException("Screen close left a held keyboard gate");
-    if (ticks == 90
+    if (ticks == 216
+        || ticks == 90
         || ticks == 130
         || ticks == 180
         || ticks == 230

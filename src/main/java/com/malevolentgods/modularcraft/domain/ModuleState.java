@@ -30,6 +30,7 @@ public record ModuleState(
     if (!values.keySet().equals(java.util.Set.copyOf(kind.parameters)))
       throw new IllegalArgumentException("parameters");
     for (var entry : values.entrySet()) entry.getKey().validate(entry.getValue());
+    if (kind == ModuleKind.EUCLIDEAN_SEQUENCER) SequencerSettings.from(values);
     if (enabled && kind != ModuleKind.SPEAKER) throw new IllegalArgumentException("not_speaker");
   }
 
@@ -46,6 +47,15 @@ public record ModuleState(
     if (!kind.parameters.contains(p)) throw new IllegalArgumentException("parameter");
     java.util.Map<Parameter, Double> next = new java.util.EnumMap<>(values);
     next.put(p, p.validate(v));
+    if (kind == ModuleKind.EUCLIDEAN_SEQUENCER) {
+      for (int channel = 0; channel < 4; channel++)
+        if (p == SequencerSettings.parameter(channel, 0)) {
+          Parameter hits = SequencerSettings.parameter(channel, 1),
+              rotation = SequencerSettings.parameter(channel, 2);
+          next.put(hits, Math.min(next.get(hits), v));
+          next.put(rotation, next.get(rotation) % v);
+        }
+    }
     return new ModuleState(
         id, owner, kind, dimension, x, y, z, Math.addExact(revision, 1), next, loaded, enabled);
   }

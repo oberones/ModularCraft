@@ -24,7 +24,10 @@ public final class Messages {
     GATE,
     CLOSE,
     REFRESH,
-    INSPECT
+    INSPECT,
+    SEQUENCER_START,
+    SEQUENCER_STOP,
+    SEQUENCER_RESET
   }
 
   // Installed only by the client entrypoint; common loading resolves no client classes.
@@ -228,7 +231,7 @@ public final class Messages {
   }
 
   public static void register(RegisterPayloadHandlersEvent event) {
-    var registrar = event.registrar("4");
+    var registrar = event.registrar("5");
     registrar
         .executesOn(HandlerThread.NETWORK)
         .playToServer(

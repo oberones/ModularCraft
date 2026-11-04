@@ -1,0 +1,90 @@
+{
+  "date": "2026-11-04",
+  "source": "c2ac2f0 plus uncommitted Euclidean sequencer implementation",
+  "runtime_jar_sha256": "750d473afbe8a54862f4a747432fdd8ee65a2dd6d740a7df5d3572d61868cd03",
+  "environment": {
+    "cpu": "Apple M2 Pro",
+    "ram_gib": 16,
+    "os": "macOS 26.6.2 arm64",
+    "java": "21.0.12.1",
+    "minecraft": "1.21.1",
+    "neoforge": "21.1.218",
+    "sample_rate_hz": 48000,
+    "audio_block_frames": 128
+  },
+  "verification": {
+    "command": "make verify",
+    "status": "PASS",
+    "junit": {
+      "tests": 108,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "packaged_gametests": 15,
+    "launcher_tests": 12,
+    "format_checkstyle_pmd": "PASS",
+    "artifact_inspection": "PASS"
+  },
+  "dsp_benchmark": {
+    "status": "PASS",
+    "warmup_blocks": 5000,
+    "measured_blocks": 10000,
+    "measured_audio_seconds": 26.666666666666668,
+    "modules": 64,
+    "cables": 96,
+    "speakers": 8,
+    "tempo_bpm": 300,
+    "detune_cents": 100,
+    "four_channel_p95_ms": 0.240416,
+    "clock_reset_chain_p95_ms": 0.21575,
+    "baseline_p95_ms": 0.178792,
+    "maximum_detune_baseline_p95_ms": 0.256,
+    "steady_allocated_bytes": 0,
+    "p95_limit_ms": 1
+  },
+  "native_probe": {
+    "command": "make smoke GRADLE_ARGS=-PqaSequencer TICKS=650",
+    "status": "PASS",
+    "world": "run/make/smoke-t_urmmug",
+    "modules": 14,
+    "cables": 15,
+    "orientations": [
+      "north",
+      "east",
+      "south",
+      "west"
+    ],
+    "cleanup_cycles": 20,
+    "screenshots": [
+      "defaults.png",
+      "editor.png",
+      "muted.png",
+      "compact.png",
+      "north.png",
+      "east.png",
+      "south.png",
+      "west.png"
+    ],
+    "audio_p95_ms_at_tick_400": 0.054375,
+    "audio_max_ms": 5.368333,
+    "audio_underruns": 1,
+    "server_max_ms": 13.639625,
+    "server_last_ms_samples": [
+      0.052041,
+      0.030625,
+      0.025833
+    ]
+  },
+  "acceptance": {
+    "server_work_below_2_ms": "FAIL: native maximum 13.639625 ms; sustained-load qualification remains pending",
+    "zero_native_underruns": "FAIL: one observed",
+    "human_listening": "PENDING",
+    "two_client_timing": "PENDING",
+    "thirty_minute_sequencer_load": "PENDING",
+    "existing_security_and_release_gates": "UNCHANGED; see ledger"
+  },
+  "self_review": "PASS for implementation scope; incomplete release acceptance explicitly retained",
+  "committed": false,
+  "published": false
+}

@@ -161,7 +161,7 @@ class DetuneTest {
     world.place(oscillator);
     var loaded = StateCodec.load(StateCodec.save(world, List.of()));
     Assertions.assertEquals(25.125, loaded.state().get(OSCILLATOR).value(detune()));
-    for (int version : new int[] {1, 2, 3}) {
+    for (int version : new int[] {1, 2, 3, 4}) {
       byte[] old = StateCodec.encode(patch);
       old[5] = (byte) version;
       Assertions.assertThrows(IllegalArgumentException.class, () -> StateCodec.decode(old));
@@ -206,7 +206,7 @@ class DetuneTest {
     try (ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         DataOutputStream out = new DataOutputStream(bytes)) {
       out.writeInt(0x4d435301);
-      out.writeShort(4);
+      out.writeShort(5);
       out.writeLong(OSCILLATOR.getMostSignificantBits());
       out.writeLong(OSCILLATOR.getLeastSignificantBits());
       out.writeLong(0);

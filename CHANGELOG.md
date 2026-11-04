@@ -50,3 +50,17 @@ Legacy world/block oscillator records migrate to Detune 0; other unknown/invalid
 retain quarantine protection. World schema stays v1; network/snapshot v4 requires updating
 clients and server together. Back up worlds before upgrading and restore the backup for
 downgrade. Listening and multiplayer qualification remain separate from automated checks.
+
+
+Added the Euclidean Sequencer: four independently configurable 1–16-step rhythm channels,
+rotation/mutes, internal 30–300 BPM sixteenth-note clock, external clock/reset inputs and
+clock output. Exact 10 ms sample-timed pulses drive existing envelopes; clock chains share
+a bounded deterministic control timeline. Start resumes; Reset arms step one. Closing the
+panel, disabling speakers and local mute leave the clock running. Settings/cables persist;
+restart and chunk suspension require Start. The editor and block face show animated rings.
+
+Network/snapshot v5 adds sequencer checkpoints and explicit envelope gate baselines; update
+clients/server together. World/block v1, legacy detune migration and unknown-record
+preservation remain compatible. Back up worlds before upgrades; new block registry entries
+make downgrading a world containing sequencers unsupported. No new dependencies. Native
+listening, multiplayer and all earlier qualification gates remain separately documented.

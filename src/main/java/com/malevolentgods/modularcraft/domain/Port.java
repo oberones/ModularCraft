@@ -9,7 +9,14 @@ public enum Port {
   CV_OUT(true, Role.PITCH),
   PITCH_IN(false, Role.PITCH),
   GATE_OUT(true, Role.GATE),
-  GATE_IN(false, Role.GATE);
+  GATE_IN(false, Role.GATE),
+  CLOCK_IN(false, Role.GATE),
+  RESET_IN(false, Role.GATE),
+  CLOCK_OUT(true, Role.GATE),
+  TRIGGER_A(true, Role.GATE),
+  TRIGGER_B(true, Role.GATE),
+  TRIGGER_C(true, Role.GATE),
+  TRIGGER_D(true, Role.GATE);
 
   public enum Role {
     AUDIO,

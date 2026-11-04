@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.malevolentgods.modularcraft.SequencerLoadTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-11-04T22:08:06.982Z" hostname="Calliope.local" time="6.468">
+  <properties/>
+  <testcase name="fourMaximumPatchesWithEveryChannelActiveStayWithinAudioBudget()" classname="com.malevolentgods.modularcraft.SequencerLoadTest" time="3.43"/>
+  <testcase name="fourMaximumPatchesWithClockAndResetChainsStayWithinAudioBudget()" classname="com.malevolentgods.modularcraft.SequencerLoadTest" time="3.038"/>
+  <system-out><![CDATA[64 module / 96 cable / 8 speaker DSP p95 ms=0.240416, detune=100.0, measured allocation bytes=0
+64 module / 96 cable / 8 speaker DSP p95 ms=0.21575, detune=100.0, measured allocation bytes=0
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

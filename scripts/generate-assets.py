@@ -46,9 +46,9 @@ def panel():
  d=Drawing();d.rect(0,0,64,64,'#151b23');d.rect(2,2,60,60,'#34434e');d.rect(4,4,56,56,'#202d37')
  for x,y in [(5,5),(58,5),(5,58),(58,58)]:d.circle(x,y,1,'#b1b9b8');d.rect(x,y,1,1,'#46515b')
  return d
-MODULES=[('oscillator','SAW','#65d7e5',['AO','PI']),('filter','LPF','#91c79a',['AI','CI','AO']),('envelope','ADSR','#ffc36a',['CO','GT']),('speaker','AMP','#d69bbd',['AI','GI']),('keyboard','KEYS','#b3a3ef',['CV','GO'])]
+MODULES=[('oscillator','SAW','#65d7e5',['AO','PI']),('filter','LPF','#91c79a',['AI','CI','AO']),('envelope','ADSR','#ffc36a',['CO','GT']),('speaker','AMP','#d69bbd',['AI','GI']),('keyboard','KEYS','#b3a3ef',['CV','GO']),('euclidean_sequencer','EUCLID','#65d7e5',['CI','RI','CO','A','B','C','D'])]
 for name,title,accent,ports in MODULES:
- d=panel();d.rect(9,8,46,2,accent);d.text(title,12,13,accent,2)
+ d=panel();d.rect(9,8,46,2,accent);d.text(title,20 if name=='euclidean_sequencer' else 12,12 if name=='euclidean_sequencer' else 13,accent,1 if name=='euclidean_sequencer' else 2)
  if name=='oscillator':
   d.rect(9,27,27,17,'#101820')
   for x in range(11,34):d.rect(x,41-(x-11)%8,1,1,accent)
@@ -60,6 +60,14 @@ for name,title,accent,ports in MODULES:
   points=[(10,43),(19,28),(31,36),(44,36),(54,43)]
   for (x1,y1),(x2,y2) in zip(points,points[1:]):
    for x in range(x1,x2+1):d.rect(x,round(y1+(y2-y1)*(x-x1)/(x2-x1)),1,2,accent)
+ elif name=='euclidean_sequencer':
+  for channel,(color,hits) in enumerate(zip(['#65d7e5','#ffc36a','#91c79a','#d69bbd'],[4,5,7,9])):
+   cx=20 if channel%2==0 else 44;cy=24 if channel<2 else 39
+   d.text('ABCD'[channel],cx-1,cy-2,color)
+   for step in range(16):
+    angle=-math.pi/2+step*2*math.pi/16
+    x=round(cx+6*math.cos(angle));y=round(cy+6*math.sin(angle))
+    d.rect(x,y,1,1,color if step*hits%16<hits else '#53636d')
  elif name=='keyboard':
   for i in range(7):d.rect(10+i*6,28,5,16,'#e4edea')
   for i in (1,2,4,5,6):d.rect(8+i*6,28,4,9,'#0e141b')
@@ -96,7 +104,18 @@ lang.update({
 'modularcraft.midi.channel':'Channel: %s',
 'modularcraft.midi.refresh':'Refresh',
 'modularcraft.midi.release':'Release Notes'})
+lang['block.modularcraft.euclidean_sequencer']='Euclidean Sequencer'
+lang['parameter.modularcraft.tempo']='Tempo'
+for channel in 'abcd':
+ for control,label in [('steps','Steps'),('hits','Hits'),('rotation','Rotation'),('mute','Mute')]:
+  lang[f'parameter.modularcraft.{channel}_{control}']=f'{channel.upper()} {label}'
+for port,label in {'clock_in':'CI ← Clock In (rising edge)','reset_in':'RI ← Reset In (rising edge)','clock_out':'CO → Clock Out','trigger_a':'A → Trigger A','trigger_b':'B → Trigger B','trigger_c':'C → Trigger C','trigger_d':'D → Trigger D'}.items():
+ lang['port.modularcraft.'+port]=label
+for key,label in {'start':'Start / Resume','stop':'Stop','reset':'Reset','mute':'Mute channel','unmute':'Unmute channel','set':'Set','up':'↑','down':'↓','bpm':'BPM','steps':'Steps','hits':'Hits','rotation':'Rotate','pending':'Next clock…','stopped':'Stopped','external':'External clock','internal':'Internal · 1/16','channel':'Channel %s','range':'%s: %s–%s (hits/rotation limited by Steps)','fast_clock':'Clock above 50 Hz ignored. Slow the source.','legend':'Filled: hit · Hollow: rest · White: playhead'}.items():
+ lang['modularcraft.euclidean.'+key]=label
 errors={
+'sequencer_pattern':'Hits must be 0–Steps; rotation must be 0–Steps−1.',
+'sequencer_overload':'Sequencer overload: reduce clock/load, then Start and enable speakers.',
 'keyboard_unavailable':'Keyboard unavailable. Move within six blocks and reopen its panel.',
 'midi_off':'MIDI off. Select an input device to play.',
 'midi_ready':'MIDI connected. Exact pitch; sustain pedal supported.',
@@ -120,7 +139,7 @@ errors={
 'patch_speakers':'Patch limit: two speakers. Disconnect a speaker first.',
 'active_patches':'World limit: four active patches. Disable another patch first.',
 'active_speakers':'World limit: eight enabled speakers. Disable one first.',
-'patch_unloaded':'Patch suspended: load all its chunks, then enable its speakers again.',
+'patch_unloaded':'Patch suspended: load all chunks, restart sequencers, and enable speakers.',
 'unloaded':'Endpoint unavailable. Load both modules and try again.',
 'disabled':'Speaker disabled. Enable it to play; restart and chunk unload disable speakers.',
 'missing_audio':'No audio input. Connect Oscillator or Filter Audio Out to Audio In.',
@@ -129,7 +148,7 @@ errors={
 'awaiting':'Waiting for the server to accept this value.',
 'stale':'This module changed. Review refreshed values and retry.',
 'occupied_input':'Input already connected. Shift-click that input to remove its cable first.',
-'incompatible_ports':'Connect Audio Out to Audio In, or Envelope Out to a control input.',
+'incompatible_ports':'Match audio, control, or pitch ports. Gate/trigger/clock outputs connect to Gate, Clock, or Reset inputs.',
 'different_owners':'Both cable endpoints must have the same owner, including operator edits.',
 'cycle':'Feedback is unsupported. Remove the connection that would form a loop.',
 'self_connection':'Connect two different modules.',
@@ -168,4 +187,4 @@ errors={
  'throttled':'Edit rate limited: 20/s per player, 200/s per world. Wait and retry refreshed values.'}
 lang.update({'modularcraft.error.'+k:v for k,v in errors.items()})
 p=ASSETS/'lang/en_us.json';p.parent.mkdir(parents=True,exist_ok=True);p.write_text(json.dumps(lang,indent=2,ensure_ascii=False)+'\n')
-print('Wrote five complete block sets, tool, localization, and editable SVG sources.')
+print('Wrote six complete block sets, tool, localization, and editable SVG sources.')

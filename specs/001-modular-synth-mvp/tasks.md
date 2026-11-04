@@ -29,3 +29,24 @@ No commit, push or publication is authorized.
 - [x] M07 Update contracts, architecture, guides, localization, changelog and explicit self-review.
 - [ ] M08 Qualify physical controller/pedal/unplug behavior and real-device resource cycles.
 - [ ] M09 Record human listening/acoustic timing and two-client MIDI SC-004 acceptance.
+
+## Euclidean sequencer extension
+
+- [x] EU01 Add exhaustive pattern, clock, control and checkpoint contract tests before implementation.
+- [x] EU02 Add the sixteenth-step four-channel module, validated settings, seven ports and schema-v1 saves.
+- [x] EU03 Implement the shared sample timeline, integer clock phase, exact pulses and bounded clock chains.
+- [x] EU04 Route digital signals by module and port; preserve envelope and keyboard/manual/redstone semantics.
+- [x] EU05 Add authoritative transport edits, v5 checkpoints, next-edge edits, overload and unload suspension.
+- [x] EU06 Add the localized responsive editor and client-only animated block rings with cached geometry.
+- [x] EU07 Generate original editable assets and extend packaging checks to all six modules.
+- [x] EU08 Cover malformed records, protocol/authority/stale revisions, persistence and server lifecycle.
+- [x] EU09 Pass `make verify`, sequencer DSP/allocation measurements and the disposable native probe.
+- [x] EU10 Inspect editor/compact layout and all four block orientations; record screenshots and self-review.
+- [x] EU11 Update RP-004, feature/architecture/acceptance documentation, changelog and validation ledger.
+- [ ] EU12 Complete human RP-004 listening and two-client timing/late-join acceptance.
+- [ ] EU13 Qualify sustained native sequencer load: resolve server-work spikes and observed underrun.
+
+Evidence: [sequencer review](../../validation/sequencer/review.md) and
+[machine-readable results](../../validation/sequencer/results.json). Automated and native
+functional passes do not close existing security, performance or release gates.
+No commit, push or publication is included.

@@ -82,11 +82,11 @@ with a minimum 48-sample separation and 1,920-sample lead. Cleanup bypasses edit
 queue overload releases and invalidates the affected session. Subsequent snapshots cannot
 rewind pending performance timestamps. Renewal never starts/retriggers a note.
 
-Pitch CV and gate have separate port roles. Snapshot v4 carries keyboard MIDI note numbers
+Pitch CV and gate have separate port roles. Snapshot v5 carries keyboard MIDI note numbers
 0–127 and gate booleans; CV = (note−60)/12 V and Hz = 440×2^((note−69)/12). Server-side
 external gates feed analytic envelope checkpoints. RenderGraph resolves pitch cables into
 smoothed frequency targets, preserves oscillator phase, and leaves envelope control routing
-unchanged. World v1 persists octave only, using existing named records; network v4 rejects
+unchanged. World v1 persists octave only, using existing named records; network v5 rejects
 old peers. Snapshot recovery restores current pitch/gate, not historical note events.
 
 
@@ -143,7 +143,7 @@ keeps server-receive scheduling (minimum 48 samples between accepted events, 1,9
 lead), existing revision/permission/range checks, and the 20/player and 200/world edit budgets.
 MIDI device timestamps are ignored; sample-accurate hardware-input timing is not claimed.
 
-Network/snapshot v4 deliberately refuses older peers/snapshots; world v1 and saved octave
+Network/snapshot v5 deliberately refuses older peers/snapshots; world v1 and saved octave
 remain unchanged. The SHA-256 of the device name/vendor/description/version is a local
 selection descriptor, not a hardware identity. Only unique matches restore automatically;
 explicit selection can distinguish duplicate ports for the current focused session. Device
@@ -169,5 +169,43 @@ spread. Native performance/listening/two-client gates remain distinct.
 World schema v1 and block schema v1 accept only the exact legacy Frequency/Level key set
 as a migration to Detune 0. Other incomplete/extra/non-finite records retain rejection or
 opaque quarantine. The complete named control set is written on next save, and repeated
-loads are stable. Snapshot/network v4 refuses older formats and does not apply this stored
+loads are stable. Snapshot/network v5 refuses older formats and does not apply this stored
 record migration. Existing parameter ordinals are retained by appending DETUNE.
+
+
+## Euclidean control timeline
+
+`SequencerSettings` prepares four immutable validated channel configurations; `Sequencer`
+owns a single 48 kHz runtime with integer clock remainders, next-step counters, input edge
+levels and five pulse endings. The canonical mask is `(step * hits) % steps < hits`, rotated
+clockwise, with zero hits silent. Musical edits are pending until a clock; mute is immediate.
+`ControlTimeline` evaluates clock/reset/gate wiring in topological order, with reset before
+clock at the same sample. Digital routing includes the source port, so all four outputs
+remain independent. The server and audio renderer use the same bounded algorithm.
+
+Logical-server timelines operate even without enabled speakers. Envelope checkpoints exist
+only for audible components; manual/redstone baseline gates are carried separately from
+external gates. Keyboard retriggers retain their prior priority. Runtime changes use the
+existing ordered 40 ms lead, validation and revisions. Internal pulses do not send packets:
+normal periodic snapshots carry current sequencer and envelope checkpoints, and listeners
+advance them on the sample timeline. Late recovery advances state without replaying audio.
+The renderer prepares all routing and mutable runtimes outside processing; it does not
+allocate buffers, perform I/O, acquire locks, or touch world objects while advancing.
+
+World/block schema v1 stores 17 named controls and cables only. Snapshot/network v5 adds
+bounded per-module sequencer checkpoints and manual/redstone envelope baselines; matching
+peers are mandatory. The parameter decoder now uses the selected module's bounded control
+count. Legacy oscillator migration and byte-preserving quarantine remain in place.
+
+At most 16 sequencers/64 channels fit one patch and 256/1,024 fit the world; all existing
+module, cable, speaker, storage, bandwidth, job and audio-queue quotas remain unchanged.
+Clock input accepts at most 50 Hz, with 480-sample output pulses and no pulse overlap.
+Timeline work is capped at 1,024 output transitions per component and 4,096 per server tick;
+overload stops that component and disables its speakers, requiring explicit recovery.
+Client recovery is likewise bounded and silences overloaded graph components.
+
+`SequencerVisuals` owns a separate client-thread projection, independent of local mute.
+The editor and world renderer share cached ring coordinates. World overlays use the accepted
+scene, check loaded chunks, camera-facing side and frustum, and stop at 32 blocks; no chunk
+scans/tickets or client classes are introduced into common loading. Unload, disconnect and
+world changes discard projections; integrated pause freezes the visual sample coordinate.

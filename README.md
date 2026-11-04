@@ -1,7 +1,7 @@
 # ModularCraft
 
-Build a shared modular synthesizer from five Minecraft blocks: **Saw Oscillator**,
-**Low-Pass Filter**, **Envelope Generator**, **Amplifier / Speaker**, and **Keyboard**. Connect their
+Build a shared modular synthesizer from six Minecraft blocks: **Saw Oscillator**,
+**Low-Pass Filter**, **Envelope Generator**, **Amplifier / Speaker**, **Keyboard**, and **Euclidean Sequencer**. Connect their
 ports with the Patching Tool; nearby players synthesize the accepted performance locally.
 No prerecorded loops, accounts, internet audio, external services, or extra audio software
 are required. Creative access is sufficient; there are no survival recipes in this MVP.
@@ -159,7 +159,7 @@ across device reopen; it adds no installed dependencies and never keeps notes fr
 MIDI shares the existing traffic limits, including renewals, so dense controller/arpeggiator
 streams can be rejected. Queue overflow stops the session and requires reopening the panel.
 Only supported notes/pedal/reset messages consume the MIDI queue. All clients and the server
-must use protocol **4**; existing world saves remain version **1**. Physical MIDI devices,
+must use protocol **5**; existing world saves remain version **1**. Physical MIDI devices,
 listening, and multiplayer timing still need the acceptance procedure below.
 
 ## Patching, permissions, and saved work
@@ -199,7 +199,7 @@ for recovery. The global registry is `data/modularcraft.dat`; per-module data is
 its owning block entity. World-save schema remains version 1; older oscillators receive Detune 0 without changing
 their saved Frequency or Level. Back up the world before upgrading; restore that backup
 if downgrading, since older builds cannot interpret the new control. Network and
-performance-snapshot protocol is version 4: update both server and clients together.
+performance-snapshot protocol is version 5: update both server and clients together.
 
 ## Troubleshooting
 
@@ -248,5 +248,56 @@ Outputs: installable JAR, source JAR (including editable artwork), full rebuilda
 `build/libs`. See [architecture](docs/architecture.md), [acceptance procedures](docs/acceptance.md),
 [dependency/license inventory](THIRD_PARTY_NOTICES.md), and [art provenance](art/PROVENANCE.md).
 The test-only native fixture is excluded from the distributable. Public publishing,
-recording/export, recipes, sequencers, additional waveforms/modules, and other loaders
+recording/export, recipes, melodic sequencing, additional waveforms/modules, and other loaders
 are deferred.
+
+
+## Euclidean rhythms: RP-004
+
+The **Euclidean Sequencer** creates four independent trigger patterns, A–D. Each channel
+has **Steps 1–16**, **Hits 0–Steps**, **Rotate 0–Steps−1**, and **Mute**. Hits are spread as
+evenly as possible; positive rotation moves them clockwise. Defaults are 16 steps with
+4/5/7/9 hits, no rotation, and no mutes. Filled markers are hits, hollow markers are rests,
+and a white outline marks the current step. The editor and placed block both animate.
+Use **Set** or Enter to submit a numeric value; Tab navigates controls, and Page Up/Down,
+the arrow buttons, or the wheel scroll the channel cards on smaller screens.
+
+**Start / Resume** begins or resumes the next step. **Stop** releases every pulse and
+holds the next-step position; **Reset** arms step one for the next clock. Pattern and tempo
+changes wait for the next clock while running; a pending label identifies that transition.
+Shortening Steps also reduces an excessive hit count and wraps rotation. Muting releases
+an active pulse without stopping the channel's position; unmuting waits for a future hit.
+
+The internal clock defaults to **120 BPM**, with four sixteenth-note steps per quarter
+note; tempo is 30–300 integer BPM. **Clock Out** pulses on every step, even when all channels
+are muted. Connecting **Clock In** selects external clocking automatically: one rising
+edge advances all four channels. A connected source that stops leaves the module waiting;
+there is no automatic tempo fallback. Connecting a high source does not invent an edge.
+Disconnecting it resumes internal clocking after one interval. Input clocks above 50 Hz
+are ignored with a visible diagnostic. **Reset In** resets on a rising edge; simultaneous
+reset and clock play step one. Outputs are normalized gates lasting exactly **10 ms**,
+compatible with Envelope Gate In and other sequencers' Clock/Reset In. They produce no audio
+or pitch. Existing one-cable-per-input, four-destination fan-out and no-feedback rules apply.
+
+Build a two-voice reference patch using one sequencer, two oscillators, two filters, four
+envelopes, and two speakers (11 modules, 12 cables):
+
+1. For each voice, connect Oscillator Audio Out → Filter Audio In → Speaker Audio In.
+2. Connect Trigger A/B → Envelope 1/2 Gate In; connect their Envelope Outs → the corresponding
+   Speaker Gain In. Set oscillator frequencies to 220/330 Hz, Detune 0, Level 50%.
+3. Connect Trigger C/D → Envelope 3/4 Gate In; connect their Envelope Outs → the corresponding
+   Filter Cutoff In. Set both filters to Cutoff 500 Hz, Resonance 0%, Amount 70%.
+4. Set every envelope to Attack 0.001 s, Decay 0.200 s, Sustain 70%, Release 0.080 s.
+   Remove manual/redstone gate holds. Enable both speakers at Volume 10%, then Start.
+5. Hear separate 4/16 and 5/16 note rhythms with 7/16 and 9/16 brightness accents. Change A
+   to 7 steps, 3 hits, rotation 1; mute/unmute B; Stop, Resume, and Reset. Close the editor
+   and confirm the rhythms and block playheads continue. Use local mute without stopping them.
+6. Optionally connect Clock Out → a second sequencer's Clock In, Start the follower, and
+   verify step locking. Use any compatible gate/trigger source for Reset In.
+
+Settings and cables survive saves. Running state, held pulses and positions do not:
+world reload and chunk suspension require Start, and speakers must be enabled again.
+Closing the editor, disabling speakers, and local mute leave a loaded sequencer running.
+Back up worlds before upgrading; install protocol-v5 builds on every client and server.
+This version does not add presets, manual step editing, swing, probability, variable gate
+lengths, clock division, pitch sequences, MIDI clock, or redstone clock conversion.

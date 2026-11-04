@@ -1,6 +1,7 @@
 package com.malevolentgods.modularcraft.domain;
 
 import com.malevolentgods.modularcraft.dsp.Envelope;
+import com.malevolentgods.modularcraft.dsp.Sequencer;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
@@ -102,12 +103,12 @@ public final class StateCodec {
     int x = in.readInt(), y = in.readInt(), z = in.readInt();
     long revision = in.readLong();
     int n = in.readUnsignedByte();
-    if (n > 4) throw new IllegalArgumentException("parameter_count");
+    if (n > kind.parameters.size()) throw new IllegalArgumentException("parameter_count");
     Map<Parameter, Double> values = new EnumMap<>(Parameter.class);
     for (int i = 0; i < n; i++)
       if (values.put(Parameter.valueOf(in.readUTF()), in.readDouble()) != null)
         throw new IllegalArgumentException("duplicate_parameter");
-    // Only legacy stored saws have this exact two-control schema. Network v4 must be complete.
+    // Only legacy stored saws have this exact two-control schema. Network v5 must be complete.
     if (stored
         && kind == ModuleKind.OSCILLATOR
         && values.keySet().equals(java.util.Set.of(Parameter.FREQUENCY, Parameter.LEVEL)))
@@ -255,7 +256,7 @@ public final class StateCodec {
         MAX_PATCH,
         out -> {
           out.writeInt(MAGIC);
-          out.writeShort(4);
+          out.writeShort(5);
           uuid(out, p.id());
           out.writeLong(p.revision());
           out.writeLong(p.sequence());
@@ -287,12 +288,78 @@ public final class StateCodec {
             out.writeByte(entry.getValue().note());
             out.writeBoolean(entry.getValue().gate());
           }
+          out.writeShort(p.sequencers().size());
+          for (var entry :
+              p.sequencers().entrySet().stream().sorted(Map.Entry.comparingByKey()).toList()) {
+            uuid(out, entry.getKey());
+            sequencer(out, entry.getValue());
+          }
+          out.writeShort(p.baseGates().size());
+          for (var entry :
+              p.baseGates().entrySet().stream().sorted(Map.Entry.comparingByKey()).toList()) {
+            uuid(out, entry.getKey());
+            out.writeBoolean(entry.getValue());
+          }
         });
+  }
+
+  private static void sequencer(DataOutputStream out, Sequencer.Checkpoint state)
+      throws IOException {
+    out.writeShort(state.active().tempo());
+    for (var channel : state.active().channels()) {
+      out.writeByte(channel.steps());
+      out.writeByte(channel.hits());
+      out.writeByte(channel.rotation());
+      out.writeBoolean(channel.muted());
+    }
+    out.writeBoolean(state.running());
+    out.writeBoolean(state.external());
+    out.writeBoolean(state.clockHigh());
+    out.writeBoolean(state.resetHigh());
+    out.writeLong(state.nextClock());
+    out.writeInt(state.remainder());
+    out.writeLong(state.lastClock());
+    out.writeLong(state.clockEnd());
+    out.writeInt(state.rejectedClocks());
+    for (var channel : state.channels()) {
+      out.writeByte(channel.next());
+      out.writeByte(channel.step());
+      out.writeLong(channel.end());
+    }
+  }
+
+  private static Sequencer.Checkpoint sequencer(DataInputStream in, long sample)
+      throws IOException {
+    int tempo = in.readUnsignedShort();
+    List<SequencerSettings.Channel> channels = new ArrayList<>();
+    for (int i = 0; i < 4; i++)
+      channels.add(
+          new SequencerSettings.Channel(
+              in.readUnsignedByte(),
+              in.readUnsignedByte(),
+              in.readUnsignedByte(),
+              in.readBoolean()));
+    SequencerSettings active = new SequencerSettings(tempo, channels);
+    boolean running = in.readBoolean(),
+        external = in.readBoolean(),
+        clock = in.readBoolean(),
+        reset = in.readBoolean();
+    long nextClock = in.readLong();
+    int remainder = in.readInt();
+    long lastClock = in.readLong(), clockEnd = in.readLong();
+    int rejected = in.readInt();
+    List<Sequencer.ChannelState> positions = new ArrayList<>();
+    for (int i = 0; i < 4; i++)
+      positions.add(
+          new Sequencer.ChannelState(in.readUnsignedByte(), in.readByte(), in.readLong()));
+    return new Sequencer.Checkpoint(
+        sample, active, running, external, clock, reset, nextClock, remainder, lastClock, clockEnd,
+        rejected, positions);
   }
 
   public static PatchSnapshot decode(byte[] bytes) {
     try (DataInputStream in = input(bytes, MAX_PATCH)) {
-      if (in.readInt() != MAGIC || in.readUnsignedShort() != 4)
+      if (in.readInt() != MAGIC || in.readUnsignedShort() != 5)
         throw new IllegalArgumentException("protocol");
       UUID id = uuid(in);
       long revision = in.readLong(), sequence = in.readLong(), sample = in.readLong();
@@ -326,9 +393,28 @@ public final class StateCodec {
       for (int i = 0; i < n; i++)
         if (keyboards.put(uuid(in), new KeyboardState(in.readUnsignedByte(), in.readBoolean()))
             != null) throw new IllegalArgumentException("duplicate_keyboard");
+      Map<UUID, Sequencer.Checkpoint> sequencers = new HashMap<>();
+      n = count(in, 16);
+      for (int i = 0; i < n; i++)
+        if (sequencers.put(uuid(in), sequencer(in, sample)) != null)
+          throw new IllegalArgumentException("duplicate_sequencer");
+      Map<UUID, Boolean> baseGates = new HashMap<>();
+      n = count(in, 16);
+      for (int i = 0; i < n; i++)
+        if (baseGates.put(uuid(in), in.readBoolean()) != null)
+          throw new IllegalArgumentException("duplicate_gate");
       end(in);
       return new PatchSnapshot(
-          id, revision, sequence, sample, modules, cables, envelopes, keyboards);
+          id,
+          revision,
+          sequence,
+          sample,
+          modules,
+          cables,
+          envelopes,
+          keyboards,
+          sequencers,
+          baseGates);
     } catch (IOException e) {
       throw new IllegalArgumentException("snapshot_bytes", e);
     }

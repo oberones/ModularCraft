@@ -146,3 +146,14 @@ in a fresh RP-001 world, checks exact 25.125-cent entry, slider maximum, invalid
 entry rejection, and return to zero against server-accepted values. It captures four
 `detune-*.png` images in the managed instance's `screenshots/`. Unit regressions use
 `make test TEST='*DetuneTest'`; the full suite includes maximum-spread DSP allocation/timing.
+
+
+### Euclidean sequencer probe
+
+`make smoke GRADLE_ARGS=-PqaSequencer TICKS=650` launches the packaged JAR in a fresh world,
+creates an autonomous four-channel/two-voice patch and three clock followers, edits the
+editor through native widgets, captures the panel and all four facing directions, and
+checks 20 audio teardown/recovery cycles. It retains the generated world/log/screenshots
+under the printed `run/make/smoke-*` directory. Do not use an existing manual world.
+Run `make test TEST='*Sequencer*Test'` for focused musical and persistence regressions;
+`make verify` includes the packaged lifecycle GameTest and artifact/resource checks.

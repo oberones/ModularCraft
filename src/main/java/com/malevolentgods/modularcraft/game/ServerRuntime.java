@@ -9,9 +9,12 @@ import com.malevolentgods.modularcraft.domain.ModuleState;
 import com.malevolentgods.modularcraft.domain.Parameter;
 import com.malevolentgods.modularcraft.domain.PatchSnapshot;
 import com.malevolentgods.modularcraft.domain.Port;
+import com.malevolentgods.modularcraft.domain.SequencerSettings;
 import com.malevolentgods.modularcraft.domain.StateCodec;
 import com.malevolentgods.modularcraft.domain.WorldState;
+import com.malevolentgods.modularcraft.dsp.ControlTimeline;
 import com.malevolentgods.modularcraft.dsp.Envelope;
+import com.malevolentgods.modularcraft.dsp.Sequencer;
 import com.malevolentgods.modularcraft.network.Messages;
 import com.malevolentgods.modularcraft.transport.Budgets;
 import com.malevolentgods.modularcraft.transport.EditInbox;
@@ -71,6 +74,14 @@ public final class ServerRuntime {
   private final EditInbox<Queued> queue = new EditInbox<>();
   private final Map<UUID, Long> lastNotice = new HashMap<>();
   private final Set<UUID> throttled = new HashSet<>();
+  private final Map<UUID, Sequencer> sequencers = new HashMap<>();
+  private final Map<UUID, Boolean> baseGates = new HashMap<>();
+  private final Map<UUID, ControlTimeline> timelines = new HashMap<>();
+  private final Set<UUID> pendingSuspensions = new HashSet<>();
+  private final Map<UUID, Integer> timelineTokens = new HashMap<>();
+  private long controlRevision = -1, controlSample;
+  private boolean controlsDirty = true;
+  private int transitionTokens = 4096;
   private long performanceSample;
   private long sequence, lastBroadcast, tickNanos, maxTickNanos;
 
@@ -402,7 +413,7 @@ public final class ServerRuntime {
         return;
       }
       state.authorize(player.getUUID(), player.hasPermissions(2), request.id(), request.revision());
-      long sample = transport.sample() + 1920;
+      long sample = Math.max(transport.sample() + 1920, Math.max(performanceSample, controlSample));
       Set<UUID> affected = state.component(before.id());
       switch (request.action()) {
         case PARAMETER ->
@@ -423,7 +434,19 @@ public final class ServerRuntime {
               before.id(),
               request.revision(),
               request.value() == 1);
-          if (!wasActive && active(affected)) clearPerformance(affected);
+          if (!wasActive && active(affected)) clearVoices(affected);
+        }
+        case SEQUENCER_START, SEQUENCER_STOP, SEQUENCER_RESET -> {
+          if (before.kind() != ModuleKind.EUCLIDEAN_SEQUENCER || request.value() != 0)
+            throw new IllegalArgumentException("action");
+          for (UUID id : affected)
+            if (!state.get(id).loaded()) throw new IllegalArgumentException("patch_unloaded");
+          updateEnvelopes(Math.max(0, sample - 1));
+          state.touch(player.getUUID(), player.hasPermissions(2), before.id(), request.revision());
+          Sequencer sequencer = sequencers.get(before.id());
+          if (request.action() == Messages.Action.SEQUENCER_START) sequencer.start(sample);
+          else if (request.action() == Messages.Action.SEQUENCER_STOP) sequencer.stop(sample);
+          else sequencer.reset(sample);
         }
         case GATE -> {
           if (before.kind() != ModuleKind.ENVELOPE
@@ -526,7 +549,7 @@ public final class ServerRuntime {
   }
 
   private void retrigger(UUID keyboard, long requestedSample) {
-    long sample = Math.max(requestedSample, performanceSample);
+    long sample = Math.max(requestedSample, Math.max(performanceSample, controlSample));
     for (Cable cable : state.cables()) {
       if (!cable.source().equals(keyboard) || cable.input() != Port.GATE_IN) continue;
       UUID id = cable.destination();
@@ -549,18 +572,58 @@ public final class ServerRuntime {
     return speaker;
   }
 
+  private void advanceControls(long sample) {
+    for (var entry : timelines.entrySet()) {
+      int allowed =
+          Math.max(
+              0, Math.min(transitionTokens, timelineTokens.getOrDefault(entry.getKey(), 1024)));
+      int used = entry.getValue().advanceTo(sample, allowed);
+      transitionTokens = Math.max(0, transitionTokens - used);
+      timelineTokens.compute(
+          entry.getKey(),
+          (id, remaining) -> Math.max(0, (remaining == null ? 1024 : remaining) - used));
+      if (entry.getValue().overloaded() && state.contains(entry.getKey())) {
+        state.suspend(state.component(entry.getKey()));
+        pendingSuspensions.addAll(state.component(entry.getKey()));
+        controlsDirty = true;
+        for (ServerPlayer player : server.getPlayerList().getPlayers())
+          error(player, "sequencer_overload");
+      }
+    }
+  }
+
   private void updateEnvelopes(long requestedSample) {
-    long sample = Math.max(requestedSample, performanceSample);
+    long sample = Math.max(requestedSample, Math.max(performanceSample, controlSample));
+    advanceControls(Math.max(controlSample, sample - 1));
+    boolean rebuild = controlsDirty || controlRevision != state.revision();
+    Set<UUID> retained = new HashSet<>();
     for (Set<UUID> ids : state.components()) {
-      boolean active = active(ids);
+      UUID root = ids.stream().min(UUID::compareTo).orElseThrow();
+      retained.add(root);
+      boolean audible = active(ids);
+      boolean allLoaded = ids.stream().allMatch(id -> state.get(id).loaded());
       for (UUID id : ids) {
         ModuleState m = state.get(id);
+        if (m.kind() == ModuleKind.EUCLIDEAN_SEQUENCER) {
+          Sequencer seq = sequencers.get(id);
+          if (seq == null) {
+            seq = new Sequencer(SequencerSettings.from(m), sample);
+            sequencers.put(id, seq);
+            rebuild = true;
+          } else if (rebuild) seq.configure(SequencerSettings.from(m), sample);
+          if (!allLoaded) seq.stop(sample);
+        }
         if (m.kind() != ModuleKind.ENVELOPE) continue;
-        if (!active) {
-          envelopes.remove(id);
+        if (!audible) {
+          if (envelopes.remove(id) != null) rebuild = true;
+          baseGates.remove(id);
           continue;
         }
-        Envelope envelope = envelopes.computeIfAbsent(id, ignored -> new Envelope());
+        if (!envelopes.containsKey(id)) {
+          envelopes.put(id, new Envelope());
+          rebuild = true;
+        }
+        Envelope envelope = envelopes.get(id);
         envelope.configure(
             m.value(Parameter.ATTACK),
             m.value(Parameter.DECAY),
@@ -571,23 +634,57 @@ public final class ServerRuntime {
         boolean redstone =
             entity != null && entity.getLevel().hasNeighborSignal(entity.getBlockPos());
         boolean manual = held.values().stream().anyMatch(h -> h.module.equals(id));
-        boolean external =
-            state.cables().stream()
-                .anyMatch(
-                    c ->
-                        c.destination().equals(id)
-                            && c.input() == Port.GATE_IN
-                            && keyboards.containsKey(c.source())
-                            && keyboards.get(c.source()).state().gate());
-        envelope.gate(manual || redstone || external, sample);
+        baseGates.put(id, manual || redstone);
       }
+      ControlTimeline timeline = timelines.get(root);
+      if (rebuild || timeline == null) {
+        List<ModuleState> modules = ids.stream().map(state::get).toList();
+        List<Cable> cables = state.cables().stream().filter(c -> ids.contains(c.source())).toList();
+        Map<UUID, KeyboardState> notes = new HashMap<>();
+        for (UUID id : ids) if (keyboards.containsKey(id)) notes.put(id, keyboards.get(id).state());
+        ControlTimeline next =
+            new ControlTimeline(modules, cables, sequencers, envelopes, baseGates, notes, sample);
+        next.rewire(timeline, sample);
+        timeline = next;
+        timelines.put(root, timeline);
+      }
+      for (UUID id : ids) {
+        timeline.base(id, baseGates.getOrDefault(id, false));
+        timeline.keyboard(id, keyboards.containsKey(id) && keyboards.get(id).state().gate());
+      }
+      int allowed =
+          Math.max(0, Math.min(transitionTokens, timelineTokens.getOrDefault(root, 1024)));
+      int used = timeline.refresh(sample);
+      if (used > allowed) {
+        timeline.suspend(sample);
+        state.suspend(ids);
+        pendingSuspensions.addAll(ids);
+        for (ServerPlayer player : server.getPlayerList().getPlayers())
+          error(player, "sequencer_overload");
+      }
+      transitionTokens = Math.max(0, transitionTokens - used);
+      timelineTokens.compute(
+          root, (id, remaining) -> Math.max(0, (remaining == null ? 1024 : remaining) - used));
     }
+    timelines.keySet().retainAll(retained);
+    timelineTokens.keySet().retainAll(retained);
+    controlRevision = state.revision();
+    controlsDirty = false;
+    controlSample = sample;
+  }
+
+  private void clearVoices(Set<UUID> ids) {
+    ids.forEach(envelopes::remove);
+    ids.forEach(baseGates::remove);
+    ids.forEach(keyboards::remove);
+    held.entrySet().removeIf(e -> ids.contains(e.getValue().module));
+    controlsDirty = true;
   }
 
   private void clearPerformance(Set<UUID> ids) {
-    ids.forEach(envelopes::remove);
-    ids.forEach(keyboards::remove);
-    held.entrySet().removeIf(e -> ids.contains(e.getValue().module));
+    clearVoices(ids);
+    ids.forEach(sequencers::remove);
+    timelines.entrySet().removeIf(entry -> ids.contains(entry.getKey()));
   }
 
   private void release(UUID player) {
@@ -612,6 +709,10 @@ public final class ServerRuntime {
   }
 
   private PatchSnapshot snapshot(Set<UUID> ids, UUID id, long sample) {
+    sample = Math.max(sample, Math.max(controlSample, performanceSample));
+    if (controlsDirty || controlRevision != state.revision()) updateEnvelopes(sample);
+    advanceControls(sample);
+    controlSample = sample;
     List<ModuleState> modules = state.modules().stream().filter(m -> ids.contains(m.id())).toList();
     List<Cable> cables = state.cables().stream().filter(c -> ids.contains(c.source())).toList();
     Map<UUID, Envelope.Checkpoint> checkpoints = new HashMap<>();
@@ -627,8 +728,24 @@ public final class ServerRuntime {
                 ? keyboards.get(module.id()).state()
                 : new KeyboardState(
                     KeyboardState.note((int) module.value(Parameter.OCTAVE), 0), false));
+    Map<UUID, Sequencer.Checkpoint> rhythms = new HashMap<>();
+    Map<UUID, Boolean> bases = new HashMap<>();
+    for (UUID member : ids) {
+      if (sequencers.containsKey(member))
+        rhythms.put(member, sequencers.get(member).checkpoint(sample));
+      if (checkpoints.containsKey(member)) bases.put(member, baseGates.getOrDefault(member, false));
+    }
     return new PatchSnapshot(
-        id, state.revision(), sequence, sample, modules, cables, checkpoints, notes);
+        id,
+        state.revision(),
+        sequence,
+        sample,
+        modules,
+        cables,
+        checkpoints,
+        notes,
+        rhythms,
+        bases);
   }
 
   private void changed(Set<UUID> affected, long sample) {
@@ -642,7 +759,7 @@ public final class ServerRuntime {
   }
 
   private void broadcast(long requestedSample, Set<UUID> affected, ServerPlayer only) {
-    long sample = Math.max(requestedSample, performanceSample);
+    long sample = Math.max(requestedSample, Math.max(performanceSample, controlSample));
     List<Set<UUID>> components = state.components();
     Map<UUID, byte[]> encoded = new HashMap<>();
     for (ServerPlayer player : only == null ? server.getPlayerList().getPlayers() : List.of(only)) {
@@ -703,6 +820,8 @@ public final class ServerRuntime {
   }
 
   private void tick() {
+    transitionTokens = 4096;
+    timelineTokens.clear();
     long start = System.nanoTime();
     while (System.nanoTime() - start < 1_500_000L) {
       Queued request = queue.poll();
@@ -739,14 +858,17 @@ public final class ServerRuntime {
       }
       keyboardOverload.clear();
     }
-    Map<UUID, Boolean> gates = new HashMap<>();
-    envelopes.forEach((id, e) -> gates.put(id, e.checkpoint(sample).gate()));
+    Map<UUID, Boolean> gates = new HashMap<>(baseGates);
     updateEnvelopes(sample);
     Set<UUID> changedGates = new HashSet<>();
-    envelopes.forEach(
-        (id, e) -> {
-          if (e.checkpoint(sample).gate() != gates.getOrDefault(id, false)) changedGates.add(id);
+    baseGates.forEach(
+        (id, gate) -> {
+          if (gate != gates.getOrDefault(id, false)) changedGates.add(id);
         });
+    if (!pendingSuspensions.isEmpty()) {
+      changedGates.addAll(pendingSuspensions);
+      pendingSuspensions.clear();
+    }
     if (!changedGates.isEmpty()) changed(changedGates, sample);
     if (start - lastBroadcast >= 500_000_000L) {
       lastBroadcast = start;

@@ -61,6 +61,13 @@ public final class WorldState {
     revision++;
   }
 
+  /** Revision-protected transient transport command. */
+  public void touch(UUID actor, boolean operator, UUID id, long expected) {
+    authorize(actor, operator, id, expected);
+    bump(id);
+    revision++;
+  }
+
   public ModuleState authorize(UUID actor, boolean operator, UUID id, long expected) {
     ModuleState m = get(id);
     if (!operator && !m.owner().equals(actor)) throw new IllegalArgumentException("permission");

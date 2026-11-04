@@ -68,7 +68,7 @@ A one-client development probe does **not** satisfy two-client packaged SC-005.
 ## Packaged play and timing
 
 1. Install only the candidate JAR plus the exact loader on a fresh Creative client and
-   a normal headless dedicated server. Confirm five blocks/tool, all textures/models,
+   a normal headless dedicated server. Confirm six blocks/tool, all textures/models,
    labeled ports, cable arrows, and every panel control. Confirm no client/audio class
    loads on the server. Obtain/accept any host licensing terms as the server operator.
 2. Build both README reference patches using only their instructions. Test every listed
@@ -183,3 +183,25 @@ unexpected attenuation after settling at zero. Confirm MIDI and released-note ta
 the selected spread; disconnect CV to restore the saved center frequency. Save/restart and
 confirm spread persists, while speakers restart disabled. Repeat with two clients under
 SC-003/004. Automated spectral/UI checks do not establish this listening/timing acceptance.
+
+
+## Euclidean sequencer qualification
+
+Run `make smoke GRADLE_ARGS=-PqaSequencer TICKS=650` for a disposable packaged four-orientation
+fixture, numeric editing, mute/transport checks, screenshots and 20 native audio cleanup
+cycles. Review the screenshots at normal GUI scale and also test small-window scrolling,
+Tab/Enter and Page Up/Down. This probe is not a listening pass.
+
+Audition README RP-004: distinguish both rhythms and filter accents, shorten one channel,
+rotate, mute, stop/resume/reset, close the editor, and use local mute. Confirm uninterrupted
+playheads when muted or speakers are disabled. Chain a second module by Clock Out → Clock In;
+stop the source and verify the follower waits. Disconnect the input and hear internal timing
+resume after one interval. A held-high clock must not create a connection pulse. Reset
+simultaneously with clock must play step one. Listen for unwanted clicks and stuck gates.
+
+Repeat joins, reconnects, pause/resume, chunk unload/reload and world restart; require fresh
+Start after suspension/restart while saved settings/cables survive. With two clients apply
+SC-004 conditions, document onset skew and edit latency, and confirm joining does not reset
+another listener. Run the 30-minute load qualification with four sequencer-driven patches,
+record hardware/backend, p95 block/tick/frame time, allocations and underruns. Existing
+release gates remain applicable until independently observed.

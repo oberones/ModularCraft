@@ -20,6 +20,166 @@ public final class ModuleGameTests {
   private ModuleGameTests() {}
 
   @GameTest(template = "empty", templateNamespace = ModularCraft.ID)
+  public static void sequencerTransportRejectsForeignStaleAndInvalidCommands(GameTestHelper h) {
+    UUID owner = UUID.randomUUID();
+    var player = FakePlayerFactory.get(h.getLevel(), new GameProfile(owner, "EuclidAuthority"));
+    var guest =
+        FakePlayerFactory.get(h.getLevel(), new GameProfile(UUID.randomUUID(), "EuclidGuest"));
+    BlockPos position = h.absolutePos(new BlockPos(1, 1, 1));
+    h.getLevel()
+        .setBlock(
+            position,
+            ModularCraft.MODULES.get(ModuleKind.EUCLIDEAN_SEQUENCER).get().defaultBlockState(),
+            3);
+    var module = (ModuleEntity) h.getLevel().getBlockEntity(position);
+    module.initialize(owner);
+    player.setPos(position.getCenter());
+    guest.setPos(position.getCenter());
+    var runtime = com.malevolentgods.modularcraft.game.ServerRuntime.get(h.getLevel().getServer());
+    UUID id = module.state().id();
+    long revision = module.state().revision();
+    com.malevolentgods.modularcraft.game.ServerRuntime.enqueue(
+        guest,
+        new com.malevolentgods.modularcraft.network.Messages.Control(
+            id,
+            revision,
+            com.malevolentgods.modularcraft.network.Messages.Action.SEQUENCER_START,
+            Parameter.TEMPO,
+            0));
+    com.malevolentgods.modularcraft.game.ServerRuntime.enqueue(
+        player,
+        new com.malevolentgods.modularcraft.network.Messages.Control(
+            id,
+            revision,
+            com.malevolentgods.modularcraft.network.Messages.Action.SEQUENCER_START,
+            Parameter.TEMPO,
+            1));
+    h.runAfterDelay(
+        3,
+        () -> {
+          h.assertTrue(
+              !runtime.currentPatch(id).sequencers().get(id).running()
+                  && module.state().revision() == revision,
+              "Rejected commands preserve state");
+          com.malevolentgods.modularcraft.game.ServerRuntime.enqueue(
+              player,
+              new com.malevolentgods.modularcraft.network.Messages.Control(
+                  id,
+                  revision,
+                  com.malevolentgods.modularcraft.network.Messages.Action.SEQUENCER_START,
+                  Parameter.TEMPO,
+                  0));
+        });
+    h.runAfterDelay(
+        6,
+        () -> {
+          h.assertTrue(
+              runtime.currentPatch(id).sequencers().get(id).running(), "Owner starts rhythm");
+          com.malevolentgods.modularcraft.game.ServerRuntime.enqueue(
+              player,
+              new com.malevolentgods.modularcraft.network.Messages.Control(
+                  id,
+                  revision,
+                  com.malevolentgods.modularcraft.network.Messages.Action.SEQUENCER_STOP,
+                  Parameter.TEMPO,
+                  0));
+          com.malevolentgods.modularcraft.game.ServerRuntime.enqueue(
+              guest,
+              new com.malevolentgods.modularcraft.network.Messages.Control(
+                  id,
+                  module.state().revision(),
+                  com.malevolentgods.modularcraft.network.Messages.Action.SEQUENCER_STOP,
+                  Parameter.TEMPO,
+                  0));
+        });
+    h.runAfterDelay(
+        9,
+        () -> {
+          h.assertTrue(
+              runtime.currentPatch(id).sequencers().get(id).running(),
+              "Stale and foreign Stop refused");
+          com.malevolentgods.modularcraft.game.ServerRuntime.enqueue(
+              player,
+              new com.malevolentgods.modularcraft.network.Messages.Control(
+                  id,
+                  module.state().revision(),
+                  com.malevolentgods.modularcraft.network.Messages.Action.SEQUENCER_STOP,
+                  Parameter.TEMPO,
+                  0));
+        });
+    h.runAfterDelay(
+        12,
+        () -> {
+          h.assertTrue(
+              !runtime.currentPatch(id).sequencers().get(id).running()
+                  && module.state().revision() == revision + 2,
+              "Authorized Stop accepted exactly once");
+          h.succeed();
+        });
+  }
+
+  @GameTest(template = "empty", templateNamespace = ModularCraft.ID)
+  public static void sequencerRunsWithoutSpeakerAndSuspendsOnUnload(GameTestHelper h) {
+    UUID owner = UUID.randomUUID();
+    var player = FakePlayerFactory.get(h.getLevel(), new GameProfile(owner, "EuclidOwner"));
+    BlockPos position = h.absolutePos(new BlockPos(1, 1, 1));
+    h.getLevel()
+        .setBlock(
+            position,
+            ModularCraft.MODULES.get(ModuleKind.EUCLIDEAN_SEQUENCER).get().defaultBlockState(),
+            3);
+    var module = (ModuleEntity) h.getLevel().getBlockEntity(position);
+    module.initialize(owner);
+    player.setPos(position.getCenter());
+    var runtime = com.malevolentgods.modularcraft.game.ServerRuntime.get(h.getLevel().getServer());
+    UUID id = module.state().id();
+    h.assertTrue(!runtime.currentPatch(id).sequencers().get(id).running(), "Initially stopped");
+    com.malevolentgods.modularcraft.game.ServerRuntime.enqueue(
+        player,
+        new com.malevolentgods.modularcraft.network.Messages.Control(
+            id,
+            module.state().revision(),
+            com.malevolentgods.modularcraft.network.Messages.Action.SEQUENCER_START,
+            Parameter.TEMPO,
+            0));
+    h.runAfterDelay(
+        4,
+        () -> {
+          h.assertTrue(
+              runtime.currentPatch(id).sequencers().get(id).running(),
+              "Runs without speaker or panel lease");
+          com.malevolentgods.modularcraft.game.ServerRuntime.enqueue(
+              player,
+              new com.malevolentgods.modularcraft.network.Messages.Control(
+                  id,
+                  module.state().revision(),
+                  com.malevolentgods.modularcraft.network.Messages.Action.CLOSE,
+                  Parameter.TEMPO,
+                  0));
+        });
+    h.runAfterDelay(
+        8,
+        () -> {
+          var checkpoint = runtime.currentPatch(id).sequencers().get(id);
+          h.assertTrue(
+              checkpoint.running() && checkpoint.channels().getFirst().step() >= 0,
+              "Closing panel keeps clock running");
+          var tag = module.saveWithFullMetadata(h.getLevel().registryAccess());
+          var restored =
+              (ModuleEntity)
+                  BlockEntity.loadStatic(
+                      position, module.getBlockState(), tag, h.getLevel().registryAccess());
+          h.assertTrue(
+              restored != null && restored.state().values().equals(module.state().values()),
+              "Seventeen controls persist");
+          runtime.unload(id);
+          h.assertTrue(
+              !runtime.currentPatch(id).sequencers().get(id).running(), "Unload stops rhythm");
+          h.succeed();
+        });
+  }
+
+  @GameTest(template = "empty", templateNamespace = ModularCraft.ID)
   public static void detuneControlPersistsAndRejectsInvalidStaleAndForeignEdits(GameTestHelper h) {
     UUID owner = UUID.randomUUID();
     var player = FakePlayerFactory.get(h.getLevel(), new GameProfile(owner, "UnisonOwner"));

@@ -1,0 +1,20 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "modularcraft:block/euclidean_sequencer",
+      "y": 0
+    },
+    "facing=east": {
+      "model": "modularcraft:block/euclidean_sequencer",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "modularcraft:block/euclidean_sequencer",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "modularcraft:block/euclidean_sequencer",
+      "y": 270
+    }
+  }
+}

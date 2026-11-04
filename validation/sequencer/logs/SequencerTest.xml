@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.malevolentgods.modularcraft.SequencerTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-11-04T22:08:13.450Z" hostname="Calliope.local" time="0.016">
+  <properties/>
+  <testcase name="settingsWaitForClockWhileMuteReleasesImmediately()" classname="com.malevolentgods.modularcraft.SequencerTest" time="0.001"/>
+  <testcase name="integerClockAndCheckpointRemainExactForAnHour()" classname="com.malevolentgods.modularcraft.SequencerTest" time="0.01"/>
+  <testcase name="everyPatternHasEvenSpacingAndExactRotation()" classname="com.malevolentgods.modularcraft.SequencerTest" time="0.003"/>
+  <testcase name="editsNormalizeDependentControlsButRecordsRejectInvalidState()" classname="com.malevolentgods.modularcraft.SequencerTest" time="0.001"/>
+  <testcase name="externalClockPrimesHighRejectsFastEdgesAndResetsBeforeClock()" classname="com.malevolentgods.modularcraft.SequencerTest" time="0.0"/>
+  <testcase name="pulseStopResumeAndResetHaveExactSampleBoundaries()" classname="com.malevolentgods.modularcraft.SequencerTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

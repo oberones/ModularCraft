@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.malevolentgods.modularcraft.SequencerAudioTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-11-04T22:08:06.965Z" hostname="Calliope.local" time="0.004">
+  <properties/>
+  <testcase name="audioRendersSampleTimedPulsesWithoutFurtherSnapshots()" classname="com.malevolentgods.modularcraft.SequencerAudioTest" time="0.004"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

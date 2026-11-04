@@ -8,6 +8,7 @@ import com.malevolentgods.modularcraft.domain.ModuleState;
 import com.malevolentgods.modularcraft.domain.Parameter;
 import com.malevolentgods.modularcraft.domain.PatchSnapshot;
 import com.malevolentgods.modularcraft.domain.Port;
+import com.malevolentgods.modularcraft.domain.SequencerSettings;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -29,7 +30,7 @@ public final class RenderGraph {
     final Smoother[] parameters = new Smoother[Parameter.values().length];
     final Smoother left = new Smoother(0), right = new Smoother(0);
     Envelope envelope;
-    int audio = -1, control = -1, pitch = -1;
+    int audio = -1, control = -1, pitch = -1, patch;
 
     Node(ModuleState module, Envelope.Checkpoint checkpoint) {
       this.module = module;
@@ -46,6 +47,8 @@ public final class RenderGraph {
 
   private final Node[] nodes;
   private final double[] signals;
+  private final ControlTimeline[] timelines;
+  private final List<Cable> routing;
 
   public RenderGraph(List<PatchSnapshot> patches) {
     if (patches.size() > 4) throw new IllegalArgumentException("active_patches");
@@ -60,6 +63,8 @@ public final class RenderGraph {
       sample = Math.max(sample, patch.sample());
     }
     if (modules.size() > 64) throw new IllegalArgumentException("active_modules");
+    routing = List.copyOf(cables);
+    timelines = new ControlTimeline[patches.size()];
     List<ModuleState> ordered = Graph.compile(modules, cables);
     nodes = new Node[ordered.size()];
     signals = new double[nodes.length];
@@ -69,13 +74,37 @@ public final class RenderGraph {
       nodes[i] = new Node(m, checkpoints.get(m.id()));
       indices.put(m.id(), i);
     }
+    for (int p = 0; p < patches.size(); p++) {
+      PatchSnapshot patch = patches.get(p);
+      Map<UUID, Envelope> envelopes = new HashMap<>();
+      Map<UUID, Sequencer> sequencers = new HashMap<>();
+      for (ModuleState module : patch.modules()) {
+        Node node = nodes[indices.get(module.id())];
+        node.patch = p;
+        if (module.kind() == ModuleKind.ENVELOPE) envelopes.put(module.id(), node.envelope);
+        if (module.kind() == ModuleKind.EUCLIDEAN_SEQUENCER)
+          sequencers.put(
+              module.id(),
+              new Sequencer(SequencerSettings.from(module), patch.sequencers().get(module.id())));
+      }
+      timelines[p] =
+          new ControlTimeline(
+              patch.modules(),
+              patch.cables(),
+              sequencers,
+              envelopes,
+              patch.baseGates(),
+              patch.keyboards(),
+              patch.sample());
+    }
     Map<UUID, KeyboardState> keyboards = new HashMap<>();
     for (PatchSnapshot patch : patches) keyboards.putAll(patch.keyboards());
     for (Cable c : cables) {
       Node n = nodes[indices.get(c.destination())];
       if (c.input() == Port.AUDIO_IN) n.audio = indices.get(c.source());
       else if (c.input() == Port.PITCH_IN) n.pitch = indices.get(c.source());
-      else if (c.input() != Port.GATE_IN) n.control = indices.get(c.source());
+      else if (c.input() == Port.CUTOFF_IN || c.input() == Port.GAIN_IN)
+        n.control = indices.get(c.source());
     }
     for (Node n : nodes)
       if (n.module.kind() == ModuleKind.OSCILLATOR) {
@@ -111,6 +140,7 @@ public final class RenderGraph {
   }
 
   public boolean sameTopology(RenderGraph previous) {
+    if (!routing.equals(previous.routing)) return false;
     if (nodes.length != previous.nodes.length) return false;
     for (int i = 0; i < nodes.length; i++)
       if (!nodes[i].module.id().equals(previous.nodes[i].module.id())
@@ -143,6 +173,7 @@ public final class RenderGraph {
         n.right.target(gain * Math.sqrt((1 + pan) * .5));
       }
     for (int frame = 0; frame < frames; frame++) {
+      for (ControlTimeline timeline : timelines) timeline.advanceTo(sample + frame, 1024);
       double left = 0, right = 0;
       for (int i = 0; i < nodes.length; i++) {
         Node n = nodes[i];
@@ -150,7 +181,7 @@ public final class RenderGraph {
         double control = n.control < 0 ? 0 : signals[n.control];
         switch (n.module.kind()) {
           case OSCILLATOR -> signals[i] = n.oscillator.next(n.next(Parameter.LEVEL) / 100);
-          case KEYBOARD -> signals[i] = 0;
+          case KEYBOARD, EUCLIDEAN_SEQUENCER -> signals[i] = 0;
           case ENVELOPE -> signals[i] = n.envelope.value(sample + frame);
           case FILTER -> {
             double cutoff =
@@ -159,7 +190,10 @@ public final class RenderGraph {
             signals[i] = n.audio < 0 ? 0 : value;
           }
           case SPEAKER -> {
-            signals[i] = audio * n.next(Parameter.VOLUME) / 100 * (n.control < 0 ? 1 : control);
+            signals[i] =
+                timelines[n.patch].overloaded()
+                    ? 0
+                    : audio * n.next(Parameter.VOLUME) / 100 * (n.control < 0 ? 1 : control);
             left += signals[i] * n.left.next();
             right += signals[i] * n.right.next();
           }
