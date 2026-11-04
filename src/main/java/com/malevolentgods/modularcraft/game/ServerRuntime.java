@@ -1,6 +1,9 @@
 package com.malevolentgods.modularcraft.game;
 
 import com.malevolentgods.modularcraft.domain.Cable;
+import com.malevolentgods.modularcraft.domain.KeyboardPerformance;
+import com.malevolentgods.modularcraft.domain.KeyboardSession;
+import com.malevolentgods.modularcraft.domain.KeyboardState;
 import com.malevolentgods.modularcraft.domain.ModuleKind;
 import com.malevolentgods.modularcraft.domain.ModuleState;
 import com.malevolentgods.modularcraft.domain.Parameter;
@@ -39,7 +42,12 @@ import net.neoforged.neoforge.network.PacketDistributor;
 public final class ServerRuntime {
   private static final Map<MinecraftServer, ServerRuntime> INSTANCES = new ConcurrentHashMap<>();
 
-  private record Queued(ServerPlayer player, Messages.Control message) {}
+  private record Queued(
+      ServerPlayer player, Messages.Control message, Messages.Keyboard keyboard, long received) {
+    Queued(ServerPlayer player, Messages.Control message) {
+      this(player, message, null, 0);
+    }
+  }
 
   private record Selection(UUID module, Port port, long revision) {}
 
@@ -52,6 +60,9 @@ public final class ServerRuntime {
   private final Budgets budgets = new Budgets();
   private final Map<UUID, ModuleEntity> loaded = new LinkedHashMap<>();
   private final Map<UUID, Envelope> envelopes = new HashMap<>();
+  private final Map<UUID, KeyboardPerformance> keyboards = new HashMap<>();
+  private final Map<UUID, KeyboardSession> sessions = new HashMap<>();
+  private final Set<UUID> keyboardOverload = new HashSet<>();
   private final Map<UUID, Held> held = new HashMap<>();
   private final Map<UUID, Selection> selections = new HashMap<>();
   private final Map<UUID, UUID> inspecting = new HashMap<>();
@@ -60,6 +71,7 @@ public final class ServerRuntime {
   private final EditInbox<Queued> queue = new EditInbox<>();
   private final Map<UUID, Long> lastNotice = new HashMap<>();
   private final Set<UUID> throttled = new HashSet<>();
+  private long performanceSample;
   private long sequence, lastBroadcast, tickNanos, maxTickNanos;
 
   private ServerRuntime(MinecraftServer server) {
@@ -121,6 +133,22 @@ public final class ServerRuntime {
         new Queued(player, message))) {
       synchronized (runtime.throttled) {
         if (runtime.throttled.size() < 256) runtime.throttled.add(id);
+      }
+    }
+  }
+
+  public static void enqueue(ServerPlayer player, Messages.Keyboard message) {
+    ServerRuntime runtime = INSTANCES.get(player.getServer());
+    if (runtime == null) return;
+    // Releases stay in order; emergency cleanup alone uses the priority lane.
+    if (!runtime.queue.offer(
+        player.getUUID(),
+        "",
+        false,
+        message.cleanup(),
+        new Queued(player, null, message, System.nanoTime()))) {
+      synchronized (runtime.keyboardOverload) {
+        if (runtime.keyboardOverload.size() < 256) runtime.keyboardOverload.add(player.getUUID());
       }
     }
   }
@@ -198,7 +226,9 @@ public final class ServerRuntime {
   public void remove(UUID id) {
     if (!state.contains(id)) return;
     Set<UUID> affected = state.component(id);
+    clearPerformance(affected);
     state.remove(id);
+    updateEnvelopes(transport.sample() + 1920);
     loaded.remove(id);
     envelopes.remove(id);
     held.entrySet().removeIf(e -> e.getValue().module.equals(id));
@@ -218,6 +248,7 @@ public final class ServerRuntime {
     if (open) {
       release(player.getUUID());
       inspecting.put(player.getUUID(), module.state().id());
+      sessions.put(player.getUUID(), new KeyboardSession(module.state().id()));
     }
     sendView(player, module, open, status(module.state()));
   }
@@ -236,6 +267,10 @@ public final class ServerRuntime {
           if (e == null || e.value(transport.sample()) == 0) return "released";
         }
     }
+    if (m.kind() == ModuleKind.OSCILLATOR
+        && state.cables().stream()
+            .anyMatch(c -> c.destination().equals(m.id()) && c.input() == Port.PITCH_IN))
+      return "pitch_connected";
     return "ready";
   }
 
@@ -246,7 +281,16 @@ public final class ServerRuntime {
                 state.component(module.state().id()), module.state().id(), transport.sample()));
     if (budgets.bytes(player.getUUID(), System.nanoTime(), bytes.length + 160))
       PacketDistributor.sendToPlayer(
-          player, new Messages.View(bytes, module.editable(player), open, status));
+          player,
+          new Messages.View(
+              bytes,
+              module.editable(player),
+              open,
+              status,
+              sessions
+                  .computeIfAbsent(
+                      player.getUUID(), ignored -> new KeyboardSession(module.state().id()))
+                  .id()));
   }
 
   public void cancel(ServerPlayer player) {
@@ -285,6 +329,7 @@ public final class ServerRuntime {
             cable,
             source.state().revision(),
             target.revision());
+        updateEnvelopes(transport.sample() + 1920);
         changed(affected, transport.sample() + 1920);
         error(player, port == Port.GAIN_IN ? "gain_disconnected" : "removed");
         return;
@@ -315,6 +360,7 @@ public final class ServerRuntime {
           selection.revision,
           target.revision());
       selections.remove(player.getUUID());
+      updateEnvelopes(transport.sample() + 1920);
       changed(affected, transport.sample() + 1920);
       error(player, "connected");
     } catch (IllegalArgumentException rejected) {
@@ -351,6 +397,10 @@ public final class ServerRuntime {
       if (!data.writable()) throw new IllegalArgumentException("quarantined");
       module = required(player, request.id());
       ModuleState before = module.state();
+      if (request.action() == Messages.Action.INSPECT) {
+        inspect(player, module, true);
+        return;
+      }
       state.authorize(player.getUUID(), player.hasPermissions(2), request.id(), request.revision());
       long sample = transport.sample() + 1920;
       Set<UUID> affected = state.component(before.id());
@@ -385,6 +435,13 @@ public final class ServerRuntime {
         default -> throw new IllegalArgumentException("action");
       }
       updateEnvelopes(sample);
+      if (request.action() == Messages.Action.PARAMETER
+          && request.parameter() == Parameter.OCTAVE) {
+        KeyboardPerformance keyboard = keyboards.get(before.id());
+        if (keyboard != null
+            && keyboard.transpose((int) state.get(before.id()).value(Parameter.OCTAVE)))
+          retrigger(before.id(), sample);
+      }
       changed(affected, sample);
       for (ServerPlayer listener : server.getPlayerList().getPlayers()) {
         UUID target = inspecting.get(listener.getUUID());
@@ -398,6 +455,89 @@ public final class ServerRuntime {
     }
   }
 
+  private void keyboard(ServerPlayer player, Messages.Keyboard request, long received) {
+    KeyboardSession session = sessions.get(player.getUUID());
+    if (player.hasDisconnected()
+        || session == null
+        || !session.id().equals(request.session())
+        || !session.module().equals(request.id())
+        || !session.accept(request.sequence())) return;
+    long sample = Math.max(transport.sample() + 1920, performanceSample);
+    if (request.cleanup() || request.note() == -1) {
+      KeyboardPerformance keyboard = keyboards.get(session.module());
+      if (keyboard != null && session.id().equals(keyboard.holder())) {
+        sample = session.schedule(sample, received);
+        performanceSample = sample;
+      }
+      releaseKeyboard(player.getUUID(), sample);
+      if (request.cleanup()) sessions.remove(player.getUUID());
+      return;
+    }
+    ModuleEntity module = null;
+    try {
+      if (!data.writable()) throw new IllegalArgumentException("quarantined");
+      module = required(player, request.id());
+      if (module.state().kind() != ModuleKind.KEYBOARD
+          || !request.id().equals(inspecting.get(player.getUUID())))
+        throw new IllegalArgumentException("gate_eligibility");
+      state.authorize(player.getUUID(), player.hasPermissions(2), request.id(), request.revision());
+      if (!budgets.edit(player.getUUID(), System.nanoTime(), false))
+        throw new IllegalArgumentException("throttled");
+      KeyboardPerformance keyboard =
+          keyboards.computeIfAbsent(
+              request.id(),
+              ignored ->
+                  new KeyboardPerformance((int) state.get(request.id()).value(Parameter.OCTAVE)));
+      if (request.renew()) {
+        keyboard.renew(session.id(), System.nanoTime());
+        return;
+      }
+      keyboard.play(
+          session.id(),
+          request.note(),
+          (int) module.state().value(Parameter.OCTAVE),
+          System.nanoTime());
+      sample = session.schedule(sample, received);
+      performanceSample = sample;
+      updateEnvelopes(sample);
+      retrigger(request.id(), sample);
+      changed(state.component(request.id()), sample);
+      sendView(player, module, false, status(module.state()));
+    } catch (IllegalArgumentException rejected) {
+      releaseKeyboard(player.getUUID(), sample);
+      error(player, key(rejected));
+      if (module != null && module.valid()) sendView(player, module, false, key(rejected));
+    }
+  }
+
+  private void releaseKeyboard(UUID actor, long sample) {
+    KeyboardSession session = sessions.get(actor);
+    if (session == null) return;
+    KeyboardPerformance keyboard = keyboards.get(session.module());
+    if (keyboard != null && keyboard.release(session.id()) && state.contains(session.module())) {
+      updateEnvelopes(sample);
+      changed(state.component(session.module()), sample);
+      ServerPlayer player = server.getPlayerList().getPlayer(actor);
+      ModuleEntity module = loaded.get(session.module());
+      if (player != null && module != null && module.eligible(player))
+        sendView(player, module, false, status(module.state()));
+    }
+  }
+
+  private void retrigger(UUID keyboard, long requestedSample) {
+    long sample = Math.max(requestedSample, performanceSample);
+    for (Cable cable : state.cables()) {
+      if (!cable.source().equals(keyboard) || cable.input() != Port.GATE_IN) continue;
+      UUID id = cable.destination();
+      ModuleEntity entity = loaded.get(id);
+      boolean manual = held.values().stream().anyMatch(h -> h.module.equals(id));
+      boolean redstone =
+          entity != null && entity.getLevel().hasNeighborSignal(entity.getBlockPos());
+      Envelope envelope = envelopes.get(id);
+      if (envelope != null && !manual && !redstone) envelope.retrigger(sample);
+    }
+  }
+
   private boolean active(Set<UUID> ids) {
     boolean speaker = false;
     for (UUID id : ids) {
@@ -408,7 +548,8 @@ public final class ServerRuntime {
     return speaker;
   }
 
-  private void updateEnvelopes(long sample) {
+  private void updateEnvelopes(long requestedSample) {
+    long sample = Math.max(requestedSample, performanceSample);
     for (Set<UUID> ids : state.components()) {
       boolean active = active(ids);
       for (UUID id : ids) {
@@ -429,17 +570,27 @@ public final class ServerRuntime {
         boolean redstone =
             entity != null && entity.getLevel().hasNeighborSignal(entity.getBlockPos());
         boolean manual = held.values().stream().anyMatch(h -> h.module.equals(id));
-        envelope.gate(manual || redstone, sample);
+        boolean external =
+            state.cables().stream()
+                .anyMatch(
+                    c ->
+                        c.destination().equals(id)
+                            && c.input() == Port.GATE_IN
+                            && keyboards.containsKey(c.source())
+                            && keyboards.get(c.source()).state().gate());
+        envelope.gate(manual || redstone || external, sample);
       }
     }
   }
 
   private void clearPerformance(Set<UUID> ids) {
     ids.forEach(envelopes::remove);
+    ids.forEach(keyboards::remove);
     held.entrySet().removeIf(e -> ids.contains(e.getValue().module));
   }
 
   private void release(UUID player) {
+    releaseKeyboard(player, transport.sample() + 1920);
     Held previous = held.remove(player);
     if (previous != null && state.contains(previous.module)) {
       long sample = transport.sample() + 1920;
@@ -452,6 +603,7 @@ public final class ServerRuntime {
     release(player.getUUID());
     selections.remove(player.getUUID());
     inspecting.remove(player.getUUID());
+    sessions.remove(player.getUUID());
     known.remove(player.getUUID());
     lastClock.remove(player.getUUID());
     budgets.forget(player.getUUID());
@@ -465,7 +617,17 @@ public final class ServerRuntime {
     for (UUID member : ids)
       if (envelopes.containsKey(member))
         checkpoints.put(member, envelopes.get(member).checkpoint(sample));
-    return new PatchSnapshot(id, state.revision(), sequence, sample, modules, cables, checkpoints);
+    Map<UUID, KeyboardState> notes = new HashMap<>();
+    for (ModuleState module : modules)
+      if (module.kind() == ModuleKind.KEYBOARD)
+        notes.put(
+            module.id(),
+            keyboards.containsKey(module.id())
+                ? keyboards.get(module.id()).state()
+                : new KeyboardState(
+                    KeyboardState.note((int) module.value(Parameter.OCTAVE), 0), false));
+    return new PatchSnapshot(
+        id, state.revision(), sequence, sample, modules, cables, checkpoints, notes);
   }
 
   private void changed(Set<UUID> affected, long sample) {
@@ -478,7 +640,8 @@ public final class ServerRuntime {
     broadcast(sample, affected, null);
   }
 
-  private void broadcast(long sample, Set<UUID> affected, ServerPlayer only) {
+  private void broadcast(long requestedSample, Set<UUID> affected, ServerPlayer only) {
+    long sample = Math.max(requestedSample, performanceSample);
     List<Set<UUID>> components = state.components();
     Map<UUID, byte[]> encoded = new HashMap<>();
     for (ServerPlayer player : only == null ? server.getPlayerList().getPlayers() : List.of(only)) {
@@ -543,7 +706,8 @@ public final class ServerRuntime {
     while (System.nanoTime() - start < 1_500_000L) {
       Queued request = queue.poll();
       if (request == null) break;
-      control(request.player, request.message);
+      if (request.keyboard != null) keyboard(request.player, request.keyboard, request.received);
+      else control(request.player, request.message);
     }
     for (UUID actor : new ArrayList<>(held.keySet())) {
       Held h = held.get(actor);
@@ -553,6 +717,27 @@ public final class ServerRuntime {
         release(actor);
     }
     long sample = transport.sample() + 1920;
+    for (var entry : sessions.entrySet()) {
+      ServerPlayer player = server.getPlayerList().getPlayer(entry.getKey());
+      ModuleEntity module = loaded.get(entry.getValue().module());
+      KeyboardPerformance keyboard = keyboards.get(entry.getValue().module());
+      if (keyboard == null) continue;
+      if (player == null || module == null || !module.editable(player))
+        releaseKeyboard(entry.getKey(), sample);
+      else if (keyboard.expire(start)) {
+        updateEnvelopes(sample);
+        changed(state.component(entry.getValue().module()), sample);
+      }
+    }
+    synchronized (keyboardOverload) {
+      for (UUID actor : keyboardOverload) {
+        releaseKeyboard(actor, sample);
+        sessions.remove(actor);
+        ServerPlayer player = server.getPlayerList().getPlayer(actor);
+        if (player != null) error(player, "keyboard_overload");
+      }
+      keyboardOverload.clear();
+    }
     Map<UUID, Boolean> gates = new HashMap<>();
     envelopes.forEach((id, e) -> gates.put(id, e.checkpoint(sample).gate()));
     updateEnvelopes(sample);
@@ -583,6 +768,12 @@ public final class ServerRuntime {
 
   public long maxTickNanos() {
     return maxTickNanos;
+  }
+
+  /** Server-side inspection token for integration fixtures; never grants edit authority. */
+  public UUID keyboardSession(ServerPlayer player) {
+    KeyboardSession session = sessions.get(player.getUUID());
+    return session == null ? null : session.id();
   }
 
   /** Current immutable checkpoint for diagnostics and host integration tests. */

@@ -26,7 +26,7 @@ public final class NativeFixture {
   private static final List<BlockPos> ENVELOPES = new ArrayList<>();
   private static ServerPlayer performer;
   private static int ticks;
-  private static BlockPos cableOrigin;
+  private static BlockPos cableOrigin, keyboardPosition;
 
   public NativeFixture() {
     if (!Boolean.getBoolean("modularcraft.qa")) return;
@@ -42,7 +42,13 @@ public final class NativeFixture {
           if (performer == null || event.getServer() != performer.getServer()) return;
           if (++ticks == 20) build(performer);
           if (cableOrigin != null && (ticks == 220 || ticks == 400)) cableView(performer, ticks);
-          if (ticks >= 20 && (ticks - 20) % 40 == 0) {
+          if (ticks == 60 && keyboardPosition != null)
+            ServerRuntime.get(event.getServer())
+                .inspect(
+                    performer,
+                    (ModuleEntity) performer.serverLevel().getBlockEntity(keyboardPosition),
+                    true);
+          if (keyboardPosition == null && ticks >= 20 && (ticks - 20) % 40 == 0) {
             boolean on = ((ticks - 20) / 40) % 2 == 0;
             for (BlockPos pos : ENVELOPES)
               performer
@@ -78,7 +84,7 @@ public final class NativeFixture {
     int patchCount = Boolean.getBoolean("modularcraft.qa.load") ? 4 : 1;
     for (int patch = 0; patch < patchCount; patch++) {
       List<ModuleEntity> modules = new ArrayList<>();
-      int count = patchCount == 4 ? 16 : 4;
+      int count = patchCount == 4 ? 16 : Boolean.getBoolean("modularcraft.qa.keyboard") ? 5 : 4;
       for (int i = 0; i < count; i++) {
         ModuleKind kind =
             patchCount == 4
@@ -93,11 +99,13 @@ public final class NativeFixture {
                 originX + (patch % 2) * 8 + (cableVisuals ? 3 - i % 4 : (i % 4) * 2),
                 y,
                 originZ + (patch / 2) * 8 + (i / 4) * 2);
+        if (kind == ModuleKind.KEYBOARD) pos = new BlockPos(originX + 2, y, originZ - 2);
         level.setBlock(pos, ModularCraft.MODULES.get(kind).get().defaultBlockState(), 3);
         ModuleEntity entity = (ModuleEntity) level.getBlockEntity(pos);
         entity.initialize(player.getUUID());
         modules.add(entity);
         if (kind == ModuleKind.ENVELOPE) ENVELOPES.add(pos);
+        if (kind == ModuleKind.KEYBOARD) keyboardPosition = pos;
       }
       if (patchCount == 4) {
         set(runtime, player, modules.getFirst(), Parameter.FREQUENCY, (patch + 1) * 110);
@@ -123,6 +131,10 @@ public final class NativeFixture {
         connect(runtime, player, modules.get(0), Port.AUDIO_OUT, modules.get(1), Port.AUDIO_IN);
         connect(runtime, player, modules.get(1), Port.AUDIO_OUT, modules.get(3), Port.AUDIO_IN);
         connect(runtime, player, modules.get(2), Port.ENVELOPE_OUT, modules.get(3), Port.GAIN_IN);
+        if (keyboardPosition != null) {
+          connect(runtime, player, modules.get(4), Port.CV_OUT, modules.get(0), Port.PITCH_IN);
+          connect(runtime, player, modules.get(4), Port.GATE_OUT, modules.get(2), Port.GATE_IN);
+        }
       }
       for (ModuleEntity module : modules) {
         runtime.attach(module);
@@ -135,6 +147,7 @@ public final class NativeFixture {
       }
     }
     player.teleportTo(originX + 7, y + 2, originZ - 2);
+    if (keyboardPosition != null) player.connection.teleport(originX + 2.5, y, originZ - 5, 0, 8);
     if (cableVisuals) {
       cableOrigin = new BlockPos(originX, y, originZ);
       player.setGameMode(GameType.SPECTATOR);

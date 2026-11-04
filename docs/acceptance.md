@@ -36,7 +36,7 @@ native/network workload.
 ## Native fixture, isolated development use
 
 For an automatically prepared disposable fixture, use `make smoke`, `make smoke-load`, or
-`make smoke-recovery TICKS=400`. Each builds/stages the current JAR, creates a fresh world,
+`make smoke-recovery TICKS=500`. Each builds/stages the current JAR, creates a fresh world,
 bootstraps a GameTest world seed if needed, and exits after the configured game ticks.
 The manual procedures below remain available for custom acceptance environments.
 
@@ -68,7 +68,7 @@ A one-client development probe does **not** satisfy two-client packaged SC-005.
 ## Packaged play and timing
 
 1. Install only the candidate JAR plus the exact loader on a fresh Creative client and
-   a normal headless dedicated server. Confirm four blocks/tool, all textures/models,
+   a normal headless dedicated server. Confirm five blocks/tool, all textures/models,
    labeled ports, cable arrows, and every panel control. Confirm no client/audio class
    loads on the server. Obtain/accept any host licensing terms as the server operator.
 2. Build both README reference patches using only their instructions. Test every listed
@@ -113,3 +113,19 @@ Hosted CI is a separate record: a local workflow-shaped command is not a hosted 
 Do not call the MVP fully accepted until every applicable release gate passes. Preserve
 failed captures and provenance alongside the final pass; do not overwrite the original
 world or recordings during recovery.
+
+
+## RP-003 keyboard acceptance
+
+Run `make smoke GRADLE_ARGS=-PqaKeyboard TICKS=500` for a fresh packaged-JAR fixture.
+It opens the actual keyboard through server inspection, plays overlapping computer keys,
+transposes a held note, drags over black/white keys and outside, reopens through audio settings, checks accepted note/gate state, and captures six native
+screenshots. Inspect idle/held/octave/released panels and the world block appearance.
+
+Separately audition all twelve notes, mouse drag over black keys and outside, mouse plus
+computer holds, octave limits, same-key repeats, close/reopen through audio settings, focus
+loss, CV/gate cable removal, manual/redstone overlap and release tails. Verify A4 = 440 Hz,
+C1/B7 bounds, CV disconnection restoring Frequency, and no unintended clicks/stuck notes.
+Repeat unload, removal, disconnect, permission/range loss, and overload recovery. Run
+SC-003 and SC-004 with RP-003 (including two listeners and late join); automated native
+state assertions do not establish listening or acoustic timing acceptance.

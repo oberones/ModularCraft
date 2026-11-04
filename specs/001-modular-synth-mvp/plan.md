@@ -24,7 +24,7 @@ L1 coefficient normalization bounds oscillator peaks at the selected level.
 
 ## Budgets and ordering
 
-Retain every SS-003 quota. Version 1 saves and protocol; edits 4 KiB, snapshots 32 KiB,
+Retain every SS-003 quota. Version 1 world saves; version 2 network/snapshots; edits 4 KiB, snapshots 32 KiB,
 world storage 2 MiB. 20 edits/s/player, 200/world; queues 64/player, 256/world.
 Cleanup and gate release bypass ordinary throttling. Outbound 128 KiB/s/listener,
 2 MiB/s/server. One preparation worker, eight pending jobs, 1,024 client events,
@@ -66,3 +66,27 @@ compare identical inactive/active fixtures. Measure 100 actions for SC-003/004,
 20 restart/lifecycle cycles and five first-time users. MU-009 plus DC <-60 dBFS,
 alias residual <-35 dB against oversampled reference, finite extremes, <0.02
 constant-fixture transition step, <1 ms arithmetic drift/hour are required.
+
+
+## Keyboard extension
+
+Add the fifth registered module through existing registration and asset generation. Pure Java
+KeyboardInput handles source priority/hit geometry; KeyboardPerformance owns the exclusive
+transient session lease, KeyboardSession validates input order and sample scheduling, and
+KeyboardState carries concert pitch/gate in bounded immutable snapshots. Octave is the only
+persistent keyboard parameter. Explicit AUDIO/CONTROL/PITCH/GATE roles enforce cabling.
+
+KeyboardScreen uses the existing panel style and host widgets, a twelve-key piano, mouse
+and A W S E D F T G Y H U J input, and octave buttons/arrows. Server-generated session IDs
+bind note packets to inspection; note releases stay FIFO, emergency cleanup invalidates the
+session, and overflow releases performance. Input spacing is retained when draining a tick;
+accepted samples and subsequent broadcasts never rewind past pending performance events.
+
+Server envelope checkpoints incorporate external gate and retriggering. RenderGraph resolves
+keyboard pitch separately from envelope controls, retains phase, and smooths frequency over
+480 samples. No audio-thread allocations or additional dependencies are introduced.
+
+Keep existing budgets and qualification gates. Run `make verify`, then the disposable
+`make smoke GRADLE_ARGS=-PqaKeyboard TICKS=500` fixture for real GUI screenshots, ordered
+note/transpose/release assertions and native audio counters. This automated probe is not a
+listening pass or two-client timing qualification. Record results in validation/ledger.md.

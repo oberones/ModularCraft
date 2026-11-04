@@ -3,6 +3,8 @@ package com.malevolentgods.modularcraft.client;
 import com.malevolentgods.modularcraft.ModularCraft;
 import com.malevolentgods.modularcraft.client.mixin.SoundEngineAccess;
 import com.malevolentgods.modularcraft.client.mixin.SoundManagerAccess;
+import com.malevolentgods.modularcraft.domain.KeyboardState;
+import com.malevolentgods.modularcraft.domain.ModuleKind;
 import com.malevolentgods.modularcraft.domain.ModuleState;
 import com.malevolentgods.modularcraft.domain.Parameter;
 import com.malevolentgods.modularcraft.domain.PatchSnapshot;
@@ -119,7 +121,23 @@ public final class ClientRuntime {
                     .findFirst()
                     .orElseThrow();
             Minecraft mc = Minecraft.getInstance();
-            if (message.open())
+            if (module.kind() == ModuleKind.KEYBOARD) {
+              KeyboardState note =
+                  snapshot
+                      .keyboards()
+                      .getOrDefault(
+                          module.id(),
+                          new KeyboardState(
+                              KeyboardState.note((int) module.value(Parameter.OCTAVE), 0), false));
+              if (message.open())
+                mc.setScreen(
+                    new KeyboardScreen(
+                        module, note, message.editable(), message.status(), message.session()));
+              else if (mc.screen instanceof KeyboardScreen screen
+                  && screen.identity().equals(module.id())
+                  && screen.session().equals(message.session()))
+                screen.accept(module, note, message.editable(), message.status());
+            } else if (message.open())
               mc.setScreen(new ModuleScreen(module, message.editable(), message.status()));
             else if (mc.screen instanceof ModuleScreen screen
                 && screen.identity().equals(module.id()))
@@ -195,6 +213,11 @@ public final class ClientRuntime {
     lastRoster = System.nanoTime();
     patches.clear();
     patches.putAll(next);
+    if (Minecraft.getInstance().screen instanceof KeyboardScreen screen)
+      for (PatchSnapshot patch : patches.values()) {
+        KeyboardState note = patch.keyboards().get(screen.identity());
+        if (note != null) screen.performance(note);
+      }
     staging.clear();
     if (!clock.ready()) clock.observe(lastRoster, lastRoster, Math.max(0, roster.sample() - 1920));
     prepare(roster.sample(), roster.sequence());

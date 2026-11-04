@@ -250,7 +250,7 @@ public final class StateCodec {
         MAX_PATCH,
         out -> {
           out.writeInt(MAGIC);
-          out.writeShort(1);
+          out.writeShort(2);
           uuid(out, p.id());
           out.writeLong(p.revision());
           out.writeLong(p.sequence());
@@ -275,12 +275,19 @@ public final class StateCodec {
             out.writeDouble(c.sustain());
             out.writeDouble(c.release());
           }
+          out.writeShort(p.keyboards().size());
+          for (var entry :
+              p.keyboards().entrySet().stream().sorted(Map.Entry.comparingByKey()).toList()) {
+            uuid(out, entry.getKey());
+            out.writeByte(entry.getValue().note());
+            out.writeBoolean(entry.getValue().gate());
+          }
         });
   }
 
   public static PatchSnapshot decode(byte[] bytes) {
     try (DataInputStream in = input(bytes, MAX_PATCH)) {
-      if (in.readInt() != MAGIC || in.readUnsignedShort() != 1)
+      if (in.readInt() != MAGIC || in.readUnsignedShort() != 2)
         throw new IllegalArgumentException("protocol");
       UUID id = uuid(in);
       long revision = in.readLong(), sequence = in.readLong(), sample = in.readLong();
@@ -309,8 +316,14 @@ public final class StateCodec {
         if (envelopes.put(module, c) != null)
           throw new IllegalArgumentException("duplicate_envelope");
       }
+      Map<UUID, KeyboardState> keyboards = new HashMap<>();
+      n = count(in, 16);
+      for (int i = 0; i < n; i++)
+        if (keyboards.put(uuid(in), new KeyboardState(in.readUnsignedByte(), in.readBoolean()))
+            != null) throw new IllegalArgumentException("duplicate_keyboard");
       end(in);
-      return new PatchSnapshot(id, revision, sequence, sample, modules, cables, envelopes);
+      return new PatchSnapshot(
+          id, revision, sequence, sample, modules, cables, envelopes, keyboards);
     } catch (IOException e) {
       throw new IllegalArgumentException("snapshot_bytes", e);
     }

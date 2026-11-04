@@ -23,7 +23,8 @@ public final class Messages {
     ENABLE,
     GATE,
     CLOSE,
-    REFRESH
+    REFRESH,
+    INSPECT
   }
 
   // Installed only by the client entrypoint; common loading resolves no client classes.
@@ -71,6 +72,51 @@ public final class Messages {
     }
   }
 
+  /** note is a chromatic key 0..11, or -1 for release; renewal never starts a note. */
+  public record Keyboard(
+      UUID id, long revision, UUID session, long sequence, int note, boolean renew, boolean cleanup)
+      implements CustomPacketPayload {
+    public Keyboard {
+      if (id == null
+          || session == null
+          || revision < 0
+          || sequence < 0
+          || note < -1
+          || note > 11
+          || (cleanup && (note != -1 || renew))
+          || (renew && note < 0)) throw new IllegalArgumentException("keyboard_packet");
+    }
+
+    public static final Type<Keyboard> TYPE = Messages.type("keyboard");
+    public static final StreamCodec<RegistryFriendlyByteBuf, Keyboard> CODEC =
+        StreamCodec.of(
+            (b, v) -> {
+              b.writeUUID(v.id);
+              b.writeLong(v.revision);
+              b.writeUUID(v.session);
+              b.writeLong(v.sequence);
+              b.writeByte(v.note);
+              b.writeBoolean(v.renew);
+              b.writeBoolean(v.cleanup);
+            },
+            b -> {
+              if (b.readableBytes() != 51) throw new IllegalArgumentException("keyboard_packet");
+              return new Keyboard(
+                  b.readUUID(),
+                  b.readLong(),
+                  b.readUUID(),
+                  b.readLong(),
+                  b.readByte(),
+                  b.readBoolean(),
+                  b.readBoolean());
+            });
+
+    @Override
+    public Type<Keyboard> type() {
+      return TYPE;
+    }
+  }
+
   public record Patch(byte[] bytes) implements CustomPacketPayload {
     public static final Type<Patch> TYPE = Messages.type("patch");
     public static final StreamCodec<RegistryFriendlyByteBuf, Patch> CODEC =
@@ -113,7 +159,7 @@ public final class Messages {
     }
   }
 
-  public record View(byte[] bytes, boolean editable, boolean open, String status)
+  public record View(byte[] bytes, boolean editable, boolean open, String status, UUID session)
       implements CustomPacketPayload {
     public static final Type<View> TYPE = Messages.type("view");
     public static final StreamCodec<RegistryFriendlyByteBuf, View> CODEC =
@@ -123,13 +169,15 @@ public final class Messages {
               b.writeBoolean(v.editable);
               b.writeBoolean(v.open);
               b.writeUtf(v.status, 128);
+              b.writeUUID(v.session);
             },
             b ->
                 new View(
                     b.readByteArray(StateCodec.MAX_PATCH),
                     b.readBoolean(),
                     b.readBoolean(),
-                    b.readUtf(128)));
+                    b.readUtf(128),
+                    b.readUUID()));
 
     @Override
     public Type<View> type() {
@@ -154,12 +202,21 @@ public final class Messages {
   }
 
   public static void register(RegisterPayloadHandlersEvent event) {
-    var registrar = event.registrar("1");
+    var registrar = event.registrar("2");
     registrar
         .executesOn(HandlerThread.NETWORK)
         .playToServer(
             Control.TYPE,
             Control.CODEC,
+            (message, context) -> {
+              if (context.player() instanceof ServerPlayer player)
+                ServerRuntime.enqueue(player, message);
+            });
+    registrar
+        .executesOn(HandlerThread.NETWORK)
+        .playToServer(
+            Keyboard.TYPE,
+            Keyboard.CODEC,
             (message, context) -> {
               if (context.player() instanceof ServerPlayer player)
                 ServerRuntime.enqueue(player, message);

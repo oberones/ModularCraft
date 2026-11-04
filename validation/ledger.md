@@ -191,3 +191,35 @@ render distance 12, simulation distance 8. No dependency pins or save/network sc
 
 No commit, push, or publication was performed. Screenshots are retained in the checkout;
 native worlds/logs remain under their fresh managed run directories.
+
+
+## Keyboard extension — 2026-11-04
+
+The extension adds the fifth block, typed CV/gate connections, octave persistence, protocol
+v2 performance snapshots, monophonic piano UI and exclusive server performance sessions.
+World-save schema remains v1; dependency pins and original worlds are preserved.
+
+- **PASS — automated checks:** `make verify`: 53 JUnit tests, 10 packaged GameTests,
+  launcher tests, Java formatting, Checkstyle, PMD, Java 21 compilation, archive and
+  five-module resource inspection. Final hashes are in `build/libs/SHA256SUMS`.
+- **PASS — native GUI and network state:** `make smoke GRADLE_ARGS=-PqaKeyboard TICKS=500`
+  loads the actual packaged JAR in a new RP-003 world. It exercises overlap/fallback,
+  octave transposition, retained release pitch, black/white mouse dragging, outside
+  release, audio-settings return, rapid note/octave acknowledgement ordering and close.
+  See [native observations](keyboard/native-results.json) and [red–green evidence](keyboard/red-green.md).
+- **PASS — visual inspection:** [idle](keyboard/idle.png), [held octave](keyboard/octave-held.png),
+  [released](keyboard/released.png), [mouse drag](keyboard/mouse-drag.png),
+  [block appearance](keyboard/blocks.png). Labels, shortcuts and piano bounds are readable;
+  the keyboard face uses the existing chassis and original editable SVG artwork.
+- **PASS — self-review:** checked typed cable compatibility, saved-data preservation,
+  protocol mismatch rejection, session/sequence validation, release ordering, bounded
+  queues/leases, phase-preserving pitch transitions and client-only UI isolation. Native
+  inspection found and fixed text blurring and a rapid octave acknowledgement race.
+- **PENDING — RP-003 human/acoustic qualification:** listening for transitions/tails,
+  physical input timing, two-client SC-004/late join, device/focus-loss and extended
+  lifecycle/load acceptance. Synthetic GUI input and native PCM counters do not replace these.
+- **Retained limitations:** the native run recorded startup underruns and maximum server
+  work above the 2 ms target (exact counters in the JSON). Existing dependency-security
+  and broader release-qualification gates remain BLOCKED/PENDING; no release claim.
+
+No commit, push or publication was performed.

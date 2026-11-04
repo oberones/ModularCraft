@@ -2,6 +2,7 @@ package com.malevolentgods.modularcraft.dsp;
 
 import com.malevolentgods.modularcraft.domain.Cable;
 import com.malevolentgods.modularcraft.domain.Graph;
+import com.malevolentgods.modularcraft.domain.KeyboardState;
 import com.malevolentgods.modularcraft.domain.ModuleKind;
 import com.malevolentgods.modularcraft.domain.ModuleState;
 import com.malevolentgods.modularcraft.domain.Parameter;
@@ -28,7 +29,8 @@ public final class RenderGraph {
     final Smoother[] parameters = new Smoother[Parameter.values().length];
     final Smoother left = new Smoother(0), right = new Smoother(0);
     Envelope envelope;
-    int audio = -1, control = -1;
+    int audio = -1, control = -1, pitch = -1;
+    Smoother frequency;
 
     Node(ModuleState module, Envelope.Checkpoint checkpoint, long sample) {
       this.module = module;
@@ -70,11 +72,28 @@ public final class RenderGraph {
       nodes[i] = new Node(m, checkpoints.get(m.id()), sample);
       indices.put(m.id(), i);
     }
+    Map<UUID, KeyboardState> keyboards = new HashMap<>();
+    for (PatchSnapshot patch : patches) keyboards.putAll(patch.keyboards());
     for (Cable c : cables) {
       Node n = nodes[indices.get(c.destination())];
       if (c.input() == Port.AUDIO_IN) n.audio = indices.get(c.source());
-      else n.control = indices.get(c.source());
+      else if (c.input() == Port.PITCH_IN) n.pitch = indices.get(c.source());
+      else if (c.input() != Port.GATE_IN) n.control = indices.get(c.source());
     }
+    for (Node n : nodes)
+      if (n.module.kind() == ModuleKind.OSCILLATOR) {
+        double hz = n.module.value(Parameter.FREQUENCY);
+        if (n.pitch >= 0) {
+          ModuleState source = nodes[n.pitch].module;
+          KeyboardState key =
+              keyboards.getOrDefault(
+                  source.id(),
+                  new KeyboardState(
+                      KeyboardState.note((int) source.value(Parameter.OCTAVE), 0), false));
+          hz = KeyboardState.frequency(key.note());
+        }
+        n.frequency = new Smoother(hz);
+      }
   }
 
   /** Transfer continuous state at the audio block boundary, without mutating the old graph. */
@@ -83,6 +102,11 @@ public final class RenderGraph {
       for (Node old : previous.nodes)
         if (node.module.id().equals(old.module.id())) {
           node.oscillator.copyFrom(old.oscillator);
+          if (node.frequency != null) {
+            double target = node.frequency.current();
+            node.frequency.reset(old.frequency.current());
+            node.frequency.target(target);
+          }
           node.filter.copyFrom(old.filter);
           for (Parameter p : node.module.kind().parameters) {
             node.parameters[p.ordinal()].reset(old.parameters[p.ordinal()].current());
@@ -99,7 +123,8 @@ public final class RenderGraph {
     for (int i = 0; i < nodes.length; i++)
       if (!nodes[i].module.id().equals(previous.nodes[i].module.id())
           || nodes[i].audio != previous.nodes[i].audio
-          || nodes[i].control != previous.nodes[i].control) return false;
+          || nodes[i].control != previous.nodes[i].control
+          || nodes[i].pitch != previous.nodes[i].pitch) return false;
     return true;
   }
 
@@ -133,8 +158,8 @@ public final class RenderGraph {
         double control = n.control < 0 ? 0 : signals[n.control];
         switch (n.module.kind()) {
           case OSCILLATOR ->
-              signals[i] =
-                  n.oscillator.next(n.next(Parameter.FREQUENCY), n.next(Parameter.LEVEL) / 100);
+              signals[i] = n.oscillator.next(n.frequency.next(), n.next(Parameter.LEVEL) / 100);
+          case KEYBOARD -> signals[i] = 0;
           case ENVELOPE -> signals[i] = n.envelope.value(sample + frame);
           case FILTER -> {
             double cutoff =

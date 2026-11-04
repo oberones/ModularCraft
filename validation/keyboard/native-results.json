@@ -1,0 +1,50 @@
+{
+  "date": "2026-11-04",
+  "command": "make smoke GRADLE_ARGS=-PqaKeyboard TICKS=500",
+  "status": "PASS",
+  "instance": "run/make/smoke-lmtzxg7u",
+  "assertions": [
+    "overlapping notes",
+    "fallback to earlier held note",
+    "held-note octave transposition",
+    "release retains pitch",
+    "black-key mouse hit",
+    "drag to white key",
+    "drag outside releases",
+    "audio-settings return renews session",
+    "rapid note/octave acknowledgement ordering",
+    "close clears gate"
+  ],
+  "observations": [
+    "MODULARCRAFT_QA artifact=union:/Users/oberon/Projects/coding/mods/minecraft/ModularCraft/run/make/smoke-lmtzxg7u/mods/modularcraft-0.1.0.jar%23187!/",
+    "MODULARCRAFT_QA fixture patches=1 modules=5 cables=5",
+    "MODULARCRAFT_QA Saved screenshot as keyboard-90.png",
+    "MODULARCRAFT_QA client p95BlockNs=73375 blocks=1795 underruns=1 maxBlockNs=1188792 peak=0.0 maxQueued=12 failed=false",
+    "MODULARCRAFT_QA keyboard tick=130 KeyboardState[note=62, gate=true]",
+    "MODULARCRAFT_QA Saved screenshot as keyboard-130.png",
+    "MODULARCRAFT_QA keyboard tick=150 KeyboardState[note=60, gate=true]",
+    "MODULARCRAFT_QA keyboard tick=180 KeyboardState[note=72, gate=true]",
+    "MODULARCRAFT_QA Saved screenshot as keyboard-180.png",
+    "MODULARCRAFT_QA server lastNs=69667 maxNs=2926667",
+    "MODULARCRAFT_QA client p95BlockNs=60416 blocks=3672 underruns=1 maxBlockNs=1188792 peak=0.02312178537249565 maxQueued=12 failed=false",
+    "MODULARCRAFT_QA keyboard tick=240 KeyboardState[note=72, gate=false]",
+    "MODULARCRAFT_QA Saved screenshot as keyboard-240.png",
+    "MODULARCRAFT_QA keyboard tick=260 KeyboardState[note=73, gate=true]",
+    "MODULARCRAFT_QA keyboard tick=280 KeyboardState[note=74, gate=true]",
+    "MODULARCRAFT_QA Saved screenshot as keyboard-280.png",
+    "MODULARCRAFT_QA keyboard tick=295 KeyboardState[note=74, gate=false]",
+    "MODULARCRAFT_QA client p95BlockNs=29833 blocks=5548 underruns=1 maxBlockNs=1188792 peak=0.02312178537249565 maxQueued=12 failed=false",
+    "MODULARCRAFT_QA keyboard tick=330 KeyboardState[note=72, gate=true]",
+    "MODULARCRAFT_QA keyboard tick=350 KeyboardState[note=86, gate=true]",
+    "MODULARCRAFT_QA server lastNs=31584 maxNs=2926667",
+    "MODULARCRAFT_QA client p95BlockNs=27792 blocks=7420 underruns=1 maxBlockNs=1188792 peak=0.02312178537249565 maxQueued=12 failed=false",
+    "MODULARCRAFT_QA Saved screenshot as keyboard-400.png",
+    "MODULARCRAFT_QA client p95BlockNs=27292 blocks=9297 underruns=1 maxBlockNs=1188792 peak=0.02312178537249565 maxQueued=12 failed=false"
+  ],
+  "limits": [
+    "Synthetic GUI input, not human listening or acoustic timing",
+    "One startup underrun; see raw counters",
+    "Server maximum tick work exceeds the existing 2 ms target",
+    "No two-client, device-loss or extended-load qualification"
+  ]
+}

@@ -1,7 +1,7 @@
 # ModularCraft
 
-Build a shared modular synthesizer from four Minecraft blocks: **Saw Oscillator**,
-**Low-Pass Filter**, **Envelope Generator**, and **Amplifier / Speaker**. Connect their
+Build a shared modular synthesizer from five Minecraft blocks: **Saw Oscillator**,
+**Low-Pass Filter**, **Envelope Generator**, **Amplifier / Speaker**, and **Keyboard**. Connect their
 ports with the Patching Tool; nearby players synthesize the accepted performance locally.
 No prerecorded loops, accounts, internet audio, external services, or extra audio software
 are required. Creative access is sufficient; there are no survival recipes in this MVP.
@@ -25,7 +25,7 @@ Audio settings are also available from the title screen, pause menu, and module 
 
 ## First instrument: RP-001
 
-1. Open the **ModularCraft Instruments** Creative tab. Take one of each module and the
+1. Open the **ModularCraft Instruments** Creative tab. Take an oscillator, filter, envelope, speaker, and the
    **Patching Tool**. Place the modules two blocks apart, with their labeled fronts facing
    you. All front ports are on the lower strip.
 2. Hold the tool and right-click **Oscillator AO → Audio Out**, then **Filter AI ← Audio In**.
@@ -74,14 +74,43 @@ Hold Gate for two seconds and release. Loudness and brightness rise together, se
 lower while held, then fade. The cutoff mapping is
 `base + (20,000 − base) × envelope × amount`, where envelope and amount are fractions.
 At full envelope these settings reach 10,250 Hz. Amount 0% restores the base cutoff.
-Redstone power at an envelope block drives the same gate: **manual OR redstone**.
+Redstone power at an envelope block drives the same gate: **manual OR redstone OR Gate In**.
 Releasing one source while the other is active does not end or retrigger the note.
 Attack, decay, and release are linear. Time edits affect the next entered stage.
+
+## Play the keyboard: RP-003
+
+Keep RP-001's three cables and all its default settings. Add a **Keyboard**, with:
+
+1. **Keyboard CV → Pitch CV Out** → **Oscillator PI ← Pitch CV In**.
+2. **Keyboard GO → Gate Out** → **Envelope GT ← Gate In**.
+3. Enable the speaker, remove redstone power from the envelope, then right-click the keyboard.
+
+The panel shows twelve chromatic keys C–B, default octave 4. Click and hold or drag across
+keys; dragging outside releases the mouse note. Alternatively, focus the piano and play
+**A W S E D F T G Y H U J** (C C# D D# E F F# G G# A A# B). Tab navigates controls.
+**Octave −/+** or left/right arrows while the piano is focused select octaves 1–7.
+Octave changes transpose held notes immediately. The last pressed held key wins; releasing
+it returns to the previous held key. Each new active note retriggers attack from the
+current envelope level. Releasing all inputs lowers Gate and lets the release tail finish
+at the last pitch. Closing the panel or losing window focus releases held notes.
+
+Press **H** in octave 4 to hear A4 = 440 Hz. CV uses 1 V/octave, with 0 V = C4;
+connected CV determines exact equal-tempered oscillator pitch. Its saved Frequency setting
+is restored when Pitch In is disconnected. The keyboard emits no audio or velocity.
+Manual/redstone envelope gates remain OR-combined with Gate In; while either is held,
+keyboard note changes change pitch without restarting the envelope.
+
+Only one eligible player can hold a keyboard at a time. Another player must wait for release.
+Inputs use the existing 20 changes/s/player budget (including five held-note renewals/s);
+release always bypasses ordinary edit throttling. An overloaded session releases and asks
+you to reopen the panel. There is no sustain latch, polyphony, MIDI, or recording.
 
 ## Patching, permissions, and saved work
 
 Audio outputs connect only to audio inputs. Envelope outputs connect only to cutoff or
-gain control inputs. An input has one source; an output can feed four destinations.
+gain control inputs. Keyboard CV Out connects only to oscillator Pitch CV In; Gate Out
+connects only to envelope Gate In. An input has one source; an output can feed four destinations.
 Shift-right-click a destination input to remove exactly that cable. Right-click air or
 a non-port area with the tool to cancel selection. Cable arrowheads show direction.
 Ports have labels and the tool HUD shows their full names; color is supplementary.
@@ -101,7 +130,8 @@ removes its cables; a replacement at the same position has a new identity and de
 | Ordinary accepted edits | 20 per second per player, 200 per second globally |
 
 Module UUIDs, owners, controls, and cable endpoints persist. **Speakers restart disabled**;
-manual gates and live envelope progress are not saved. Enable speakers to start fresh
+manual/keyboard gates and live envelope progress are not saved. Keyboard octave is saved;
+its pitch resets to C in that octave on fresh activation. Enable speakers to start fresh
 from the current redstone state. Unloading any part of a patch suspends the entire patch;
 load all its chunks and explicitly enable its speakers again. Instruments never force
 chunks to stay loaded. A true singleplayer pause freezes music; module panels do not pause.
@@ -110,7 +140,8 @@ Unknown or corrupt records are quarantined and preserved, including connected af
 components. Do not edit the save to guess missing values. Back up the entire world, use
 a compatible mod version or restore a known-good backup, and retain the original data
 for recovery. The global registry is `data/modularcraft.dat`; per-module data is also in
-its owning block entity. Save/network schema is version 1; no old public format exists.
+its owning block entity. World-save schema remains version 1; existing patches load unchanged. Network and
+performance-snapshot protocol is version 2: update both server and clients together.
 
 ## Troubleshooting
 

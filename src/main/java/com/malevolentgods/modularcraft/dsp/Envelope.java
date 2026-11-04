@@ -91,6 +91,13 @@ public final class Envelope {
         value ? attack : release);
   }
 
+  /** New external note, including an overlapping note, attacks from the current level. */
+  public void retrigger(long sample) {
+    double current = value(sample);
+    gate = true;
+    enter(Stage.ATTACK, sample, current, 1, attack);
+  }
+
   private void enter(Stage next, long sample, double begin, double end, double seconds) {
     stage = next;
     start = sample;

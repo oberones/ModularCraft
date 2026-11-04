@@ -10,7 +10,8 @@ public enum Parameter {
   DECAY(.001, 10, .200, "s"),
   SUSTAIN(0, 100, 70, "%"),
   RELEASE(.001, 10, .300, "s"),
-  VOLUME(0, 100, 10, "%");
+  VOLUME(0, 100, 10, "%"),
+  OCTAVE(1, 7, 4, "");
   public final double min, max, initial;
   public final String unit;
 
@@ -22,7 +23,10 @@ public enum Parameter {
   }
 
   public double validate(double value) {
-    if (!Double.isFinite(value) || value < min || value > max)
+    if ((this == OCTAVE && value != Math.rint(value))
+        || !Double.isFinite(value)
+        || value < min
+        || value > max)
       throw new IllegalArgumentException("range:" + name() + ":" + min + ":" + max);
     return value;
   }

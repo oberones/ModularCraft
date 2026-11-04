@@ -123,3 +123,11 @@ Type `stop` in a running normal server console for an orderly save/shutdown.
 `DEV_CLIENT_DIR`, `DEV_SERVER_DIR`, and `GAMETEST_DIR` customize their named runs. Automated
 smoke seed generation always uses the managed `run/make/gametest` seed instance. These
 targets do not publish, commit, push, update dependency pins, or delete validation worlds.
+
+
+Keyboard native probe: `make smoke GRADLE_ARGS=-PqaKeyboard TICKS=500` builds RP-003
+in a fresh managed world, opens its piano panel, exercises notes/priority/octave/mouse/
+settings return/close, asserts server-accepted note states and captures six screenshots
+under that instance's `screenshots/`. It does not reuse player saves. Use at least 500
+ticks; keep the game window focused so the normal focus-loss safety release does not
+interrupt synthetic holds. Listening and two-client timing remain separate checks.

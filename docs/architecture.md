@@ -9,7 +9,9 @@ clock estimation, admission windows, and bounded queues. Host adapters live in `
 The server owns accepted module and cable state on its game thread. Network threads can
 only place connection-derived requests in `EditInbox`: 64 ordinary queued edits per
 player, 256 globally, with coalesced parameter updates. Cleanup has a separate bounded
-priority lane; releasing a gate cancels an older queued press. Server handlers validate
+priority lane; releasing the envelope manual gate cancels an older queued press.
+Keyboard note-off stays FIFO to preserve taps; only emergency keyboard cleanup invalidates
+the session ahead of pending notes. Server handlers validate
 identity, loaded state, owner/operator access, same dimension, six-block interaction,
 host protection, and expected revision. Successful edits have one sequence order.
 
@@ -69,3 +71,20 @@ and requests/resumes a current-state synchronization. Game-thread edit draining 
 1.5 ms admission slice; the **2 ms overall work target still needs load qualification**
 because initial encoding/class-loading work exceeded it in native probes. Numeric bounds
 are not a hard real-time guarantee from Java, the OS, or the audio device.
+
+
+## Keyboard authority and pitch
+
+Keyboard sessions are server-issued per inspected panel, with strictly increasing input
+sequences. A performance lease belongs to one session and renews every 200 ms, expiring
+at 750 ms. Accepted note changes retain server receive spacing even within one tick,
+with a minimum 48-sample separation and 1,920-sample lead. Cleanup bypasses edit tokens;
+queue overload releases and invalidates the affected session. Subsequent snapshots cannot
+rewind pending performance timestamps. Renewal never starts/retriggers a note.
+
+Pitch CV and gate have separate port roles. Snapshot v2 carries keyboard MIDI note numbers
+24–107 and gate booleans; CV = (note−60)/12 V and Hz = 440×2^((note−69)/12). Server-side
+external gates feed analytic envelope checkpoints. RenderGraph resolves pitch cables into
+smoothed frequency targets, preserves oscillator phase, and leaves envelope control routing
+unchanged. World v1 persists octave only, using existing named records; network v2 rejects
+old peers. Snapshot recovery restores current pitch/gate, not historical note events.

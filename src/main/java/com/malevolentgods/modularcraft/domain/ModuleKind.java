@@ -5,14 +5,15 @@ import java.util.List;
 import java.util.Map;
 
 public enum ModuleKind {
-  OSCILLATOR(List.of(Parameter.FREQUENCY, Parameter.LEVEL), List.of(Port.AUDIO_OUT)),
+  OSCILLATOR(List.of(Parameter.FREQUENCY, Parameter.LEVEL), List.of(Port.AUDIO_OUT, Port.PITCH_IN)),
   FILTER(
       List.of(Parameter.CUTOFF, Parameter.RESONANCE, Parameter.AMOUNT),
       List.of(Port.AUDIO_IN, Port.CUTOFF_IN, Port.AUDIO_OUT)),
   ENVELOPE(
       List.of(Parameter.ATTACK, Parameter.DECAY, Parameter.SUSTAIN, Parameter.RELEASE),
-      List.of(Port.ENVELOPE_OUT)),
-  SPEAKER(List.of(Parameter.VOLUME), List.of(Port.AUDIO_IN, Port.GAIN_IN));
+      List.of(Port.ENVELOPE_OUT, Port.GATE_IN)),
+  SPEAKER(List.of(Parameter.VOLUME), List.of(Port.AUDIO_IN, Port.GAIN_IN)),
+  KEYBOARD(List.of(Parameter.OCTAVE), List.of(Port.CV_OUT, Port.GATE_OUT));
   public final List<Parameter> parameters;
   public final List<Port> ports;
 

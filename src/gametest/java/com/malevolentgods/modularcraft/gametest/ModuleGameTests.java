@@ -20,6 +20,174 @@ public final class ModuleGameTests {
   private ModuleGameTests() {}
 
   @GameTest(template = "empty", templateNamespace = ModularCraft.ID)
+  public static void keyboardRejectsOldSessionsReorderedNotesAndGuests(GameTestHelper h) {
+    UUID owner = UUID.randomUUID();
+    var player = FakePlayerFactory.get(h.getLevel(), new GameProfile(owner, "OrderedKeyboard"));
+    BlockPos pos = h.absolutePos(new BlockPos(1, 1, 1));
+    h.getLevel()
+        .setBlock(pos, ModularCraft.MODULES.get(ModuleKind.KEYBOARD).get().defaultBlockState(), 3);
+    var module = (ModuleEntity) h.getLevel().getBlockEntity(pos);
+    module.initialize(owner);
+    player.setPos(pos.getCenter());
+    var runtime = com.malevolentgods.modularcraft.game.ServerRuntime.get(h.getLevel().getServer());
+    runtime.inspect(player, module, true);
+    UUID old = runtime.keyboardSession(player);
+    runtime.inspect(player, module, true);
+    UUID current = runtime.keyboardSession(player);
+    long revision = module.state().revision();
+    com.malevolentgods.modularcraft.game.ServerRuntime.enqueue(
+        player,
+        new com.malevolentgods.modularcraft.network.Messages.Keyboard(
+            module.state().id(), revision, old, 99, 9, false, false));
+    com.malevolentgods.modularcraft.game.ServerRuntime.enqueue(
+        player,
+        new com.malevolentgods.modularcraft.network.Messages.Keyboard(
+            module.state().id(), revision, current, 2, 4, false, false));
+    com.malevolentgods.modularcraft.game.ServerRuntime.enqueue(
+        player,
+        new com.malevolentgods.modularcraft.network.Messages.Keyboard(
+            module.state().id(), revision, current, 1, 1, false, false));
+    com.malevolentgods.modularcraft.game.ServerRuntime.enqueue(
+        player,
+        new com.malevolentgods.modularcraft.network.Messages.Keyboard(
+            module.state().id(), revision, current, 3, -1, false, false));
+    var guest =
+        FakePlayerFactory.get(
+            h.getLevel(), new GameProfile(UUID.randomUUID(), "UntrustedKeyboard"));
+    guest.setPos(pos.getCenter());
+    runtime.inspect(guest, module, true);
+    com.malevolentgods.modularcraft.game.ServerRuntime.enqueue(
+        guest,
+        new com.malevolentgods.modularcraft.network.Messages.Keyboard(
+            module.state().id(), revision, runtime.keyboardSession(guest), 0, 10, false, false));
+    h.runAfterDelay(
+        3,
+        () -> {
+          var note = runtime.currentPatch(module.state().id()).keyboards().get(module.state().id());
+          h.assertTrue(note.note() == 64 && !note.gate(), "Only ordered authorized E4 survives");
+          com.malevolentgods.modularcraft.game.ServerRuntime.enqueue(
+              player,
+              new com.malevolentgods.modularcraft.network.Messages.Keyboard(
+                  module.state().id(), revision, current, 4, -1, false, true));
+          com.malevolentgods.modularcraft.game.ServerRuntime.enqueue(
+              player,
+              new com.malevolentgods.modularcraft.network.Messages.Keyboard(
+                  module.state().id(), revision, current, 5, 2, false, false));
+        });
+    h.runAfterDelay(
+        6,
+        () -> {
+          var note = runtime.currentPatch(module.state().id()).keyboards().get(module.state().id());
+          h.assertTrue(note.note() == 64 && !note.gate(), "Closed session cannot revive a note");
+          h.succeed();
+        });
+  }
+
+  @GameTest(template = "empty", templateNamespace = ModularCraft.ID)
+  public static void keyboardPortsPersistenceAndOrderedRelease(GameTestHelper h) {
+    UUID owner = UUID.randomUUID();
+    var player = FakePlayerFactory.get(h.getLevel(), new GameProfile(owner, "KeyboardOwner"));
+    BlockPos position = h.absolutePos(new BlockPos(1, 1, 1));
+    h.getLevel()
+        .setBlock(
+            position, ModularCraft.MODULES.get(ModuleKind.KEYBOARD).get().defaultBlockState(), 3);
+    var keyboard = (ModuleEntity) h.getLevel().getBlockEntity(position);
+    keyboard.initialize(owner);
+    player.setPos(position.getCenter());
+    h.assertTrue(keyboard.editable(player), "Owner may play keyboard");
+    h.assertTrue(keyboard.state().value(Parameter.OCTAVE) == 4, "Default octave is four");
+    var guest =
+        FakePlayerFactory.get(h.getLevel(), new GameProfile(UUID.randomUUID(), "KeyboardGuest"));
+    guest.setPos(position.getCenter());
+    h.assertTrue(!keyboard.editable(guest), "Guest cannot play keyboard");
+    var block =
+        (com.malevolentgods.modularcraft.game.ModuleBlock) keyboard.getBlockState().getBlock();
+    var hit =
+        new net.minecraft.world.phys.BlockHitResult(
+            new net.minecraft.world.phys.Vec3(
+                position.getX() + .75, position.getY() + .125, position.getZ()),
+            net.minecraft.core.Direction.NORTH,
+            position,
+            false);
+    h.assertTrue(
+        block.portAt(keyboard.getBlockState(), hit)
+            == com.malevolentgods.modularcraft.domain.Port.CV_OUT,
+        "CV jack matches lower-front artwork");
+    var tag = keyboard.saveWithFullMetadata(h.getLevel().registryAccess());
+    var restored =
+        (ModuleEntity)
+            BlockEntity.loadStatic(
+                position, keyboard.getBlockState(), tag, h.getLevel().registryAccess());
+    h.assertTrue(
+        restored != null && restored.state().kind() == ModuleKind.KEYBOARD,
+        "Keyboard survives block-entity save");
+    var runtime = com.malevolentgods.modularcraft.game.ServerRuntime.get(h.getLevel().getServer());
+    runtime.inspect(player, keyboard, true);
+    UUID session = runtime.keyboardSession(player);
+    long revision = keyboard.state().revision();
+    com.malevolentgods.modularcraft.game.ServerRuntime.enqueue(
+        player,
+        new com.malevolentgods.modularcraft.network.Messages.Keyboard(
+            keyboard.state().id(), revision, session, 0, 9, false, false));
+    com.malevolentgods.modularcraft.game.ServerRuntime.enqueue(
+        player,
+        new com.malevolentgods.modularcraft.network.Messages.Keyboard(
+            keyboard.state().id(), revision, session, 1, -1, false, false));
+    h.runAfterDelay(
+        3,
+        () -> {
+          var note =
+              runtime.currentPatch(keyboard.state().id()).keyboards().get(keyboard.state().id());
+          h.assertTrue(note.note() == 69 && !note.gate(), "Quick tap retains A4 but releases gate");
+          runtime.unload(keyboard.state().id());
+          note = runtime.currentPatch(keyboard.state().id()).keyboards().get(keyboard.state().id());
+          h.assertTrue(note.note() == 60 && !note.gate(), "Unload clears transient note");
+          h.succeed();
+        });
+  }
+
+  @GameTest(template = "empty", templateNamespace = ModularCraft.ID)
+  public static void keyboardPacketsAreBoundedAndRoundtrip(GameTestHelper h) {
+    var bytes =
+        new net.minecraft.network.RegistryFriendlyByteBuf(
+            io.netty.buffer.Unpooled.buffer(), h.getLevel().registryAccess());
+    try {
+      var packet =
+          new com.malevolentgods.modularcraft.network.Messages.Keyboard(
+              UUID.randomUUID(), 3, UUID.randomUUID(), 4, 11, false, false);
+      com.malevolentgods.modularcraft.network.Messages.Keyboard.CODEC.encode(bytes, packet);
+      h.assertTrue(
+          com.malevolentgods.modularcraft.network.Messages.Keyboard.CODEC
+              .decode(bytes)
+              .equals(packet),
+          "Keyboard packet roundtrip");
+      bytes.clear();
+      com.malevolentgods.modularcraft.network.Messages.Keyboard.CODEC.encode(bytes, packet);
+      bytes.writeByte(0);
+      boolean rejected = false;
+      try {
+        com.malevolentgods.modularcraft.network.Messages.Keyboard.CODEC.decode(bytes);
+      } catch (IllegalArgumentException expected) {
+        rejected = true;
+      }
+      h.assertTrue(rejected, "Trailing note data rejected");
+      bytes.clear();
+      com.malevolentgods.modularcraft.network.Messages.Keyboard.CODEC.encode(bytes, packet);
+      bytes.setByte(48, 12);
+      rejected = false;
+      try {
+        com.malevolentgods.modularcraft.network.Messages.Keyboard.CODEC.decode(bytes);
+      } catch (IllegalArgumentException expected) {
+        rejected = true;
+      }
+      h.assertTrue(rejected, "Out-of-range note rejected");
+      h.succeed();
+    } finally {
+      bytes.release();
+    }
+  }
+
+  @GameTest(template = "empty", templateNamespace = ModularCraft.ID)
   public static void placedIdentityAndPermissions(GameTestHelper h) {
     BlockPos relative = new BlockPos(1, 1, 1);
     h.setBlock(relative, ModularCraft.MODULES.get(ModuleKind.OSCILLATOR).get());
