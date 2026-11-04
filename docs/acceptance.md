@@ -158,11 +158,12 @@ Use RP-003 at conservative speaker volume, then perform the following:
    Replug, Refresh and play fresh notes. Record whether the provider reports removal; if it
    does not, record BLOCKED device-loss qualification and verify Release Notes/close recovery.
    Test unavailable and duplicate device descriptors without substituting another device.
-5. Repeat open/close/reconnect 20 times; native device/transmitter/receiver counts must return
-   to idle baseline. Flood supported MIDI events until overflow: input must release, the
+5. Repeat open/close/reconnect 20 times, playing fresh notes after every return; native
+   device/transmitter/receiver and helper-process counts must return to idle baseline. Flood supported MIDI events until overflow: input must release, the
    panel must request reopening, and the game must remain responsive. Unsupported CC/pitch
-   bend floods must not consume the event queue. Native hangs cannot be reclaimed forcibly;
-   record provider behavior and use a game restart if necessary.
+   bend floods must not consume the event queue. The isolated native helper must exit after
+   close (including forced termination of a blocked native close), with no overlapping helper.
+   A parent-side discovery stall still requires timeout guidance and may need a game restart.
 6. Apply SC-003 (100 measured actions over ten minutes, p95 <=100 ms, zero stuck notes) and
    SC-004 (two clients, RTT <=50 ms/jitter <=10 ms, p95 <=150 ms response and <=50 ms skew).
    Record MIDI event arrival and acoustic onset uncertainty; do not infer this from fake tests.

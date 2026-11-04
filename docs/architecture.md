@@ -92,14 +92,37 @@ old peers. Snapshot recovery restores current pitch/gate, not historical note ev
 
 ## MIDI input ownership
 
-The client-only Java Sound adapter uses one daemon worker with four pending-operation slots,
-no replacement workers, one open input, and at most 64 discovered device entries. Provider
-objects are queried without opening; selected device/transmitter/receiver handles are closed
-on cancellation, replacement and shutdown. Discovery/open/health/close never run on the game
-or audio thread. A two-second operation deadline revokes callbacks and reports failure;
-late results close their resources. A handle whose close fails remains owned and blocks
-replacement opens until cleanup succeeds. Native calls cannot be forcibly interrupted safely, so
-an unresponsive provider remains bounded to that worker until it returns or the process exits.
+The client-only MIDI adapter uses one daemon worker with four pending-operation slots,
+no replacement workers, one open input, and at most 64 discovered device entries. Discovery
+borrows unopened Java Sound provider objects. A selected connection runs in one headless
+Java 21 helper process launched with the same runtime as Minecraft. Only the mod's fixed
+standalone classes are extracted into one private temporary directory per client, removed
+on normal JVM exit. No dependencies, native binaries, network services or shell commands
+are added. The helper has a 32 MiB maximum Java heap and 64 MiB metaspace ceiling; those
+are not a total process RSS limit.
+
+Each panel/focus/selection generation owns a fresh helper and therefore a fresh Java Sound
+reader/cache. This contains the macOS provider's retained-reader/silent-reopen defect.
+The helper explicitly closes receiver/transmitter/device on a stop command. The worker
+allows 1.25 seconds for graceful exit, then forcibly terminates the helper and waits up to
+250 ms. It retains ownership and refuses another open if the process is still alive. A
+parent-liveness watchdog exits the helper if Minecraft disappears, including during a
+blocked native open/close. No process is automatically respawned after an input failure.
+
+Device discovery/open/health/close and bounded pipe polling all run on the same worker;
+no game/audio thread performs I/O. Idle polling every 5 ms avoids an extra client-tick
+transport delay. The helper's bounded 256-event ingress queue, OS pipe, and client's
+256-event queue are separate stages; each poll transfers at most 64 four-byte messages,
+and each client tick consumes at most 64 events. Unsupported messages and unselected channels are rejected before
+queueing; malformed frames or helper exit stop input, and overflow at either queue
+invalidates performance. Native/device timestamps are not transferred. The helper's
+one-byte readiness handshake is followed by fixed-width note/controller frames and an
+explicit overflow marker; no unbounded strings or deserialization cross the pipe.
+
+A two-second operation deadline revokes callbacks and reports failure. Late results close
+their resources. Refresh/focus/selection changes retain a timeout while an operation is
+outstanding. Parent-side discovery remains bounded to its original worker if a provider
+stalls there; the helper containment specifically addresses native connection lifetimes.
 
 Only the game thread owns input priority, channel selection and UI state. Callback messages
 cross a 256-event queue; at most 64 are drained each tick. Generation-tagged callbacks,

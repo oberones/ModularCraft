@@ -109,7 +109,7 @@ exists. Detailed ownership, failure and timing contracts are in `docs/architectu
 | IV ownership | Injectable backend/serial worker/clock; game-thread priority and worker-owned handles |
 | V composition | Existing CV/gate ports, fixed gate, monophonic sustain/fallback; RP-003 extension |
 | VI timing | Existing server receive/sample ordering and smoothing; SC-003/004 retained, no hardware timing claim |
-| VII bounds | One worker, four task slots, one input, 64 ports, 256 events, 64/tick, 2,061 holds; timeout/overflow tests |
+| VII bounds | One worker, four task slots, one input/helper, 64 ports, two bounded 256-event queues, 64/tick, 2,061 holds; timeout/overflow tests |
 | VIII persistence | Only local device/channel preferences; world v1 preserved, protocol/snapshot v3 refuses older peers |
 | IX dependencies | Built-in Java Sound only; all dependency and host pins retained |
 | X controls | Opt-in device/channel, Refresh, Release Notes, localized diagnostics, local mute, guide and screenshots |
@@ -117,3 +117,12 @@ exists. Detailed ownership, failure and timing contracts are in `docs/architectu
 Run `make verify` and `make smoke GRADLE_ARGS=-PqaKeyboard TICKS=500`; record artifact hashes,
 red–green results and self-review. Native synthetic playback is distinct from physical MIDI,
 listening and two-client timing. Preserve all earlier PENDING/BLOCKED gates and manual worlds.
+
+MIDI reconnect remediation: use one disposable headless Java 21 helper per native input
+connection to contain the observed macOS retained-reader/silent-reopen failure. The original
+client worker owns discovery, process lifecycle and 5 ms event polling; helpers are never
+concurrent and are reaped before replacement. Preserve generation invalidation, local
+preferences, server scheduling and all musical/authority contracts. This maps constitution
+I/IV/VII to process isolation and bounded cleanup, IX to the same JDK/no new dependencies,
+and III/VI/X to reconnect regressions, unchanged timing acceptance and recovery guidance.
+Physical timing qualification remains separate from helper lifecycle evidence.

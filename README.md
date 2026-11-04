@@ -134,7 +134,11 @@ changes clear only MIDI holds. Device loss is checked once per second; check the
 and click Refresh to recover. A provider that does not report physical removal may require
 Release Notes or closing the panel. No missed notes are replayed. Device operations time out
 visibly after two seconds without blocking Minecraft. A stalled native provider may need a
-game restart; Refresh does not spawn replacement workers.
+game restart; Refresh does not spawn replacement workers. A timeout remains visible across
+Refresh, focus changes and device/channel selections while that operation is still blocked.
+MIDI connections now use one small Java helper process, which closes when the panel loses
+eligibility and starts fresh on return. This avoids macOS Java Sound keeping a broken reader
+across device reopen; it adds no installed dependencies and never keeps notes from a prior panel.
 
 MIDI shares the existing traffic limits, including renewals, so dense controller/arpeggiator
 streams can be rejected. Queue overflow stops the session and requires reopening the panel.

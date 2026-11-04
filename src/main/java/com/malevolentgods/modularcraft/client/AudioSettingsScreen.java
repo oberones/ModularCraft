@@ -62,7 +62,8 @@ public final class AudioSettingsScreen extends Screen {
   }
 
   @Override
-  public void render(GuiGraphics graphics, int x, int y, float partial) {
+  public void renderBackground(GuiGraphics graphics, int x, int y, float partial) {
+    super.renderBackground(graphics, x, y, partial);
     graphics.fill(width / 2 - 140, height / 2 - 95, width / 2 + 140, height / 2 + 90, 0xf018212a);
     graphics.drawCenteredString(font, title, width / 2, height / 2 - 80, 0xffd9edf1);
     graphics.drawCenteredString(
@@ -77,7 +78,6 @@ public final class AudioSettingsScreen extends Screen {
         width / 2,
         height / 2 + 46,
         0xffe2c88c);
-    super.render(graphics, x, y, partial);
   }
 
   @Override

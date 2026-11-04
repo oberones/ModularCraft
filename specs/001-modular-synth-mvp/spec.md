@@ -252,7 +252,12 @@ Velocity expression, pitch bend, polyphony, sequencers and recording remain excl
 - **MI-004 — Lifecycle/bounds**: Close, focus loss, world/dimension exit, resource reload,
   eligibility loss and disconnect clear input, sustain and queued messages. Device/channel
   changes clear MIDI sources only. One worker/four pending tasks, one device, 64 discovered
-  entries, 256 queued events, 64 events drained/tick, 13 GUI + 2,048 MIDI holds. Two-second
+  entries, a 256-event client queue, 64 events drained/tick, 13 GUI + 2,048 MIDI holds.
+  Native connection lifetimes are isolated in at most one headless Java 21 helper (32 MiB
+  heap, 64 MiB metaspace, separate 256-event ingress queue, fixed four-byte IPC frames).
+  The same worker polls input between client ticks. Closing explicitly closes native
+  resources and reaps the helper; a blocked close is terminated within the operation budget.
+  No replacement opens before the old process exits. Two-second
   provider deadline, one-second device checks. Stale callbacks/results never revive notes;
   failures require Refresh/reselection, overflow invalidates the session and requires reopen.
   A stalled provider never creates additional workers or blocks game/audio threads.

@@ -6,7 +6,6 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.Executor;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
 import java.util.function.LongSupplier;
@@ -31,6 +30,11 @@ public final class MidiInput implements AutoCloseable {
   public interface Connection extends AutoCloseable {
     boolean isOpen();
 
+    /** Worker-only, nonblocking event pump. False reports transport queue overflow. */
+    default boolean poll() {
+      return true;
+    }
+
     @Override
     void close();
   }
@@ -41,6 +45,11 @@ public final class MidiInput implements AutoCloseable {
     String name();
 
     Connection open(Consumer<Event> receiver) throws MidiUnavailableException;
+
+    /** Filter before transport queueing when the backend supports it; -1 means All. */
+    default Connection open(int channel, Consumer<Event> receiver) throws MidiUnavailableException {
+      return open(receiver);
+    }
   }
 
   @FunctionalInterface
@@ -59,7 +68,7 @@ public final class MidiInput implements AutoCloseable {
       boolean scan,
       List<Port> catalog) {}
 
-  private record Result(long generation, List<Port> ports, String status) {}
+  private record Result(long generation, List<Port> ports, String status, boolean scanned) {}
 
   private final Backend backend;
   private final Executor worker;
@@ -67,12 +76,13 @@ public final class MidiInput implements AutoCloseable {
   private final ArrayBlockingQueue<Input> events = new ArrayBlockingQueue<>(256);
   private final ArrayBlockingQueue<Result> results = new ArrayBlockingQueue<>(4);
   private final AtomicLong overflow = new AtomicLong(-1);
+  private final AtomicLong unavailable = new AtomicLong(-1);
   private volatile long generation;
   private String key = "", status = "midi_off", reset;
   private Port choice;
   private int channel = -1;
   private boolean enabled, needsWork, scan, busy, timedOut, faulted, closed;
-  private long started, nextCheck;
+  private long started, nextCheck, nextPoll;
   private List<Port> catalog = List.of();
   // The worker exclusively owns the following native resources; no game/world references.
   private Connection connection;
@@ -80,28 +90,14 @@ public final class MidiInput implements AutoCloseable {
   private long workerGeneration = -1;
 
   public MidiInput() {
-    this(
-        new JavaMidiBackend(),
-        new ThreadPoolExecutor(
-            1,
-            1,
-            0,
-            TimeUnit.MILLISECONDS,
-            new ArrayBlockingQueue<>(4),
-            runnable -> {
-              Thread thread = new Thread(runnable, "ModularCraft MIDI");
-              thread.setDaemon(true);
-              return thread;
-            },
-            new ThreadPoolExecutor.AbortPolicy()),
-        System::nanoTime);
+    this(new MidiProcessBackend(), null, System::nanoTime);
   }
 
   /** Injectable provider, serial executor and clock; thread pools are shut down on close. */
   public MidiInput(Backend backend, Executor worker, LongSupplier clock) {
     this.backend = backend;
-    this.worker = worker;
     this.clock = clock;
+    this.worker = worker == null ? new MidiWorker(this::pump) : worker;
   }
 
   /** Game thread only. channel is -1 for All, otherwise 0..15. Null choice restores by key. */
@@ -125,9 +121,15 @@ public final class MidiInput implements AutoCloseable {
   }
 
   private void restart(boolean discover) {
+    // Refresh/focus cannot restart a native call. Keep its failure visible until it returns.
+    if (busy && timedOut) {
+      fail("midi_timeout");
+      return;
+    }
     generation++;
     events.clear();
     overflow.set(-1);
+    unavailable.set(-1);
     reset = null;
     faulted = false;
     needsWork = true;
@@ -138,13 +140,14 @@ public final class MidiInput implements AutoCloseable {
   public void tick() {
     if (closed) return;
     if (overflow.getAndSet(-1) == generation) fail("keyboard_overload");
+    if (unavailable.getAndSet(-1) == generation) fail("midi_unavailable");
     Result result;
     while ((result = results.poll()) != null) {
       busy = false;
       if (result.generation != generation || faulted) continue;
       catalog = result.ports;
       status = result.status;
-      nextCheck = clock.getAsLong() + 1_000_000_000L;
+      if (result.scanned) nextCheck = clock.getAsLong() + 1_000_000_000L;
       if (!status.equals("midi_ready") && enabled && !key.isEmpty()) fail(status);
     }
     if (busy && !timedOut && clock.getAsLong() - started >= 2_000_000_000L) {
@@ -152,7 +155,7 @@ public final class MidiInput implements AutoCloseable {
       fail("midi_timeout");
     }
     if (busy
-        || !(needsWork || enabled && !key.isEmpty() && !faulted && clock.getAsLong() >= nextCheck))
+        || !(needsWork || enabled && !key.isEmpty() && !faulted && clock.getAsLong() >= nextPoll))
       return;
     Request request =
         new Request(
@@ -161,13 +164,14 @@ public final class MidiInput implements AutoCloseable {
             choice,
             channel,
             enabled && !faulted,
-            scan || enabled && !faulted,
+            scan || enabled && !faulted && clock.getAsLong() >= nextCheck,
             catalog);
     needsWork = false;
     scan = false;
     busy = true;
     timedOut = false;
     started = clock.getAsLong();
+    nextPoll = started + 25_000_000L;
     try {
       worker.execute(() -> reconcile(request));
     } catch (RejectedExecutionException rejected) {
@@ -187,9 +191,23 @@ public final class MidiInput implements AutoCloseable {
     scan = false;
   }
 
+  private void pump() {
+    long epoch = workerGeneration;
+    if (connection == null
+        || epoch != generation
+        || overflow.get() == epoch
+        || unavailable.get() == epoch) return;
+    try {
+      if (!connection.poll()) overflow.accumulateAndGet(epoch, Math::max);
+    } catch (RuntimeException failure) {
+      unavailable.accumulateAndGet(epoch, Math::max);
+    }
+  }
+
   private void receive(long epoch, int filter, Event event) {
     if (epoch != generation
         || overflow.get() == epoch
+        || unavailable.get() == epoch
         || !event.supported()
         || filter >= 0 && filter != event.channel) return;
     if (!events.offer(new Input(epoch, event))) overflow.accumulateAndGet(epoch, Math::max);
@@ -216,10 +234,19 @@ public final class MidiInput implements AutoCloseable {
           else {
             opened = selected == null ? matches.getFirst() : selected;
             workerGeneration = request.generation;
-            connection = opened.open(event -> receive(request.generation, request.channel, event));
+            connection =
+                opened.open(
+                    request.channel, event -> receive(request.generation, request.channel, event));
             message = "midi_ready";
           }
         }
+      }
+      if (connection != null
+          && request.enabled
+          && generation == request.generation
+          && !connection.poll()) {
+        message = "keyboard_overload";
+        closeConnection();
       }
     } catch (MidiUnavailableException | RuntimeException failure) {
       closeConnection();
@@ -228,7 +255,7 @@ public final class MidiInput implements AutoCloseable {
       if (generation != request.generation && !closeConnection()) message = "midi_unavailable";
     }
     // At most one operation is outstanding, so this bounded mailbox cannot fill.
-    results.add(new Result(request.generation, ports, message));
+    results.add(new Result(request.generation, ports, message, request.scan));
   }
 
   // Retain a failed handle so no replacement opens before its close succeeds.
@@ -247,7 +274,8 @@ public final class MidiInput implements AutoCloseable {
 
   /** Game thread only; one tick consumes at most 64 ordered, current-generation events. */
   public void drain(Consumer<Event> consumer) {
-    if (closed || faulted || overflow.get() == generation) return;
+    if (closed || faulted || overflow.get() == generation || unavailable.get() == generation)
+      return;
     for (int count = 0; count < 64; count++) {
       Input input = events.poll();
       if (input == null) break;
@@ -278,6 +306,7 @@ public final class MidiInput implements AutoCloseable {
     generation++;
     events.clear();
     worker.execute(this::closeConnection);
-    if (worker instanceof ThreadPoolExecutor executor) executor.shutdown();
+    if (worker instanceof MidiWorker midiWorker) midiWorker.close();
+    else if (worker instanceof ThreadPoolExecutor executor) executor.shutdown();
   }
 }

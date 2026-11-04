@@ -200,7 +200,8 @@ public final class ModuleScreen extends Screen {
   }
 
   @Override
-  public void render(GuiGraphics graphics, int mouseX, int mouseY, float partial) {
+  public void renderBackground(GuiGraphics graphics, int mouseX, int mouseY, float partial) {
+    super.renderBackground(graphics, mouseX, mouseY, partial);
     graphics.fill(
         left,
         top,
@@ -233,7 +234,6 @@ public final class ModuleScreen extends Screen {
         left + 10,
         Math.min(height - 12, row + 53),
         0xffe2c88c);
-    super.render(graphics, mouseX, mouseY, partial);
   }
 
   private final class ValueSlider extends AbstractSliderButton {

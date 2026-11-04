@@ -31,3 +31,12 @@ Network/snapshot protocol is now v3: upgrade clients and server together. World-
 remains v1, with no saved device handles or held performance; backups and earlier qualification
 gates remain applicable. MIDI uses Java Sound without added dependencies. Hardware/listening
 and two-client acceptance are separate from automated and synthetic native checks.
+
+Fixed MIDI timeouts being hidden by Refresh, focus changes or device/channel selection.
+The panel now keeps the timeout visible while a native operation is blocked and explains
+when restarting Minecraft is needed. This does not repair native Java Sound provider hangs.
+
+Fixed macOS MIDI input becoming silent after leaving and reopening the keyboard panel.
+Each native connection now uses a fresh, bounded Java helper process; closing reaps it even
+when the Java Sound reader fails to stop. One client worker handles lifecycle and input
+polling, with no new dependencies or changes to notes, channels, saves or networking.

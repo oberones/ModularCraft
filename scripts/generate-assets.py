@@ -105,7 +105,7 @@ errors={
 'midi_missing':'MIDI device missing. Connect it, then Refresh or select an input.',
 'midi_ambiguous':'Several MIDI inputs match. Select the intended device again.',
 'midi_unavailable':'MIDI input unavailable. Check the device, then Refresh.',
-'midi_timeout':'MIDI device did not respond. Check it, then Refresh.',
+'midi_timeout':'MIDI timed out. Refresh; if still unavailable, restart Minecraft.',
 'keyboard_busy':'Keyboard in use. Wait until the other player releases it.',
 'keyboard_overload':'Keyboard input overloaded. Close and reopen the panel.',
 'pitch_connected':'Pitch follows CV. Disconnect Pitch In to use Frequency.',

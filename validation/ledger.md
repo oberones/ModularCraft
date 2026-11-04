@@ -262,3 +262,106 @@ plus the working tree; the assistant did not create that commit or push/publish 
 
 No assistant commit, push or publication was performed. The final runtime JAR hash is
 recorded in the linked JSON; archive hashes are refreshed in `build/libs/SHA256SUMS`.
+
+## RK006 MIDI connection diagnosis — 2026-11-04
+
+Source `b4f7377` plus this uncommitted fix; [detailed evidence](midi/rk006-diagnostics.md).
+
+- **PASS — physical Java Sound ingress:** player-assisted 90-second IN_ALL capture
+  received 191 Note On/Off messages on channel 1. Device/channel selection is confirmed.
+- **FAIL — live native lifecycle:** two thread dumps show the game's MIDI worker
+  blocked in `MidiInDevice.nStop` during health-failure close. An isolated 20-cycle
+  RK006 probe completed operations but retained one input thread after every close
+  against a zero-thread baseline. This supersedes any assumption of hardware lifecycle
+  qualification; the native hang itself remains unresolved.
+- **PASS — red–green/status fix:** a new test first reproduced Refresh/focus/channel
+  changes hiding the timeout as Connecting. It now retains timeout status and restart
+  guidance while the native call is outstanding. Late callbacks remain invalidated;
+  no replacement worker is created. Explicit self-review is in the linked evidence.
+- **PASS — `make verify`:** 72 JUnit, 12 packaged GameTests, 12 launcher tests, formatting,
+  static analysis and artifact inspection. Runtime JAR SHA-256:
+  `4acf4138ad4cf2ab9ee538ad20412fb78a65738757a4e9b1389d468e847106e2`.
+- **PENDING — in-game physical MIDI listening/recovery**, sustain, resource-lifecycle
+  remediation, two-client timing and prior acceptance/security/performance gates.
+  No second Minecraft smoke client was launched during the player's active session.
+
+The running client and manual worlds were left untouched. No commit, push or publication.
+
+## MIDI silent-reopen remediation — 2026-11-04
+
+Source `b4f7377` plus uncommitted work; [evidence and self-review](midi/reconnect-fix.md).
+
+- **PASS — reconnect fix:** native Java Sound handles/readers now live in one bounded Java
+  helper per connection. The single client worker polls input between game ticks and owns
+  all lifecycle work; it reaps the old helper before a new open. Blocked native close is
+  contained without blocking Minecraft or creating replacement client workers.
+- **PASS — red–green/full verification:** cached-reader reconnect, idle input polling and
+  pre-queue channel selection each failed before their fix. `make verify` passes 81 JUnit,
+  12 packaged GameTests, 12 launcher tests, formatting, static analysis and artifact checks.
+- **PASS — real RK006 cleanup:** 20 IN_ALL/channel-1 open/health/close cycles returned live
+  helper and parent input-thread counts to zero after each bounded close. Abrupt test-parent
+  exit also left no orphan helper. This addresses the earlier failed lifecycle baseline.
+- **PASS — packaged native smoke/UI:** fresh keyboard fixture passes note/sustain/GUI/
+  settings-return/range-loss assertions; inspected screenshot shows a connected helper.
+- **PENDING — physical post-reopen notes/listening**, sustain/unplug and SC-003/004 timing.
+  The synthetic fixture and hardware resource checks do not establish these. Existing
+  security/performance gates remain: startup underruns 1, max audio block 7.75 ms and server
+  work 6.09 ms in this short fixture.
+
+Runtime JAR SHA-256: `3ed718d239657a83becd1d02e72ad0d25da12088600ed025815a6fef65f28059`.
+No changes to user worlds, running client, dependency pins or save/network formats.
+No commit, push or publication.
+
+
+## Player-assisted RK006 reconnect capture — 2026-11-04
+
+- **PASS — physical adapter input before/after close:** restarted capture received 327
+  events during the first 35-second window and 317 during the second window after fully
+  closing and reopening IN_ALL on UI channel 1. Both phases ended `midi_ready`; after each
+  close, live helper count was zero. The capture process exited with code 0.
+- The player accidentally closed Minecraft and requested the capture restart. This test
+  runs the production adapter independently of Minecraft; closing the game did not prevent
+  it from receiving physical notes. An earlier interrupted capture is excluded from the
+  before/after comparison because its first window contained no playing.
+- **PENDING — in-game physical panel-reopen/listening acceptance**, sustain/unplug and
+  SC-003/004 timing. Physical native-adapter reconnect is now established separately from
+  the earlier synthetic in-game fixture. [Updated evidence](midi/reconnect-fix.md).
+- **Self-review:** distinguish standalone hardware delivery from screen/network/DSP/audio
+  acceptance; retain the recorded runtime candidate hash and existing release gates.
+  No production code changed, no game was launched, and no commit/push/publication occurred.
+
+## Module label blur correction — 2026-11-04
+
+Source `b4f7377` plus existing uncommitted work and this two-screen correction.
+
+- **FAIL — visual baseline:** the [player-supplied envelope screenshot](ui-labels/before.png)
+  shows blurred title, parameter labels/ranges and status text alongside sharp widgets.
+  Inspection of the pinned NeoForge/Minecraft `Screen` source confirms that the previous
+  trailing `super.render(...)` applied background blur after these custom elements.
+- **PASS — correction and self-review:** `ModuleScreen` and `AudioSettingsScreen` now
+  override `renderBackground`, call `super.renderBackground(...)` first, then draw their
+  existing panel/text. Inherited `Screen.render` renders widgets afterward, once. This
+  matches `KeyboardScreen`; wording, geometry, parameter/edit behavior, server authority,
+  save/network schemas and dependency pins are unchanged. Changes remain client-only.
+- **PASS — `make check`:** 81 JUnit tests (zero failures/errors/skips), 12 launcher tests,
+  formatting, Checkstyle and PMD. Initial sandbox execution could not create the Gradle
+  cache lock; the rerun with cache access passed.
+- **PASS — `make build`:** checks and runtime/source/project archives completed. Runtime
+  JAR SHA-256: `3d815a9f16fea6862d25046e9e774273eb73e36673ba80f45801240d8bee66d2`.
+- **PASS — packaged startup only:** `make smoke TICKS=18000 QA_DIR=run/make/labels-20261104`
+  loaded that staged JAR, joined the fresh world and created the four-module/three-cable
+  fixture on macOS 26.6.2, Apple M2 Pro, Java 21.0.12.1, NeoForge 21.1.218. The console
+  identified the packaged artifact and reported `failed=false` audio output. This does
+  not establish visual, acoustic, performance or listening acceptance.
+- **BLOCKED — native UI access:** the computer-control inventory did not expose the Java
+  game window and `getApp("java")` returned `Invalid app: java`. Only the new QA process
+  was stopped, after verifying its working directory; the server saved all dimensions.
+  The deliberate SIGTERM produced exit 143, so the smoke command is not recorded as a
+  completed pass. Its world/logs remain in `run/make/labels-20261104/`.
+- **PENDING — native visual/interaction acceptance:** inspect oscillator, filter,
+  envelope, speaker and local audio panels with blur enabled at multiple GUI scales;
+  save after screenshots and verify slider dragging, numeric Apply and keyboard navigation.
+  The supplied before screenshot is retained; no after screenshot was captured.
+
+Existing manual worlds and unrelated changes were preserved. Earlier release/security/
+performance/listening gates remain unchanged. No commit, push or publication.

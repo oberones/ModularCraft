@@ -28,7 +28,9 @@ class MidiInputTest {
   private static final class Port implements MidiInput.Port {
     Consumer<MidiInput.Event> receiver;
     int opens, closes;
-    boolean fail, failClose, blockClose;
+    int selectedChannel = -2;
+    boolean fail, failClose, blockClose, overflow;
+    Runnable duringPoll = () -> {};
     Runnable duringOpen = () -> {};
 
     @Override
@@ -39,6 +41,13 @@ class MidiInputTest {
     @Override
     public String name() {
       return "Test keyboard";
+    }
+
+    @Override
+    public MidiInput.Connection open(int channel, Consumer<MidiInput.Event> sink)
+        throws MidiUnavailableException {
+      selectedChannel = channel;
+      return open(sink);
     }
 
     @Override
@@ -54,6 +63,12 @@ class MidiInputTest {
         @Override
         public boolean isOpen() {
           return open;
+        }
+
+        @Override
+        public boolean poll() {
+          duringPoll.run();
+          return !overflow;
         }
 
         @Override
@@ -78,7 +93,15 @@ class MidiInputTest {
     final AtomicLong clock = new AtomicLong();
     final Port port = new Port();
     final List<MidiInput.Port> catalog = new ArrayList<>(List.of(port));
-    final MidiInput midi = new MidiInput(() -> List.copyOf(catalog), worker, clock::get);
+    final AtomicLong scans = new AtomicLong();
+    final MidiInput midi =
+        new MidiInput(
+            () -> {
+              scans.incrementAndGet();
+              return List.copyOf(catalog);
+            },
+            worker,
+            clock::get);
 
     void settle() {
       for (int i = 0; i < 8; i++) {
@@ -102,9 +125,34 @@ class MidiInputTest {
   }
 
   @Test
+  void workerPumpsNotesEveryTickWithoutRescanningDevicesEveryTick() {
+    try (Fixture f = new Fixture()) {
+      f.connect(-1);
+      f.port.duringPoll = () -> f.port.note(0, 69);
+      List<MidiInput.Event> notes = new ArrayList<>();
+      for (int tick = 1; tick <= 20; tick++) {
+        f.clock.set(tick * 50_000_000L);
+        f.settle();
+        f.midi.drain(notes::add);
+        Assertions.assertEquals(tick, notes.size());
+        Assertions.assertEquals(tick == 20 ? 2 : 1, f.scans.get());
+      }
+      f.port.overflow = true;
+      f.clock.addAndGet(50_000_000L);
+      f.settle();
+      Assertions.assertEquals("keyboard_overload", f.midi.takeReset());
+      Assertions.assertEquals(1, f.port.closes);
+      notes.clear();
+      f.midi.drain(notes::add);
+      Assertions.assertTrue(notes.isEmpty());
+    }
+  }
+
+  @Test
   void selectionUsesExactUniqueDescriptorAndOnlySelectedChannel() {
     try (Fixture f = new Fixture()) {
       f.connect(3);
+      Assertions.assertEquals(3, f.port.selectedChannel);
       Assertions.assertEquals("midi_ready", f.midi.status());
       f.port.note(2, 60);
       f.port.note(3, 69);
@@ -207,6 +255,41 @@ class MidiInputTest {
       f.clock.set(10_000_000_000L);
       f.settle();
       Assertions.assertEquals(1, f.port.opens);
+    }
+  }
+
+  @Test
+  void stalledWorkerKeepsTimeoutAcrossRefreshFocusAndSelectionChanges() {
+    try (Fixture f = new Fixture()) {
+      f.connect(-1);
+      Consumer<MidiInput.Event> old = f.port.receiver;
+      f.midi.refresh();
+      f.midi.tick();
+      // Leave this operation pending to model a native provider that never returns.
+      f.clock.set(2_000_000_001L);
+      f.midi.tick();
+      Assertions.assertEquals("midi_timeout", f.midi.takeReset());
+      for (int attempt = 0; attempt < 20; attempt++) {
+        f.midi.target(f.port.key(), null, attempt % 16, false);
+        f.midi.target(f.port.key(), null, attempt % 16, true);
+        f.midi.refresh();
+        f.midi.tick();
+        Assertions.assertEquals("midi_timeout", f.midi.status());
+        Assertions.assertEquals(1, f.worker.jobs.size());
+      }
+      old.accept(new MidiInput.Event(0x90, 0, 69, 100));
+      List<MidiInput.Event> received = new ArrayList<>();
+      f.midi.drain(received::add);
+      Assertions.assertTrue(received.isEmpty());
+      // A late return cleans up, but must not reopen until the player retries.
+      f.settle();
+      Assertions.assertEquals("midi_timeout", f.midi.status());
+      Assertions.assertEquals(1, f.port.opens);
+      Assertions.assertEquals(1, f.port.closes);
+      f.midi.refresh();
+      f.settle();
+      Assertions.assertEquals("midi_ready", f.midi.status());
+      Assertions.assertEquals(2, f.port.opens);
     }
   }
 
