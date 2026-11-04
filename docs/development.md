@@ -11,6 +11,7 @@ Run commands from the project directory, or use `make -C /path/to/ModularCraft`.
 make client                         # Interactive Minecraft; build and stage current JAR first
 make smoke                          # Fresh RP-001 patch, about one minute, automatic exit
 make smoke-recovery TICKS=400        # Twenty recovery cycles, about twenty seconds, then exit
+make smoke GRADLE_ARGS=-PqaCables TICKS=600 # Adjacent modules; three cable screenshots, then exit
 make smoke-load TICKS=1200           # 64 modules / 96 cables / eight speakers, about one minute
 ```
 
@@ -62,6 +63,16 @@ The automatic fixture is a development test mod, separate from the distributed r
 JAR. One-client smoke tests, teardown counters, and the single-client benchmark do not
 satisfy two-client timing, acoustic capture, listening, device-switching, or full SC-005
 acceptance. Follow [acceptance.md](acceptance.md) for those procedures.
+
+The opt-in `-PqaCables` smoke variant places RP-001's four modules directly adjacent on
+a solid floor. It requests a 1920×1080 window with 50° FOV, selects spectator mode,
+hides the HUD, and moves through front, oblique, and rear views. At 160, 340, and 520
+client ticks it saves `cables-front.png`,
+`cables-oblique.png`, and `cables-occlusion.png` in that fresh instance's `screenshots/`.
+Use at least 600 ticks and inspect the captures for a single solid cable per connection,
+jack alignment, a taper toward each input, clearance above the floor, and rear-view
+occlusion. This variant is for `make smoke`, not load/recovery qualification; ordinary
+interactive clients and existing worlds are unaffected.
 
 ## Build and check
 

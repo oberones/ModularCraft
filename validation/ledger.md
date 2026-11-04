@@ -150,3 +150,44 @@ this follow-up changes tooling/documentation, not musical runtime behavior.
 Structured evidence is in [makefile-results.json](makefile-results.json). Source archives
 and checksums include the Makefile and launcher tests. The workflow now invokes `make ci`;
 its hosted execution remains PENDING. Earlier failed/pending release gates remain open.
+
+## Patch cable appearance — 2026-11-04
+
+Source: uncommitted changes based on `760e492`. Runtime JAR SHA-256:
+`1e8cbedd14364ebfadc8cf0fc9ed2cb9881870822d32ce4d06951289fb6c4867`.
+Environment: macOS 26.6.2 arm64, Eclipse Adoptium Java 21.0.12.1+1-LTS,
+Minecraft 1.21.1 / NeoForge 21.1.218; default renderer, no shaders, VSync off,
+render distance 12, simulation distance 8. No dependency pins or save/network schemas changed.
+
+- **PASS — regression reproduction:** extracted the original port/curve calculations
+  without changing their behavior, then observed both jack-height and ground-clearance
+  tests fail under `make test TEST='*CableGeometryTest'` (`cables-red.log`).
+- **PASS — geometry:** six JUnit tests cover jack positions on all four facings and all
+  port counts, 24 segments/eight-sided constant-diameter tube rings, attached collar
+  taper direction, full-mesh floor clearance across facing/elevation combinations,
+  vertical/near-vertical/short/coincident/16-block connections, and independent fan-out.
+  The targeted run passed in `cables-green.log`; `make check` passed all **41 JUnit**
+  and **12 Python** tests plus formatting, Checkstyle, and PMD (`cables-check.log`).
+- **PASS — packaged verification:** `make verify` passed build/checks, all **seven
+  packaged headless GameTests**, and archive inspection (`cables-verify.log`).
+- **PASS — native visual inspection:** `make smoke GRADLE_ARGS=-PqaCables TICKS=600`
+  loaded the above packaged JAR in fresh `run/make/smoke-duw693p2`, built the adjacent
+  RP-001 row on solid ground, captured front/oblique/rear views, and exited normally.
+  Reviewed captures show three solid cables with jack-centered endpoints, attached
+  input collars, no arrowhead branches, clearance above the floor, and correct hiding
+  behind opaque modules. Cyan/amber cables may still cross, as the contract permits.
+  See [front](cables/front.png), [oblique](cables/oblique.png), and
+  [occlusion](cables/occlusion.png); native log: `cables-native-final.log`.
+- **PASS — self-review:** rendering remains client-only; geometry is cached by endpoints
+  and rebuilt on facing/position changes, pruned when cables disappear, and cleared on
+  client teardown. Mesh construction is bounded per cable. Camera-relative local
+  vertices avoid losing cable thickness at large world coordinates. Lighting checks
+  chunk availability before reading it. Existing manual worlds were not used as fixtures.
+- **PENDING — broader acceptance:** multiplayer, other graphics platforms/shader packs,
+  maximum-load frame-time qualification, and prior acoustic/listening/security gates
+  are not established by this visual fix. Native smoke output is diagnostic only and
+  is not a new audio-performance acceptance result. Arbitrary-terrain cable routing
+  remains outside scope; floor clearance refers to the lower connected block's base.
+
+No commit, push, or publication was performed. Screenshots are retained in the checkout;
+native worlds/logs remain under their fresh managed run directories.

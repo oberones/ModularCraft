@@ -260,6 +260,7 @@ public final class ClientRuntime {
   }
 
   private static void clear() {
+    CableRenderer.clear();
     stopAudio();
     patches.clear();
     staging.clear();

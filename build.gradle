@@ -30,6 +30,10 @@ neoForge {
                 systemProperty 'modularcraft.qa.load', providers.gradleProperty('qaLoad').getOrElse('false')
                 systemProperty 'modularcraft.qa.ticks', providers.gradleProperty('qaTicks').getOrElse('1200')
                 systemProperty 'modularcraft.qa.cycles', providers.gradleProperty('qaCycles').getOrElse('false')
+                systemProperty 'modularcraft.qa.cables', project.hasProperty('qaCables').toString()
+                if (project.hasProperty('qaCables')) {
+                    programArguments.addAll('--width', '1920', '--height', '1080')
+                }
                 programArguments.addAll('--quickPlaySingleplayer', 'ModularCraft-QA')
             }
         }

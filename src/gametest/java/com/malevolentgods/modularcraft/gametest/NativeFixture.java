@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.block.Blocks;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.common.NeoForge;
@@ -25,6 +26,7 @@ public final class NativeFixture {
   private static final List<BlockPos> ENVELOPES = new ArrayList<>();
   private static ServerPlayer performer;
   private static int ticks;
+  private static BlockPos cableOrigin;
 
   public NativeFixture() {
     if (!Boolean.getBoolean("modularcraft.qa")) return;
@@ -39,6 +41,7 @@ public final class NativeFixture {
         (ServerTickEvent.Post event) -> {
           if (performer == null || event.getServer() != performer.getServer()) return;
           if (++ticks == 20) build(performer);
+          if (cableOrigin != null && (ticks == 220 || ticks == 400)) cableView(performer, ticks);
           if (ticks >= 20 && (ticks - 20) % 40 == 0) {
             boolean on = ((ticks - 20) / 40) % 2 == 0;
             for (BlockPos pos : ENVELOPES)
@@ -67,6 +70,7 @@ public final class NativeFixture {
     ServerRuntime runtime = ServerRuntime.get(player.getServer());
     int y = player.blockPosition().getY();
     int originX = player.blockPosition().getX(), originZ = player.blockPosition().getZ() + 4;
+    boolean cableVisuals = Boolean.getBoolean("modularcraft.qa.cables");
     for (int x = -2; x < 18; x++)
       for (int z = -2; z < 18; z++)
         level.setBlock(
@@ -86,7 +90,7 @@ public final class NativeFixture {
                 : ModuleKind.values()[i];
         BlockPos pos =
             new BlockPos(
-                originX + (patch % 2) * 8 + (i % 4) * 2,
+                originX + (patch % 2) * 8 + (cableVisuals ? 3 - i % 4 : (i % 4) * 2),
                 y,
                 originZ + (patch / 2) * 8 + (i / 4) * 2);
         level.setBlock(pos, ModularCraft.MODULES.get(kind).get().defaultBlockState(), 3);
@@ -131,6 +135,12 @@ public final class NativeFixture {
       }
     }
     player.teleportTo(originX + 7, y + 2, originZ - 2);
+    if (cableVisuals) {
+      cableOrigin = new BlockPos(originX, y, originZ);
+      player.setGameMode(GameType.SPECTATOR);
+      level.setDayTime(6000);
+      cableView(player, 20);
+    }
     System.out.println(
         "MODULARCRAFT_QA fixture patches="
             + patchCount
@@ -138,6 +148,13 @@ public final class NativeFixture {
             + runtime.state().modules().size()
             + " cables="
             + runtime.state().cables().size());
+  }
+
+  private static void cableView(ServerPlayer player, int tick) {
+    double x = cableOrigin.getX(), y = cableOrigin.getY(), z = cableOrigin.getZ();
+    if (tick == 20) player.connection.teleport(x + 2, y - .7, z - 3, 0, 8);
+    else if (tick == 220) player.connection.teleport(x - 1, y + .1, z - 3, -45, 20);
+    else player.connection.teleport(x + 2, y - .7, z + 3, 180, 8);
   }
 
   private static void set(

@@ -2,6 +2,7 @@ package com.malevolentgods.modularcraft.gametest.client;
 
 import com.malevolentgods.modularcraft.client.ClientRuntime;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.Screenshot;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
@@ -18,6 +19,7 @@ public final class NativeProbe {
         (ClientTickEvent.Post event) -> {
           if (Minecraft.getInstance().level == null) return;
           ticks++;
+          if (Boolean.getBoolean("modularcraft.qa.cables")) captureCables();
           if (ticks == 1)
             System.out.println(
                 "MODULARCRAFT_QA artifact="
@@ -45,5 +47,26 @@ public final class NativeProbe {
           if (ticks == Integer.getInteger("modularcraft.qa.ticks", 1200))
             Minecraft.getInstance().stop();
         });
+  }
+
+  // Minecraft owns this borrowed client and its framebuffer.
+  @SuppressWarnings("PMD.CloseResource")
+  private void captureCables() {
+    Minecraft mc = Minecraft.getInstance();
+    mc.options.hideGui = true;
+    mc.options.fov().set(50);
+    String view =
+        switch (ticks) {
+          case 160 -> "front";
+          case 340 -> "oblique";
+          case 520 -> "occlusion";
+          default -> null;
+        };
+    if (view != null)
+      Screenshot.grab(
+          mc.gameDirectory,
+          "cables-" + view + ".png",
+          mc.getMainRenderTarget(),
+          message -> System.out.println("MODULARCRAFT_QA " + message.getString()));
   }
 }

@@ -17,3 +17,8 @@ Added a comprehensive Makefile with built-JAR interactive/client/server launches
 packaged GameTests, isolated native smoke/load/recovery fixtures, checks, packaging,
 and maintenance targets. Managed instances preserve manual worlds and replace only their
 tracked mod JAR. CI now uses `make ci`; launcher isolation tests accompany the commands.
+
+Patch cables now use slim solid tubes with tapered input collars instead of thin lines
+and branching arrowheads. Endpoints align with the painted jacks, and gentle sag keeps
+the entire cable above the lower connected block's base. Connection rules, saves, and
+audio are unchanged. An opt-in native cable fixture captures three review views.
