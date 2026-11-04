@@ -10,12 +10,19 @@ import net.neoforged.fml.loading.FMLPaths;
 
 /** Client game-thread preferences; never accessed by server or audio threads. */
 public final class LocalSettings {
-  private final Path file = FMLPaths.CONFIGDIR.get().resolve("modularcraft-listener.properties");
+  private final Path file;
   public boolean muted;
   public double volume = 1;
   public String error = "";
+  public String midiDevice = "", midiName = "";
+  public int midiChannel = -1;
 
   public LocalSettings() {
+    this(FMLPaths.CONFIGDIR.get().resolve("modularcraft-listener.properties"));
+  }
+
+  public LocalSettings(Path file) {
+    this.file = file;
     try {
       if (Files.isRegularFile(file) && Files.size(file) <= 8192) {
         Properties properties = new Properties();
@@ -25,6 +32,14 @@ public final class LocalSettings {
         muted = Boolean.parseBoolean(properties.getProperty("muted", "false"));
         double parsed = Double.parseDouble(properties.getProperty("volume", "1"));
         if (Double.isFinite(parsed)) volume = Math.clamp(parsed, 0, 1);
+        String device = properties.getProperty("midiDevice", "");
+        int channel = Integer.parseInt(properties.getProperty("midiChannel", "-1"));
+        String name = properties.getProperty("midiName", "");
+        if (device.length() <= 256 && channel >= -1 && channel <= 15 && name.length() <= 128) {
+          midiDevice = device;
+          midiChannel = channel;
+          midiName = name;
+        }
       }
     } catch (IOException | IllegalArgumentException failure) {
       error = "settings_read";
@@ -35,6 +50,9 @@ public final class LocalSettings {
     Properties properties = new Properties();
     properties.setProperty("muted", Boolean.toString(muted));
     properties.setProperty("volume", Double.toString(volume));
+    properties.setProperty("midiDevice", midiDevice);
+    properties.setProperty("midiName", midiName);
+    properties.setProperty("midiChannel", Integer.toString(midiChannel));
     try {
       Files.createDirectories(file.getParent());
       try (OutputStream output = Files.newOutputStream(file)) {

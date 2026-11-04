@@ -125,6 +125,6 @@ class KeyboardTest {
     WorldState restored = StateCodec.load(StateCodec.save(world, List.of())).state();
     Assertions.assertEquals(5, restored.get(module.id()).value(Parameter.OCTAVE));
     Assertions.assertFalse(restored.get(module.id()).loaded());
-    Assertions.assertThrows(IllegalArgumentException.class, () -> new KeyboardState(108, true));
+    Assertions.assertThrows(IllegalArgumentException.class, () -> new KeyboardState(128, true));
   }
 }

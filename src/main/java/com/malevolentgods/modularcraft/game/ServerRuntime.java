@@ -495,6 +495,7 @@ public final class ServerRuntime {
       keyboard.play(
           session.id(),
           request.note(),
+          request.absolute(),
           (int) module.state().value(Parameter.OCTAVE),
           System.nanoTime());
       sample = session.schedule(sample, received);

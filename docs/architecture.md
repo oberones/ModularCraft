@@ -82,9 +82,46 @@ with a minimum 48-sample separation and 1,920-sample lead. Cleanup bypasses edit
 queue overload releases and invalidates the affected session. Subsequent snapshots cannot
 rewind pending performance timestamps. Renewal never starts/retriggers a note.
 
-Pitch CV and gate have separate port roles. Snapshot v2 carries keyboard MIDI note numbers
-24–107 and gate booleans; CV = (note−60)/12 V and Hz = 440×2^((note−69)/12). Server-side
+Pitch CV and gate have separate port roles. Snapshot v3 carries keyboard MIDI note numbers
+0–127 and gate booleans; CV = (note−60)/12 V and Hz = 440×2^((note−69)/12). Server-side
 external gates feed analytic envelope checkpoints. RenderGraph resolves pitch cables into
 smoothed frequency targets, preserves oscillator phase, and leaves envelope control routing
-unchanged. World v1 persists octave only, using existing named records; network v2 rejects
+unchanged. World v1 persists octave only, using existing named records; network v3 rejects
 old peers. Snapshot recovery restores current pitch/gate, not historical note events.
+
+
+## MIDI input ownership
+
+The client-only Java Sound adapter uses one daemon worker with four pending-operation slots,
+no replacement workers, one open input, and at most 64 discovered device entries. Provider
+objects are queried without opening; selected device/transmitter/receiver handles are closed
+on cancellation, replacement and shutdown. Discovery/open/health/close never run on the game
+or audio thread. A two-second operation deadline revokes callbacks and reports failure;
+late results close their resources. A handle whose close fails remains owned and blocks
+replacement opens until cleanup succeeds. Native calls cannot be forcibly interrupted safely, so
+an unresponsive provider remains bounded to that worker until it returns or the process exits.
+
+Only the game thread owns input priority, channel selection and UI state. Callback messages
+cross a 256-event queue; at most 64 are drained each tick. Generation-tagged callbacks,
+queue entries, and overflow indications cannot revive a previous focus/session/device.
+Unsupported MIDI messages are filtered before queueing. Overflow clears input, sends emergency
+session cleanup, and requires reopening. Health checks once per second rescan availability;
+missing/unavailable/ambiguous ports require explicit retry. Provider disconnect detection is
+limited by the platform's Java Sound reporting; no silence timeout cuts legitimate long notes.
+
+The pure input model contains at most 13 GUI and 2,048 MIDI sources, with 16 pedal states.
+MIDI notes use channel+pitch identity; repeated onsets replace/retrigger that source, and
+one Note Off releases it. Sustain preserves priority order until release; GUI holds remain
+independent. A single ordered winner drives the existing authoritative performance lease.
+Keyboard packets are exactly 52 bytes: the existing 51 bytes plus pitch mode 0 (relative)
+or 1 (absolute). Relative notes are 0–11, absolute notes 0–127, release is -1 with mode 0.
+Renewal cannot start a note. Server octave changes affect only a relative winner. All input
+keeps server-receive scheduling (minimum 48 samples between accepted events, 1,920-sample
+lead), existing revision/permission/range checks, and the 20/player and 200/world edit budgets.
+MIDI device timestamps are ignored; sample-accurate hardware-input timing is not claimed.
+
+Network/snapshot v3 deliberately refuses older peers/snapshots; world v1 and saved octave
+remain unchanged. The SHA-256 of the device name/vendor/description/version is a local
+selection descriptor, not a hardware identity. Only unique matches restore automatically;
+explicit selection can distinguish duplicate ports for the current focused session. Device
+and channel preferences are stored with the existing listener settings, never in world data.

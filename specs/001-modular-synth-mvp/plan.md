@@ -24,7 +24,7 @@ L1 coefficient normalization bounds oscillator peaks at the selected level.
 
 ## Budgets and ordering
 
-Retain every SS-003 quota. Version 1 world saves; version 2 network/snapshots; edits 4 KiB, snapshots 32 KiB,
+Retain every SS-003 quota. Version 1 world saves; version 3 network/snapshots; edits 4 KiB, snapshots 32 KiB,
 world storage 2 MiB. 20 edits/s/player, 200/world; queues 64/player, 256/world.
 Cleanup and gate release bypass ordinary throttling. Outbound 128 KiB/s/listener,
 2 MiB/s/server. One preparation worker, eight pending jobs, 1,024 client events,
@@ -90,3 +90,30 @@ Keep existing budgets and qualification gates. Run `make verify`, then the dispo
 `make smoke GRADLE_ARGS=-PqaKeyboard TICKS=500` fixture for real GUI screenshots, ordered
 note/transpose/release assertions and native audio counters. This automated probe is not a
 listening pass or two-client timing qualification. Record results in validation/ledger.md.
+
+
+## MIDI input extension
+
+Implement MI-001–006 with the existing Java 21 `javax.sound.midi` API and no dependency changes.
+The client owns local device preferences, a bounded asynchronous adapter, and combined GUI/MIDI
+priority. The logical server accepts relative GUI or absolute MIDI notes through its existing
+session/revision/permission checks. Network/snapshot v3 expands pitch to 0–127; world v1 remains
+unchanged. Native input providers are initially qualified on macOS only when actual evidence
+exists. Detailed ownership, failure and timing contracts are in `docs/architecture.md`.
+
+| Principle | MIDI design and evidence |
+|---|---|
+| I world safety | No world/device state crosses workers; client-only provider, packaged server loading |
+| II boundaries | 52-byte packet, explicit mode/range, unchanged authorization; malformed/old-session tests |
+| III TDD | Observed model, adapter, snapshot, packet and native failures before implementation; ledger |
+| IV ownership | Injectable backend/serial worker/clock; game-thread priority and worker-owned handles |
+| V composition | Existing CV/gate ports, fixed gate, monophonic sustain/fallback; RP-003 extension |
+| VI timing | Existing server receive/sample ordering and smoothing; SC-003/004 retained, no hardware timing claim |
+| VII bounds | One worker, four task slots, one input, 64 ports, 256 events, 64/tick, 2,061 holds; timeout/overflow tests |
+| VIII persistence | Only local device/channel preferences; world v1 preserved, protocol/snapshot v3 refuses older peers |
+| IX dependencies | Built-in Java Sound only; all dependency and host pins retained |
+| X controls | Opt-in device/channel, Refresh, Release Notes, localized diagnostics, local mute, guide and screenshots |
+
+Run `make verify` and `make smoke GRADLE_ARGS=-PqaKeyboard TICKS=500`; record artifact hashes,
+red–green results and self-review. Native synthetic playback is distinct from physical MIDI,
+listening and two-client timing. Preserve all earlier PENDING/BLOCKED gates and manual worlds.

@@ -131,3 +131,11 @@ settings return/close, asserts server-accepted note states and captures six scre
 under that instance's `screenshots/`. It does not reuse player saves. Use at least 500
 ticks; keep the game window focused so the normal focus-loss safety release does not
 interrupt synthetic holds. Listening and two-client timing remain separate checks.
+
+
+The keyboard fixture `make smoke GRADLE_ARGS=-PqaKeyboard TICKS=500` now injects MIDI A4,
+sustain on, Note Off under sustain, and pedal release into the real keyboard panel. It retains
+GUI overlap, octave acknowledgement, mouse and close assertions and captures the MIDI controls.
+It uses no physical MIDI input and does not change local device preferences outside the fresh
+fixture. Run `make test TEST='*Midi*Test'` for deterministic input, fake-provider lifecycle,
+preferences and snapshot tests. Physical controller procedures are in [acceptance.md](acceptance.md).

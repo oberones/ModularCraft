@@ -223,3 +223,42 @@ World-save schema remains v1; dependency pins and original worlds are preserved.
   and broader release-qualification gates remain BLOCKED/PENDING; no release claim.
 
 No commit, push or publication was performed.
+
+
+## MIDI keyboard input — 2026-11-04
+
+Implementation uses Java Sound with no added dependencies, exact MIDI notes 0–127,
+channel-scoped sustain/reset, combined GUI/MIDI priority, remembered local preferences,
+and bounded asynchronous device lifecycle. Network/snapshot v3 requires matching peers;
+world v1, dependency pins and manual worlds remain unchanged. Source is commit `0450bc0`
+plus the working tree; the assistant did not create that commit or push/publish anything.
+
+- **PASS — TDD and automated verification:** `make verify`: 71 JUnit tests, 12 packaged
+  GameTests, 12 launcher tests, formatting, Checkstyle, PMD, Java 21 compilation and
+  artifact/resource inspection. [Red–green record](midi/red-green.md).
+- **PASS — native synthetic MIDI/UI:** `make smoke GRADLE_ARGS=-PqaKeyboard TICKS=500`
+  exercises device/Refresh/channel controls, MIDI note/pedal delivery, octave independence,
+  release during an octave acknowledgement, GUI overlap/dragging, settings return, range
+  loss and panel close. [Artifact hash, environment and observations](midi/native-results.json).
+- **PASS — visual inspection:** [controls](midi/controls.png), [sustain](midi/sustain.png),
+  [release](midi/released.png). All controls/status text fit the default 854×480 window
+  at GUI scale 2. The native process discovered and opened **Scarlett 18i8 USB**; the
+  earlier sandboxed discovery scan exposed only internal devices.
+- **PASS — explicit self-review:** inspected server authority, bounds and generation
+  revocation, MIDI channel/hold/pedal identity, provider timeout/cancellation/partial-open
+  ownership, non-blocking shutdown, dedicated-server loading, full-range DSP finiteness,
+  old-protocol refusal and world roundtrip. Fixed null selection on immutable port lists,
+  obsolete connection opens, late/persistent close failures, and range-loss local-input cleanup.
+  PMD exceptions are limited to unopened provider capability queries, explicit worker-owned
+  connection cleanup, and asynchronous executor shutdown; lifecycle tests cover ownership.
+- **PENDING — physical/human qualification:** actual controller note/pedal messages,
+  unplug reporting, real-device 20-cycle resource accounting, listening/acoustic SC-003,
+  two-client SC-004, other operating systems, and existing release gates. Synthetic input
+  and an opened hardware port do not establish these results.
+- **Retained performance limitations:** the short native run recorded one startup underrun,
+  maximum audio-block processing about 4.43 ms and maximum server work about 10.75 ms,
+  above the existing 2 ms server-work target. This fixture is not SC-005/load qualification.
+  Existing security/performance BLOCKED/PENDING results remain in force.
+
+No assistant commit, push or publication was performed. The final runtime JAR hash is
+recorded in the linked JSON; archive hashes are refreshed in `build/libs/SHA256SUMS`.

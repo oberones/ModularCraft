@@ -90,7 +90,7 @@ The panel shows twelve chromatic keys C–B, default octave 4. Click and hold or
 keys; dragging outside releases the mouse note. Alternatively, focus the piano and play
 **A W S E D F T G Y H U J** (C C# D D# E F F# G G# A A# B). Tab navigates controls.
 **Octave −/+** or left/right arrows while the piano is focused select octaves 1–7.
-Octave changes transpose held notes immediately. The last pressed held key wins; releasing
+Octave changes transpose held mouse/computer notes immediately; MIDI pitches stay fixed. The last pressed held key wins; releasing
 it returns to the previous held key. Each new active note retriggers attack from the
 current envelope level. Releasing all inputs lowers Gate and lets the release tail finish
 at the last pitch. Closing the panel or losing window focus releases held notes.
@@ -104,7 +104,43 @@ keyboard note changes change pitch without restarting the envelope.
 Only one eligible player can hold a keyboard at a time. Another player must wait for release.
 Inputs use the existing 20 changes/s/player budget (including five held-note renewals/s);
 release always bypasses ordinary edit throttling. An overloaded session releases and asks
-you to reopen the panel. There is no sustain latch, polyphony, MIDI, or recording.
+you to reopen the panel. Polyphony, velocity expression, pitch bend, and recording are not supported.
+
+### Play from a MIDI controller
+
+In the keyboard panel, use **MIDI** to cycle through input ports and Off. **Refresh** rescans
+ports; the selected port and **Channel** (All or 1–16) are remembered in local preferences.
+MIDI starts Off until you choose a device. Only a unique descriptor match reconnects
+automatically; missing or identical devices require Refresh/reselection. The port's list
+number helps distinguish identical names during manual selection. Hardware and virtual
+input ports exposed by Java Sound are eligible; the internal synth and sequencer are excluded.
+
+MIDI works only while this editable panel is open and Minecraft is focused. It plays exact
+notes 0–127 (A4 = note 69 = 440 Hz), independently of the panel octave. The most recent
+mouse, computer, or MIDI note wins. Releasing it returns to the previous held/sustained
+note. Repeated MIDI Note On retriggers; velocity zero is Note Off. Velocity otherwise does
+not change the gate level. The twelve displayed keys retain the panel octave; the Note
+readout shows the accepted pitch even when a MIDI note lies outside that octave.
+
+A sustain pedal (CC64, values 64–127 down) retains released MIDI notes on its channel;
+it does not sustain computer or mouse input. CC123 releases the channel's physical holds
+while respecting the pedal; CC121 resets the pedal; CC120 clears the channel's MIDI holds
+and pedal. All release operations let connected envelopes follow their normal release tails.
+**Release Notes** clears all local holds and pedals; use local mute for immediate local silence.
+
+Closing the panel, changing worlds, losing focus/permission/range, or reloading resources
+releases notes. Refocusing reconnects with no held notes; press again to play. Device/channel
+changes clear only MIDI holds. Device loss is checked once per second; check the connection
+and click Refresh to recover. A provider that does not report physical removal may require
+Release Notes or closing the panel. No missed notes are replayed. Device operations time out
+visibly after two seconds without blocking Minecraft. A stalled native provider may need a
+game restart; Refresh does not spawn replacement workers.
+
+MIDI shares the existing traffic limits, including renewals, so dense controller/arpeggiator
+streams can be rejected. Queue overflow stops the session and requires reopening the panel.
+Only supported notes/pedal/reset messages consume the MIDI queue. All clients and the server
+must use protocol **3**; existing world saves remain version **1**. Physical MIDI devices,
+listening, and multiplayer timing still need the acceptance procedure below.
 
 ## Patching, permissions, and saved work
 

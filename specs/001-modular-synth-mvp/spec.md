@@ -148,7 +148,7 @@ A player can leave, reload the world, and return to the same module settings and
 | Saw Oscillator | Frequency: 20–8,000 Hz; 220 Hz. Level: 0–100%; 50%. | One Pitch CV In accepting Keyboard CV Out and one Audio Out carrying a bipolar saw signal with a peak magnitude no greater than the selected level. It runs continuously while its patch is active. Zero level is silence. |
 | Low-Pass Filter | Cutoff: 20–20,000 Hz; 5,000 Hz. Resonance: 0–95%; 0%. Envelope Amount: 0–100%; 0%. | One Audio In, one Cutoff Control In, one Audio Out. Higher cutoff passes more upper harmonics; higher resonance increases emphasis near cutoff. No self-oscillation is required. Unconnected audio is silence; unconnected control is zero. |
 | Envelope Generator | Attack: 0.001–10 s; 0.010 s. Decay: 0.001–10 s; 0.200 s. Sustain: 0–100%; 70%. Release: 0.001–10 s; 0.300 s. Momentary manual Gate; released. | One Gate In accepting Keyboard Gate Out and one Envelope Out carrying a unipolar 0–100% control signal. The manual gate and redstone at the block drive the same ADSR behavior. It emits no audio. |
-| Keyboard | Octave: integers 1–7; 4. Twelve momentary chromatic keys C–B; released. | CV Out (1 V/octave, 0 V = C4) and Gate Out (0/1). Concert tuning, last-note priority, retrigger on new active notes; no audio. See KB-001–KB-006. |
+| Keyboard | Octave: integers 1–7; 4. Twelve momentary chromatic keys C–B; released. | CV Out (1 V/octave, 0 V = C4) and Gate Out (0/1). Concert tuning, last-note priority, retrigger on new active notes; no audio. See KB-001–KB-006 and MI-001–MI-006. |
 | Amplifier/Speaker | Volume: 0–100%; 10%. Enabled: on/off; off. | One Audio In and one Gain Control In. Output is input audio × volume × control gain before final output protection and distance attenuation. An unconnected gain input means 100%; an unconnected audio input means silence. |
 
 - **MU-002 — Connection contract**: Audio Out connects only to Audio In. Envelope Out connects only to Cutoff Control In or Gain Control In. Keyboard CV Out connects only to oscillator Pitch CV In; Keyboard Gate Out connects only to envelope Gate In. Each input accepts one cable; each output may fan out to four inputs, subject to patch limits. There is no implicit summing, role conversion, polyphony within a module, or feedback. Audio is a continuously varying bipolar signal nominally spanning −1 to +1; envelope control spans 0 to 1. Multiple independent oscillator blocks are allowed within capacity. Audio and envelope control MUST support continuous audible evolution rather than steps tied to world updates; exact processing rates belong in the plan.
@@ -212,7 +212,7 @@ Criteria are acceptance targets, not measured results. The plan supplies impleme
 
 - **Access and scope**: Creative-mode construction is sufficient for the first MVP. Survival crafting recipes, progression/economy, power consumption, block-transport automation, and public distribution are separate work. All five named modules and multiplayer audio remain mandatory; story priority only determines implementation order.
 - **Musical interpretation**: “Enveloper generator” means an ADSR envelope generator with fixed linear attack, decay, and release, as confirmed during clarification. “Filter” means one resonant low-pass filter. “Amplifier/speaker” is one combined block with envelope-controlled gain and positional output. Manual/redstone gating, cutoff modulation, control ranges, and conservative defaults are explicit proposed MVP product choices.
-- **Modularity**: A patching tool and visible cables are supporting interaction assets, not additional synth module block types. The MVP permits multiple instances of the five types within limits. Sequencers, LFOs, other waveforms/filter modes, effects, mixers, MIDI, recording/export, preset libraries, and feedback synthesis are excluded.
+- **Modularity**: A patching tool and visible cables are supporting interaction assets, not additional synth module block types. The MVP permits multiple instances of the five types within limits. Sequencers, LFOs, other waveforms/filter modes, effects, mixers, recording/export, preset libraries, and feedback synthesis are excluded. MIDI input is defined in the extension below.
 - **Access policy**: Owners and server operators may edit modules; other players may listen. A share/ACL editor and integration with third-party claim systems are excluded; built-in host protection rules still apply. Combining modules from different owners is not required.
 - **Compatibility**: No current implementation plan or runtime sources existed when this spec was written. Exact Minecraft/loader/toolchain and sound-production choices are planning decisions, not unresolved product requirements. The first plan must resolve them and numeric engineering budgets before executable implementation.
 - **Control interaction**: Module adjustments use right-click control panels, with in-world ports for cable patching. Direct adjustment of knobs on block faces is outside the MVP; depicted knobs may communicate module function or state.
@@ -222,10 +222,48 @@ Criteria are acceptance targets, not measured results. The plan supplies impleme
 ### Keyboard extension (approved 2026-11-04)
 
 - **KB-001 — Instrument**: Fifth module `keyboard`, matching chassis, front sockets and patch-tool workflow. CV Out and Gate Out; no audio. Non-pausing right-click panel: twelve piano keys C–B, octave −/+ (integer 1–7, default 4), local audio and Done. Computer keys A W S E D F T G Y H U J map to chromatic semitones; left/right changes octave while piano is focused. Mouse drag supports black-key hit priority and releases outside the piano. Ignore key repeat; retain independent mouse/computer holds.
-- **KB-002 — Performance**: Monophonic most-recent-held input wins. New active notes and return to an earlier held note retrigger linear attack from the current envelope level. Changing octave transposes held notes and retriggers. Manual/redstone sources retain priority over keyboard retriggering while held; all three gate sources are OR-combined. Gate is 0/1. Last pitch remains after release; fresh activation resets pitch to C in selected octave.
+- **KB-002 — Performance**: Monophonic most-recent-held input wins. New active notes and return to an earlier held note retrigger linear attack from the current envelope level. Changing octave transposes held GUI notes and retriggers; absolute MIDI notes are unaffected. Manual/redstone sources retain priority over keyboard retriggering while held; all three gate sources are OR-combined. Gate is 0/1. Last pitch remains after release; fresh activation resets pitch to C in selected octave.
 - **KB-003 — Pitch**: Pitch CV is 1 V/octave, 0 V = C4; equal temperament, A4 = 440 Hz. Pitch input overrides oscillator Frequency while connected and restores the saved Frequency when disconnected. Preserve phase with 10 ms pitch smoothing. Typed ports prohibit implicit pitch/gate/control conversions; existing cable and capacity limits apply.
 - **KB-004 — Authority/lifecycle**: Server validates owner/operator, range, loaded module, revision, inspection session, monotonically increasing input sequence and existing traffic budgets. First eligible note obtains exclusive session lease; renew at 200 ms, expire at 750 ms. Ordinary releases preserve preceding queued presses and bypass edit throttling. Emergency cleanup, overload, focus loss, close, unload, permission/range loss, dimension change and disconnect clear held performance; stale sessions cannot revive it. Short accepted taps preserve receive-time spacing on the sample timeline (minimum one millisecond), using the existing 40 ms lead. Late recovery enters current state without replaying notes.
-- **KB-005 — Compatibility**: Persist octave and cables, never held inputs/gates or last played pitch. Keep world-save version 1 and unknown-record preservation. Network and snapshot version 2 require matching clients/server. No new dependencies.
+- **KB-005 — Compatibility**: Persist octave and cables, never held inputs/gates or last played pitch. Keep world-save version 1 and unknown-record preservation. Network and snapshot version 3 (MIDI extension) require matching clients/server. No new dependencies.
 - **KB-006 — RP-003**: RP-001 with all default settings, plus Keyboard CV → Oscillator Pitch In and Keyboard Gate → Envelope Gate In; keyboard octave 4 and no envelope redstone. Press H for A4 (440 Hz), overlap A/S, return to A, transpose while held, release and hear a tail at the retained pitch. Disconnect CV and confirm the saved 220 Hz oscillator setting returns. Validate with the existing SC-003/SC-004 timing limits; native multiplayer and listening need separate evidence.
 
-Velocity, sustain/latch, polyphony, MIDI, sequencers and recording remain excluded.
+Velocity expression, pitch bend, polyphony, sequencers and recording remain excluded. MIDI sustain is specified below.
+
+
+### MIDI input extension (approved 2026-11-04)
+
+- **MI-001 — Activation/preferences**: MIDI is Off initially. The editable keyboard panel
+  offers device selection, Refresh, All/1–16 channel selection (default All), localized
+  status and Release Notes. Remember device descriptor/name/channel locally. Restore only
+  unique matches; missing/ambiguous inputs require selection. Accept hardware/virtual input
+  ports exposed by Java Sound, excluding internal synthesizers/sequencers. Input requires
+  the panel to remain open and the Minecraft window focused.
+- **MI-002 — Performance**: Play absolute MIDI notes 0–127 with A4=440 Hz. Panel octave
+  affects GUI inputs only. Most recent held/sustained source wins across all inputs;
+  fallback and repeated MIDI onsets retrigger according to KB-002. Note On velocity zero
+  is Note Off; other velocity values do not affect gate level. One Note Off releases a
+  repeated channel+pitch source. Retain KB-003 smoothing and released pitch.
+- **MI-003 — Sustain/reset**: CC64 values >=64 sustain released MIDI notes on that channel;
+  values <64 release latched notes. GUI input is unaffected. CC123 releases physical MIDI
+  holds, respecting sustain; CC121 resets sustain while retaining physical holds; CC120
+  clears channel holds/pedal. Release Notes clears every local source and pedal. Gate
+  releases retain downstream envelope release tails; local mute remains available.
+- **MI-004 — Lifecycle/bounds**: Close, focus loss, world/dimension exit, resource reload,
+  eligibility loss and disconnect clear input, sustain and queued messages. Device/channel
+  changes clear MIDI sources only. One worker/four pending tasks, one device, 64 discovered
+  entries, 256 queued events, 64 events drained/tick, 13 GUI + 2,048 MIDI holds. Two-second
+  provider deadline, one-second device checks. Stale callbacks/results never revive notes;
+  failures require Refresh/reselection, overflow invalidates the session and requires reopen.
+  A stalled provider never creates additional workers or blocks game/audio threads.
+- **MI-005 — Authority/compatibility**: Relative/absolute pitch mode is explicit in bounded
+  v3 packets; v3 snapshots permit 0–127. Reject old peers and malformed modes/ranges.
+  Retain all KB-004 authorization, ordering, timing and traffic limits; ignore device
+  timestamps. Save schema stays v1; no MIDI holds, pedals, device handles or pitch mode
+  are saved in worlds. No dependencies or platform claims are added.
+- **MI-006 — Qualification**: TDD covers mixed sources, full range, channels, sustain,
+  malformed messages, device failures/timeouts, queue overflow, stale callbacks, and 20
+  cleanup cycles. Packaged GameTests cover authoritative MIDI pitch, ordering, permissions,
+  protocol rejection and persistence. Extend RP-003 with native synthetic MIDI, screenshots,
+  real-controller focus/unplug/pedal tests and SC-003/SC-004 measurements. Synthetic input
+  does not establish hardware, listening or multiplayer acceptance.

@@ -129,3 +129,44 @@ C1/B7 bounds, CV disconnection restoring Frequency, and no unintended clicks/stu
 Repeat unload, removal, disconnect, permission/range loss, and overload recovery. Run
 SC-003 and SC-004 with RP-003 (including two listeners and late join); automated native
 state assertions do not establish listening or acoustic timing acceptance.
+
+
+## RP-003 MIDI acceptance
+
+Automated command: `make smoke GRADLE_ARGS=-PqaKeyboard TICKS=500`. Native synthetic events
+must show note 69/gate=true after pedal-held Note Off and note 69/gate=false after pedal release.
+Inspect the keyboard screenshots for readable device/channel/status/release controls. This is
+not a physical MIDI or listening pass. Run `make verify` for codec, authoritative server and
+fake-provider lifecycle tests.
+
+For physical acceptance, record the runtime JAR hash, Java/macOS versions, controller model,
+firmware, connection/driver, audio device, sample/buffer configuration and measurement method.
+Use RP-003 at conservative speaker volume, then perform the following:
+
+1. Select the input and All channels; play note 69 (A4, 440 Hz). Change the panel octave while
+   holding it: MIDI pitch must remain fixed. Overlap computer/mouse and MIDI notes, release in
+   both orders, and confirm last-held fallback and retriggers. Try MIDI 0 and 127 at low volume;
+   validate pitch numerically where physical audition is inappropriate.
+2. Repeat a note, send velocity-zero Note On, test channels 1 and 16 individually and together,
+   and confirm filtering. Sustain notes with CC64 values 64/127, release them with 63/0, and
+   verify GUI notes are unaffected. Test CC123 under sustain, CC121 with physical holds, CC120,
+   and Release Notes. Envelope tails are expected; local mute must stop local audio promptly.
+3. Hold/sustain while changing device/channel, closing the panel, opening local audio settings,
+   unfocusing, reloading resources, moving out of range, changing dimension, disconnecting and
+   breaking/unloading the block. No old hold may return on reconnect/refocus/reopen.
+4. Unplug the selected device while holding a note and verify reported removal releases input.
+   Replug, Refresh and play fresh notes. Record whether the provider reports removal; if it
+   does not, record BLOCKED device-loss qualification and verify Release Notes/close recovery.
+   Test unavailable and duplicate device descriptors without substituting another device.
+5. Repeat open/close/reconnect 20 times; native device/transmitter/receiver counts must return
+   to idle baseline. Flood supported MIDI events until overflow: input must release, the
+   panel must request reopening, and the game must remain responsive. Unsupported CC/pitch
+   bend floods must not consume the event queue. Native hangs cannot be reclaimed forcibly;
+   record provider behavior and use a game restart if necessary.
+6. Apply SC-003 (100 measured actions over ten minutes, p95 <=100 ms, zero stuck notes) and
+   SC-004 (two clients, RTT <=50 ms/jitter <=10 ms, p95 <=150 ms response and <=50 ms skew).
+   Record MIDI event arrival and acoustic onset uncertainty; do not infer this from fake tests.
+   Audition sustain release, fallback, octave changes and reconnect for clicks/stuck sound.
+
+Physical MIDI, unplug reporting, listening and multiplayer remain PENDING until measured.
+Windows/Linux device qualification is outside the current macOS-first acceptance claim.

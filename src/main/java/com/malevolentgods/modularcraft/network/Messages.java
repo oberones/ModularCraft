@@ -72,17 +72,36 @@ public final class Messages {
     }
   }
 
-  /** note is a chromatic key 0..11, or -1 for release; renewal never starts a note. */
+  /** Relative key 0..11 or absolute MIDI pitch 0..127; -1 releases. Renewal never starts a note. */
   public record Keyboard(
-      UUID id, long revision, UUID session, long sequence, int note, boolean renew, boolean cleanup)
+      UUID id,
+      long revision,
+      UUID session,
+      long sequence,
+      int note,
+      boolean renew,
+      boolean cleanup,
+      boolean absolute)
       implements CustomPacketPayload {
+    public Keyboard(
+        UUID id,
+        long revision,
+        UUID session,
+        long sequence,
+        int note,
+        boolean renew,
+        boolean cleanup) {
+      this(id, revision, session, sequence, note, renew, cleanup, false);
+    }
+
     public Keyboard {
       if (id == null
           || session == null
           || revision < 0
           || sequence < 0
           || note < -1
-          || note > 11
+          || note > (absolute ? 127 : 11)
+          || (absolute && note < 0)
           || (cleanup && (note != -1 || renew))
           || (renew && note < 0)) throw new IllegalArgumentException("keyboard_packet");
     }
@@ -98,9 +117,10 @@ public final class Messages {
               b.writeByte(v.note);
               b.writeBoolean(v.renew);
               b.writeBoolean(v.cleanup);
+              b.writeByte(v.absolute ? 1 : 0);
             },
             b -> {
-              if (b.readableBytes() != 51) throw new IllegalArgumentException("keyboard_packet");
+              if (b.readableBytes() != 52) throw new IllegalArgumentException("keyboard_packet");
               return new Keyboard(
                   b.readUUID(),
                   b.readLong(),
@@ -108,8 +128,14 @@ public final class Messages {
                   b.readLong(),
                   b.readByte(),
                   b.readBoolean(),
-                  b.readBoolean());
+                  b.readBoolean(),
+                  pitchMode(b.readUnsignedByte()));
             });
+
+    private static boolean pitchMode(int mode) {
+      if (mode > 1) throw new IllegalArgumentException("keyboard_packet");
+      return mode == 1;
+    }
 
     @Override
     public Type<Keyboard> type() {
@@ -202,7 +228,7 @@ public final class Messages {
   }
 
   public static void register(RegisterPayloadHandlersEvent event) {
-    var registrar = event.registrar("2");
+    var registrar = event.registrar("3");
     registrar
         .executesOn(HandlerThread.NETWORK)
         .playToServer(

@@ -57,6 +57,7 @@ public final class ClientRuntime {
           GLFW.GLFW_KEY_K,
           "key.categories.modularcraft");
   public static final LocalSettings PREFERENCES = new LocalSettings();
+  public static final MidiInput MIDI = new MidiInput();
   private static final Map<UUID, PatchSnapshot> patches = new HashMap<>();
   private static final Map<UUID, PatchSnapshot> staging = new HashMap<>();
   private static ThreadPoolExecutor preparation;
@@ -83,6 +84,8 @@ public final class ClientRuntime {
                     manager -> Minecraft.getInstance().execute(() -> recover("reloading"))));
     NeoForge.EVENT_BUS.addListener((ClientTickEvent.Post event) -> tick());
     NeoForge.EVENT_BUS.addListener((ClientPlayerNetworkEvent.LoggingOut event) -> clear());
+    NeoForge.EVENT_BUS.addListener(
+        (net.neoforged.neoforge.event.GameShuttingDownEvent event) -> MIDI.close());
     NeoForge.EVENT_BUS.addListener(
         (ScreenEvent.Init.Post event) -> {
           if (event.getScreen() instanceof TitleScreen || event.getScreen() instanceof PauseScreen)
@@ -216,7 +219,11 @@ public final class ClientRuntime {
     if (Minecraft.getInstance().screen instanceof KeyboardScreen screen)
       for (PatchSnapshot patch : patches.values()) {
         KeyboardState note = patch.keyboards().get(screen.identity());
-        if (note != null) screen.performance(note);
+        if (note != null) {
+          screen.performance(note);
+          if (patch.modules().stream().anyMatch(module -> !module.loaded()))
+            screen.suspendInput(true);
+        }
       }
     staging.clear();
     if (!clock.ready()) clock.observe(lastRoster, lastRoster, Math.max(0, roster.sample() - 1920));
@@ -277,12 +284,19 @@ public final class ClientRuntime {
   }
 
   public static void recover(String reason) {
+    if (reason.equals("reloading")) {
+      if (Minecraft.getInstance().screen instanceof KeyboardScreen screen)
+        screen.suspendInput(false);
+      MIDI.target("", null, -1, false);
+    }
     stopAudio();
     diagnostic = reason;
     lastRecovery = 0;
   }
 
   private static void clear() {
+    if (Minecraft.getInstance().screen instanceof KeyboardScreen screen) screen.suspendInput(true);
+    MIDI.target("", null, -1, false);
     CableRenderer.clear();
     stopAudio();
     patches.clear();
@@ -298,6 +312,7 @@ public final class ClientRuntime {
   // Borrowed Minecraft singleton/world; its lifecycle belongs to the host.
   @SuppressWarnings("PMD.CloseResource")
   private static void tick() {
+    MIDI.tick();
     Minecraft mc = Minecraft.getInstance();
     while (MUTE.consumeClick()) toggleMute();
     while (SETTINGS.consumeClick()) mc.setScreen(new AudioSettingsScreen(mc.screen));

@@ -22,3 +22,12 @@ Patch cables now use slim solid tubes with tapered input collars instead of thin
 and branching arrowheads. Endpoints align with the painted jacks, and gentle sag keeps
 the entire cable above the lower connected block's base. Connection rules, saves, and
 audio are unchanged. An opt-in native cable fixture captures three review views.
+
+
+The keyboard now accepts opt-in client MIDI input with exact notes 0–127, per-channel sustain,
+combined GUI/MIDI last-note priority, remembered local device/channel selection, Refresh,
+Release Notes and bounded asynchronous device recovery. Panel octave affects GUI keys only.
+Network/snapshot protocol is now v3: upgrade clients and server together. World-save schema
+remains v1, with no saved device handles or held performance; backups and earlier qualification
+gates remain applicable. MIDI uses Java Sound without added dependencies. Hardware/listening
+and two-client acceptance are separate from automated and synthetic native checks.

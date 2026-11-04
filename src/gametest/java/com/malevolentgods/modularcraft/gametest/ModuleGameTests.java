@@ -20,6 +20,137 @@ public final class ModuleGameTests {
   private ModuleGameTests() {}
 
   @GameTest(template = "empty", templateNamespace = ModularCraft.ID)
+  public static void midiOrderedPitchesAndClosedSessionCannotReviveIt(GameTestHelper h) {
+    UUID owner = UUID.randomUUID();
+    var player = FakePlayerFactory.get(h.getLevel(), new GameProfile(owner, "MidiKeyboard"));
+    BlockPos position = h.absolutePos(new BlockPos(1, 1, 1));
+    h.getLevel()
+        .setBlock(
+            position, ModularCraft.MODULES.get(ModuleKind.KEYBOARD).get().defaultBlockState(), 3);
+    var module = (ModuleEntity) h.getLevel().getBlockEntity(position);
+    module.initialize(owner);
+    player.setPos(position.getCenter());
+    var runtime = com.malevolentgods.modularcraft.game.ServerRuntime.get(h.getLevel().getServer());
+    runtime.inspect(player, module, true);
+    UUID session = runtime.keyboardSession(player);
+    com.malevolentgods.modularcraft.game.ServerRuntime.enqueue(
+        player,
+        new com.malevolentgods.modularcraft.network.Messages.Keyboard(
+            module.state().id(), module.state().revision(), session, 0, 127, false, false, true));
+    h.runAfterDelay(
+        3,
+        () -> {
+          var note = runtime.currentPatch(module.state().id()).keyboards().get(module.state().id());
+          // Fake players are absent from PlayerList, so lease cleanup runs in the same tick.
+          h.assertTrue(
+              note.note() == 127 && !note.gate(), "MIDI 127 accepted; offline lease released");
+          com.malevolentgods.modularcraft.game.ServerRuntime.enqueue(
+              player,
+              new com.malevolentgods.modularcraft.network.Messages.Control(
+                  module.state().id(),
+                  module.state().revision(),
+                  com.malevolentgods.modularcraft.network.Messages.Action.PARAMETER,
+                  Parameter.OCTAVE,
+                  6));
+        });
+    h.runAfterDelay(
+        6,
+        () -> {
+          var note = runtime.currentPatch(module.state().id()).keyboards().get(module.state().id());
+          h.assertTrue(
+              note.note() == 127 && !note.gate() && module.state().value(Parameter.OCTAVE) == 6,
+              "Released pitch retained across octave edit");
+          com.malevolentgods.modularcraft.game.ServerRuntime.enqueue(
+              player,
+              new com.malevolentgods.modularcraft.network.Messages.Keyboard(
+                  module.state().id(), module.state().revision(), session, 1, 9, false, false));
+        });
+    h.runAfterDelay(
+        9,
+        () -> {
+          var note = runtime.currentPatch(module.state().id()).keyboards().get(module.state().id());
+          h.assertTrue(note.note() == 93 && !note.gate(), "GUI pitch still uses selected octave");
+          com.malevolentgods.modularcraft.game.ServerRuntime.enqueue(
+              player,
+              new com.malevolentgods.modularcraft.network.Messages.Keyboard(
+                  module.state().id(),
+                  module.state().revision(),
+                  session,
+                  2,
+                  0,
+                  false,
+                  false,
+                  true));
+          com.malevolentgods.modularcraft.game.ServerRuntime.enqueue(
+              player,
+              new com.malevolentgods.modularcraft.network.Messages.Keyboard(
+                  module.state().id(), module.state().revision(), session, 3, -1, false, false));
+        });
+    h.runAfterDelay(
+        12,
+        () -> {
+          var note = runtime.currentPatch(module.state().id()).keyboards().get(module.state().id());
+          h.assertTrue(note.note() == 0 && !note.gate(), "MIDI zero and release retain order");
+          com.malevolentgods.modularcraft.game.ServerRuntime.enqueue(
+              player,
+              new com.malevolentgods.modularcraft.network.Messages.Keyboard(
+                  module.state().id(), module.state().revision(), session, 4, -1, false, true));
+          com.malevolentgods.modularcraft.game.ServerRuntime.enqueue(
+              player,
+              new com.malevolentgods.modularcraft.network.Messages.Keyboard(
+                  module.state().id(),
+                  module.state().revision(),
+                  session,
+                  5,
+                  69,
+                  false,
+                  false,
+                  true));
+        });
+    h.runAfterDelay(
+        15,
+        () -> {
+          var note = runtime.currentPatch(module.state().id()).keyboards().get(module.state().id());
+          h.assertTrue(note.note() == 0 && !note.gate(), "Closed MIDI session cannot revive sound");
+          h.succeed();
+        });
+  }
+
+  @GameTest(template = "empty", templateNamespace = ModularCraft.ID)
+  public static void midiPacketsCarryAbsolutePitchesAndRejectMalformedModes(GameTestHelper h) {
+    var bytes =
+        new net.minecraft.network.RegistryFriendlyByteBuf(
+            io.netty.buffer.Unpooled.buffer(), h.getLevel().registryAccess());
+    try {
+      for (int note : new int[] {0, 127}) {
+        var packet =
+            new com.malevolentgods.modularcraft.network.Messages.Keyboard(
+                UUID.randomUUID(), 0, UUID.randomUUID(), 0, note, false, false, true);
+        bytes.clear();
+        com.malevolentgods.modularcraft.network.Messages.Keyboard.CODEC.encode(bytes, packet);
+        h.assertTrue(bytes.readableBytes() == 52, "Bounded v3 keyboard packet");
+        h.assertTrue(
+            packet.equals(
+                com.malevolentgods.modularcraft.network.Messages.Keyboard.CODEC.decode(bytes)),
+            "Absolute pitch roundtrip");
+        bytes.clear();
+        com.malevolentgods.modularcraft.network.Messages.Keyboard.CODEC.encode(bytes, packet);
+        bytes.setByte(51, 2);
+        boolean rejected = false;
+        try {
+          com.malevolentgods.modularcraft.network.Messages.Keyboard.CODEC.decode(bytes);
+        } catch (IllegalArgumentException expected) {
+          rejected = true;
+        }
+        h.assertTrue(rejected, "Malformed pitch mode rejected");
+      }
+      h.succeed();
+    } finally {
+      bytes.release();
+    }
+  }
+
+  @GameTest(template = "empty", templateNamespace = ModularCraft.ID)
   public static void keyboardRejectsOldSessionsReorderedNotesAndGuests(GameTestHelper h) {
     UUID owner = UUID.randomUUID();
     var player = FakePlayerFactory.get(h.getLevel(), new GameProfile(owner, "OrderedKeyboard"));

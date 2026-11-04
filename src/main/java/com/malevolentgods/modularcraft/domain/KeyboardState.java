@@ -3,7 +3,7 @@ package com.malevolentgods.modularcraft.domain;
 /** Transient concert pitch (MIDI note number) and normalized gate; never world-saved. */
 public record KeyboardState(int note, boolean gate) {
   public KeyboardState {
-    if (note < 24 || note > 107) throw new IllegalArgumentException("keyboard_note");
+    if (note < 0 || note > 127) throw new IllegalArgumentException("keyboard_note");
   }
 
   public static int note(int octave, int semitone) {

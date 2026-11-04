@@ -67,6 +67,19 @@ class KeyboardAudioTest {
   }
 
   @Test
+  void expandedMidiPitchExtremesRemainFiniteAndBounded() {
+    Assertions.assertEquals(8.175798915643707, KeyboardState.frequency(0), 1e-10);
+    Assertions.assertEquals(12543.853951415975, KeyboardState.frequency(127), 1e-8);
+    for (int note : new int[] {0, 23, 108, 127}) {
+      double[] samples = render(new RenderGraph(List.of(patch(true, true, note))));
+      for (double sample : samples) {
+        Assertions.assertTrue(Double.isFinite(sample));
+        Assertions.assertTrue(Math.abs(sample) <= 1);
+      }
+    }
+  }
+
+  @Test
   void disconnectRestoresSavedFrequencyAcrossGraphAdoption() {
     RenderGraph before = new RenderGraph(List.of(patch(true, true, 69)));
     render(before);

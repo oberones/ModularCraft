@@ -7,6 +7,7 @@ public final class KeyboardPerformance {
   private UUID holder;
   private long expires;
   private int semitone;
+  private boolean absolute;
   private KeyboardState state;
 
   public KeyboardPerformance(int octave) {
@@ -22,9 +23,15 @@ public final class KeyboardPerformance {
   }
 
   public void play(UUID session, int key, int octave, long now) {
+    play(session, key, false, octave, now);
+  }
+
+  /** Absolute MIDI pitches ignore the panel octave; relative GUI keys track it. */
+  public void play(UUID session, int key, boolean absolute, int octave, long now) {
     if (holder != null && !holder.equals(session))
       throw new IllegalArgumentException("keyboard_busy");
-    state = new KeyboardState(KeyboardState.note(octave, key), true);
+    state = new KeyboardState(absolute ? key : KeyboardState.note(octave, key), true);
+    this.absolute = absolute;
     semitone = key;
     holder = session;
     expires = now + 750_000_000L;
@@ -47,7 +54,7 @@ public final class KeyboardPerformance {
 
   public boolean transpose(int octave) {
     Parameter.OCTAVE.validate(octave);
-    if (holder == null) return false;
+    if (holder == null || absolute) return false;
     state = new KeyboardState(KeyboardState.note(octave, semitone), true);
     return true;
   }

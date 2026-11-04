@@ -16,3 +16,16 @@ this checklist; acceptance evidence is recorded in ../../validation/ledger.md.
 
 Existing security, performance, other platforms and release-acceptance gates remain unchanged.
 No commit, push or publication is authorized.
+
+
+## MIDI extension
+
+- [x] M01 Observe failing priority/sustain/full-range tests before behavior implementation.
+- [x] M02 Add bounded Java Sound discovery, selection, callbacks, lifecycle and fake-provider tests.
+- [x] M03 Add relative/absolute packet mode and v3 snapshots; preserve v1 world data.
+- [x] M04 Add local preferences, device/channel/refresh/release controls and compact layout.
+- [x] M05 Cover server ordering, malformed packets, DSP endpoints, failures and 20 fake-device cycles.
+- [x] M06 Pass `make verify`, native MIDI/octave/range fixture and visual review; record evidence.
+- [x] M07 Update contracts, architecture, guides, localization, changelog and explicit self-review.
+- [ ] M08 Qualify physical controller/pedal/unplug behavior and real-device resource cycles.
+- [ ] M09 Record human listening/acoustic timing and two-client MIDI SC-004 acceptance.

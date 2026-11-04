@@ -1,0 +1,99 @@
+{
+  "date": "2026-11-04",
+  "source_revision": "0450bc09b35ad5a587f489d5df8a17d214db3468",
+  "source_state": "working tree; no assistant-created commit",
+  "command": "make smoke GRADLE_ARGS=-PqaKeyboard TICKS=500",
+  "result": "PASS synthetic native fixture and visual inspection",
+  "instance": "run/make/smoke-gv9pcb3f",
+  "artifact": "build/libs/modularcraft-0.1.0.jar",
+  "sha256": "a3f6573af5f87dcfdc4ad8363ff117cf4e59cffcc41ea5a9c8e8ed1d30b4cf82",
+  "environment": {
+    "java": "Eclipse Adoptium 21.0.12.1+1-LTS",
+    "os": "macOS 26.6.2",
+    "architecture": "aarch64",
+    "minecraft": "1.21.1",
+    "neoforge": "21.1.218",
+    "window": "854x480; GUI scale 2"
+  },
+  "midi_port_opened": "Scarlett 18i8 USB",
+  "input_method": "Synthetic events delivered through the keyboard panel; no physical MIDI messages or listening asserted",
+  "unit_tests": {
+    "tests": 71,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "packaged_gametests": 12,
+  "launcher_tests": 12,
+  "keyboard_observations": [
+    {
+      "tick": 130,
+      "note": 62,
+      "gate": true
+    },
+    {
+      "tick": 150,
+      "note": 60,
+      "gate": true
+    },
+    {
+      "tick": 180,
+      "note": 72,
+      "gate": true
+    },
+    {
+      "tick": 230,
+      "note": 69,
+      "gate": true
+    },
+    {
+      "tick": 240,
+      "note": 69,
+      "gate": false
+    },
+    {
+      "tick": 260,
+      "note": 73,
+      "gate": true
+    },
+    {
+      "tick": 280,
+      "note": 74,
+      "gate": true
+    },
+    {
+      "tick": 295,
+      "note": 74,
+      "gate": false
+    },
+    {
+      "tick": 330,
+      "note": 72,
+      "gate": true
+    },
+    {
+      "tick": 350,
+      "note": 86,
+      "gate": true
+    }
+  ],
+  "range_cleanup": "PASS: native fixture moves out of range at tick 355 and asserts disabled piano at tick 358; gate cleanup checked at tick 380",
+  "client_counters": [
+    "p95BlockNs=80042 blocks=1808 underruns=1 maxBlockNs=4426791 peak=0.02317783609032631 maxQueued=12 failed=false",
+    "p95BlockNs=55208 blocks=3680 underruns=1 maxBlockNs=4426791 peak=0.02317783609032631 maxQueued=12 failed=false",
+    "p95BlockNs=32792 blocks=5557 underruns=1 maxBlockNs=4426791 peak=0.02317783609032631 maxQueued=12 failed=false",
+    "p95BlockNs=31000 blocks=7433 underruns=1 maxBlockNs=4426791 peak=0.02317783609032631 maxQueued=12 failed=false",
+    "p95BlockNs=30042 blocks=9305 underruns=1 maxBlockNs=4426791 peak=0.02317783609032631 maxQueued=12 failed=false"
+  ],
+  "server_counters": [
+    "lastNs=111708 maxNs=10751000",
+    "lastNs=42541 maxNs=10751000"
+  ],
+  "pending": [
+    "physical MIDI note/pedal input and unplug reporting",
+    "human listening/acoustic timing",
+    "two-client SC-004",
+    "other platforms",
+    "existing performance/security release gates"
+  ]
+}
