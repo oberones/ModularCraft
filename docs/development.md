@@ -100,6 +100,59 @@ listening, or two-client acceptance.
 | `make verify` | Launcher tests, complete Gradle build/check, packaged GameTests, delivery inspection |
 | `make ci` | `verify` with `--no-daemon`; headless, no game window or external audit service |
 
+## Tagged releases
+
+The mod version is recorded in `.cz.toml` and `gradle.properties` (`mod_version`).
+Commitizen's `version_files` updates the Gradle property during a bump, alongside its
+own version and `CHANGELOG.md`, before creating the bump commit and `v<version>` tag.
+Gradle uses that property for archive names, NeoForge mod metadata, and the JAR's
+`Implementation-Version`. Java 21 and the pinned Gradle, Minecraft, and NeoForge
+versions are independent of the mod version and are not bumped.
+
+With Commitizen installed (validated with 4.8.3), prepare a release from a clean,
+reviewed working tree after running `make ci`:
+
+```sh
+cz bump --check-consistency --dry-run  # Preview the next version and changelog
+cz bump --check-consistency           # Update files, commit, and create the version tag
+python3 scripts/release.py check --tag "v$(cz version --project)"
+git push --atomic origin HEAD "refs/tags/v$(cz version --project)"
+```
+
+The bump and push commands above intentionally create a commit/tag and publish them;
+run them only when ready to release. Use `cz bump --check-consistency --prerelease rc`
+for a release candidate. Review any partial file updates if Commitizen reports a
+consistency failure. The optional real-Commitizen regression in `make test-tools`
+runs in a disposable repository; it is skipped when `cz` is not installed.
+
+The Verify workflow keeps branch/PR checks and accepts version-tag pushes with or
+without `v`, including prerelease/build suffixes. Commitizen generates `v` tags.
+Malformed version-like tags fail, and the normalized tag must exactly match both
+committed versions. CI does not rewrite versions or create tags. `make test-tools`
+also checks committed version consistency during ordinary builds/checks.
+
+Only a successful full `make ci` run can publish. The build job stages the exact
+runtime JAR selected by `build/runtime-artifact.json`, checks its embedded versions,
+and includes LICENSE, THIRD_PARTY_NOTICES.md, dependencies.json, licenses.json,
+README.md, CHANGELOG.md, ledger.md, and SHA256SUMS. The checksum file covers every
+other release asset; sources JARs and project ZIPs remain local build outputs.
+The publishing job verifies these checksums and uses GitHub's repository token;
+no personal token is required. The intermediate Actions artifact lasts seven days.
+
+Releases are titled `ModularCraft <version>` and include generated notes plus links
+to compatibility, migration, and acceptance records at the tag. Prerelease suffixes
+produce GitHub prereleases. An existing release causes publication to fail without
+replacing assets; use a new version for changed content. In-progress tag releases
+are not canceled by subsequent pushes.
+
+For local inspection after `make ci`, run
+`python3 scripts/release.py stage --tag "v$(cz version --project)"`. Staging requires
+an absent `build/release` directory so stale files cannot enter a release; archive or
+remove that generated directory before staging again. Tag creation, GitHub publication,
+and native/listening/multiplayer/security acceptance remain distinct operations.
+
+## Build overrides
+
 All Make-managed Gradle commands keep dependency verification strict. `GRADLE_ARGS`
 adds ordinary flags such as `--offline`, `--stacktrace`, or `--rerun-tasks`; `GRADLEW`
 and `PYTHON` override executable paths. Do not use `GRADLE_ARGS` to override launcher-owned

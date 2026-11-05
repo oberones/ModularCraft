@@ -2,10 +2,10 @@
 """Verify distributable contents and authored resource coverage; no game client required."""
 from pathlib import Path
 import hashlib,json,zipfile
+from release import checked_artifacts
 root=Path(__file__).resolve().parents[1]
-jar=root/'build/libs/modularcraft-0.1.0.jar'
-sources=root/'build/libs/modularcraft-0.1.0-sources.jar'
-project=root/'build/libs/modularcraft-0.1.0-project.zip'
+artifacts=checked_artifacts(root)
+jar,sources,project=(artifacts[key] for key in ('jar','sources','project'))
 assert all(p.is_file() for p in (jar,sources,project)), 'Build the JARs and full project archive first'
 with zipfile.ZipFile(jar) as archive:
  names=archive.namelist()
@@ -27,7 +27,7 @@ with zipfile.ZipFile(jar) as archive:
    assert int.from_bytes(data[6:8],'big')==65, f'Not Java 21: {name}'
 with zipfile.ZipFile(project) as archive:
  names=archive.namelist()
- for path in ('Makefile','scripts/run_validation.py','build.gradle','gradle/wrapper/gradle-wrapper.jar','gradle/verification-metadata.xml',
+ for path in ('Makefile','scripts/run_validation.py','scripts/release.py','.cz.toml','build.gradle','gradle/wrapper/gradle-wrapper.jar','gradle/verification-metadata.xml',
               'src/gametest/java/com/malevolentgods/modularcraft/gametest/ModuleGameTests.java',
               'validation/ledger.md','validation/mixer/results.json','validation/mixer/full.png','validation/licenses.json','validation/lfo/results.json','README.md'):
   assert path in names, path

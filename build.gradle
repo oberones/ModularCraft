@@ -5,7 +5,7 @@ plugins {
     id 'net.neoforged.moddev' version '2.0.148'
 }
 group = 'com.malevolentgods.modularcraft'
-version = '0.1.0'
+version = providers.gradleProperty('mod_version').get()
 base { archivesName = 'modularcraft' }
 java { toolchain.languageVersion = JavaLanguageVersion.of(21); withSourcesJar() }
 repositories { mavenCentral() }
@@ -73,16 +73,30 @@ tasks.withType(JavaCompile).configureEach {
 }
 tasks.withType(Test).configureEach { useJUnitPlatform(); maxHeapSize = '1G' }
 tasks.withType(AbstractArchiveTask).configureEach { preserveFileTimestamps = false; reproducibleFileOrder = true }
-tasks.named('jar') { from('LICENSE', 'THIRD_PARTY_NOTICES.md') }
+['processResources', 'processGametestResources'].each { taskName ->
+    tasks.named(taskName) {
+        inputs.property('mod_version', project.version.toString())
+        filesMatching('META-INF/neoforge.mods.toml') {
+            expand(mod_version: project.version.toString())
+        }
+    }
+}
+tasks.named('jar') {
+    from('LICENSE', 'THIRD_PARTY_NOTICES.md')
+    manifest.attributes('Implementation-Version': project.version.toString())
+}
 tasks.register('runtimeArtifact') {
     dependsOn tasks.named('jar')
     def artifact = tasks.named('jar', Jar).flatMap { it.archiveFile }
     def descriptor = layout.buildDirectory.file('runtime-artifact.json')
     inputs.file(artifact)
+    inputs.property('version', project.version.toString())
     outputs.file(descriptor)
     doLast {
         descriptor.get().asFile.text = groovy.json.JsonOutput.toJson(
-            [jar: project.relativePath(artifact.get().asFile)]) + '\n'
+            [version: project.version.toString(), jar: project.relativePath(artifact.get().asFile),
+             sources: project.relativePath(tasks.named('sourcesJar', Jar).get().archiveFile.get().asFile),
+             project: project.relativePath(tasks.named('projectSources', Zip).get().archiveFile.get().asFile)]) + '\n'
     }
 }
 dependencyLocking { lockAllConfigurations() }
@@ -126,12 +140,12 @@ tasks.register('projectSources', Zip) {
             '.github/**', 'specs/**', '.specify/memory/constitution.md',
             'validation/*.md', 'validation/*.json', 'validation/*.xml', 'validation/midi/**', 'validation/detune/**', 'validation/sequencer/**', 'validation/square/**', 'validation/mixer/**', 'validation/lfo/*.md', 'validation/lfo/*.json', 'validation/lfo/*.xml', 'validation/lfo/*.txt', 'validation/lfo/*.png',
             'Makefile', 'build.gradle', 'settings.gradle', 'gradle.properties', 'gradle.lockfile',
-            'gradlew', 'gradlew.bat', '.gitignore', 'AGENTS.md', 'README.md',
+            'gradlew', 'gradlew.bat', '.gitignore', '.cz.toml', 'AGENTS.md', 'README.md',
             'CHANGELOG.md', 'LICENSE', 'THIRD_PARTY_NOTICES.md'
         exclude '**/__pycache__/**', '**/.DS_Store'
     }
 }
-tasks.named('assemble') { dependsOn 'projectSources' }
+tasks.named('assemble') { dependsOn 'projectSources', 'runtimeArtifact' }
 tasks.register('dependencyInventory') {
     doLast {
         def entries = []

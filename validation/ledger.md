@@ -575,3 +575,31 @@ publication or dependency changes; manual worlds and AGENTS.md preserved.
   dependency pins, shared configuration, assets and structured validation evidence remain
   trackable. No executable behavior changed; runtime suites were not rerun. Earlier
   native, listening, multiplayer and release gates remain unchanged.
+
+## Commitizen synchronization and tagged releases — 2026-11-05
+
+Baseline: `d8c9533`, plus this uncommitted workflow/build change. Repository version
+remains `0.1.0`. Validation used macOS, Gradle 8.13 with strict dependency verification,
+the Java 21 toolchain, Python 3.14.6, Commitizen 4.8.3, and actionlint 1.7.7.
+
+| Check | Result | Evidence |
+|---|---|---|
+| Commitizen regression, red then green | PASS | In a disposable Git repository, the original configuration bumped its own version/tag but left Gradle unchanged. Stable and prerelease bumps now update `.cz.toml`, `mod_version`, changelog, commit and tag together; the temporary repository is clean afterward. |
+| Version and release boundary tests | PASS | 25 Python tests pass, including existing launcher tests; reject malformed/mismatched tags, stale descriptors, incorrect paths, missing assets, wrong embedded versions, altered checksums, and existing-release publication failure. Stable build metadata containing a hyphen does not become a prerelease. |
+| Default-version full verification | PASS | `make ci GAMETEST_DIR=run/make/release-ci-final-20261105` under Java 21: 157 JUnit tests, 32 packaged GameTests, formatting, Checkstyle, PMD, strict dependency verification, artifact/resource inspection. |
+| Bumped-version full verification | PASS | A disposable source copy bumped by Commitizen to `0.1.1-rc0` passes `make ci` with the same 25 Python, 157 JUnit and 32 GameTest cases. The first run exposed the GameTest's hard-coded `modularcraft-0.1.0.jar` assertion; it now verifies the filename against loaded mod metadata, and both mod/test metadata derive from Gradle. |
+| Release staging and mock publication | PASS | The actual bumped JAR staged with LICENSE, THIRD_PARTY_NOTICES.md, dependencies.json, licenses.json, README.md, CHANGELOG.md, ledger.md, and SHA256SUMS. Checksums and embedded versions verified before mocked `gh release create`; no sources JAR/project ZIP included. |
+| Clean runtime rebuild | PASS | Disposable-copy `./gradlew --no-daemon --dependency-verification strict clean assemble` reproduced the exact runtime JAR hash below. This is same-environment runtime-JAR evidence, not cross-platform or all-archive reproducibility. |
+| Workflow syntax and action provenance | PASS | `actionlint .github/workflows/verify.yml`; added upload-artifact v4.6.2 (`ea165f8d65b6e75b540449e92b4886f43607fa02`) and download-artifact v4.3.0 (`d3f86a106a0bac45b974a628896c90dbdf5c8093`) SHAs verified using upstream `git ls-remote`. |
+| Hosted tag trigger and GitHub publication | PENDING | No repository commit/tag/push or real release was created. A future version-tag push must establish hosted execution. |
+| Self-review | PASS | Build job remains read-only, publishing alone receives contents:write, credentials are not persisted, tag text passes through quoted arguments, assets are selected exactly and rechecked, existing releases are not overwritten, tag runs are not canceled. AGENTS.md, dependency/toolchain pins, and manual worlds preserved. |
+
+Runtime SHA-256 values:
+
+- `modularcraft-0.1.0.jar`: `c9ab680f10460fd67737f12e85907a331c4e0cabc93fa21f7ef39006c9698eaf`.
+- `modularcraft-0.1.1-rc0.jar`, before and after clean rebuild:
+  `aa2174f2698324762957319dec43a31aabe844313f8e6a2d2263fa3ccc97e636`.
+
+All earlier native, acoustic/listening, multiplayer, platform, performance and security
+acceptance results remain applicable. Publishing build outputs does not turn those
+PENDING/FAIL/BLOCKED results into passes. No runtime synthesis or world schema changed.

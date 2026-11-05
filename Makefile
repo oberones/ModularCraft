@@ -59,6 +59,7 @@ test: ## Run JUnit; optionally select TEST='*SceneTest'.
 	$(GRADLE) test $(if $(strip $(TEST)),--tests "$(TEST)",)
 
 test-tools: ## Test launcher isolation, JAR staging, and subprocess failure handling.
+	"$(PYTHON)" scripts/release.py check
 	"$(PYTHON)" -m unittest discover -s scripts/tests -v
 
 lint: ## Check Java formatting, Checkstyle, and PMD across all source sets.

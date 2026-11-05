@@ -1,5 +1,11 @@
 # 0.1.0 development candidate
 
+Added version-tag GitHub Releases after full automated verification. Commitizen now
+updates the Gradle mod version before tagging; archive names, mod/test metadata, and
+the JAR manifest derive from that version. CI rejects mismatched tags and publishes
+only the runtime JAR, supporting records, and checksums. Publication does not establish
+the outstanding native, listening, multiplayer, or security acceptance gates.
+
 Initial NeoForge 1.21.1 implementation: four adjustable modules, visible typed cables,
 owner/operator edits, persistent compositions, server-synchronized local synthesis,
 manual/redstone linear ADSR, local mute/volume, and bounded existing-device OpenAL output.

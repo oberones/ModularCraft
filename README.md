@@ -13,10 +13,15 @@ measurements, user-reported listening, and outstanding release acceptance.
 ## Install
 
 Use **Minecraft 1.21.1**, **NeoForge 21.1.218**, and **Java 21**. Put
-`build/libs/modularcraft-0.1.0.jar` in the client and server `mods` directories. Every
+the release's `modularcraft-<version>.jar` (or the local build under `build/libs/`) in the
+client and server `mods` directories. Every
 participant needs the same protocol-compatible mod. The initial playback target is macOS;
 Windows/Linux playback and other loaders are unqualified. A headless server does not
 need an audio device. Do not install the `-sources.jar` as a mod.
+
+Version tags publish the verified JAR and supporting records to
+[GitHub Releases](https://github.com/oberones/ModularCraft/releases).
+See [release preparation](docs/development.md#tagged-releases) for Commitizen and tag-push instructions.
 
 Use Minecraft's **Master** and **Jukebox/Note Blocks (Records)** sliders. The mod also has
 independent persistent local volume and mute. Default keys are **M** for mute and **K**

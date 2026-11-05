@@ -53,7 +53,7 @@ shaders off, VSync off, `pauseOnLostFocus:false`, `onboardAccessibility:false`.
 ./gradlew runClient -Pqa -PqaLoad=true -PclientRunDir=run/native-load
 ```
 
-For packaged verification, copy `build/libs/modularcraft-0.1.0.jar` into the disposable
+For packaged verification, copy the runtime JAR named by `build/runtime-artifact.json` into the disposable
 run directory's `mods/` folder and add `-Ppackaged`. The probe prints the loaded code
 origin so an IDE class directory cannot be mistaken for the installable artifact.
 Add `-PqaCycles=true` for twenty local audio resynchronizations with native channel/timer

@@ -10,6 +10,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.common.util.FakePlayerFactory;
 import net.neoforged.neoforge.gametest.GameTestHolder;
 import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
@@ -993,9 +994,16 @@ public final class ModuleGameTests {
   public static void packagedArtifactIsActuallyLoaded(GameTestHelper h) {
     String origin =
         ModularCraft.class.getProtectionDomain().getCodeSource().getLocation().toString();
+    String version =
+        ModList.get()
+            .getModContainerById(ModularCraft.ID)
+            .orElseThrow()
+            .getModInfo()
+            .getVersion()
+            .toString();
     if (Boolean.getBoolean("modularcraft.packaged"))
       h.assertTrue(
-          origin.contains("modularcraft-0.1.0.jar"),
+          origin.contains("modularcraft-" + version + ".jar"),
           "Runtime must resolve the installable JAR: " + origin);
     System.out.println("MODULARCRAFT_TEST_ARTIFACT " + origin);
     h.succeed();
