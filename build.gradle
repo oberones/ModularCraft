@@ -99,7 +99,13 @@ tasks.register('runtimeArtifact') {
              project: project.relativePath(tasks.named('projectSources', Zip).get().archiveFile.get().asFile)]) + '\n'
     }
 }
-dependencyLocking { lockAllConfigurations() }
+dependencyLocking {
+    lockAllConfigurations()
+    // Minecraft's native runtime dependencies differ between Linux CI and macOS development.
+    if (System.getProperty('os.name').startsWith('Linux')) {
+        lockFile = file('gradle/linux.lockfile')
+    }
+}
 configurations { formatter }
 dependencies { formatter 'com.google.googlejavaformat:google-java-format:1.25.2:all-deps' }
 tasks.register('formatJava', JavaExec) {

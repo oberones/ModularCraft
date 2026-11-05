@@ -131,6 +131,17 @@ Malformed version-like tags fail, and the normalized tag must exactly match both
 committed versions. CI does not rewrite versions or create tags. `make test-tools`
 also checks committed version consistency during ordinary builds/checks.
 
+Both verification/build and publishing use Ubuntu 24.04 x64 GitHub-hosted runners.
+The JAR is platform-independent; CI runs headless GameTests and does not require
+a graphical Minecraft client or audio device. Native playback qualification remains
+separate from the build runner's operating system.
+
+Gradle selects `gradle/linux.lockfile` on Linux and the existing `gradle.lockfile` on
+macOS. Both pin the same dependency versions; their runtime configuration memberships
+account for Minecraft's Linux transport and macOS Objective-C bridge. Dependency updates
+must refresh and review the locks on both build platforms while keeping checksum
+verification strict.
+
 Only a successful full `make ci` run can publish. The build job stages the exact
 runtime JAR selected by `build/runtime-artifact.json`, checks its embedded versions,
 and includes LICENSE, THIRD_PARTY_NOTICES.md, dependencies.json, licenses.json,

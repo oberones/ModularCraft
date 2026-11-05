@@ -620,3 +620,73 @@ PENDING/FAIL/BLOCKED results into passes. No runtime synthesis or world schema c
   workflow run can use it. An existing tag still references its original workflow;
   release validation requires a new version tag containing this correction. No commit,
   tag, push, or publication was performed here; existing acceptance gates remain open.
+
+## Hosted Java setup and action runtime correction — 2026-11-05
+
+- **FAIL — hosted bootstrap, reproduced in logs.**
+  [Run 42113860147, job 127548178839](https://github.com/oberones/ModularCraft/actions/runs/42113860147/job/127548178839)
+  reached the supported macOS 15 ARM64 runner (runner 2.338.2), then setup-java v4
+  rejected `21.0.12.1+1` as invalid SemVer before running the build. Checkout and
+  setup-java also emitted Node.js 20 deprecation warnings. Earlier workflow linting
+  did not validate the action's Java version parser.
+- **PASS — upstream verification and configuration.** Updated immutable pins to
+  checkout v7.0.1 (`3d3c42e5aac5ba805825da76410c181273ba90b1`), setup-java v6.2.0
+  (`77dd5b2ce225ea11469928ac317850245a74ae78`), upload-artifact v7.0.2
+  (`cf430e030ddbb5b0abf93d22962f4752f3646cd9`), and download-artifact v8.0.2
+  (`9000827ccba6bdab643e8b6fd33ac0654aef8333`). All SHAs were checked against
+  upstream release tags with `git ls-remote`, and all four upstream action manifests
+  declare `node24`. Existing inputs and the artifact archive/extraction defaults
+  remain compatible. The exact Temurin JDK pin is retained:
+  [setup-java v6.1.0](https://github.com/actions/setup-java/releases/tag/v6.1.0)
+  introduced Temurin JEP 322 patch-version support.
+- **PASS — actual Java setup smoke test.** Executed the pinned v6.2.0 bundled action
+  with Node.js 24.21.0, `distribution=temurin`, `java-version=21.0.12.1+1`, and fresh
+  temporary runner/tool-cache/settings directories on macOS ARM64. The action exited
+  successfully, resolved and downloaded the matching upstream ARM64 JDK, verified its
+  SHA-256, and installed it. The installed executable reports `openjdk 21.0.12.1`
+  and `Temurin-21.0.12.1+1`. No existing JDK or user Maven settings were replaced.
+- **PASS — local configuration validation and self-review.**
+  `actionlint .github/workflows/verify.yml` and `git diff --check` pass. Credentials
+  remain unpersisted; only publishing receives contents:write. Application code,
+  dependency pins, version synchronization and release behavior are unchanged;
+  application suites were not rerun for these action updates.
+- **PENDING — hosted execution with updated pins.** The local setup test does not
+  establish hosted checkout, artifact transfer, build or publication success. A new
+  run containing this workflow change must establish those results. No commit, tag,
+  push, workflow rerun or publication was performed here.
+
+## Linux CI runner and dependency resolution — 2026-11-05
+
+- **PASS — runner configuration.** Both verification/build and publishing now use
+  `ubuntu-24.04` (x64). Existing Node.js 24 action pins, the exact Temurin JDK version,
+  verification commands, release behavior and permissions are retained.
+- **PASS — platform lock regression and correction.** A disposable Ubuntu 24.04 x64
+  container reproduced the macOS lock's incompatible Objective-C bridge/Linux epoll
+  runtime memberships. Gradle now selects `gradle/linux.lockfile` on Linux and retains
+  the original lock on macOS. Generated the Linux lock with Gradle 8.13
+  `dependencies --write-locks` under strict verification; all component coordinates
+  and versions match the original lock exactly. Only two entries' configuration
+  memberships differ. No dependency version was upgraded or verification relaxed.
+- **PASS — independently verified missing checksums.** Fresh dependency resolution
+  exposed three missing JUnit BOM `.module` hashes and eight Linux LWJGL native JAR
+  hashes. Each was downloaded independently from Maven Central, checked against its
+  published SHA-256, and compared byte-for-byte with the NeoForge or Mojang copy.
+  Added only those 11 hashes; provenance is recorded in
+  [linux-ci-dependencies.json](linux-ci-dependencies.json).
+- **PASS — Linux bootstrap and dependency resolution.** Ran `make ci` in a disposable
+  source copy using the exact Temurin 21.0.12.1+1 Ubuntu Noble x64 image, digest
+  `sha256:57424b1d8eca9c4cf8a4fe226207027911f08d6758628891bf59fcfb53777029`,
+  under local x64 emulation. Used the pinned Gradle 8.13 distribution, two workers,
+  and a read-only dependency-cache seed. Python checks: 23 passed, two optional
+  Commitizen tests skipped because `cz` was absent. With the corrected locks/hashes,
+  strict dependency verification passed and NeoForm loaded 131 artifacts before
+  successfully downloading, stripping, merging and renaming Minecraft inputs.
+- **PASS — macOS regression and configuration checks.** `make check` under Java 21
+  passed, including all 25 Python tests, JUnit, formatting, Checkstyle and PMD.
+  `actionlint .github/workflows/verify.yml`, XML/provenance consistency checks and
+  `git diff --check` passed. Native playback/platform qualification is separate.
+- **PENDING — full Linux build and hosted execution.** Stopped the optional cold,
+  emulated Linux build at the slow Minecraft decompilation step after verifying
+  dependency resolution; no Linux JUnit/GameTest or final artifact success is claimed.
+  A hosted run containing these changes must establish CI
+  success. No commit, tag, push or publication was performed.

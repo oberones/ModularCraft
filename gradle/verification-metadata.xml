@@ -1561,11 +1561,17 @@
          </artifact>
       </component>
       <component group="org.junit" name="junit-bom" version="5.10.0">
+         <artifact name="junit-bom-5.10.0.module">
+            <sha256 value="eb3ee6127608010694a898056e7407d117296003aba5f5db801df430b9887fcf" origin="Verified against Maven Central published SHA-256 and identical NeoForge bytes; see validation/linux-ci-dependencies.json"/>
+         </artifact>
          <artifact name="junit-bom-5.10.0.pom">
             <sha256 value="e006dd8894f9fc7b75fc32bb12fe5ed8be65667d5b454f99e2e0b8c5bb8d30b3" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
          </artifact>
       </component>
       <component group="org.junit" name="junit-bom" version="5.10.1">
+         <artifact name="junit-bom-5.10.1.module">
+            <sha256 value="21b0afcfffe2ecb3770f5eb00ae7a19feaee94e771fa3918173850dae78067b7" origin="Verified against Maven Central published SHA-256 and identical NeoForge bytes; see validation/linux-ci-dependencies.json"/>
+         </artifact>
          <artifact name="junit-bom-5.10.1.pom">
             <sha256 value="21c4b0286f4b20069577ff4b20978a85c100ac8a46b6f1c8672fbaab337bc3f2" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
          </artifact>
@@ -1591,6 +1597,9 @@
          </artifact>
       </component>
       <component group="org.junit" name="junit-bom" version="5.9.3">
+         <artifact name="junit-bom-5.9.3.module">
+            <sha256 value="b401fd25901e582a524aa5343c4b39e28bc56e24961c1069bf2b4bbfcee46b93" origin="Verified against Maven Central published SHA-256 and identical NeoForge bytes; see validation/linux-ci-dependencies.json"/>
+         </artifact>
          <artifact name="junit-bom-5.9.3.pom">
             <sha256 value="4d0329cd9e72f2420e5ca15724cbfe6ffa6e5fd2888361516271190fdc342ed7" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
          </artifact>
@@ -1652,6 +1661,9 @@
          </artifact>
       </component>
       <component group="org.lwjgl" name="lwjgl" version="3.3.3">
+         <artifact name="lwjgl-3.3.3-natives-linux.jar">
+            <sha256 value="e663738c519a06f6d659882fa8e4e09af7f10e921929ee5cc54a7587f62ed4c9" origin="Verified against Maven Central published SHA-256 and identical Mojang bytes; see validation/linux-ci-dependencies.json"/>
+         </artifact>
          <artifact name="lwjgl-3.3.3-natives-macos-arm64.jar">
             <sha256 value="50ac9ca09e59f051dcacf4dc0b2145e9e916e6ab14633b75694231bfe59314a8" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
          </artifact>
@@ -1666,6 +1678,9 @@
          </artifact>
       </component>
       <component group="org.lwjgl" name="lwjgl-freetype" version="3.3.3">
+         <artifact name="lwjgl-freetype-3.3.3-natives-linux.jar">
+            <sha256 value="9fc63518a27b8ff1ab78196343710ce28e8000ce88f60be851a2d3db5beab8e9" origin="Verified against Maven Central published SHA-256 and identical Mojang bytes; see validation/linux-ci-dependencies.json"/>
+         </artifact>
          <artifact name="lwjgl-freetype-3.3.3-natives-macos-arm64.jar">
             <sha256 value="18bd938d2abb9d0ea36a5d491790ec78e38908b459216a750f7bc1f85e3513fd" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
          </artifact>
@@ -1680,6 +1695,9 @@
          </artifact>
       </component>
       <component group="org.lwjgl" name="lwjgl-glfw" version="3.3.3">
+         <artifact name="lwjgl-glfw-3.3.3-natives-linux.jar">
+            <sha256 value="b8306062b17741f34269088751421f1ac21a597bfbbd0c6c61226301cde744b8" origin="Verified against Maven Central published SHA-256 and identical Mojang bytes; see validation/linux-ci-dependencies.json"/>
+         </artifact>
          <artifact name="lwjgl-glfw-3.3.3-natives-macos-arm64.jar">
             <sha256 value="b9451d67bc17c906fb8282a5522f258b022f30569e0b62da001d590a17b45e19" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
          </artifact>
@@ -1694,6 +1712,9 @@
          </artifact>
       </component>
       <component group="org.lwjgl" name="lwjgl-jemalloc" version="3.3.3">
+         <artifact name="lwjgl-jemalloc-3.3.3-natives-linux.jar">
+            <sha256 value="4e4a13d7015d42605bbcf7ef9faead46deac6409e4377a8ed4aea815f14634b3" origin="Verified against Maven Central published SHA-256 and identical Mojang bytes; see validation/linux-ci-dependencies.json"/>
+         </artifact>
          <artifact name="lwjgl-jemalloc-3.3.3-natives-macos-arm64.jar">
             <sha256 value="63956ea246ff64aaa9ce0e1d6e3ccad686cfbf937d1fcd6cb8d5f44f6382160c" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
          </artifact>
@@ -1708,6 +1729,9 @@
          </artifact>
       </component>
       <component group="org.lwjgl" name="lwjgl-openal" version="3.3.3">
+         <artifact name="lwjgl-openal-3.3.3-natives-linux.jar">
+            <sha256 value="9030fed928a71eac2fdf4ce1643cc4ec724d8710e3b437bdce750bdc9e982b2a" origin="Verified against Maven Central published SHA-256 and identical Mojang bytes; see validation/linux-ci-dependencies.json"/>
+         </artifact>
          <artifact name="lwjgl-openal-3.3.3-natives-macos-arm64.jar">
             <sha256 value="3992463a16a8df19f63117b0883ead0ed928dd4df017f55b5e4e12b7a270489a" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
          </artifact>
@@ -1722,6 +1746,9 @@
          </artifact>
       </component>
       <component group="org.lwjgl" name="lwjgl-opengl" version="3.3.3">
+         <artifact name="lwjgl-opengl-3.3.3-natives-linux.jar">
+            <sha256 value="d823a92c6a2810b5112da304dcc6abcd4cb102706f74f7e934a223cea2051250" origin="Verified against Maven Central published SHA-256 and identical Mojang bytes; see validation/linux-ci-dependencies.json"/>
+         </artifact>
          <artifact name="lwjgl-opengl-3.3.3-natives-macos-arm64.jar">
             <sha256 value="f1b3f1de83f973abae3a4bc32db5b229ae5d55cc80dbbc5f7c841812fe20b5fe" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
          </artifact>
@@ -1736,6 +1763,9 @@
          </artifact>
       </component>
       <component group="org.lwjgl" name="lwjgl-stb" version="3.3.3">
+         <artifact name="lwjgl-stb-3.3.3-natives-linux.jar">
+            <sha256 value="c4489068ddc6dc44b103071943f801a2d076634d4b74db470927f84a308219e1" origin="Verified against Maven Central published SHA-256 and identical Mojang bytes; see validation/linux-ci-dependencies.json"/>
+         </artifact>
          <artifact name="lwjgl-stb-3.3.3-natives-macos-arm64.jar">
             <sha256 value="b1f65875fd9ddd28097be6076029e2b8fab5ebc1626e21cef761611dfca715c2" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
          </artifact>
@@ -1750,6 +1780,9 @@
          </artifact>
       </component>
       <component group="org.lwjgl" name="lwjgl-tinyfd" version="3.3.3">
+         <artifact name="lwjgl-tinyfd-3.3.3-natives-linux.jar">
+            <sha256 value="a076fa05a4d174762eab5852ee72c29d14ab10a5654f27fb00664ef1b52c0c05" origin="Verified against Maven Central published SHA-256 and identical Mojang bytes; see validation/linux-ci-dependencies.json"/>
+         </artifact>
          <artifact name="lwjgl-tinyfd-3.3.3-natives-macos-arm64.jar">
             <sha256 value="6f7d979414651e343dc8b8b3faade0e2d9e4fdf99d565d5623e12d40dbae4a22" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
          </artifact>
