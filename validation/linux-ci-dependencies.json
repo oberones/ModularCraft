@@ -130,5 +130,65 @@
     "published_checksum": "a076fa05a4d174762eab5852ee72c29d14ab10a5654f27fb00664ef1b52c0c05",
     "mirror": "https://libraries.minecraft.net/org/lwjgl/lwjgl-tinyfd/3.3.3/lwjgl-tinyfd-3.3.3-natives-linux.jar",
     "status": "PASS"
+  },
+  {
+    "group": "com.google.guava",
+    "module": "guava-parent",
+    "version": "33.4.0-jre",
+    "artifact": "guava-parent-33.4.0-jre.pom",
+    "sha256": "3a499ed34a0d9ee0f1bcc39230021a1cd4e2f7dd0426ab6844f585465d41dcd7",
+    "upstream": "https://repo.maven.apache.org/maven2/com/google/guava/guava-parent/33.4.0-jre/guava-parent-33.4.0-jre.pom",
+    "published_checksum_algorithm": "sha1",
+    "published_checksum": "ee79b87abc4ef9b3591db13c59de368c7b03dc79",
+    "mirror": "https://maven.neoforged.net/releases/com/google/guava/guava-parent/33.4.0-jre/guava-parent-33.4.0-jre.pom",
+    "status": "PASS"
+  },
+  {
+    "group": "org.junit",
+    "module": "junit-bom",
+    "version": "5.11.2",
+    "artifact": "junit-bom-5.11.2.module",
+    "sha256": "883a05b892f11859f3836de79b7207e247e14125583ccb8a3bef4d8bc0f58f2c",
+    "upstream": "https://repo.maven.apache.org/maven2/org/junit/junit-bom/5.11.2/junit-bom-5.11.2.module",
+    "published_checksum_algorithm": "sha256",
+    "published_checksum": "883a05b892f11859f3836de79b7207e247e14125583ccb8a3bef4d8bc0f58f2c",
+    "mirror": "https://maven.neoforged.net/releases/org/junit/junit-bom/5.11.2/junit-bom-5.11.2.module",
+    "status": "PASS"
+  },
+  {
+    "group": "com.google.guava",
+    "module": "guava-parent",
+    "version": "32.1.3-jre",
+    "artifact": "guava-parent-32.1.3-jre.pom",
+    "sha256": "f283c1f04897a9a88a3fa4ff46804e65e82114809a09cd04094bf7de01b1857b",
+    "upstream": "https://repo.maven.apache.org/maven2/com/google/guava/guava-parent/32.1.3-jre/guava-parent-32.1.3-jre.pom",
+    "published_checksum_algorithm": "sha1",
+    "published_checksum": "25e3a63dea904b6b1461cb6cbcf7e31bd211714e",
+    "mirror": "https://maven.neoforged.net/releases/com/google/guava/guava-parent/32.1.3-jre/guava-parent-32.1.3-jre.pom",
+    "status": "PASS"
+  },
+  {
+    "group": "org.junit",
+    "module": "junit-bom",
+    "version": "5.11.0",
+    "artifact": "junit-bom-5.11.0.module",
+    "sha256": "f7edbe67f22042708c410abc547408e5c476f409f556236a1179221274a2ed2d",
+    "upstream": "https://repo.maven.apache.org/maven2/org/junit/junit-bom/5.11.0/junit-bom-5.11.0.module",
+    "published_checksum_algorithm": "sha256",
+    "published_checksum": "f7edbe67f22042708c410abc547408e5c476f409f556236a1179221274a2ed2d",
+    "mirror": "https://maven.neoforged.net/releases/org/junit/junit-bom/5.11.0/junit-bom-5.11.0.module",
+    "status": "PASS"
+  },
+  {
+    "group": "org.junit",
+    "module": "junit-bom",
+    "version": "5.11.4",
+    "artifact": "junit-bom-5.11.4.pom",
+    "sha256": "19d4b747b204805325b6334553296f986562277a4ac1cb5e593a5e4c4f5e4115",
+    "upstream": "https://repo.maven.apache.org/maven2/org/junit/junit-bom/5.11.4/junit-bom-5.11.4.pom",
+    "published_checksum_algorithm": "sha256",
+    "published_checksum": "19d4b747b204805325b6334553296f986562277a4ac1cb5e593a5e4c4f5e4115",
+    "mirror": "https://maven.neoforged.net/releases/org/junit/junit-bom/5.11.4/junit-bom-5.11.4.pom",
+    "status": "PASS"
   }
 ]

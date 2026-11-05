@@ -690,3 +690,34 @@ PENDING/FAIL/BLOCKED results into passes. No runtime synthesis or world schema c
   dependency resolution; no Linux JUnit/GameTest or final artifact success is claimed.
   A hosted run containing these changes must establish CI
   success. No commit, tag, push or publication was performed.
+
+## Fresh-cache Checkstyle and dependency metadata correction — 2026-11-05
+
+- **FAIL then PASS — metadata regression.** The hosted Checkstyle failure reported
+  missing hashes for Guava parent `33.4.0-jre` and JUnit BOM `5.11.2.module`.
+  A fresh-cache Linux audit reproduced both and found three additional gaps:
+  Guava parent `32.1.3-jre`, JUnit BOM `5.11.0.module`, and JUnit BOM `5.11.4.pom`.
+  Added exactly five SHA-256 entries. Existing checksums, dependency versions, both
+  lockfiles, and strict verification settings are unchanged.
+- **PASS — independent provenance.** Downloaded each artifact from Maven Central,
+  checked its published checksum (SHA-256 for JUnit; SHA-1 for the Guava parent POMs,
+  where no SHA-256 sidecar was available), and verified byte identity with NeoForge's
+  copy. Computed and pinned SHA-256 for all five files. Exact URLs, published digests
+  and verification results are appended to
+  [linux-ci-dependencies.json](linux-ci-dependencies.json).
+- **PASS — exhaustive fresh-cache Linux resolution.** In a disposable Ubuntu 24.04
+  x64/Temurin 21.0.12.1+1 container, a temporary Gradle init task called `resolve()`
+  on every `canBeResolved` configuration, collecting all failures before exiting.
+  Ran Gradle 8.13 with `--no-daemon --max-workers=2 --dependency-verification strict`,
+  a new `GRADLE_USER_HOME`, and no shared dependency cache. The corrected audit
+  verified all 33 configurations in 2m 2s, including Checkstyle (34 files), PMD (19),
+  formatter (7), all test/compile/runtime configurations, and NeoForm dependencies.
+  This verifies dependency resolution without compiling or decompiling Minecraft.
+- **PASS — self-review and consistency.** XML/provenance checks confirmed the five
+  added entries match the independently downloaded artifacts and all pre-existing
+  entries remain unchanged. `git diff --check` passed. No dependency verification
+  bypass, wildcard trust, version upgrade, or unreviewed checksum acceptance was used.
+- **PENDING — hosted build and GameTests.** The exhaustive dependency audit does not
+  replace the full hosted build, Checkstyle execution, or GameTests. A workflow run
+  containing this correction must establish those results. No commit, tag, push,
+  publication, or hosted workflow rerun was performed.

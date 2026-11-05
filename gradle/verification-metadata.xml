@@ -244,6 +244,16 @@
             <sha256 value="88e9cb007335ab5fdb314a6e3c987734ec2308c9a063ff747c7469189d0a92bf" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
          </artifact>
       </component>
+      <component group="com.google.guava" name="guava-parent" version="32.1.3-jre">
+         <artifact name="guava-parent-32.1.3-jre.pom">
+            <sha256 value="f283c1f04897a9a88a3fa4ff46804e65e82114809a09cd04094bf7de01b1857b" origin="Verified against Maven Central published checksum and identical NeoForge bytes; see validation/linux-ci-dependencies.json"/>
+         </artifact>
+      </component>
+      <component group="com.google.guava" name="guava-parent" version="33.4.0-jre">
+         <artifact name="guava-parent-33.4.0-jre.pom">
+            <sha256 value="3a499ed34a0d9ee0f1bcc39230021a1cd4e2f7dd0426ab6844f585465d41dcd7" origin="Verified against Maven Central published checksum and identical NeoForge bytes; see validation/linux-ci-dependencies.json"/>
+         </artifact>
+      </component>
       <component group="com.google.guava" name="listenablefuture" version="9999.0-empty-to-avoid-conflict-with-guava">
          <artifact name="listenablefuture-9999.0-empty-to-avoid-conflict-with-guava.jar">
             <sha256 value="b372a037d4230aa57fbeffdef30fd6123f9c0c2db85d0aced00c91b974f33f99" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
@@ -1577,11 +1587,17 @@
          </artifact>
       </component>
       <component group="org.junit" name="junit-bom" version="5.11.0">
+         <artifact name="junit-bom-5.11.0.module">
+            <sha256 value="f7edbe67f22042708c410abc547408e5c476f409f556236a1179221274a2ed2d" origin="Verified against Maven Central published SHA-256 and identical NeoForge bytes; see validation/linux-ci-dependencies.json"/>
+         </artifact>
          <artifact name="junit-bom-5.11.0.pom">
             <sha256 value="e67459d4882424ac6374f40db1c8f4a2e88946b340ba072c80be932a2be4644d" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
          </artifact>
       </component>
       <component group="org.junit" name="junit-bom" version="5.11.2">
+         <artifact name="junit-bom-5.11.2.module">
+            <sha256 value="883a05b892f11859f3836de79b7207e247e14125583ccb8a3bef4d8bc0f58f2c" origin="Verified against Maven Central published SHA-256 and identical NeoForge bytes; see validation/linux-ci-dependencies.json"/>
+         </artifact>
          <artifact name="junit-bom-5.11.2.pom">
             <sha256 value="f48e88538aac145eb3ae0345a9ebd055b28f329a35dce8d1e9281325ca9b0ea2" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
          </artifact>
@@ -1589,6 +1605,9 @@
       <component group="org.junit" name="junit-bom" version="5.11.4">
          <artifact name="junit-bom-5.11.4.module">
             <sha256 value="a9a4f27be94e99b9d570162d246a80f686d277d5d31aeb5481047cf51daf46e4" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
+         </artifact>
+         <artifact name="junit-bom-5.11.4.pom">
+            <sha256 value="19d4b747b204805325b6334553296f986562277a4ac1cb5e593a5e4c4f5e4115" origin="Verified against Maven Central published SHA-256 and identical NeoForge bytes; see validation/linux-ci-dependencies.json"/>
          </artifact>
       </component>
       <component group="org.junit" name="junit-bom" version="5.7.2">
