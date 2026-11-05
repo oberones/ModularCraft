@@ -603,3 +603,20 @@ Runtime SHA-256 values:
 All earlier native, acoustic/listening, multiplayer, platform, performance and security
 acceptance results remain applicable. Publishing build outputs does not turn those
 PENDING/FAIL/BLOCKED results into passes. No runtime synthesis or world schema changed.
+
+## Hosted macOS runner correction — 2026-11-05
+
+- **FAIL — reported hosted scheduling.** The user reported
+  `The configuration 'macos-14-arm64-us-default' is not supported`. The Verify job
+  still selected `macos-14`; GitHub retired all macOS 14 Actions images on November 2,
+  2026 ([official announcement](https://github.com/actions/runner-images/issues/13518)).
+- **PASS — configuration correction and local validation.** Changed only the Verify
+  build runner to `macos-15`, a supported standard ARM64 macOS image according to
+  [GitHub's runner reference](https://docs.github.com/en/actions/reference/runners/github-hosted-runners).
+  `actionlint .github/workflows/verify.yml` and `git diff --check` passed. This changes
+  runner scheduling only; application suites were not rerun. Java/dependency pins,
+  verification commands, publishing permissions and release behavior are unchanged.
+- **PENDING — hosted execution.** The fix must be committed and pushed before a new
+  workflow run can use it. An existing tag still references its original workflow;
+  release validation requires a new version tag containing this correction. No commit,
+  tag, push, or publication was performed here; existing acceptance gates remain open.
