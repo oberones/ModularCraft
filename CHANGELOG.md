@@ -104,3 +104,22 @@ and existing final output protection. World schema 1 retains existing records; n
 and snapshots now require version 8 on every peer. Back up worlds before upgrade; restore
 the backup before downgrade. RP-007 and mixer native/load probes added. Human listening,
 multiplayer and sustained acceptance remain separately tracked; no release is implied.
+
+## v0.1.0 (2026-11-05)
+
+### Feat
+
+- add mixer block
+- add clock-synced LFO
+- add square oscillator block
+- add better note control to saw oscillator block
+- add euclidean sequencer module
+- add detune capability to saw osc module
+- add midi support to keyboard block
+- add keyboard block
+- initial MvP with four basic module blocks
+
+### Fix
+
+- address UI bug that made text difficult to read
+- update wiring graphics to prevent clipping
