@@ -10,6 +10,7 @@ import com.malevolentgods.modularcraft.dsp.Envelope;
 import com.malevolentgods.modularcraft.dsp.Filter;
 import com.malevolentgods.modularcraft.dsp.Oscillator;
 import com.malevolentgods.modularcraft.dsp.Output;
+import com.malevolentgods.modularcraft.dsp.PulseOscillator;
 import com.malevolentgods.modularcraft.dsp.RenderGraph;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -188,6 +189,100 @@ class MeasurementTest {
             .toList());
   }
 
+  @Test
+  void squareAndMixedDspBenchmarksAndNoSteadyAllocation() {
+    for (boolean mixed : new boolean[] {false, true}) {
+      List<PatchSnapshot> patches = new ArrayList<>();
+      int index = 0;
+      for (PatchSnapshot patch : loadFixture()) {
+        boolean replace = !mixed || index++ % 2 == 0;
+        List<ModuleState> modules =
+            patch.modules().stream()
+                .map(
+                    m -> {
+                      if (m.kind() != ModuleKind.OSCILLATOR) return m;
+                      if (!replace) return m.withValue(Parameter.DETUNE, 100);
+                      return new ModuleState(
+                          m.id(),
+                          m.owner(),
+                          ModuleKind.SQUARE_OSCILLATOR,
+                          m.dimension(),
+                          m.x(),
+                          m.y(),
+                          m.z(),
+                          m.revision(),
+                          Map.of(
+                              Parameter.FREQUENCY,
+                              m.value(Parameter.FREQUENCY),
+                              Parameter.PULSE_WIDTH,
+                              5.0,
+                              Parameter.LEVEL,
+                              m.value(Parameter.LEVEL)),
+                          m.loaded(),
+                          m.enabled());
+                    })
+                .toList();
+        patches.add(
+            new PatchSnapshot(
+                patch.id(),
+                patch.revision(),
+                patch.sequence(),
+                patch.sample(),
+                modules,
+                patch.cables(),
+                patch.envelopes(),
+                patch.keyboards()));
+      }
+      benchmark(patches);
+    }
+  }
+
+  @Test
+  void pulseDcAndAliasResidualAgainstIndependentOversampledReference() {
+    int count = 65536, oversample = 16;
+    for (double duty : new double[] {.05, .25, .5, .95})
+      for (double requested : new double[] {55, 220, 880, 3520, 8000}) {
+        int bin = (int) Math.round(requested * count / 48000);
+        double hz = bin * 48000.0 / count;
+        double[] real = new double[count], imag = new double[count];
+        PulseOscillator pulse = new PulseOscillator(hz, duty, 0);
+        for (int warmup = 0; warmup < 128; warmup++) pulse.next(.5);
+        double sum = 0;
+        for (int i = 0; i < count; i++) {
+          real[i] = pulse.next(.5);
+          sum += real[i];
+          Assertions.assertTrue(Math.abs(real[i]) <= .5);
+        }
+        Assertions.assertTrue(Math.abs(sum / count) < .001, "DC below -60 dBFS");
+        fft(real, imag);
+        double[] reference = new double[count * oversample],
+            referenceImag = new double[reference.length];
+        for (int i = 0; i < reference.length; i++) {
+          double phase = (i * (double) bin / reference.length) % 1;
+          reference[i] =
+              ((phase < duty ? 1 : -1) - (2 * duty - 1)) / (4 * Math.max(duty, 1 - duty));
+        }
+        fft(reference, referenceImag);
+        double residual = 0, energy = 0;
+        for (int k = 1; k < count / 2; k++) {
+          energy +=
+              (reference[k] * reference[k] + referenceImag[k] * referenceImag[k])
+                  / (oversample * (double) oversample);
+          if (k % bin != 0) residual += real[k] * real[k] + imag[k] * imag[k];
+        }
+        double db = 10 * Math.log10(residual / energy);
+        System.out.printf(
+            java.util.Locale.ROOT,
+            "pulse duty=%.2f Hz=%.6f alias=%.3f dB DC=%.9f%n",
+            duty,
+            hz,
+            db,
+            sum / count);
+        Assertions.assertTrue(
+            db < -35, "Pulse alias residual " + db + " at " + hz + " duty " + duty);
+      }
+  }
+
   static void benchmark(List<PatchSnapshot> patches) {
     RenderGraph graph = new RenderGraph(patches);
     var listener = new RenderGraph.Listener("minecraft:overworld", 8, 66, 8, 0, 1);
@@ -208,12 +303,12 @@ class MeasurementTest {
     System.out.println(
         "64 module / 96 cable / 8 speaker DSP p95 ms="
             + p95
-            + ", detune="
-            + patches.getFirst().modules().stream()
-                .filter(m -> m.kind() == ModuleKind.OSCILLATOR)
-                .findFirst()
-                .orElseThrow()
-                .value(Parameter.DETUNE)
+            + ", oscillators="
+            + patches.stream()
+                .flatMap(p -> p.modules().stream())
+                .filter(m -> m.kind().isOscillator())
+                .map(m -> m.kind().name())
+                .toList()
             + ", measured allocation bytes="
             + allocation);
     Assertions.assertTrue(
@@ -221,7 +316,7 @@ class MeasurementTest {
     Assertions.assertTrue(allocation < 4096, "Steady audio processing allocated " + allocation);
   }
 
-  private static void fft(double[] real, double[] imag) {
+  static void fft(double[] real, double[] imag) {
     int n = real.length;
     for (int i = 1, j = 0; i < n; i++) {
       int bit = n >> 1;

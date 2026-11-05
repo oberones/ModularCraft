@@ -45,9 +45,7 @@ public final class ModuleScreen extends Screen {
     this.editable = editable;
     this.status = status;
     note =
-        state.kind() == ModuleKind.OSCILLATOR
-            ? new OscillatorNote(state.value(Parameter.FREQUENCY))
-            : null;
+        state.kind().isOscillator() ? new OscillatorNote(state.value(Parameter.FREQUENCY)) : null;
   }
 
   public UUID identity() {

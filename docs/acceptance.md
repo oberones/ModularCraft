@@ -68,7 +68,7 @@ A one-client development probe does **not** satisfy two-client packaged SC-005.
 ## Packaged play and timing
 
 1. Install only the candidate JAR plus the exact loader on a fresh Creative client and
-   a normal headless dedicated server. Confirm six blocks/tool, all textures/models,
+   a normal headless dedicated server. Confirm seven blocks/tool, all textures/models,
    labeled ports, cable arrows, and every panel control. Confirm no client/audio class
    loads on the server. Obtain/accept any host licensing terms as the server operator.
 2. Build both README reference patches using only their instructions. Test every listed
@@ -205,3 +205,14 @@ SC-004 conditions, document onset skew and edit latency, and confirm joining doe
 another listener. Run the 30-minute load qualification with four sequencer-driven patches,
 record hardware/backend, p95 block/tick/frame time, allocations and underruns. Existing
 release gates remain applicable until independently observed.
+
+
+## Square oscillator acceptance
+
+Run README RP-005 and record width 50/25/5%, filter comparison, keyboard/MIDI pitch,
+width edits while held, CV removal, Level 0, enable/disable/mute, save/reload, chunk unload,
+block removal and reconnect. Confirm saved saw patches retain their original settings/sound.
+On two matching protocol-v6 clients verify shared PWM edits, late join, authority and timing
+against existing SC-003/004 limits. Listen for clicks, stuck tones, harsh aliasing and intended
+pulse-tone changes; automated samples/screenshots do not establish listening acceptance.
+Use a disposable `make smoke GRADLE_ARGS=-PqaSquare TICKS=600` for widgets and screenshots.

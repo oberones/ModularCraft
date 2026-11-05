@@ -181,22 +181,90 @@ public final class ModuleGameTests {
 
   @GameTest(template = "empty", templateNamespace = ModularCraft.ID)
   public static void detuneControlPersistsAndRejectsInvalidStaleAndForeignEdits(GameTestHelper h) {
-    assertParameterEdits(h, Parameter.DETUNE, 25.125);
+    assertParameterEdits(h, ModuleKind.OSCILLATOR, Parameter.DETUNE, 25.125);
   }
 
   @GameTest(template = "empty", templateNamespace = ModularCraft.ID)
   public static void noteFrequencyPersistsAndRejectsInvalidStaleAndForeignEdits(GameTestHelper h) {
     assertParameterEdits(
-        h, Parameter.FREQUENCY, com.malevolentgods.modularcraft.domain.KeyboardState.frequency(60));
+        h,
+        ModuleKind.OSCILLATOR,
+        Parameter.FREQUENCY,
+        com.malevolentgods.modularcraft.domain.KeyboardState.frequency(60));
   }
 
-  private static void assertParameterEdits(GameTestHelper h, Parameter parameter, double value) {
+  @GameTest(template = "empty", templateNamespace = ModularCraft.ID)
+  public static void squarePwmPersistsAndRejectsInvalidStaleAndForeignEdits(GameTestHelper h) {
+    assertParameterEdits(h, ModuleKind.SQUARE_OSCILLATOR, Parameter.PULSE_WIDTH, 25.125);
+  }
+
+  @GameTest(template = "empty", templateNamespace = ModularCraft.ID)
+  public static void squareNoteFrequencyPersists(GameTestHelper h) {
+    assertParameterEdits(
+        h,
+        ModuleKind.SQUARE_OSCILLATOR,
+        Parameter.FREQUENCY,
+        com.malevolentgods.modularcraft.domain.KeyboardState.frequency(60));
+  }
+
+  @GameTest(template = "empty", templateNamespace = ModularCraft.ID)
+  public static void squarePlacementCablingReloadAndRemoval(GameTestHelper h) {
+    UUID owner = UUID.randomUUID();
+    BlockPos a = new BlockPos(1, 1, 1), b = new BlockPos(2, 1, 1);
+    h.setBlock(a, ModularCraft.MODULES.get(ModuleKind.SQUARE_OSCILLATOR).get());
+    h.setBlock(b, ModularCraft.MODULES.get(ModuleKind.SPEAKER).get());
+    var pulse = (ModuleEntity) h.getLevel().getBlockEntity(h.absolutePos(a));
+    var speaker = (ModuleEntity) h.getLevel().getBlockEntity(h.absolutePos(b));
+    pulse.initialize(owner);
+    speaker.initialize(owner);
+    var runtime = com.malevolentgods.modularcraft.game.ServerRuntime.get(h.getLevel().getServer());
+    var id = pulse.state().id();
+    var cable =
+        new com.malevolentgods.modularcraft.domain.Cable(
+            id,
+            com.malevolentgods.modularcraft.domain.Port.AUDIO_OUT,
+            speaker.state().id(),
+            com.malevolentgods.modularcraft.domain.Port.AUDIO_IN);
+    runtime
+        .state()
+        .connect(owner, false, cable, pulse.state().revision(), speaker.state().revision());
+    runtime.attach(pulse);
+    runtime.attach(speaker);
+    h.assertTrue(
+        runtime.currentPatch(id).cables().contains(cable), "Square audio connects to speaker");
+    var saved = pulse.saveWithFullMetadata(h.getLevel().registryAccess());
+    var restored =
+        (ModuleEntity)
+            BlockEntity.loadStatic(
+                pulse.getBlockPos(), pulse.getBlockState(), saved, h.getLevel().registryAccess());
+    h.assertTrue(
+        restored != null
+            && restored.state().id().equals(id)
+            && restored.state().kind() == ModuleKind.SQUARE_OSCILLATOR,
+        "Square kind and identity persist");
+    h.assertTrue(
+        !ModularCraft.MODULES
+            .get(ModuleKind.SQUARE_OSCILLATOR)
+            .get()
+            .asItem()
+            .getDefaultInstance()
+            .isEmpty(),
+        "Square item registered");
+    h.setBlock(a, net.minecraft.world.level.block.Blocks.AIR);
+    h.assertTrue(!runtime.state().cables().contains(cable), "Removing square cleans cable");
+    h.setBlock(a, ModularCraft.MODULES.get(ModuleKind.SQUARE_OSCILLATOR).get());
+    var replacement = (ModuleEntity) h.getLevel().getBlockEntity(h.absolutePos(a));
+    replacement.initialize(owner);
+    h.assertTrue(!replacement.state().id().equals(id), "Replacement has fresh identity");
+    h.succeed();
+  }
+
+  private static void assertParameterEdits(
+      GameTestHelper h, ModuleKind kind, Parameter parameter, double value) {
     UUID owner = UUID.randomUUID();
     var player = FakePlayerFactory.get(h.getLevel(), new GameProfile(owner, "ParameterOwner"));
     BlockPos position = h.absolutePos(new BlockPos(1, 1, 1));
-    h.getLevel()
-        .setBlock(
-            position, ModularCraft.MODULES.get(ModuleKind.OSCILLATOR).get().defaultBlockState(), 3);
+    h.getLevel().setBlock(position, ModularCraft.MODULES.get(kind).get().defaultBlockState(), 3);
     var module = (ModuleEntity) h.getLevel().getBlockEntity(position);
     module.initialize(owner);
     player.setPos(position.getCenter());

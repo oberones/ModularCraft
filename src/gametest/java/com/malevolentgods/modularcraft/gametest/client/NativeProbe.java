@@ -19,9 +19,11 @@ public final class NativeProbe {
         (ClientTickEvent.Post event) -> {
           if (Minecraft.getInstance().level == null) return;
           ticks++;
+          if (Boolean.getBoolean("modularcraft.qa.cableRemoval")) NativeCableProbe.tick(ticks);
           if (Boolean.getBoolean("modularcraft.qa.cables")) captureCables();
           if (Boolean.getBoolean("modularcraft.qa.keyboard")) keyboard();
-          if (Boolean.getBoolean("modularcraft.qa.detune")) detune();
+          if (Boolean.getBoolean("modularcraft.qa.detune")
+              || Boolean.getBoolean("modularcraft.qa.square")) oscillator();
           if (Boolean.getBoolean("modularcraft.qa.sequencer")) sequencer();
           if (ticks == 1)
             System.out.println(
@@ -160,7 +162,7 @@ public final class NativeProbe {
 
   // Minecraft owns this borrowed client and its framebuffer.
   @SuppressWarnings("PMD.CloseResource")
-  private void detune() {
+  private void oscillator() {
     if (ticks < 90 || ticks > 550) return;
     Minecraft mc = Minecraft.getInstance();
     if (!(mc.screen instanceof com.malevolentgods.modularcraft.client.ModuleScreen screen))
@@ -175,6 +177,11 @@ public final class NativeProbe {
       OscillatorNoteProbe.tick(screen, ticks);
       return;
     }
+    boolean square = Boolean.getBoolean("modularcraft.qa.square");
+    var control =
+        square
+            ? com.malevolentgods.modularcraft.domain.Parameter.PULSE_WIDTH
+            : com.malevolentgods.modularcraft.domain.Parameter.DETUNE;
     var detuneField =
         screen.children().stream()
             .filter(net.minecraft.client.gui.components.EditBox.class::isInstance)
@@ -190,7 +197,7 @@ public final class NativeProbe {
               .map(net.minecraft.client.gui.components.EditBox.class::cast)
               .toList();
       if (fields.size() != 3) throw new IllegalStateException("Expected three oscillator controls");
-      fields.get(1).setValue(ticks == 100 ? "25.125" : ticks == 180 ? "-1" : "0");
+      fields.get(1).setValue(ticks == 100 ? "25.125" : ticks == 180 ? "-1" : square ? "50" : "0");
       screen.mouseClicked(applyX, rowY, 0);
       screen.mouseReleased(applyX, rowY, 0);
     }
@@ -199,22 +206,22 @@ public final class NativeProbe {
       screen.mouseReleased(detuneField.getX() - 13, rowY, 0);
     }
     if (ticks == 120 || ticks == 160 || ticks == 200 || ticks == 240) {
-      double expected = ticks == 120 ? 25.125 : ticks == 240 ? 0 : 100;
+      double expected = ticks == 120 ? 25.125 : ticks == 240 ? control.initial : control.max;
       double accepted =
           ClientRuntime.patches().stream()
               .flatMap(p -> p.modules().stream())
               .filter(m -> m.id().equals(screen.identity()))
               .findFirst()
               .orElseThrow()
-              .value(com.malevolentgods.modularcraft.domain.Parameter.DETUNE);
+              .value(control);
       if (accepted != expected)
-        throw new IllegalStateException("Detune expected " + expected + " got " + accepted);
-      System.out.println("MODULARCRAFT_QA detune tick=" + ticks + " accepted=" + accepted);
+        throw new IllegalStateException(control + " expected " + expected + " got " + accepted);
+      System.out.println("MODULARCRAFT_QA " + control + " tick=" + ticks + " accepted=" + accepted);
     }
     if (ticks == 90 || ticks == 120 || ticks == 160 || ticks == 240)
       Screenshot.grab(
           mc.gameDirectory,
-          "detune-" + ticks + ".png",
+          (square ? "square-" : "detune-") + ticks + ".png",
           mc.getMainRenderTarget(),
           message -> System.out.println("MODULARCRAFT_QA " + message.getString()));
   }

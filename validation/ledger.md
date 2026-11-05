@@ -445,3 +445,68 @@ Base `b58caec` plus this uncommitted change. [Evidence and self-review](detune/n
 
 Runtime JAR SHA-256: `b85ddc3828d8b6c464e388beb4463098584b0d40ae68cec287305adf108e28df`.
 Manual worlds preserved. No commit, push or publication.
+
+
+## Square oscillator with manual PWM — 2026-11-04
+
+[Evidence and self-review](square/review.md), [results](square/results.json),
+[panel](square/panel.png), [compact layout](square/compact.png).
+
+- **PASS — implementation:** separate Square Oscillator, 5–95% fractional PWM (50% default),
+  shared Frequency/note/octave/Level and pitch precedence, matching SQR assets and ports.
+  Single-voice DC-compensated pulse DSP with phase/history retention and 10 ms edits.
+- **PASS — compatibility:** world v1, unchanged legacy saw migration, complete square records,
+  quarantine preservation, appended enums and matching network/snapshot v6 peers.
+- **PASS — verification:** `make verify`; 124 JUnit, 19 packaged GameTests, 12 launcher tests,
+  formatting/static checks and seven-block artifact inspection. Red–green evidence retained.
+- **PASS — DSP:** alias residual worst -86.279 dB in the measured pulse fixtures, DC below
+  -60 dBFS; synthetic square/mixed load p95 0.211/0.261 ms, zero steady allocation.
+- **PASS — native functional/visual:** disposable `make smoke GRADLE_ARGS=-PqaSquare TICKS=600`;
+  fractional PWM, slider/bounds, rejection, note selection, keyboard navigation and compact
+  screenshots. Actual packaged JAR used; manual worlds preserved.
+- **FAIL/unqualified — native performance:** one underrun and 2.975 ms maximum server work
+  against the <2 ms target. Final sampled audio p95 was 0.0363 ms; this is not a sustained-load pass.
+- **PENDING — human RP-005 listening, physical MIDI and two-client acceptance.** Earlier
+  security, platform and release gates remain open. No commit, push or publication.
+
+Runtime JAR SHA-256: `3fea40a61bc656b764d80e6730e61fc591432ae0695671ba6e74e1f4d4fbddd9`.
+
+
+## Shift-right-click cable removal — 2026-11-05
+
+- **PASS — reproduced before implementation:** four new packaged GameTests failed at
+  Minecraft game-mode dispatch while sneaking; ordinary connection setup and the 19
+  existing tests passed. Failures were `Module port click must be consumed, including
+  while sneaking` and `Sneak-click on non-port module area is consumed`.
+- **PASS — implementation:** the tool's item-on-block fallback forwards module hits to
+  the existing block handler and consumes its result on both sides. Server-authorized
+  destination-input removal, port geometry and air/non-port cancellation remain intact.
+  Overlay and generated localization now explicitly say Shift-right-click.
+- **PASS — regression and verification:** `make gametest` changed from four expected
+  failures to all 23 passing. `make verify` passed 124 JUnit tests (zero skipped),
+  23 packaged GameTests, 12 launcher tests, formatting, Checkstyle, PMD, and delivery
+  inspection. New regressions cover empty/occupied offhand, fan-out preservation,
+  output/empty-input refusal, foreign-owner refusal and selection cancellation.
+- **PASS — native automated functional/visual probe:**
+  `make smoke GRADLE_ARGS=-PqaCableRemoval TICKS=300` loaded the packaged JAR in fresh
+  `run/make/smoke-7nb1kbho`. Actual native client game-mode dispatch and server packets
+  removed, reconnected and removed the filter input cable with an offhand stick.
+  Synchronized cable sets matched exactly at ticks 140/200/240 (2/3/2 cables).
+  All three screenshots were inspected: removal displays `Cable removed. Other
+  connections are unchanged.`, reconnection displays the connection confirmation,
+  and the Shift-right-click hint is visible. Captures remain in that instance's
+  `screenshots/cable-removal-{140,200,240}.png`.
+- **PASS — explicit self-review:** production change is confined to tool dispatch and
+  localization; no duplicated graph edits or client-side world mutation, no save or
+  protocol changes, no dependency changes. The fallback returns PASS for non-modules
+  or absent players. Native probe code remains in the test-only source set and is
+  opt-in. Existing uncommitted work and manual worlds were preserved.
+- **PENDING — physical mouse/key and two-client acceptance.** Native actions above were
+  dispatched programmatically. Listening and earlier security/platform/release gates
+  remain unchanged. This functional run is not performance qualification: zero audio
+  underruns were reported, but maximum server work was 91.242125 ms against the retained
+  <2 ms target, so native performance remains **FAIL/unqualified**.
+
+Local raw logs: `validation/cable-removal-{red,green,verify,native}.log`.
+Runtime JAR SHA-256: `8e84f9edfed73f507588bbe8431668506de6e53e995a21bb07592464699675de`.
+No commit, push or publication.

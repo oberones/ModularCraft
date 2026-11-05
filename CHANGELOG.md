@@ -71,3 +71,17 @@ panel. Concert tuning uses A4 = 440 Hz; E0–B8 fit the existing frequency range
 Hz tuning remains available, and connected Pitch In retains precedence. Draft selections
 survive updates/resizing; the compact panel supports keyboard navigation. Only the resulting
 Frequency is saved, with no schema, protocol, dependency or DSP changes.
+
+Added a separate **Square Oscillator** with the saw's Frequency, note/octave selection,
+Level, Pitch In and Audio Out, plus manual **PWM (pulse width)** from 5–95% (default 50%).
+Fractional widths, keyboard/MIDI pitch precedence and 10 ms continuous edits are supported.
+The original SQR face uses the matching chassis and cyan accent. Single-voice pulse DSP
+uses DC compensation, bounded output and pulse-specific anti-alias filtering; saw synthesis
+is preserved. Network/snapshot v6 requires matching clients/server; world v1 needs no new
+migration. Back up before upgrading and restore that backup for downgrade. RP-005 documents
+the pulse/filter patch. No new dependencies; native listening/multiplayer remain separate gates.
+
+
+Fixed Shift-right-click cable removal: sneaking tool use now reaches the module's existing
+port handler instead of falling through to selection cancellation. Removal still targets
+one destination input and respects ownership; the overlay now names the right mouse button.

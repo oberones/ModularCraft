@@ -32,8 +32,10 @@ neoForge {
                 systemProperty 'modularcraft.qa.cycles', providers.gradleProperty('qaCycles').getOrElse('false')
                 systemProperty 'modularcraft.qa.keyboard', project.hasProperty('qaKeyboard').toString()
                 systemProperty 'modularcraft.qa.sequencer', project.hasProperty('qaSequencer').toString()
+                systemProperty 'modularcraft.qa.square', project.hasProperty('qaSquare').toString()
                 systemProperty 'modularcraft.qa.detune', project.hasProperty('qaDetune').toString()
                 systemProperty 'modularcraft.qa.cables', project.hasProperty('qaCables').toString()
+                systemProperty 'modularcraft.qa.cableRemoval', project.hasProperty('qaCableRemoval').toString()
                 if (project.hasProperty('qaCables') || project.hasProperty('qaSequencer')) {
                     programArguments.addAll('--width', '1920', '--height', '1080')
                 }
@@ -111,7 +113,7 @@ tasks.named('sourcesJar') {
     from('scripts/generate-assets.py') { into 'scripts' }
     from('docs') { into 'docs' }
     from('README.md', 'LICENSE', 'THIRD_PARTY_NOTICES.md')
-    from('validation') { include '*.md', '*.json', 'midi/**', 'detune/**', 'sequencer/**'; into 'validation' }
+    from('validation') { include '*.md', '*.json', 'midi/**', 'detune/**', 'sequencer/**', 'square/**'; into 'validation' }
 }
 tasks.register('projectSources', Zip) {
     archiveBaseName = 'modularcraft'
@@ -120,7 +122,7 @@ tasks.register('projectSources', Zip) {
     from('.') {
         include 'src/**', 'art/**', 'config/**', 'docs/**', 'scripts/**', 'gradle/**',
             '.github/**', 'specs/**', '.specify/memory/constitution.md',
-            'validation/*.md', 'validation/*.json', 'validation/*.xml', 'validation/midi/**', 'validation/detune/**', 'validation/sequencer/**',
+            'validation/*.md', 'validation/*.json', 'validation/*.xml', 'validation/midi/**', 'validation/detune/**', 'validation/sequencer/**', 'validation/square/**',
             'Makefile', 'build.gradle', 'settings.gradle', 'gradle.properties', 'gradle.lockfile',
             'gradlew', 'gradlew.bat', '.gitignore', 'AGENTS.md', 'README.md',
             'CHANGELOG.md', 'LICENSE', 'THIRD_PARTY_NOTICES.md'

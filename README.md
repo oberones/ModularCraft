@@ -1,6 +1,6 @@
 # ModularCraft
 
-Build a shared modular synthesizer from six Minecraft blocks: **Saw Oscillator**,
+Build a shared modular synthesizer from seven Minecraft blocks: **Saw Oscillator**, **Square Oscillator**,
 **Low-Pass Filter**, **Envelope Generator**, **Amplifier / Speaker**, **Keyboard**, and **Euclidean Sequencer**. Connect their
 ports with the Patching Tool; nearby players synthesize the accepted performance locally.
 No prerecorded loops, accounts, internet audio, external services, or extra audio software
@@ -180,7 +180,7 @@ across device reopen; it adds no installed dependencies and never keeps notes fr
 MIDI shares the existing traffic limits, including renewals, so dense controller/arpeggiator
 streams can be rejected. Queue overflow stops the session and requires reopening the panel.
 Only supported notes/pedal/reset messages consume the MIDI queue. All clients and the server
-must use protocol **5**; existing world saves remain version **1**. Physical MIDI devices,
+must use protocol **6**; existing world saves remain version **1**. Physical MIDI devices,
 listening, and multiplayer timing still need the acceptance procedure below.
 
 ## Patching, permissions, and saved work
@@ -220,7 +220,7 @@ for recovery. The global registry is `data/modularcraft.dat`; per-module data is
 its owning block entity. World-save schema remains version 1; older oscillators receive Detune 0 without changing
 their saved Frequency or Level. Back up the world before upgrading; restore that backup
 if downgrading, since older builds cannot interpret the new control. Network and
-performance-snapshot protocol is version 5: update both server and clients together.
+performance-snapshot protocol is version 6: update both server and clients together.
 
 ## Troubleshooting
 
@@ -319,6 +319,34 @@ envelopes, and two speakers (11 modules, 12 cables):
 Settings and cables survive saves. Running state, held pulses and positions do not:
 world reload and chunk suspension require Start, and speakers must be enabled again.
 Closing the editor, disabling speakers, and local mute leave a loaded sequencer running.
-Back up worlds before upgrading; install protocol-v5 builds on every client and server.
+Back up worlds before upgrading; install protocol-v6 builds on every client and server.
 This version does not add presets, manual step editing, swing, probability, variable gate
 lengths, clock division, pitch sequences, MIDI clock, or redstone clock conversion.
+
+
+## Square Oscillator — RP-005
+
+Place a **Square Oscillator**, **Low-Pass Filter**, and **Amplifier / Speaker** two blocks
+apart. Connect Square Audio Out → Filter Audio In → Speaker Audio In. Leave the filter's
+Cutoff Control In and speaker's Gain Control In disconnected for a sustained drone.
+Use Frequency **220 Hz**, Level **50%**, filter Cutoff **5,000 Hz**, Resonance **0%**,
+Envelope Amount **0%**, and speaker Volume **10%**; enable the speaker.
+
+The square panel has the same Frequency, Note/Octave, Set Note, and Level controls as the
+saw. **PWM (pulse width)** replaces Detune: enter fractional percentages from **5–95%**,
+with **50%** as the default square wave. Compare **50%**, **25%**, and **5%**, then restore
+50%. The equal-width square emphasizes odd harmonics; narrower pulses change the tone
+and become quieter. PWM is a manual width setting; it has no built-in LFO or extra CV jack.
+Compare filter Cutoff **500 Hz** versus **5,000 Hz**, then restore 5,000 Hz.
+
+Optional keyboard variation: connect Keyboard CV Out → Square Pitch In, keep keyboard
+Octave **4**, and press **H** for A4 (440 Hz). Adjust PWM while holding the note; pitch
+stays at A4. Disconnect Pitch In to return to the saved 220 Hz. Gate is independent:
+for articulated notes add Keyboard Gate Out → Envelope Gate In and Envelope Out →
+Speaker Gain Control In, using default envelope controls. Disable the speaker or press
+local mute to stop. Save/reload retains width, frequency, level and cables; speakers
+restart disabled. Human listening and multiplayer qualification remain separate gates.
+
+The new block requires protocol **6** clients/server. World schema remains **1** and
+existing saw blocks retain their identifiers and sound. Back up worlds before upgrading;
+restore the backup before downgrading to a build that does not know the square block.

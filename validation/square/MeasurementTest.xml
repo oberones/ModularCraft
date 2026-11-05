@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.malevolentgods.modularcraft.MeasurementTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-11-05T00:28:15.576Z" hostname="Calliope.local" time="14.526">
+  <properties/>
+  <testcase name="sawFilterBandEnergyMeetsMu009AndExtremesAreFinite()" classname="com.malevolentgods.modularcraft.MeasurementTest" time="0.055"/>
+  <testcase name="squareAndMixedDspBenchmarksAndNoSteadyAllocation()" classname="com.malevolentgods.modularcraft.MeasurementTest" time="6.277"/>
+  <testcase name="maximumUnisonSpreadDspBenchmarkAndNoSteadyAllocation()" classname="com.malevolentgods.modularcraft.MeasurementTest" time="4.008"/>
+  <testcase name="fixedLoadDspBenchmarkAndNoSteadyAllocation()" classname="com.malevolentgods.modularcraft.MeasurementTest" time="2.815"/>
+  <testcase name="sawDcAndAliasResidualAgainstOversampledReference()" classname="com.malevolentgods.modularcraft.MeasurementTest" time="0.239"/>
+  <testcase name="pulseDcAndAliasResidualAgainstIndependentOversampledReference()" classname="com.malevolentgods.modularcraft.MeasurementTest" time="1.13"/>
+  <system-out><![CDATA[MU-009 2-8 kHz attenuation dB=-30.4302240725257
+64 module / 96 cable / 8 speaker DSP p95 ms=0.211, oscillators=[SQUARE_OSCILLATOR, SQUARE_OSCILLATOR, SQUARE_OSCILLATOR, SQUARE_OSCILLATOR], measured allocation bytes=0
+64 module / 96 cable / 8 speaker DSP p95 ms=0.260917, oscillators=[SQUARE_OSCILLATOR, OSCILLATOR, SQUARE_OSCILLATOR, OSCILLATOR], measured allocation bytes=0
+64 module / 96 cable / 8 speaker DSP p95 ms=0.295167, oscillators=[OSCILLATOR, OSCILLATOR, OSCILLATOR, OSCILLATOR], measured allocation bytes=0
+64 module / 96 cable / 8 speaker DSP p95 ms=0.21325, oscillators=[OSCILLATOR, OSCILLATOR, OSCILLATOR, OSCILLATOR], measured allocation bytes=0
+alias 54.931641 Hz: -70.779 dB; DC 0.000000000
+alias 219.726563 Hz: -65.616 dB; DC 0.000000000
+alias 879.638672 Hz: -61.597 dB; DC -0.000000000
+alias 3520.019531 Hz: -49.686 dB; DC 0.000000000
+pulse duty=0.05 Hz=54.931641 alias=-115.381 dB DC=-0.000000000
+pulse duty=0.05 Hz=219.726563 alias=-109.977 dB DC=0.000000000
+pulse duty=0.05 Hz=879.638672 alias=-100.543 dB DC=0.000000000
+pulse duty=0.05 Hz=3520.019531 alias=-91.226 dB DC=0.000000000
+pulse duty=0.05 Hz=8000.244141 alias=-86.279 dB DC=0.000000000
+pulse duty=0.25 Hz=54.931641 alias=-121.179 dB DC=-0.000000000
+pulse duty=0.25 Hz=219.726563 alias=-115.169 dB DC=-0.000000000
+pulse duty=0.25 Hz=879.638672 alias=-108.956 dB DC=-0.000000000
+pulse duty=0.25 Hz=3520.019531 alias=-104.235 dB DC=0.000000000
+pulse duty=0.25 Hz=8000.244141 alias=-94.657 dB DC=0.000000000
+pulse duty=0.50 Hz=54.931641 alias=-122.429 dB DC=-0.000000000
+pulse duty=0.50 Hz=219.726563 alias=-116.693 dB DC=0.000000000
+pulse duty=0.50 Hz=879.638672 alias=-114.357 dB DC=0.000000000
+pulse duty=0.50 Hz=3520.019531 alias=-102.615 dB DC=0.000000000
+pulse duty=0.50 Hz=8000.244141 alias=-92.943 dB DC=0.000000000
+pulse duty=0.95 Hz=54.931641 alias=-115.380 dB DC=0.000000000
+pulse duty=0.95 Hz=219.726563 alias=-109.977 dB DC=0.000000000
+pulse duty=0.95 Hz=879.638672 alias=-100.543 dB DC=-0.000000000
+pulse duty=0.95 Hz=3520.019531 alias=-91.226 dB DC=0.000000000
+pulse duty=0.95 Hz=8000.244141 alias=-86.279 dB DC=-0.000000000
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

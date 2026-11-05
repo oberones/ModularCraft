@@ -82,11 +82,11 @@ with a minimum 48-sample separation and 1,920-sample lead. Cleanup bypasses edit
 queue overload releases and invalidates the affected session. Subsequent snapshots cannot
 rewind pending performance timestamps. Renewal never starts/retriggers a note.
 
-Pitch CV and gate have separate port roles. Snapshot v5 carries keyboard MIDI note numbers
+Pitch CV and gate have separate port roles. Snapshot v6 carries keyboard MIDI note numbers
 0–127 and gate booleans; CV = (note−60)/12 V and Hz = 440×2^((note−69)/12). Server-side
 external gates feed analytic envelope checkpoints. RenderGraph resolves pitch cables into
 smoothed frequency targets, preserves oscillator phase, and leaves envelope control routing
-unchanged. World v1 persists octave only, using existing named records; network v5 rejects
+unchanged. World v1 persists octave only, using existing named records; network v6 rejects
 old peers. Snapshot recovery restores current pitch/gate, not historical note events.
 
 
@@ -143,7 +143,7 @@ keeps server-receive scheduling (minimum 48 samples between accepted events, 1,9
 lead), existing revision/permission/range checks, and the 20/player and 200/world edit budgets.
 MIDI device timestamps are ignored; sample-accurate hardware-input timing is not claimed.
 
-Network/snapshot v5 deliberately refuses older peers/snapshots; world v1 and saved octave
+Network/snapshot v6 deliberately refuses older peers/snapshots; world v1 and saved octave
 remain unchanged. The SHA-256 of the device name/vendor/description/version is a local
 selection descriptor, not a hardware identity. Only unique matches restore automatically;
 explicit selection can distinguish duplicate ports for the current focused session. Device
@@ -169,7 +169,7 @@ spread. Native performance/listening/two-client gates remain distinct.
 World schema v1 and block schema v1 accept only the exact legacy Frequency/Level key set
 as a migration to Detune 0. Other incomplete/extra/non-finite records retain rejection or
 opaque quarantine. The complete named control set is written on next save, and repeated
-loads are stable. Snapshot/network v5 refuses older formats and does not apply this stored
+loads are stable. Snapshot/network v6 refuses older formats and does not apply this stored
 record migration. Existing parameter ordinals are retained by appending DETUNE.
 
 
@@ -192,7 +192,7 @@ advance them on the sample timeline. Late recovery advances state without replay
 The renderer prepares all routing and mutable runtimes outside processing; it does not
 allocate buffers, perform I/O, acquire locks, or touch world objects while advancing.
 
-World/block schema v1 stores 17 named controls and cables only. Snapshot/network v5 adds
+World/block schema v1 stores 17 named controls and cables only. Snapshot/network v6 adds
 bounded per-module sequencer checkpoints and manual/redstone envelope baselines; matching
 peers are mandatory. The parameter decoder now uses the selected module's bounded control
 count. Legacy oscillator migration and byte-preserving quarantine remain in place.
@@ -209,3 +209,21 @@ The editor and world renderer share cached ring coordinates. World overlays use 
 scene, check loaded chunks, camera-facing side and frustum, and stop at 32 blocks; no chunk
 scans/tickets or client classes are introduced into common loading. Unload, disconnect and
 world changes discard projections; integrated pause freezes the visual sample coordinate.
+
+
+## Square oscillator
+
+SQUARE_OSCILLATOR appends a module kind and PULSE_WIDTH appends a fractional 5–95% control;
+integer-only parameters are classified explicitly. Shared pitch preparation and note UI use
+both oscillator kinds; the server reports CV pitch precedence without mentioning saw detune.
+World v1 keeps named records and exact legacy saw migration. Network/snapshot v6 refuses
+older peers; square records require exactly Frequency, Pulse Width and Level.
+
+PulseOscillator has one phase/history, frequency/width smoothers, four internal samples per
+48 kHz frame, and the same 95-tap decimator design as the saw, with an 18 kHz corner. Four-sample PolyBLEP
+edges use the integrated cubic B-spline step: a nonnegative smoothing kernel preserves
+bounds even when narrow-pulse edges overlap. Subtract the ideal duty-dependent mean and
+normalize by twice the longer duty fraction before decimation. This bounds peaks without
+RMS compensation; narrow pulses are quieter. Frequency/width/level ramp over 480 frames.
+Graph adoption copies state only between matching IDs and module kinds. Preparation stays
+off the audio owner; processing remains bounded and allocation-free. Saw DSP is unchanged.

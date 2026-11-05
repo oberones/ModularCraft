@@ -140,6 +140,8 @@ public final class NativeFixture {
                         ? ModuleKind.FILTER
                         : i <= 13 ? ModuleKind.ENVELOPE : ModuleKind.SPEAKER)
                 : ModuleKind.values()[i];
+        if (kind == ModuleKind.OSCILLATOR && Boolean.getBoolean("modularcraft.qa.square"))
+          kind = ModuleKind.SQUARE_OSCILLATOR;
         BlockPos pos =
             new BlockPos(
                 originX + (patch % 2) * 8 + (cableVisuals ? 3 - i % 4 : (i % 4) * 2),
@@ -152,8 +154,9 @@ public final class NativeFixture {
         modules.add(entity);
         if (kind == ModuleKind.ENVELOPE) ENVELOPES.add(pos);
         if (kind == ModuleKind.KEYBOARD) keyboardPosition = pos;
-        if (kind == ModuleKind.OSCILLATOR && Boolean.getBoolean("modularcraft.qa.detune"))
-          oscillatorPosition = pos;
+        if (kind.isOscillator()
+            && (Boolean.getBoolean("modularcraft.qa.detune")
+                || Boolean.getBoolean("modularcraft.qa.square"))) oscillatorPosition = pos;
       }
       if (patchCount == 4) {
         set(runtime, player, modules.getFirst(), Parameter.FREQUENCY, (patch + 1) * 110);
@@ -195,6 +198,16 @@ public final class NativeFixture {
       }
     }
     player.teleportTo(originX + 7, y + 2, originZ - 2);
+    if (Boolean.getBoolean("modularcraft.qa.cableRemoval")) {
+      player.setGameMode(GameType.SURVIVAL);
+      player.setItemInHand(
+          net.minecraft.world.InteractionHand.MAIN_HAND,
+          new net.minecraft.world.item.ItemStack(ModularCraft.TOOL.get()));
+      player.setItemInHand(
+          net.minecraft.world.InteractionHand.OFF_HAND,
+          new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.STICK));
+      player.connection.teleport(originX + 1.5, y, originZ - 2, 0, 30);
+    }
     if (keyboardPosition != null) player.connection.teleport(originX + 2.5, y, originZ - 5, 0, 8);
     if (oscillatorPosition != null) player.connection.teleport(originX + .5, y, originZ - 3, 0, 8);
     if (cableVisuals) {

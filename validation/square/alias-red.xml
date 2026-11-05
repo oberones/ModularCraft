@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.malevolentgods.modularcraft.MeasurementTest" tests="6" skipped="0" failures="1" errors="0" timestamp="2026-11-05T00:25:16.779Z" hostname="Calliope.local" time="13.467">
+  <properties/>
+  <testcase name="sawFilterBandEnergyMeetsMu009AndExtremesAreFinite()" classname="com.malevolentgods.modularcraft.MeasurementTest" time="0.074"/>
+  <testcase name="squareAndMixedDspBenchmarksAndNoSteadyAllocation()" classname="com.malevolentgods.modularcraft.MeasurementTest" time="6.21"/>
+  <testcase name="maximumUnisonSpreadDspBenchmarkAndNoSteadyAllocation()" classname="com.malevolentgods.modularcraft.MeasurementTest" time="3.962"/>
+  <testcase name="fixedLoadDspBenchmarkAndNoSteadyAllocation()" classname="com.malevolentgods.modularcraft.MeasurementTest" time="2.692"/>
+  <testcase name="sawDcAndAliasResidualAgainstOversampledReference()" classname="com.malevolentgods.modularcraft.MeasurementTest" time="0.234"/>
+  <testcase name="pulseDcAndAliasResidualAgainstIndependentOversampledReference()" classname="com.malevolentgods.modularcraft.MeasurementTest" time="0.294">
+    <failure message="org.opentest4j.AssertionFailedError: Pulse alias residual -28.280845757006908 at 8000.244140625 duty 0.05 ==&gt; expected: &lt;true&gt; but was: &lt;false&gt;" type="org.opentest4j.AssertionFailedError">org.opentest4j.AssertionFailedError: Pulse alias residual -28.280845757006908 at 8000.244140625 duty 0.05 ==&gt; expected: &lt;true&gt; but was: &lt;false&gt;
+	at app//org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
+	at app//org.junit.jupiter.api.AssertionFailureBuilder.buildAndThrow(AssertionFailureBuilder.java:132)
+	at app//org.junit.jupiter.api.AssertTrue.failNotTrue(AssertTrue.java:63)
+	at app//org.junit.jupiter.api.AssertTrue.assertTrue(AssertTrue.java:36)
+	at app//org.junit.jupiter.api.Assertions.assertTrue(Assertions.java:214)
+	at app//com.malevolentgods.modularcraft.MeasurementTest.pulseDcAndAliasResidualAgainstIndependentOversampledReference(MeasurementTest.java:247)
+	at java.base@21.0.12.1/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base@21.0.12.1/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base@21.0.12.1/java.util.ArrayList.forEach(ArrayList.java:1596)
+</failure>
+  </testcase>
+  <system-out><![CDATA[MU-009 2-8 kHz attenuation dB=-30.4302240725257
+64 module / 96 cable / 8 speaker DSP p95 ms=0.195584, oscillators=[SQUARE_OSCILLATOR, SQUARE_OSCILLATOR, SQUARE_OSCILLATOR, SQUARE_OSCILLATOR], measured allocation bytes=0
+64 module / 96 cable / 8 speaker DSP p95 ms=0.268542, oscillators=[SQUARE_OSCILLATOR, OSCILLATOR, SQUARE_OSCILLATOR, OSCILLATOR], measured allocation bytes=0
+64 module / 96 cable / 8 speaker DSP p95 ms=0.300375, oscillators=[OSCILLATOR, OSCILLATOR, OSCILLATOR, OSCILLATOR], measured allocation bytes=0
+64 module / 96 cable / 8 speaker DSP p95 ms=0.203666, oscillators=[OSCILLATOR, OSCILLATOR, OSCILLATOR, OSCILLATOR], measured allocation bytes=0
+alias 54.931641 Hz: -70.779 dB; DC 0.000000000
+alias 219.726563 Hz: -65.616 dB; DC 0.000000000
+alias 879.638672 Hz: -61.597 dB; DC -0.000000000
+alias 3520.019531 Hz: -49.686 dB; DC 0.000000000
+pulse duty=0.05 Hz=54.931641 alias=-67.422 dB DC=-0.000000000
+pulse duty=0.05 Hz=219.726563 alias=-57.471 dB DC=0.000000000
+pulse duty=0.05 Hz=879.638672 alias=-53.287 dB DC=-0.000000000
+pulse duty=0.05 Hz=3520.019531 alias=-40.132 dB DC=0.000000000
+pulse duty=0.05 Hz=8000.244141 alias=-28.281 dB DC=0.000000000
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

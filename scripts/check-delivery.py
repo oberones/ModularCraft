@@ -12,12 +12,12 @@ with zipfile.ZipFile(jar) as archive:
  assert not any('/gametest/' in name or name.startswith(('net/minecraft/','org/lwjgl/','org/junit/')) for name in names)
  assert not any(name.startswith('data/modularcraft/structure/') for name in names)
  assert 'META-INF/neoforge.mods.toml' in names and 'modularcraft.mixins.json' in names
- for module in ('oscillator','filter','envelope','speaker','keyboard','euclidean_sequencer'):
+ for module in ('square_oscillator','oscillator','filter','envelope','speaker','keyboard','euclidean_sequencer'):
   for path in (f'blockstates/{module}.json',f'models/block/{module}.json',f'models/item/{module}.json',f'textures/block/{module}_front.png'):
    assert f'assets/modularcraft/{path}' in names, path
   assert (root/f'art/{module}_front.svg').is_file()
  language=json.loads(archive.read('assets/modularcraft/lang/en_us.json'))
- for parameter in ('frequency','level','cutoff','resonance','amount','attack','decay','sustain','release','volume','octave','detune','tempo',*(f'{c}_{p}' for c in 'abcd' for p in ('steps','hits','rotation','mute'))):
+ for parameter in ('pulse_width','frequency','level','cutoff','resonance','amount','attack','decay','sustain','release','volume','octave','detune','tempo',*(f'{c}_{p}' for c in 'abcd' for p in ('steps','hits','rotation','mute'))):
   assert 'parameter.modularcraft.'+parameter in language
  for port in ('audio_out','audio_in','envelope_out','cutoff_in','gain_in','cv_out','pitch_in','gate_out','gate_in','clock_in','reset_in','clock_out','trigger_a','trigger_b','trigger_c','trigger_d'):
   assert 'port.modularcraft.'+port in language
@@ -34,5 +34,5 @@ with zipfile.ZipFile(project) as archive:
  assert not any(name.startswith(('run/','build/','.git/','.gradle/')) for name in names)
 checksums=''.join(hashlib.sha256(p.read_bytes()).hexdigest()+'  '+p.name+'\n' for p in (jar,sources,project))
 (root/'build/libs/SHA256SUMS').write_text(checksums)
-print('PASS: Java 21 artifacts, six complete asset sets, no test fixtures or bundled host/runtime libraries.')
+print('PASS: Java 21 artifacts, seven complete asset sets, no test fixtures or bundled host/runtime libraries.')
 print(checksums,end='')

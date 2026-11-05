@@ -42,13 +42,20 @@ public enum ModuleKind {
           Port.TRIGGER_A,
           Port.TRIGGER_B,
           Port.TRIGGER_C,
-          Port.TRIGGER_D));
+          Port.TRIGGER_D)),
+  SQUARE_OSCILLATOR(
+      List.of(Parameter.FREQUENCY, Parameter.PULSE_WIDTH, Parameter.LEVEL),
+      List.of(Port.AUDIO_OUT, Port.PITCH_IN));
   public final List<Parameter> parameters;
   public final List<Port> ports;
 
   ModuleKind(List<Parameter> parameters, List<Port> ports) {
     this.parameters = parameters;
     this.ports = ports;
+  }
+
+  public boolean isOscillator() {
+    return this == OSCILLATOR || this == SQUARE_OSCILLATOR;
   }
 
   public Map<Parameter, Double> defaults() {

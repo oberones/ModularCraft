@@ -50,3 +50,20 @@ Evidence: [sequencer review](../../validation/sequencer/review.md) and
 [machine-readable results](../../validation/sequencer/results.json). Automated and native
 functional passes do not close existing security, performance or release gates.
 No commit, push or publication is included.
+
+
+## Square oscillator extension
+
+- [x] SQ01 Observe failing square defaults/authority, pitch/DSP, persistence and protocol tests.
+- [x] SQ02 Append square kind/PWM; retain fractional widths and explicit integer validation.
+- [x] SQ03 Add bounded pulse DSP, anti-alias/DC measurement and phase-continuous control ramps.
+- [x] SQ04 Share oscillator note/pitch behavior and authoritative edits; retain world v1, require protocol v6.
+- [x] SQ05 Generate SQR assets/localization and extend delivery checks to seven modules.
+- [x] SQ06 Cover malformed records, edits, packaged placement/cabling/reload/removal and load budgets.
+- [x] SQ07 Pass `make verify` and disposable native PWM/note/compact-layout probe; inspect screenshots.
+- [x] SQ08 Update contracts, RP-005, architecture, acceptance, changelog and explicit self-review.
+- [ ] SQ09 Record human RP-005 listening and two-client timing/late-join acceptance.
+- [ ] SQ10 Qualify native sustained performance; retain the observed underrun/server-work failure.
+
+Evidence: [square review](../../validation/square/review.md) and
+[results](../../validation/square/results.json). Earlier release gates remain applicable.

@@ -12,6 +12,7 @@ make client                         # Interactive Minecraft; build and stage cur
 make smoke                          # Fresh RP-001 patch, about one minute, automatic exit
 make smoke-recovery TICKS=400        # Twenty recovery cycles, about twenty seconds, then exit
 make smoke GRADLE_ARGS=-PqaCables TICKS=600 # Adjacent modules; three cable screenshots, then exit
+make smoke GRADLE_ARGS=-PqaCableRemoval TICKS=300 # Remove/reconnect via native client dispatch
 make smoke-load TICKS=1200           # 64 modules / 96 cables / eight speakers, about one minute
 ```
 
@@ -73,6 +74,13 @@ Use at least 600 ticks and inspect the captures for a single solid cable per con
 jack alignment, a taper toward each input, clearance above the floor, and rear-view
 occlusion. This variant is for `make smoke`, not load/recovery qualification; ordinary
 interactive clients and existing worlds are unaffected.
+
+The `-PqaCableRemoval` variant equips the patching tool and an offhand stick in a fresh
+RP-001 world. It dispatches Shift-right-click through the native client game mode, checks
+the server's synchronized cables after removal/reconnection/repeated removal, and saves
+`cable-removal-140.png`, `cable-removal-200.png`, and `cable-removal-240.png`. Use at least
+300 ticks. This automated interaction probe does not substitute for physical mouse/key,
+listening, or two-client acceptance.
 
 ## Build and check
 
@@ -164,3 +172,10 @@ checks 20 audio teardown/recovery cycles. It retains the generated world/log/scr
 under the printed `run/make/smoke-*` directory. Do not use an existing manual world.
 Run `make test TEST='*Sequencer*Test'` for focused musical and persistence regressions;
 `make verify` includes the packaged lifecycle GameTest and artifact/resource checks.
+
+
+Square probe: `make smoke GRADLE_ARGS=-PqaSquare TICKS=600` creates a fresh square/filter/
+envelope/speaker fixture, exercises fractional PWM, slider maximum, invalid rejection,
+restoration to 50%, note selection and compact bounds, then exits. Screenshots and logs live
+in the newly created managed QA directory; existing worlds are never reused. This is a
+functional/visual probe, not a human audition or multiplayer timing pass.

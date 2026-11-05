@@ -7,7 +7,7 @@ ASSETS=ROOT/'src/main/resources/assets/modularcraft'
 ART=ROOT/'art'
 ART.mkdir(exist_ok=True)
 FONT={
-'A':['010','101','111','101','101'],'D':['110','101','101','101','110'],'S':['011','100','010','001','110'],
+'Q':['010','101','101','111','011'],'A':['010','101','111','101','101'],'D':['110','101','101','101','110'],'S':['011','100','010','001','110'],
 'R':['110','101','110','101','101'],'L':['100','100','100','100','111'],'P':['110','101','110','100','100'],
 'F':['111','100','110','100','100'],'M':['101','111','111','101','101'],'W':['101','101','111','111','101'],
 'O':['010','101','101','101','010'],'I':['111','010','010','010','111'],'C':['011','100','100','100','011'],
@@ -46,12 +46,16 @@ def panel():
  d=Drawing();d.rect(0,0,64,64,'#151b23');d.rect(2,2,60,60,'#34434e');d.rect(4,4,56,56,'#202d37')
  for x,y in [(5,5),(58,5),(5,58),(58,58)]:d.circle(x,y,1,'#b1b9b8');d.rect(x,y,1,1,'#46515b')
  return d
-MODULES=[('oscillator','SAW','#65d7e5',['AO','PI']),('filter','LPF','#91c79a',['AI','CI','AO']),('envelope','ADSR','#ffc36a',['CO','GT']),('speaker','AMP','#d69bbd',['AI','GI']),('keyboard','KEYS','#b3a3ef',['CV','GO']),('euclidean_sequencer','EUCLID','#65d7e5',['CI','RI','CO','A','B','C','D'])]
+MODULES=[('square_oscillator','SQR','#65d7e5',['AO','PI']),('oscillator','SAW','#65d7e5',['AO','PI']),('filter','LPF','#91c79a',['AI','CI','AO']),('envelope','ADSR','#ffc36a',['CO','GT']),('speaker','AMP','#d69bbd',['AI','GI']),('keyboard','KEYS','#b3a3ef',['CV','GO']),('euclidean_sequencer','EUCLID','#65d7e5',['CI','RI','CO','A','B','C','D'])]
 for name,title,accent,ports in MODULES:
  d=panel();d.rect(9,8,46,2,accent);d.text(title,20 if name=='euclidean_sequencer' else 12,12 if name=='euclidean_sequencer' else 13,accent,1 if name=='euclidean_sequencer' else 2)
- if name=='oscillator':
+ if name in ('oscillator','square_oscillator'):
   d.rect(9,27,27,17,'#101820')
-  for x in range(11,34):d.rect(x,41-(x-11)%8,1,1,accent)
+  for x in range(11,34):
+   if name=='oscillator':d.rect(x,41-(x-11)%8,1,1,accent)
+   else:
+    d.rect(x,32 if (x-11)%12<6 else 40,1,1,accent)
+    if (x-11)%6==0:d.rect(x,32,1,9,accent)
   d.circle(46,35,8,'#0e141b');d.circle(46,35,6,'#667b83');d.rect(45,29,2,6,'#e4edea')
  elif name=='filter':
   for x in range(11,53):d.rect(x,30+int(10/(1+math.exp(-(x-34)/3))),1,1,accent)
@@ -90,8 +94,8 @@ d=Drawing()
 for i in range(34):d.rect(12+i,48-i,7,7,'#111b25');d.rect(14+i,49-i,3,4,'#65d7e5')
 d.rect(39,10,12,14,'#84999f');d.rect(43,4,4,11,'#e2c88c');d.rect(6,45,15,12,'#84999f');d.save('patching_tool','item')
 p=ASSETS/'models/item/patching_tool.json';p.write_text(json.dumps({'parent':'minecraft:item/handheld','textures':{'layer0':'modularcraft:item/patching_tool'}},indent=2)+'\n')
-lang={'tab.modularcraft':'ModularCraft Instruments','block.modularcraft.keyboard':'Keyboard','block.modularcraft.oscillator':'Saw Oscillator','block.modularcraft.filter':'Low-Pass Filter','block.modularcraft.envelope':'Envelope Generator','block.modularcraft.speaker':'Amplifier / Speaker','item.modularcraft.patching_tool':'Patching Tool','key.modularcraft.mute':'Mute ModularCraft','key.modularcraft.settings':'ModularCraft Audio Settings','key.categories.modularcraft':'ModularCraft','modularcraft.local_audio':'ModularCraft Audio','modularcraft.local_volume':'Local volume: %s%%','modularcraft.volume_help':'Minecraft Master + Records also apply','modularcraft.apply':'Apply','modularcraft.enable':'Enable speaker','modularcraft.disable':'Disable speaker','modularcraft.hold_gate':'Hold Gate (or Space)','modularcraft.mute':'Mute locally','modularcraft.unmute':'Unmute locally','modularcraft.recover':'Resynchronize audio','modularcraft.selected':'Selected %s at %s, %s, %s. Choose an input.','modularcraft.tool_help':'Ports are on the lower front face. Right-click air to cancel.','modularcraft.port_hint':'%s · Click to patch; Shift-click an input to remove.','modularcraft.gain_warning':'Removing Gain In makes connected audio a sustained drone.'}
-for key,label in {'frequency':'Frequency','detune':'Detune (unison spread)','level':'Level','cutoff':'Cutoff','resonance':'Resonance','amount':'Envelope Amount','attack':'Attack','decay':'Decay','sustain':'Sustain','release':'Release','volume':'Volume','octave':'Octave'}.items():lang['parameter.modularcraft.'+key]=label
+lang={'block.modularcraft.square_oscillator':'Square Oscillator','tab.modularcraft':'ModularCraft Instruments','block.modularcraft.keyboard':'Keyboard','block.modularcraft.oscillator':'Saw Oscillator','block.modularcraft.filter':'Low-Pass Filter','block.modularcraft.envelope':'Envelope Generator','block.modularcraft.speaker':'Amplifier / Speaker','item.modularcraft.patching_tool':'Patching Tool','key.modularcraft.mute':'Mute ModularCraft','key.modularcraft.settings':'ModularCraft Audio Settings','key.categories.modularcraft':'ModularCraft','modularcraft.local_audio':'ModularCraft Audio','modularcraft.local_volume':'Local volume: %s%%','modularcraft.volume_help':'Minecraft Master + Records also apply','modularcraft.apply':'Apply','modularcraft.enable':'Enable speaker','modularcraft.disable':'Disable speaker','modularcraft.hold_gate':'Hold Gate (or Space)','modularcraft.mute':'Mute locally','modularcraft.unmute':'Unmute locally','modularcraft.recover':'Resynchronize audio','modularcraft.selected':'Selected %s at %s, %s, %s. Choose an input.','modularcraft.tool_help':'Ports are on the lower front face. Right-click air to cancel.','modularcraft.port_hint':'%s · Right-click to patch; Shift-right-click an input to remove.','modularcraft.gain_warning':'Removing Gain In makes connected audio a sustained drone.'}
+for key,label in {'pulse_width':'PWM (pulse width)','frequency':'Frequency','detune':'Detune (unison spread)','level':'Level','cutoff':'Cutoff','resonance':'Resonance','amount':'Envelope Amount','attack':'Attack','decay':'Decay','sustain':'Sustain','release':'Release','volume':'Volume','octave':'Octave'}.items():lang['parameter.modularcraft.'+key]=label
 for key,label in {'audio_out':'AO → Audio Out','audio_in':'AI ← Audio In','envelope_out':'CO → Envelope Out','cutoff_in':'CI ← Cutoff Control In','gain_in':'GI ← Gain Control In','cv_out':'CV → Pitch CV Out','pitch_in':'PI ← Pitch CV In','gate_out':'GO → Gate Out','gate_in':'GT ← Gate In'}.items():lang['port.modularcraft.'+key]=label
 lang.update({'modularcraft.note.letter': 'Note: %s ▾', 'modularcraft.note.octave': 'Octave: %s ▾', 'modularcraft.note.set': 'Set Note', 'modularcraft.note.preview': 'Selected: %s = %s Hz', 'modularcraft.note.range': 'Below 20 Hz. Choose E0 or higher.', 'modularcraft.note.help': 'Sets manual frequency (A4 = 440 Hz). Connected Pitch In controls the sounding pitch.', 'modularcraft.note.menu_help': 'Up/Down selects; Home/End jumps; Enter confirms; Escape cancels. Tab moves to the next control.'})
 lang.update({'modularcraft.octave_down':'Octave −','modularcraft.octave_up':'Octave +',
@@ -128,6 +132,7 @@ errors={
 'midi_timeout':'MIDI timed out. Refresh; if still unavailable, restart Minecraft.',
 'keyboard_busy':'Keyboard in use. Wait until the other player releases it.',
 'keyboard_overload':'Keyboard input overloaded. Close and reopen the panel.',
+'pulse_pitch_connected':'CV sets pitch; PWM sets pulse width.',
 'pitch_connected':'CV sets pitch; Detune adds unison spread.',
 'permission':'Only the owner or an operator within six blocks may edit. Move closer or ask the owner.',
 'range':'Use a finite value in the displayed range; stay within six blocks.',
@@ -148,7 +153,7 @@ errors={
 'ready':'Ready. Master, Records, local volume and distance affect what you hear.',
 'awaiting':'Waiting for the server to accept this value.',
 'stale':'This module changed. Review refreshed values and retry.',
-'occupied_input':'Input already connected. Shift-click that input to remove its cable first.',
+'occupied_input':'Input already connected. Shift-right-click that input to remove its cable first.',
 'incompatible_ports':'Match audio, control, or pitch ports. Gate/trigger/clock outputs connect to Gate, Clock, or Reset inputs.',
 'different_owners':'Both cable endpoints must have the same owner, including operator edits.',
 'cycle':'Feedback is unsupported. Remove the connection that would form a loop.',
@@ -158,7 +163,7 @@ errors={
 'cable_distance':'Cable limit: 16 blocks between centers. Move the modules closer.',
 'dimension':'Both endpoints must be in the same dimension.',
 'missing_cable':'That input has no cable to remove.',
-'remove_at_input':'Shift-click the destination input to remove one cable.',
+'remove_at_input':'Shift-right-click the destination input to remove one cable.',
 'select_output':'Select an output on the source module first.',
 'cancelled':'Cable selection cancelled. Select an output to start again.',
 'connected':'Cable connected. Select another output to continue.',
@@ -188,4 +193,4 @@ errors={
  'throttled':'Edit rate limited: 20/s per player, 200/s per world. Wait and retry refreshed values.'}
 lang.update({'modularcraft.error.'+k:v for k,v in errors.items()})
 p=ASSETS/'lang/en_us.json';p.parent.mkdir(parents=True,exist_ok=True);p.write_text(json.dumps(lang,indent=2,ensure_ascii=False)+'\n')
-print('Wrote six complete block sets, tool, localization, and editable SVG sources.')
+print('Wrote seven complete block sets, tool, localization, and editable SVG sources.')

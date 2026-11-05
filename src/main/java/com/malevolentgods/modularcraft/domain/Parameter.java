@@ -29,7 +29,8 @@ public enum Parameter {
   D_STEPS(1, 16, 16, ""),
   D_HITS(0, 16, 9, ""),
   D_ROTATION(0, 15, 0, ""),
-  D_MUTE(0, 1, 0, "");
+  D_MUTE(0, 1, 0, ""),
+  PULSE_WIDTH(5, 95, 50, "%");
   public final double min, max, initial;
   public final String unit;
 
@@ -40,8 +41,33 @@ public enum Parameter {
     this.unit = unit;
   }
 
+  private boolean integer() {
+    return switch (this) {
+      case OCTAVE,
+          TEMPO,
+          A_STEPS,
+          A_HITS,
+          A_ROTATION,
+          A_MUTE,
+          B_STEPS,
+          B_HITS,
+          B_ROTATION,
+          B_MUTE,
+          C_STEPS,
+          C_HITS,
+          C_ROTATION,
+          C_MUTE,
+          D_STEPS,
+          D_HITS,
+          D_ROTATION,
+          D_MUTE ->
+          true;
+      default -> false;
+    };
+  }
+
   public double validate(double value) {
-    if (((this == OCTAVE || ordinal() >= TEMPO.ordinal()) && value != Math.rint(value))
+    if ((integer() && value != Math.rint(value))
         || !Double.isFinite(value)
         || value < min
         || value > max)

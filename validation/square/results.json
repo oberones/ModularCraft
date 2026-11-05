@@ -1,0 +1,48 @@
+{
+  "date": "2026-11-04",
+  "platform": "Apple M2 Pro, macOS 26.6.2, aarch64, Eclipse Adoptium 21.0.12.1",
+  "runtime_jar_sha256": "3fea40a61bc656b764d80e6730e61fc591432ae0695671ba6e74e1f4d4fbddd9",
+  "automated": {
+    "tests": 124,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "launcher_tests": 12,
+  "packaged_gametests": 19,
+  "asset_sets": 7,
+  "synthetic_dsp": {
+    "square_p95_ms": 0.211,
+    "mixed_p95_ms": 0.260917,
+    "allocation_bytes": 0,
+    "frames_per_block": 128,
+    "sample_rate_hz": 48000,
+    "warmup_blocks": 5000,
+    "measured_blocks": 10000,
+    "modules": 64,
+    "cables": 96,
+    "speakers": 8,
+    "worst_measured_alias_db": -86.279,
+    "dc_below_dbfs": -60
+  },
+  "native": {
+    "command": "make smoke GRADLE_ARGS=-PqaSquare TICKS=600",
+    "directory": "run/make/smoke-un40b9sb",
+    "functional": "PASS",
+    "visual": "PASS",
+    "underruns": 1,
+    "max_server_work_ms": 2.974709,
+    "final_audio_p95_ms": 0.036292,
+    "max_audio_block_ms": 1.685375,
+    "failed": false
+  },
+  "pending": [
+    "human RP-005 listening",
+    "two-client timing/late join",
+    "sustained native performance qualification",
+    "all earlier security/platform/release gates"
+  ],
+  "self_review": "PASS; see review.md",
+  "committed": false,
+  "published": false
+}

@@ -278,10 +278,10 @@ public final class ServerRuntime {
           if (e == null || e.value(transport.sample()) == 0) return "released";
         }
     }
-    if (m.kind() == ModuleKind.OSCILLATOR
+    if (m.kind().isOscillator()
         && state.cables().stream()
             .anyMatch(c -> c.destination().equals(m.id()) && c.input() == Port.PITCH_IN))
-      return "pitch_connected";
+      return m.kind() == ModuleKind.SQUARE_OSCILLATOR ? "pulse_pitch_connected" : "pitch_connected";
     return "ready";
   }
 

@@ -8,18 +8,18 @@ package com.malevolentgods.modularcraft.dsp;
  */
 public final class Oscillator {
   private static final int FACTOR = 4;
-  private static final double[] COEFFICIENTS = coefficients();
+  private static final double[] COEFFICIENTS = coefficients(.1125);
   private final double[] history = new double[95];
   private int cursor;
   private double phase;
 
-  private static double[] coefficients() {
+  static double[] coefficients(double cutoff) {
     double[] taps = new double[95];
     double norm = 0;
     for (int i = 0; i < taps.length; i++) {
       int offset = i - 47;
       double sinc =
-          offset == 0 ? .225 : Math.sin(2 * Math.PI * .1125 * offset) / (Math.PI * offset);
+          offset == 0 ? 2 * cutoff : Math.sin(2 * Math.PI * cutoff * offset) / (Math.PI * offset);
       double window =
           .42 - .5 * Math.cos(2 * Math.PI * i / 94) + .08 * Math.cos(4 * Math.PI * i / 94);
       taps[i] = sinc * window;

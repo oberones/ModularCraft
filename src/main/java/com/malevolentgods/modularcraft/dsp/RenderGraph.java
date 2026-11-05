@@ -26,6 +26,7 @@ public final class RenderGraph {
   private static final class Node {
     final ModuleState module;
     UnisonSaw oscillator;
+    PulseOscillator pulse;
     final Filter filter = new Filter();
     final Smoother[] parameters = new Smoother[Parameter.values().length];
     final Smoother left = new Smoother(0), right = new Smoother(0);
@@ -107,7 +108,7 @@ public final class RenderGraph {
         n.control = indices.get(c.source());
     }
     for (Node n : nodes)
-      if (n.module.kind() == ModuleKind.OSCILLATOR) {
+      if (n.module.kind().isOscillator()) {
         double hz = n.module.value(Parameter.FREQUENCY);
         if (n.pitch >= 0) {
           ModuleState source = nodes[n.pitch].module;
@@ -118,7 +119,9 @@ public final class RenderGraph {
                       KeyboardState.note((int) source.value(Parameter.OCTAVE), 0), false));
           hz = KeyboardState.frequency(key.note());
         }
-        n.oscillator = new UnisonSaw(hz, n.module.value(Parameter.DETUNE), sample);
+        if (n.module.kind() == ModuleKind.OSCILLATOR)
+          n.oscillator = new UnisonSaw(hz, n.module.value(Parameter.DETUNE), sample);
+        else n.pulse = new PulseOscillator(hz, n.module.value(Parameter.PULSE_WIDTH) / 100, sample);
       }
   }
 
@@ -126,8 +129,9 @@ public final class RenderGraph {
   public void adopt(RenderGraph previous) {
     for (Node node : nodes)
       for (Node old : previous.nodes)
-        if (node.module.id().equals(old.module.id())) {
+        if (node.module.id().equals(old.module.id()) && node.module.kind() == old.module.kind()) {
           if (node.oscillator != null) node.oscillator.adopt(old.oscillator);
+          if (node.pulse != null) node.pulse.adopt(old.pulse);
           node.filter.copyFrom(old.filter);
           for (Parameter p : node.module.kind().parameters) {
             node.parameters[p.ordinal()].reset(old.parameters[p.ordinal()].current());
@@ -144,6 +148,7 @@ public final class RenderGraph {
     if (nodes.length != previous.nodes.length) return false;
     for (int i = 0; i < nodes.length; i++)
       if (!nodes[i].module.id().equals(previous.nodes[i].module.id())
+          || nodes[i].module.kind() != previous.nodes[i].module.kind()
           || nodes[i].audio != previous.nodes[i].audio
           || nodes[i].control != previous.nodes[i].control
           || nodes[i].pitch != previous.nodes[i].pitch) return false;
@@ -181,6 +186,7 @@ public final class RenderGraph {
         double control = n.control < 0 ? 0 : signals[n.control];
         switch (n.module.kind()) {
           case OSCILLATOR -> signals[i] = n.oscillator.next(n.next(Parameter.LEVEL) / 100);
+          case SQUARE_OSCILLATOR -> signals[i] = n.pulse.next(n.next(Parameter.LEVEL) / 100);
           case KEYBOARD, EUCLIDEAN_SEQUENCER -> signals[i] = 0;
           case ENVELOPE -> signals[i] = n.envelope.value(sample + frame);
           case FILTER -> {

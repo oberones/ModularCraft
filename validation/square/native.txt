@@ -1,0 +1,38 @@
+BUILD SUCCESSFUL in 505ms
+[19:29:08] [main/INFO] [cp.mo.mo.Launcher/MODLAUNCHER]: ModLauncher 11.0.5+main.901c6ea8 starting: java version 21.0.12.1 by Eclipse Adoptium; OS Mac OS X arch aarch64 version 26.6.2
+[19:29:09] [pool-2-thread-1/INFO] [EARLYDISPLAY/]: GL info: Apple M2 Pro GL version 4.1 Metal - 90.5, Apple
+MODULARCRAFT_QA artifact=union:/Users/oberon/Projects/coding/mods/minecraft/ModularCraft/run/make/smoke-un40b9sb/mods/modularcraft-0.1.0.jar%23187!/
+MODULARCRAFT_QA fixture patches=1 modules=4 cables=3
+MODULARCRAFT_QA Saved screenshot as square-90.png
+MODULARCRAFT_QA client p95BlockNs=89542 blocks=1786 underruns=1 maxBlockNs=1685375 peak=0.027308886870741844 maxQueued=12 failed=false
+MODULARCRAFT_QA PULSE_WIDTH tick=120 accepted=25.125
+MODULARCRAFT_QA Saved screenshot as square-120.png
+MODULARCRAFT_QA PULSE_WIDTH tick=160 accepted=95.0
+MODULARCRAFT_QA Saved screenshot as square-160.png
+MODULARCRAFT_QA PULSE_WIDTH tick=200 accepted=95.0
+MODULARCRAFT_QA client p95BlockNs=68167 blocks=3662 underruns=1 maxBlockNs=1685375 peak=0.027308886870741844 maxQueued=12 failed=false
+MODULARCRAFT_QA server lastNs=58875 maxNs=2974709
+MODULARCRAFT_QA PULSE_WIDTH tick=240 accepted=50.0
+MODULARCRAFT_QA Saved screenshot as square-240.png
+MODULARCRAFT_QA Saved screenshot as notes-275.png
+MODULARCRAFT_QA note frequency=220.0
+MODULARCRAFT_QA Saved screenshot as notes-295.png
+MODULARCRAFT_QA client p95BlockNs=37083 blocks=5535 underruns=1 maxBlockNs=1685375 peak=0.027600763365626335 maxQueued=12 failed=false
+MODULARCRAFT_QA note frequency=277.1826309768721
+MODULARCRAFT_QA Saved screenshot as notes-335.png
+MODULARCRAFT_QA note frequency=432.123
+MODULARCRAFT_QA note frequency=432.123
+MODULARCRAFT_QA Saved screenshot as notes-395.png
+MODULARCRAFT_QA client p95BlockNs=37417 blocks=7411 underruns=1 maxBlockNs=1685375 peak=0.027600763365626335 maxQueued=12 failed=false
+MODULARCRAFT_QA server lastNs=48833 maxNs=2974709
+MODULARCRAFT_QA note frequency=432.123
+MODULARCRAFT_QA Saved screenshot as notes-425.png
+MODULARCRAFT_QA note frequency=261.6255653005986
+MODULARCRAFT_QA Saved screenshot as notes-455.png
+MODULARCRAFT_QA note frequency=330.123
+MODULARCRAFT_QA Saved screenshot as notes-495.png
+MODULARCRAFT_QA client p95BlockNs=37125 blocks=9283 underruns=1 maxBlockNs=1685375 peak=0.027600763365626335 maxQueued=12 failed=false
+MODULARCRAFT_QA note frequency=587.3295358348151
+MODULARCRAFT_QA client p95BlockNs=36292 blocks=11160 underruns=1 maxBlockNs=1685375 peak=0.027600763365626335 maxQueued=12 failed=false
+MODULARCRAFT_QA server lastNs=42917 maxNs=2974709
+BUILD SUCCESSFUL in 46s
