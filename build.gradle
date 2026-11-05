@@ -67,6 +67,9 @@ dependencies {
 }
 checkstyle { toolVersion = '10.21.2'; configFile = file('config/checkstyle/checkstyle.xml') }
 pmd { toolVersion = '7.10.0'; consoleOutput = true; ruleSets = []; ruleSetFiles = files('config/pmd.xml') }
+// PMD creates its runtime auxiliary configurations when its tasks are realized.
+// Include them in dependency reports, lock generation, and preflight verification.
+tasks.withType(org.gradle.api.plugins.quality.Pmd).each { }
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
     options.compilerArgs += ['-Xlint:all,-processing,-deprecation', '-Werror']
@@ -104,6 +107,16 @@ dependencyLocking {
     // Minecraft's native runtime dependencies differ between Linux CI and macOS development.
     if (System.getProperty('os.name').startsWith('Linux')) {
         lockFile = file('gradle/linux.lockfile')
+    }
+}
+tasks.register('verifyDependencies') {
+    group = 'verification'
+    description = 'Resolve every dependency configuration, including PMD auxiliary classpaths.'
+    doLast {
+        configurations.findAll { it.canBeResolved }.sort { it.name }.each { configuration ->
+            def files = configuration.resolve()
+            logger.lifecycle("Verified ${configuration.name}: ${files.size()} files")
+        }
     }
 }
 configurations { formatter }

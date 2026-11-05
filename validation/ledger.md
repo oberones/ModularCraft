@@ -705,7 +705,7 @@ PENDING/FAIL/BLOCKED results into passes. No runtime synthesis or world schema c
   copy. Computed and pinned SHA-256 for all five files. Exact URLs, published digests
   and verification results are appended to
   [linux-ci-dependencies.json](linux-ci-dependencies.json).
-- **PASS — exhaustive fresh-cache Linux resolution.** In a disposable Ubuntu 24.04
+- **PASS — fresh-cache Linux resolution of the configurations then enumerated.** In a disposable Ubuntu 24.04
   x64/Temurin 21.0.12.1+1 container, a temporary Gradle init task called `resolve()`
   on every `canBeResolved` configuration, collecting all failures before exiting.
   Ran Gradle 8.13 with `--no-daemon --max-workers=2 --dependency-verification strict`,
@@ -713,11 +713,56 @@ PENDING/FAIL/BLOCKED results into passes. No runtime synthesis or world schema c
   verified all 33 configurations in 2m 2s, including Checkstyle (34 files), PMD (19),
   formatter (7), all test/compile/runtime configurations, and NeoForm dependencies.
   This verifies dependency resolution without compiling or decompiling Minecraft.
+  **Coverage correction:** the audit did not realize PMD tasks, so its 33 configurations
+  excluded the three lazily created PMD auxiliary classpaths. See the correction below.
 - **PASS — self-review and consistency.** XML/provenance checks confirmed the five
   added entries match the independently downloaded artifacts and all pre-existing
   entries remain unchanged. `git diff --check` passed. No dependency verification
   bypass, wildcard trust, version upgrade, or unreviewed checksum acceptance was used.
-- **PENDING — hosted build and GameTests.** The exhaustive dependency audit does not
+- **PENDING — hosted build and GameTests.** The dependency audit does not
   replace the full hosted build, Checkstyle execution, or GameTests. A workflow run
   containing this correction must establish those results. No commit, tag, push,
   publication, or hosted workflow rerun was performed.
+
+## Linux PMD auxiliary dependency locks — 2026-11-05
+
+- **FAIL — hosted failure and local regression reproduced.**
+  [Run 42127644219, job 127595818628](https://github.com/oberones/ModularCraft/actions/runs/42127644219/job/127595818628)
+  passed compilation and Checkstyle, then failed `pmdGametest` because its auxiliary
+  classpath still locked the macOS Objective-C bridge instead of Linux epoll.
+  Gradle 8.13's PMD plugin creates auxiliary configurations only when PMD tasks are
+  realized. These configurations request runtime dependencies even though they extend
+  compile classpaths. The earlier 33-configuration audit missed all three.
+  The new `verifyDependencies` task reproduced the exact reported lock failure in an
+  isolated Ubuntu 24.04 x64/Temurin 21.0.12.1+1 copy before changing the Linux lock.
+- **PASS — generated lock and build correction.** Realized PMD tasks before dependency
+  enumeration, then regenerated locks using strict `dependencies --write-locks` on
+  Linux and macOS. Linux changes only `mainPmdAuxClasspath` and
+  `gametestPmdAuxClasspath` membership for `java-objc-bridge:1.1` and
+  `netty-transport-native-epoll:4.1.97.Final`. All coordinates/versions are unchanged;
+  the macOS lock is byte-identical. No checksum metadata changes were needed.
+  `make verify-dependencies` resolves all configurations, and `make verify`/`make ci`
+  now run this preflight before build checks.
+- **PASS — complete enumerated dependency coverage.** With the corrected Linux lock,
+  strict verification resolved all 36 configurations, including main/gametest PMD
+  auxiliary classpaths (93 files each) and test PMD auxiliary classpath (7 files).
+  The same task passed all 36 configurations on macOS. Linux used the verified
+  dependency cache from the preceding fresh-cache audit; this was not a new cold-cache run.
+- **PASS — macOS regression checks.** `make verify-dependencies check` passed, including
+  25 Python tests and formatting. Java tests, Checkstyle and PMD were up-to-date under
+  Gradle's input tracking. No application source changed.
+- **PASS — actual Linux PMD execution.** In the disposable x64 Linux copy, ran
+  `verifyDependencies pmdMain pmdTest pmdGametest` with strict verification, two workers
+  and no persistent daemon; all six executable tasks passed in 2m 23s. Reused portable
+  compiled classes and mapped Minecraft JARs from the macOS build, explicitly excluding
+  `createMinecraftArtifacts`, `compileJava`, `compileTestJava`, and
+  `compileGametestJava`. All three PMD analyses executed on Linux; this is not evidence
+  of a fresh Linux compilation or GameTest run.
+- **PASS — self-review.** Reviewed generated locks against their previous contents:
+  only the two expected Linux entries and PMD memberships changed. Strict verification,
+  dependency versions, checksum metadata and the macOS lock remain intact.
+  `git diff --check` passed; dependency preflight and lock maintenance are documented.
+- **PENDING — full hosted Linux CI.** This correction requires a hosted run to establish
+  the complete Linux build and packaged GameTest result. Native, listening, multiplayer
+  and security acceptance remain separate and retain their previous pending gates.
+  No commit, tag, push, publication or hosted workflow rerun was performed.

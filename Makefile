@@ -26,7 +26,7 @@ QA_LOCATION = $(if $(strip $(QA_DIR)),--run-dir "$(QA_DIR)",)
 .PHONY: help all build assemble jar package checksums check test test-tools lint format \
         gametest gametest-dev verify ci client run play client-dev server server-dev \
         smoke smoke-load smoke-recovery benchmark assets inventory integrity audit \
-        dependencies tasks info clean rebuild stop
+        dependencies verify-dependencies tasks info clean rebuild stop
 
 help: ## List targets and common configuration overrides (default).
 	@printf 'ModularCraft development and packaged validation\n\n'
@@ -75,7 +75,7 @@ gametest-dev: ## Run headless GameTests against development classes.
 	$(GRADLE) runGameTestServer
 
 verify: test-tools ## Full automated checks, packaged headless GameTests, and artifact inspection.
-	$(GRADLE) check build runtimeArtifact
+	$(GRADLE) verifyDependencies check build runtimeArtifact
 	"$(PYTHON)" scripts/run_validation.py gametest --run-dir "$(GAMETEST_DIR)"
 	"$(PYTHON)" scripts/check-delivery.py
 
@@ -124,6 +124,9 @@ audit: ## Query OSV for public dependency coordinates and save the advisory repo
 
 dependencies: ## Show Gradle dependency configurations.
 	$(GRADLE) dependencies
+
+verify-dependencies: ## Resolve all locked dependencies, including lazy PMD auxiliary classpaths.
+	$(GRADLE) verifyDependencies
 
 tasks: ## List available Gradle tasks.
 	$(GRADLE) tasks --all

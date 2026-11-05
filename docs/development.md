@@ -92,12 +92,13 @@ listening, or two-client acceptance.
 | `make package` | Build/check, inspect distributables, write `build/libs/SHA256SUMS` |
 | `make checksums` | Assemble, inspect archives, refresh checksums |
 | `make check` | Launcher tests plus Java tests, formatting, Checkstyle, PMD |
+| `make verify-dependencies` | Resolve all locked dependency configurations with strict checksum verification, including PMD auxiliary classpaths |
 | `make test` | JUnit suite; use `TEST='*SceneTest'` to select tests |
 | `make test-tools` | Filesystem isolation and launcher command/failure tests, no Minecraft |
 | `make lint` / `make format` | Check Java formatting/static analysis / apply Java formatting |
 | `make gametest` | Packaged JAR on a headless GameTest server in `run/make/gametest` |
 | `make gametest-dev` | GameTests against development classes |
-| `make verify` | Launcher tests, complete Gradle build/check, packaged GameTests, delivery inspection |
+| `make verify` | Launcher tests, dependency preflight, complete Gradle build/check, packaged GameTests, delivery inspection |
 | `make ci` | `verify` with `--no-daemon`; headless, no game window or external audit service |
 
 ## Tagged releases
@@ -141,6 +142,14 @@ macOS. Both pin the same dependency versions; their runtime configuration member
 account for Minecraft's Linux transport and macOS Objective-C bridge. Dependency updates
 must refresh and review the locks on both build platforms while keeping checksum
 verification strict.
+
+Run `make verify-dependencies` to catch lock/checksum failures without compiling Minecraft.
+The build realizes PMD tasks before enumerating configurations because Gradle creates
+their auxiliary classpaths lazily; these use runtime dependencies even though they
+extend the compile classpaths. When intentionally refreshing locks, run
+`./gradlew --dependency-verification strict dependencies --write-locks` on each platform,
+review the coordinate/version and configuration changes, then run
+`make verify-dependencies`. CI includes this preflight in `make verify`/`make ci`.
 
 Only a successful full `make ci` run can publish. The build job stages the exact
 runtime JAR selected by `build/runtime-artifact.json`, checks its embedded versions,
