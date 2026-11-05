@@ -6,7 +6,7 @@
 **Input**: User description: "I want to create an MVP for a minecraft mod that implements modular synthesis in block form. Each type of synth module, oscillator, filter, etc., will be represented by a unique block. The blocks will then be able to be 'wired together' in order to create a full modular synthesizer. The MVP for this project should be a fully functional mod with a saw oscillator block with adjustable controls, a filter block with adjustable controls, an enveloper generator with adjustable controls, and an amplifier/speaker block that actually outputs the sound to nearby players. Use blender and your own image generation as needed to create visuals."
 **Constitution**: [ModularCraft Constitution](../../.specify/memory/constitution.md), version 1.0.0, reviewed 2026-11-03.
 
-The MVP lets a player build, play, adjust, and save an audible modular synthesizer inside Minecraft. It delivers eight distinct module blocks, visible connections, and sound shared with nearby players. The instrument produces sound from the current patch and controls; a decorative installation or prerecorded sound loop does not satisfy this feature.
+The MVP lets a player build, play, adjust, and save an audible modular synthesizer inside Minecraft. It delivers nine distinct module blocks, visible connections, and sound shared with nearby players. The instrument produces sound from the current patch and controls; a decorative installation or prerecorded sound loop does not satisfy this feature.
 
 ## Clarifications
 
@@ -27,7 +27,7 @@ A player obtains the four modules and a patching tool in Creative mode, places t
 
 **Acceptance Scenarios**:
 
-1. **Given** a fresh supported installation, **When** the player opens the Creative inventory, **Then** the eight separately named, visually distinct modules and patching tool are available, placeable, and identifiable.
+1. **Given** a fresh supported installation, **When** the player opens the Creative inventory, **Then** the nine separately named, visually distinct modules and patching tool are available, placeable, and identifiable.
 2. **Given** the RP-001 connections and defaults, **When** the speaker is enabled and the manual gate is held for two seconds and released, **Then** the speaker produces the configured saw tone, its loudness follows attack, decay, sustain, and release, and it returns to silence.
 3. **Given** an oscillator connected directly to an enabled speaker with no gain-control cable, **When** the frequency changes from 220 Hz to 440 Hz, **Then** a sustained tone rises by one octave; disconnecting its audio cable silences that speaker.
 4. **Given** an enabled speaker with no audio source or an envelope connected without an audio source, **When** the patch runs, **Then** the speaker remains silent and identifies the missing audio input.
@@ -123,7 +123,7 @@ A player can leave, reload the world, and return to the same module settings and
 
 ### Functional Requirements
 
-- **FR-001**: Provide exactly eight synth module block types: Saw Oscillator, Square Oscillator, Low-Pass Filter, Envelope Generator, Amplifier/Speaker, Keyboard, Euclidean Sequencer, and LFO. Each MUST have its own recognizable in-world appearance, inventory representation, name, and accessible control surface.
+- **FR-001**: Provide exactly nine synth module block types: Saw Oscillator, Square Oscillator, Low-Pass Filter, Envelope Generator, Amplifier/Speaker, Keyboard, Euclidean Sequencer, LFO, and Audio Mixer. Each MUST have its own recognizable in-world appearance, inventory representation, name, and accessible control surface.
 - **FR-002**: Provide Creative inventory access to all modules and a patching tool, plus a concise guide containing the complete RP-001 placement, cabling, control, enable, play, release, and mute instructions. A fresh installation MUST support this journey without development commands or external audio software.
 - **FR-003**: Players MUST be able to place, inspect, adjust, and break modules using ordinary in-world interactions. Right-clicking a module block without using the patching tool on a port MUST open that module's control panel. All module parameters, the envelope's momentary manual gate, and the speaker's enable/disable control MUST be operated through these panels. Controls MUST expose the ranges, units, defaults, and precise numeric entry or keyboard adjustment defined in MU-001. Panels MUST keep the world and musical playback running, including in singleplayer, so edits can be heard immediately. Edit permission and interaction eligibility remain subject to SS-001.
 - **FR-004**: The patching tool MUST support source/destination selection at in-world ports on block faces, cancellation, explicit cable removal, endpoint inspection, and visible established cables. Using the tool on a port MUST select that port rather than open a module control panel. Cable direction and signal role MUST be conveyed through labels or shapes as well as any color coding.
@@ -141,7 +141,7 @@ A player can leave, reload the world, and return to the same module settings and
 
 ### Musical and Signal Requirements *(mandatory review)*
 
-- **MU-001 — Module contract**: All eight modules are single-channel. Values below are product defaults, not choices of synthesis algorithm. Percentages are shown as percentages to players. Continuous controls accept values throughout their stated ranges without musical scale snapping; keyboard octave is an integer and piano keys use equal-tempered chromatic notes. Frequency and cutoff allow at least 0.1 Hz precision, time controls 1 ms precision, and percentages 1 percentage-point precision.
+- **MU-001 — Module contract**: All nine modules are single-channel. Values below are product defaults, not choices of synthesis algorithm. Percentages are shown as percentages to players. Continuous controls accept values throughout their stated ranges without musical scale snapping; keyboard octave is an integer and piano keys use equal-tempered chromatic notes. Frequency and cutoff allow at least 0.1 Hz precision, time controls 1 ms precision, and percentages 1 percentage-point precision.
 
 | Module | Adjustable controls: range; default | Ports and behavior |
 | --- | --- | --- |
@@ -150,10 +150,11 @@ A player can leave, reload the world, and return to the same module settings and
 | Low-Pass Filter | Cutoff: 20–20,000 Hz; 5,000 Hz. Resonance: 0–95%; 0%. Cutoff CV Amount: 0–100%; 0%. | One Audio In, one Cutoff Control In, one Resonance CV In, one Audio Out. Resonance CV depth −100–100%, default 0%. Higher cutoff passes more upper harmonics; higher resonance increases emphasis near cutoff. No self-oscillation is required. Unconnected audio is silence; unconnected control is zero. |
 | Envelope Generator | Attack: 0.001–10 s; 0.010 s. Decay: 0.001–10 s; 0.200 s. Sustain: 0–100%; 70%. Release: 0.001–10 s; 0.300 s. Momentary manual Gate; released. | One Gate In, four ADSR CV inputs (individual depths −100…100%, default 0%), and one Envelope Out carrying a unipolar 0–100% control signal. The manual gate and redstone at the block drive the same ADSR behavior. It emits no audio. |
 | Keyboard | Octave: integers 1–7; 4. Twelve momentary chromatic keys C–B; released. | CV Out (1 V/octave, 0 V = C4) and Gate Out (0/1). Concert tuning, last-note priority, retrigger on new active notes; no audio. See KB-001–KB-006 and MI-001–MI-006. |
+| Audio Mixer | Four input levels 0–100%, default 100%; master 0–100%, default 25%; input mute/solo and master mute default off. | Four mono Audio In ports and one Audio Out. Linear summing, multi-solo, mute precedence, 10 ms gain ramps; see MX-001–MX-006. |
 | LFO | Frequency .01–20 Hz, default 1; waveform sine/triangle/rising saw/falling saw/square, default sine; bipolar/unipolar, default bipolar; cycle 1/16 through four bars, default quarter. | Control Out and Clock In; automatic synchronization, phase-holding clock loss. See LF-001–006. |
 | Amplifier/Speaker | Volume: 0–100%; 10%. Enabled: on/off; off. | One Audio In and one Gain Control In. Output is input audio × volume × control gain before final output protection and distance attenuation. An unconnected gain input means 100%; an unconnected audio input means silence. |
 
-- **MU-002 — Connection contract**: Audio Out connects only to Audio In. Envelope Out and LFO Control Out connect to cutoff, resonance, ADSR CV, or gain inputs. Keyboard CV Out connects only to oscillator Pitch CV In; Gate-role outputs connect to Gate In, Clock In, or Reset In. Each input accepts one cable; each output may fan out to four inputs, subject to patch limits. There is no implicit summing, role conversion, polyphony within a module, or feedback. Audio is a continuously varying bipolar signal nominally spanning −1 to +1; envelope control spans 0 to 1. Multiple independent oscillator blocks are allowed within capacity. Audio and envelope control MUST support continuous audible evolution rather than steps tied to world updates; exact processing rates belong in the plan.
+- **MU-002 — Connection contract**: Audio Out connects only to Audio In, including the four numbered mixer inputs. Envelope Out and LFO Control Out connect to cutoff, resonance, ADSR CV, or gain inputs. Keyboard CV Out connects only to oscillator Pitch CV In; Gate-role outputs connect to Gate In, Clock In, or Reset In. Each input accepts one cable; each output may fan out to four inputs, subject to patch limits. There is no implicit summing, role conversion, polyphony within a module, or feedback. Audio is a continuously varying bipolar signal nominally spanning −1 to +1; envelope control spans 0 to 1. Multiple independent oscillator blocks are allowed within capacity. Audio and envelope control MUST support continuous audible evolution rather than steps tied to world updates; exact processing rates belong in the plan.
 - **MU-003 — Envelope contract**: The effective gate is active while manual gate OR redstone power OR connected keyboard Gate Out is active; redstone strength above zero counts as active. Its inactive-to-active transition starts attack from the current envelope level to 100% over the attack time, followed by decay to sustain over the decay time. Sustain lasts while the gate is active. Its active-to-inactive transition starts release from the current level to zero over the release time. Attack, decay, and release MUST each use a fixed linear progression from the stage's starting level to its target over the configured duration, including attack or release entered from an intermediate level. There is no selectable curve control in the MVP. A brief gate can therefore end attack early. A second gate source becoming active while manual or redstone is held does not retrigger. With those sources inactive, keyboard note onsets retrigger according to KB-002. The manual gate releases on key/button release, control-screen close, loss of interaction eligibility, or player disconnect. Time-control edits apply to the next entered stage; sustain edits update the held level through a smooth transition. Initial activation starts at zero and treats currently active redstone as a new gate.
 - **MU-004 — Cutoff modulation**: Cutoff CV Amount determines the CV sweep; positive control retains the original upward mapping. Effective cutoff in Hz is base cutoff + (20,000 − base cutoff) × envelope fraction × amount fraction, bounded to the cutoff range. For example, base 500 Hz and amount 50% reaches 10,250 Hz at full envelope. Negative CV applies base + (base − 20) × CV × amount. Zero amount or a disconnected control input leaves the base cutoff unchanged. This audible mapping MUST be documented and tested.
 - **MU-005 — Musical continuity**: The same accepted patch settings and gate sequence MUST produce the same musical progression within declared tolerances. Pitch, envelope stage duration, and sustained performance MUST remain independent of frame rate and normal world-update jitter. Shared changes have one accepted order; stale updates cannot rewind playback. Late listeners join the current progression without replaying history. Patch edits, volume changes, activation, disconnection, and local recovery MUST avoid unintended clicks; intentional saw-wave harmonics are preserved.
@@ -201,7 +202,7 @@ BLOCKED/PENDING evidence MUST remain visible; automated tests do not establish l
 ### Measurable Outcomes
 
 - **SC-001**: In a fresh supported Creative installation, at least four of five first-time testers using only the supplied guide MUST place, wire, and play RP-001 within ten minutes, then release its note and locate local mute without assistance.
-- **SC-002**: All eight module types MUST be obtainable and visually distinguishable; every specified control, port, default, and connection rule MUST pass its acceptance cases. All six reference patches MUST produce the described audible results with objective MU-009 checks and a recorded in-game listening pass.
+- **SC-002**: All nine module types MUST be obtainable and visually distinguishable; every specified control, port, default, and connection rule MUST pass its acceptance cases. All seven reference patches MUST produce the described audible results with objective MU-009 checks and a recorded in-game listening pass.
 - **SC-003**: During a ten-minute singleplayer performance with one RP-001 patch, at least 95% of 100 measured gate/parameter actions MUST begin their audible response within 100 ms of input, excluding deliberately configured envelope duration. There MUST be zero stuck notes or unintended playback interruptions longer than 100 ms. Local mute MUST meet its 100 ms bound.
 - **SC-004**: On a dedicated server with two clients, round-trip network delay at most 50 ms, delay variation at most 10 ms, and no induced packet loss, at least 95% of 100 gate events/control edits MUST affect both listeners within 150 ms of the originating input. Audible envelope onset between the clients MUST differ by no more than 50 ms for at least 95% of those events. Joining/resynchronizing MUST meet the one-second bound without restarting other listeners. Hardware, measurement uncertainty, and tested conditions MUST be recorded.
 - **SC-005**: In a 30-minute run with four active patches, each containing 16 modules, 24 valid cables, and two speakers, two in-range clients MUST continue to meet SC-004 timing and output bounds. Each maximum-load patch contains one oscillator, ten filters in series, three envelopes, and two speakers. Audio passes through all ten filters and fans out to both speakers (12 audio cables); each envelope fans out to four distinct control inputs, collectively covering the ten filters and two speakers (12 control cables). All envelope amounts are 50%, speakers are enabled, and gates repeatedly exercise attack, sustain, and release. Against the same world/hardware without active synthesis, the 95th-percentile frame duration MUST worsen by no more than 20%, and the world's 95th-percentile update duration MUST remain below 50 ms. There MUST be zero crashes, stuck notes, or audible interruptions longer than 100 ms. The plan MUST fix placement, remaining control values, gate schedule, and hardware baseline before implementation.
@@ -212,13 +213,13 @@ Criteria are acceptance targets, not measured results. The plan supplies impleme
 
 ## Assumptions
 
-- **Access and scope**: Creative-mode construction is sufficient for the first MVP. Survival crafting recipes, progression/economy, power consumption, block-transport automation, and public distribution are separate work. All eight named modules and multiplayer audio remain mandatory; story priority only determines implementation order.
+- **Access and scope**: Creative-mode construction is sufficient for the first MVP. Survival crafting recipes, progression/economy, power consumption, block-transport automation, and public distribution are separate work. All nine named modules and multiplayer audio remain mandatory; story priority only determines implementation order.
 - **Musical interpretation**: “Enveloper generator” means an ADSR envelope generator with fixed linear attack, decay, and release, as confirmed during clarification. “Filter” means one resonant low-pass filter. “Amplifier/speaker” is one combined block with envelope-controlled gain and positional output. Manual/redstone gating, cutoff modulation, control ranges, and conservative defaults are explicit proposed MVP product choices.
-- **Modularity**: A patching tool and visible cables are supporting interaction assets, not additional synth module block types. The MVP permits multiple instances of the five types within limits. Sequencers, LFOs, other waveforms/filter modes, effects, mixers, recording/export, preset libraries, and feedback synthesis are excluded. MIDI input is defined in the extension below.
+- **Modularity**: A patching tool and visible cables are supporting interaction assets, not additional synth module block types. The MVP permits multiple instances of the nine module types within limits. Additional waveforms/filter modes, effects, recording/export, preset libraries, and feedback synthesis are excluded. MIDI input is defined in the extension below.
 - **Access policy**: Owners and server operators may edit modules; other players may listen. A share/ACL editor and integration with third-party claim systems are excluded; built-in host protection rules still apply. Combining modules from different owners is not required.
 - **Compatibility**: No current implementation plan or runtime sources existed when this spec was written. Exact Minecraft/loader/toolchain and sound-production choices are planning decisions, not unresolved product requirements. The first plan must resolve them and numeric engineering budgets before executable implementation.
 - **Control interaction**: Module adjustments use right-click control panels, with in-world ports for cable patching. Direct adjustment of knobs on block faces is outside the MVP; depicted knobs may communicate module function or state.
-- **Visuals**: Finished module art and editable provenance are in scope. The user's authorization to use Blender and image generation is available for asset production as needed; generating artwork is not required to complete this specification. Detailed visual style may be chosen during planning while preserving eight recognizable module identities.
+- **Visuals**: Finished module art and editable provenance are in scope. The user's authorization to use Blender and image generation is available for asset production as needed; generating artwork is not required to complete this specification. Detailed visual style may be chosen during planning while preserving nine recognizable module identities.
 
 
 ### Keyboard extension (approved 2026-11-04)
@@ -227,7 +228,7 @@ Criteria are acceptance targets, not measured results. The plan supplies impleme
 - **KB-002 — Performance**: Monophonic most-recent-held input wins. New active notes and return to an earlier held note retrigger linear attack from the current envelope level. Changing octave transposes held GUI notes and retriggers; absolute MIDI notes are unaffected. Manual/redstone sources retain priority over keyboard retriggering while held; all three gate sources are OR-combined. Gate is 0/1. Last pitch remains after release; fresh activation resets pitch to C in selected octave.
 - **KB-003 — Pitch**: Pitch CV is 1 V/octave, 0 V = C4; equal temperament, A4 = 440 Hz. Pitch input overrides oscillator Frequency while connected and restores the saved Frequency when disconnected. Preserve phase with 10 ms pitch smoothing. Typed ports prohibit implicit pitch/gate/control conversions; existing cable and capacity limits apply.
 - **KB-004 — Authority/lifecycle**: Server validates owner/operator, range, loaded module, revision, inspection session, monotonically increasing input sequence and existing traffic budgets. First eligible note obtains exclusive session lease; renew at 200 ms, expire at 750 ms. Ordinary releases preserve preceding queued presses and bypass edit throttling. Emergency cleanup, overload, focus loss, close, unload, permission/range loss, dimension change and disconnect clear held performance; stale sessions cannot revive it. Short accepted taps preserve receive-time spacing on the sample timeline (minimum one millisecond), using the existing 40 ms lead. Late recovery enters current state without replaying notes.
-- **KB-005 — Compatibility**: Persist octave and cables, never held inputs/gates or last played pitch. Keep world-save version 1 and unknown-record preservation. Network and snapshot version 7 (LFO extension) require matching clients/server. No new dependencies.
+- **KB-005 — Compatibility**: Persist octave and cables, never held inputs/gates or last played pitch. Keep world-save version 1 and unknown-record preservation. Network and snapshot version 8 (mixer extension) require matching clients/server. No new dependencies.
 - **KB-006 — RP-003**: RP-001 with all default settings, plus Keyboard CV → Oscillator Pitch In and Keyboard Gate → Envelope Gate In; keyboard octave 4 and no envelope redstone. Press H for A4 (440 Hz), overlap A/S, return to A, transpose while held, release and hear a tail at the retained pitch. Disconnect CV and confirm the saved 220 Hz oscillator setting returns. Validate with the existing SC-003/SC-004 timing limits; native multiplayer and listening need separate evidence.
 
 Velocity expression, pitch bend, polyphony and recording remain excluded. MIDI sustain is specified below.
@@ -264,7 +265,7 @@ Velocity expression, pitch bend, polyphony and recording remain excluded. MIDI s
   failures require Refresh/reselection, overflow invalidates the session and requires reopen.
   A stalled provider never creates additional workers or blocks game/audio threads.
 - **MI-005 — Authority/compatibility**: Relative/absolute pitch mode is explicit in bounded
-  v7 packets; v7 snapshots permit 0–127. Reject old peers and malformed modes/ranges.
+  v8 packets; v8 snapshots permit 0–127. Reject old peers and malformed modes/ranges.
   Retain all KB-004 authorization, ordering, timing and traffic limits; ignore device
   timestamps. Save schema stays v1; no MIDI holds, pedals, device handles or pitch mode
   are saved in worlds. No dependencies or platform claims are added.
@@ -286,8 +287,8 @@ Velocity expression, pitch bend, polyphony and recording remain excluded. MIDI s
   and single/unison blend over 10 ms. Three voices maximum; no audio-thread allocation,
   exponentiation, locks or I/O. Finite output stays within the selected Level ceiling.
 - **UN-003**: Old world/block Frequency/Level-only oscillator records migrate to Detune 0;
-  reject/preserve all other malformed or unknown records. Require matching v7 peers and
-  complete v7 snapshots; no silent network fallback. Retain ownership, range, revision,
+  reject/preserve all other malformed or unknown records. Require matching v8 peers and
+  complete v8 snapshots; no silent network fallback. Retain ownership, range, revision,
   interaction and traffic validation. Record roundtrips, rejection and server integration.
 - **UN-004**: RP-001 drone variation uses all defaults except removing the gain cable and
   comparing Detune 0/12.5/25/100; restore Detune 0 and the gain cable afterward. RP-003 holds
@@ -314,7 +315,7 @@ Velocity expression, pitch bend, polyphony and recording remain excluded. MIDI s
   changing running state, ordered before a simultaneous clock. Mute releases immediately
   while counters continue. Other musical edits apply next clock (immediately while stopped).
 - **EU-005 — Authority/state:** Server-owned accepted revisions, unchanged permission/range
-  checks and traffic quotas. Snapshot v7 contains active/pending configuration, positions,
+  checks and traffic quotas. Snapshot v8 contains active/pending configuration, positions,
   phase, input levels, pulse endings and envelope baseline gates. Join/recovery preserves
   current progress without restarting others or playing a missed-note backlog.
 - **EU-006 — Lifecycle:** Loaded sequencers continue with panels closed, speakers disabled
@@ -343,7 +344,7 @@ Velocity expression, pitch bend, polyphony and recording remain excluded. MIDI s
   a subsequently changed selection. Provide mouse/keyboard/narrated controls and compact layout.
 - **ON-003 — Compatibility:** Submit full-precision Hz through the existing authoritative
   Frequency edit. Keep slider/numeric entry, permission/revision checks, pitch-input precedence,
-  smoothing, world v1 and network/snapshot v7 unchanged. Store no note/octave parameter.
+  smoothing, world v1 and network/snapshot v8 unchanged. Store no note/octave parameter.
 - **ON-004 — Acceptance:** Verify concert pitches, bounds, draft/acknowledgement behavior,
   exact packet and NBT persistence, rejected edits and keyboard override/disconnect. Exercise
   actual controls and normal/compact screenshots in the disposable oscillator fixture.
@@ -361,7 +362,7 @@ Velocity expression, pitch bend, polyphony and recording remain excluded. MIDI s
 - **SQ-003**: Use one continuous pulse voice, DC compensation, bounded output and 10 ms
   ramps. Retain existing alias/DC, lifecycle, resource and DSP-budget gates. Preserve saw sound.
 - **SQ-004**: Append enum values; world v1 named records need no migration. Reject incomplete
-  square records and preserve quarantined originals. Network/snapshot v7 requires matching peers.
+  square records and preserve quarantined originals. Network/snapshot v8 requires matching peers.
 - **SQ-005**: RP-005 in README specifies 50/25/5% widths, direct filter/speaker routing and a
   keyboard variation. Verify DSP, authority, NBT/world/snapshot persistence, packaged loading,
   real widgets and screenshots. Human listening/multiplayer acceptance requires observed evidence.
@@ -398,3 +399,36 @@ Velocity expression, pitch bend, polyphony and recording remain excluded. MIDI s
   stage entry, checkpoint equivalence, migration, hostile input, authority, packaged lifecycle,
   native UI, and maximum-load measurements. Existing acoustic, latency, security, native
   sustained-load and two-client gates remain separate; no publication is implied.
+
+## Four-input Audio Mixer extension — 2026-11-05
+
+- **MX-001 — Contract:** Ninth module `mixer` has `AUDIO_IN_1` through `AUDIO_IN_4` and
+  `AUDIO_OUT`. Each input accepts one mono audio source; disconnected input is zero.
+  Fan-out, owner, range, capacity, DAG and speaker activation rules remain unchanged.
+- **MX-002 — Mix:** Input levels are linear 0–100%, default 100%; master defaults to 25%.
+  All five strips have persisted mute, inputs also have persisted solo, initially off.
+  Any solos exclude non-soloed inputs, and mute overrides solo. Output is master gain
+  times the sum of eligible scaled inputs. Never normalize by connected input count or
+  clip internally. Final output protection remains separate. Smooth effective gains over
+  480 samples, preserve continuity through graph replacement, and crossfade rewiring.
+- **MX-003 — UI:** Non-pausing right-click panel has five labeled vertical faders, exact
+  fractional percentage entry, Apply, input mute/solo and master mute. Reflow/scroll in
+  compact windows with keyboard focus visibility and fixed Done/local-audio controls.
+  Live changes coalesce to at most 10 edits/s, one outstanding request, acknowledged
+  revisions. Release retains the final value; close cancels unsent edits. Rejection
+  restores authoritative values; a two-second acknowledgment timeout stops queued work.
+- **MX-004 — Meters:** Five client-local post-level/mute/solo peak meters, master after
+  its gain; no speaker/listener attenuation. Immediate attack, 300 ms linear decay and
+  one-second OVER hold above amplitude 1. Publish with preallocated nonblocking storage;
+  UI samples at 20 Hz. Retired graphs cannot supply readings. Paused/muted/nonrendered
+  patches and readings older than 500 ms are unavailable. Show Audio inactive, and never
+  enable a patch solely to meter it. No meter networking or audio-thread allocation.
+- **MX-005 — Compatibility:** Append stable identifiers; all 14 controls persist in world
+  schema 1 without migrating existing modules. Require matching network/snapshot v8 peers.
+  Retain unknown-record quarantine, authority and existing numerical resource budgets.
+  No new dependencies, stereo/pan/EQ/boost controls, CV inputs, or survival recipes.
+- **MX-006 — Acceptance:** RP-007 blends four documented sources. Cover weighted sums,
+  mute/solo, chain/cycle behavior, malformed records, old worlds, authority, smoothing,
+  meters, live edits, NBT persistence/removal, all five jack hitboxes, responsive UI,
+  protected output and maximum-load allocations/timing. Automated native probes are
+  separate from human listening, multiplayer and sustained qualification.

@@ -68,7 +68,7 @@ A one-client development probe does **not** satisfy two-client packaged SC-005.
 ## Packaged play and timing
 
 1. Install only the candidate JAR plus the exact loader on a fresh Creative client and
-   a normal headless dedicated server. Confirm eight blocks/tool, all textures/models,
+   a normal headless dedicated server. Confirm nine blocks/tool, all textures/models,
    labeled ports, cable arrows, and every panel control. Confirm no client/audio class
    loads on the server. Obtain/accept any host licensing terms as the server operator.
 2. Build both README reference patches using only their instructions. Test every listed
@@ -212,7 +212,7 @@ release gates remain applicable until independently observed.
 Run README RP-005 and record width 50/25/5%, filter comparison, keyboard/MIDI pitch,
 width edits while held, CV removal, Level 0, enable/disable/mute, save/reload, chunk unload,
 block removal and reconnect. Confirm saved saw patches retain their original settings/sound.
-On two matching protocol-v7 clients verify shared PWM edits, late join, authority and timing
+On two matching protocol-v8 clients verify shared PWM edits, late join, authority and timing
 against existing SC-003/004 limits. Listen for clicks, stuck tones, harsh aliasing and intended
 pulse-tone changes; automated samples/screenshots do not establish listening acceptance.
 Use a disposable `make smoke GRADLE_ARGS=-PqaSquare TICKS=600` for widgets and screenshots.
@@ -228,3 +228,18 @@ speakers after unload, no replay backlog, clicks, stuck gates, or unexpected gai
 Record listening separately from numerical measurements and synthetic native UI assertions.
 Use the LFO load fixture for a 30-minute/two-client qualification; the short automated fixture
 is only functional/performance evidence for its recorded duration and machine.
+
+## Mixer / RP-007
+
+Run the four-source RP-007 patch in README. Audition every input and Master while dragging,
+entering exact values, muting, soloing multiple channels, disconnecting and reconnecting.
+Check smooth transitions, silence with Master mute, and expected individual/blended pitches.
+Observe pre-speaker meters and OVER, then verify local mute/paused/inactive states. Repeat
+at compact GUI sizes with keyboard navigation and narrator enabled. Reopen after local
+settings and verify accepted edits. Save, restart and reload: all mix controls/cables must
+persist, speakers start disabled, and enabling restores the intended blend.
+
+On two protocol-v8 clients verify shared edits, stale/foreign rejection, late join,
+chunk/dimension unload, removal and recovery. Run the mixer load fixture for 30 minutes,
+record hardware, tails, underruns and p95 budgets. Automated probes do not mark these
+listening, multiplayer, disk-restart or sustained gates passed.

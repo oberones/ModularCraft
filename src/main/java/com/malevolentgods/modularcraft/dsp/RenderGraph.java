@@ -4,6 +4,7 @@ import com.malevolentgods.modularcraft.domain.Cable;
 import com.malevolentgods.modularcraft.domain.Graph;
 import com.malevolentgods.modularcraft.domain.KeyboardState;
 import com.malevolentgods.modularcraft.domain.LfoSettings;
+import com.malevolentgods.modularcraft.domain.MixerSettings;
 import com.malevolentgods.modularcraft.domain.ModuleKind;
 import com.malevolentgods.modularcraft.domain.ModuleState;
 import com.malevolentgods.modularcraft.domain.Parameter;
@@ -33,6 +34,8 @@ public final class RenderGraph {
     final Smoother left = new Smoother(0), right = new Smoother(0);
     Envelope envelope;
     Lfo lfo;
+    Mixer mixer;
+    final int[] mixerInputs = {-1, -1, -1, -1};
     final Smoother cutoffCv = new Smoother(0),
         resonanceCv = new Smoother(0),
         gainCv = new Smoother(1);
@@ -42,6 +45,7 @@ public final class RenderGraph {
       this.module = module;
       for (Parameter p : module.kind().parameters)
         parameters[p.ordinal()] = new Smoother(module.value(p));
+      if (module.kind() == ModuleKind.MIXER) mixer = new Mixer(module);
       if (checkpoint != null) envelope = new Envelope(checkpoint);
       else envelope = new Envelope();
     }
@@ -113,6 +117,8 @@ public final class RenderGraph {
     for (PatchSnapshot patch : patches) keyboards.putAll(patch.keyboards());
     for (Cable c : cables) {
       Node n = nodes[indices.get(c.destination())];
+      int mixerInput = MixerSettings.INPUTS.indexOf(c.input());
+      if (mixerInput >= 0) n.mixerInputs[mixerInput] = indices.get(c.source());
       if (c.input() == Port.AUDIO_IN) n.audio = indices.get(c.source());
       else if (c.input() == Port.RESONANCE_IN) n.resonance = indices.get(c.source());
       else if (c.input() == Port.PITCH_IN) n.pitch = indices.get(c.source());
@@ -142,6 +148,7 @@ public final class RenderGraph {
     for (Node node : nodes)
       for (Node old : previous.nodes)
         if (node.module.id().equals(old.module.id()) && node.module.kind() == old.module.kind()) {
+          if (node.mixer != null) node.mixer.adopt(old.mixer);
           if (node.oscillator != null) node.oscillator.adopt(old.oscillator);
           if (node.pulse != null) node.pulse.adopt(old.pulse);
           node.filter.copyFrom(old.filter);
@@ -168,6 +175,13 @@ public final class RenderGraph {
           || nodes[i].control != previous.nodes[i].control
           || nodes[i].pitch != previous.nodes[i].pitch) return false;
     return true;
+  }
+
+  /** UI-thread snapshot of the current graph only; retired crossfade graphs are never exposed. */
+  public MixerMeter.Reading meter(UUID id, long now) {
+    for (Node node : nodes)
+      if (node.module.id().equals(id) && node.mixer != null) return node.mixer.meter.read(now);
+    return null;
   }
 
   /** Writes 128 interleaved stereo float frames before shared DC blocking/limiting. */
@@ -202,6 +216,7 @@ public final class RenderGraph {
         switch (n.module.kind()) {
           case OSCILLATOR -> signals[i] = n.oscillator.next(n.next(Parameter.LEVEL) / 100);
           case SQUARE_OSCILLATOR -> signals[i] = n.pulse.next(n.next(Parameter.LEVEL) / 100);
+          case MIXER -> signals[i] = n.mixer.next(signals, n.mixerInputs);
           case LFO -> signals[i] = n.lfo.value(sample + frame);
           case KEYBOARD, EUCLIDEAN_SEQUENCER -> signals[i] = 0;
           case ENVELOPE -> signals[i] = n.envelope.value(sample + frame);
@@ -238,5 +253,7 @@ public final class RenderGraph {
       stereo[frame * 2] = (float) left;
       stereo[frame * 2 + 1] = (float) right;
     }
+    long now = System.nanoTime();
+    for (Node node : nodes) if (node.mixer != null) node.mixer.meter.publish(now);
   }
 }

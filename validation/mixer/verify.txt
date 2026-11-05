@@ -1,0 +1,163 @@
+"python3" -m unittest discover -s scripts/tests -v
+test_bad_artifact_and_seed_symlink_are_refused (test_run_validation.ValidationRunTest.test_bad_artifact_and_seed_symlink_are_refused) ... Staged modularcraft-0.1.0.jar SHA-256 e1126d5980965e61956db20d1c0ec767cef982769369c809bf8a1addbb82d415
+Staged modularcraft-0.1.0.jar SHA-256 e1126d5980965e61956db20d1c0ec767cef982769369c809bf8a1addbb82d415
+Validation instance: /private/var/folders/f5/rhvgpl9j7gn7znm94p8jdz080000gn/T/modularcraft launcher i118w773/run/make/client with spaces
+ok
+test_ci_keeps_no_daemon_when_user_supplies_gradle_flags (test_run_validation.ValidationRunTest.test_ci_keeps_no_daemon_when_user_supplies_gradle_flags) ... ok
+test_failed_seed_server_never_launches_client (test_run_validation.ValidationRunTest.test_failed_seed_server_never_launches_client) ... Staged modularcraft-0.1.0.jar SHA-256 e1126d5980965e61956db20d1c0ec767cef982769369c809bf8a1addbb82d415
+Validation instance: /private/var/folders/f5/rhvgpl9j7gn7znm94p8jdz080000gn/T/modularcraft launcher 2bnd4q4g/run/make/client with spaces
+Staged modularcraft-0.1.0.jar SHA-256 e1126d5980965e61956db20d1c0ec767cef982769369c809bf8a1addbb82d415
+Validation instance: /private/var/folders/f5/rhvgpl9j7gn7znm94p8jdz080000gn/T/modularcraft launcher 2bnd4q4g/run/make/gametest
+ok
+test_fresh_fixture_never_reuses_a_world (test_run_validation.ValidationRunTest.test_fresh_fixture_never_reuses_a_world) ... Staged modularcraft-0.1.0.jar SHA-256 e1126d5980965e61956db20d1c0ec767cef982769369c809bf8a1addbb82d415
+ok
+test_launch_uses_packaged_mode_and_preserves_space_in_path (test_run_validation.ValidationRunTest.test_launch_uses_packaged_mode_and_preserves_space_in_path) ... Staged modularcraft-0.1.0.jar SHA-256 e1126d5980965e61956db20d1c0ec767cef982769369c809bf8a1addbb82d415
+Validation instance: /private/var/folders/f5/rhvgpl9j7gn7znm94p8jdz080000gn/T/modularcraft launcher lslh6ody/run/make/client with spaces
+ok
+test_refuses_modified_managed_jar_instead_of_overwriting_it (test_run_validation.ValidationRunTest.test_refuses_modified_managed_jar_instead_of_overwriting_it) ... Staged modularcraft-0.1.0.jar SHA-256 e1126d5980965e61956db20d1c0ec767cef982769369c809bf8a1addbb82d415
+ok
+test_refuses_outside_run_root_and_symlinks (test_run_validation.ValidationRunTest.test_refuses_outside_run_root_and_symlinks) ... ok
+test_refuses_unmanaged_nonempty_directory (test_run_validation.ValidationRunTest.test_refuses_unmanaged_nonempty_directory) ... ok
+test_same_instance_cannot_be_launched_concurrently (test_run_validation.ValidationRunTest.test_same_instance_cannot_be_launched_concurrently) ... ok
+test_server_launch_does_not_accept_or_replace_eula (test_run_validation.ValidationRunTest.test_server_launch_does_not_accept_or_replace_eula) ... Staged modularcraft-0.1.0.jar SHA-256 e1126d5980965e61956db20d1c0ec767cef982769369c809bf8a1addbb82d415
+Validation instance: /private/var/folders/f5/rhvgpl9j7gn7znm94p8jdz080000gn/T/modularcraft launcher wwwp8rt7/run/make/client with spaces
+Staged modularcraft-0.1.0.jar SHA-256 e1126d5980965e61956db20d1c0ec767cef982769369c809bf8a1addbb82d415
+Validation instance: /private/var/folders/f5/rhvgpl9j7gn7znm94p8jdz080000gn/T/modularcraft launcher wwwp8rt7/run/make/client with spaces
+ok
+test_smoke_bootstraps_seed_then_launches_a_fresh_fixture (test_run_validation.ValidationRunTest.test_smoke_bootstraps_seed_then_launches_a_fresh_fixture) ... Staged modularcraft-0.1.0.jar SHA-256 e1126d5980965e61956db20d1c0ec767cef982769369c809bf8a1addbb82d415
+Validation instance: /private/var/folders/f5/rhvgpl9j7gn7znm94p8jdz080000gn/T/modularcraft launcher fan7vm4w/run/make/client with spaces
+Staged modularcraft-0.1.0.jar SHA-256 e1126d5980965e61956db20d1c0ec767cef982769369c809bf8a1addbb82d415
+Validation instance: /private/var/folders/f5/rhvgpl9j7gn7znm94p8jdz080000gn/T/modularcraft launcher fan7vm4w/run/make/gametest
+ok
+test_stages_exact_runtime_jar_and_preserves_world_on_upgrade (test_run_validation.ValidationRunTest.test_stages_exact_runtime_jar_and_preserves_world_on_upgrade) ... Staged modularcraft-0.1.0.jar SHA-256 e1126d5980965e61956db20d1c0ec767cef982769369c809bf8a1addbb82d415
+Staged modularcraft-0.2.0.jar SHA-256 e00c727481da2425e8a2f4cf31c54965508450af2dd6d7ea23407e4e4e63e615
+ok
+
+----------------------------------------------------------------------
+Ran 12 tests in 0.046s
+
+OK
+"./gradlew"  --dependency-verification strict check build runtimeArtifact
+> Task :createMinecraftArtifacts UP-TO-DATE
+> Task :compileJava
+> Task :processResources UP-TO-DATE
+> Task :classes
+> Task :compileGametestJava
+> Task :processGametestResources UP-TO-DATE
+> Task :gametestClasses
+> Task :compileTestJava
+> Task :processTestResources NO-SOURCE
+> Task :testClasses
+> Task :formatCheck
+> Task :jarJar NO-SOURCE
+> Task :jar
+> Task :sourcesJar
+> Task :checkstyleGametest
+> Task :checkstyleTest
+> Task :pmdTest
+> Task :pmdMain
+> Task :pmdGametest
+> Task :checkstyleMain
+> Task :test
+> Task :check
+> Task :projectSources
+> Task :assemble
+> Task :build
+> Task :runtimeArtifact
+
+[Incubating] Problems report is available at: file:///Users/oberon/Projects/coding/mods/minecraft/ModularCraft/build/reports/problems/problems-report.html
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 9.0.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/8.13/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD SUCCESSFUL in 40s
+18 actionable tasks: 15 executed, 3 up-to-date
+"python3" scripts/run_validation.py gametest --run-dir "run/make/mixer-gametest-final"
+Staged modularcraft-0.1.0.jar SHA-256 de2bedad0f061d50e9649f56995d5618c028844f1ca35c85e8386e67481afcc5
+Validation instance: /Users/oberon/Projects/coding/mods/minecraft/ModularCraft/run/make/mixer-gametest-final
+> Task :createMinecraftArtifacts UP-TO-DATE
+> Task :compileJava UP-TO-DATE
+> Task :processResources UP-TO-DATE
+> Task :classes UP-TO-DATE
+> Task :compileGametestJava UP-TO-DATE
+> Task :processGametestResources UP-TO-DATE
+> Task :gametestClasses UP-TO-DATE
+> Task :downloadAssets UP-TO-DATE
+> Task :writeGameTestServerLegacyClasspath UP-TO-DATE
+> Task :prepareGameTestServerRun UP-TO-DATE
+
+> Task :runGameTestServer
+WARN StatusConsoleListener Advanced terminal features are not available in this environment
+[15:49:21] [main/INFO] [cp.mo.mo.Launcher/MODLAUNCHER]: ModLauncher running: args [--launchTarget, forgeserverdev, --gameDir, ., --fml.fmlVersion, 4.0.42, --fml.mcVersion, 1.21.1, --fml.neoForgeVersion, 21.1.218, --fml.neoFormVersion, 20240808.144430]
+[15:49:21] [main/INFO] [cp.mo.mo.Launcher/MODLAUNCHER]: JVM identified as Eclipse Adoptium OpenJDK 64-Bit Server VM 21.0.12.1+1-LTS
+[15:49:21] [main/INFO] [cp.mo.mo.Launcher/MODLAUNCHER]: ModLauncher 11.0.5+main.901c6ea8 starting: java version 21.0.12.1 by Eclipse Adoptium; OS Mac OS X arch aarch64 version 26.6.2
+[15:49:21] [main/INFO] [ne.ne.fm.lo.ImmediateWindowHandler/]: ImmediateWindowProvider not loading because launch target is forgeserverdev
+[15:49:21] [main/INFO] [mixin/]: SpongePowered MIXIN Subsystem Version=0.8.7 Source=union:/Users/oberon/.gradle/caches/modules-2/files-2.1/net.fabricmc/sponge-mixin/0.15.2+mixin.0.8.7/2af2f021d8e02a0220dc27a7a72b4666d66d44ca/sponge-mixin-0.15.2+mixin.0.8.7.jar%2394!/ Service=ModLauncher Env=SERVER
+[15:49:21] [main/INFO] [ne.ne.fm.lo.mo.lo.JarInJarDependencyLocator/]: Found 2 dependencies adding them to mods collection
+[15:49:21] [main/INFO] [ne.ne.fm.lo.mo.ModDiscoverer/]: 
+     Mod List:
+		Name Version (Mod Id)
+
+		Minecraft 1.21.1 (minecraft)
+		ModularCraft 0.1.0 (modularcraft)
+		ModularCraft GameTests (development only) 0.1.0 (modularcraft_tests)
+		NeoForge 21.1.218 (neoforge)
+[15:49:21] [main/INFO] [mixin/]: Compatibility level set to JAVA_21
+[15:49:21] [main/INFO] [cp.mo.mo.LaunchServiceHandler/MODLAUNCHER]: Launching target 'forgeserverdev' with arguments [--gameDir, .]
+[15:49:22] [main/INFO] [MixinExtras|Service/]: Initializing MixinExtras via com.llamalad7.mixinextras.service.MixinExtrasServiceImpl(version=0.5.0).
+[15:49:25] [main/WARN] [minecraft/Commands]: Ambiguity between arguments [teleport, location] and [teleport, destination] with inputs: [0.1 -0.5 .9, 0 0 0]
+[15:49:25] [main/WARN] [minecraft/Commands]: Ambiguity between arguments [teleport, location] and [teleport, targets] with inputs: [0.1 -0.5 .9, 0 0 0]
+[15:49:25] [main/WARN] [minecraft/Commands]: Ambiguity between arguments [teleport, destination] and [teleport, targets] with inputs: [Player, 0123, @e, dd12be42-52a9-4a91-a8a1-11c01849e498]
+[15:49:25] [main/WARN] [minecraft/Commands]: Ambiguity between arguments [teleport, targets] and [teleport, destination] with inputs: [Player, 0123, dd12be42-52a9-4a91-a8a1-11c01849e498]
+[15:49:25] [main/WARN] [minecraft/Commands]: Ambiguity between arguments [teleport, targets, location] and [teleport, targets, destination] with inputs: [0.1 -0.5 .9, 0 0 0]
+[15:49:25] [modloading-worker-0/INFO] [ne.ne.ne.co.NeoForgeMod/NEOFORGE-MOD]: NeoForge mod loading, version 21.1.218, for MC 1.21.1
+[15:49:25] [main/INFO] [mojang/YggdrasilAuthenticationService]: Environment: Environment[sessionHost=https://sessionserver.mojang.com, servicesHost=https://api.minecraftservices.com, name=PROD]
+[15:49:25] [main/WARN] [minecraft/VanillaPackResourcesBuilder]: Assets URL 'union:/Users/oberon/Projects/coding/mods/minecraft/ModularCraft/build/moddev/artifacts/neoforge-21.1.218.jar%23126!/assets/.mcassetsroot' uses unexpected schema
+[15:49:25] [main/WARN] [minecraft/VanillaPackResourcesBuilder]: Assets URL 'union:/Users/oberon/Projects/coding/mods/minecraft/ModularCraft/build/moddev/artifacts/neoforge-21.1.218.jar%23126!/data/.mcassetsroot' uses unexpected schema
+[15:49:25] [main/INFO] [ne.ne.ne.ga.GameTestHooks/]: Enabled Gametest Namespaces: [modularcraft]
+[15:49:25] [main/INFO] [minecraft/RecipeManager]: Loaded 1291 recipes
+[15:49:25] [main/INFO] [minecraft/AdvancementTree]: Loaded 1400 advancements
+[15:49:26] [Server thread/INFO] [minecraft/MinecraftServer]: Preparing start region for dimension minecraft:overworld
+[15:49:26] [worldgen/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 2%
+[15:49:26] [Server thread/INFO] [minecraft/LoggerChunkProgressListener]: Time elapsed: 75 ms
+[15:49:26] [Server thread/INFO] [minecraft/GameTestServer]: Started game test server
+[15:49:26] [Server thread/INFO] [ne.ne.ne.se.pe.PermissionAPI/]: Successfully initialized permission handler neoforge:default_handler
+[15:49:26] [Server thread/INFO] [minecraft/GameTestServer]: 32 tests are now running at position -3048811, -59, 14368521!
+[15:49:26] [Server thread/INFO] [minecraft/GameTestRunner]: Running test batch 'defaultBatch:0' (32 tests)...
+[15:49:26] [Server thread/INFO] [minecraft/GameTestServer]: [                                ]
+MODULARCRAFT_TEST_ARTIFACT union:/Users/oberon/Projects/coding/mods/minecraft/ModularCraft/run/make/mixer-gametest-final/mods/modularcraft-0.1.0.jar%23128!/
+[15:49:26] [Server thread/INFO] [minecraft/GameTestServer]: [++++++++++++++_++++++++__++_++__]
+[15:49:26] [Server thread/INFO] [minecraft/GameTestServer]: [++++++++++++++++++++++++++++++++]
+[15:49:26] [Server thread/INFO] [minecraft/GameTestServer]: ========= 32 GAME TESTS COMPLETE IN 505.3 ms ======================
+[15:49:26] [Server thread/INFO] [minecraft/GameTestServer]: All 32 required tests passed :)
+[15:49:26] [Server thread/INFO] [minecraft/GameTestServer]: ====================================================
+[15:49:26] [Server thread/INFO] [minecraft/MinecraftServer]: Stopping server
+[15:49:26] [Server thread/INFO] [minecraft/MinecraftServer]: Saving players
+[15:49:26] [Server thread/INFO] [minecraft/MinecraftServer]: Saving worlds
+[15:49:27] [Server thread/INFO] [minecraft/MinecraftServer]: Saving chunks for level 'ServerLevel[Test Level]'/minecraft:overworld
+[15:49:27] [Server thread/INFO] [minecraft/MinecraftServer]: Saving chunks for level 'ServerLevel[Test Level]'/minecraft:the_end
+[15:49:27] [Server thread/INFO] [minecraft/MinecraftServer]: Saving chunks for level 'ServerLevel[Test Level]'/minecraft:the_nether
+[15:49:27] [Server thread/INFO] [minecraft/MinecraftServer]: ThreadedAnvilChunkStorage (world): All chunks are saved
+[15:49:27] [Server thread/INFO] [minecraft/MinecraftServer]: ThreadedAnvilChunkStorage (DIM1): All chunks are saved
+[15:49:27] [Server thread/INFO] [minecraft/MinecraftServer]: ThreadedAnvilChunkStorage (DIM-1): All chunks are saved
+[15:49:27] [Server thread/INFO] [minecraft/MinecraftServer]: ThreadedAnvilChunkStorage: All dimensions are saved
+[15:49:27] [Server thread/INFO] [minecraft/GameTestServer]: Game test server shutting down
+
+[Incubating] Problems report is available at: file:///Users/oberon/Projects/coding/mods/minecraft/ModularCraft/build/reports/problems/problems-report.html
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 9.0.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/8.13/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD SUCCESSFUL in 7s
+9 actionable tasks: 1 executed, 8 up-to-date
+"python3" scripts/check-delivery.py
+PASS: Java 21 artifacts, nine complete asset sets, no test fixtures or bundled host/runtime libraries.
+de2bedad0f061d50e9649f56995d5618c028844f1ca35c85e8386e67481afcc5  modularcraft-0.1.0.jar
+0b1d02423d7def26b1ab7c07e1bc08188da0b2b5e6deae28bf02a4cb258c6e52  modularcraft-0.1.0-sources.jar
+a519a0b822d7ee80eff49141543aa78fbc6f13033c22e829ca78eeff161d6da5  modularcraft-0.1.0-project.zip

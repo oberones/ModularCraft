@@ -231,7 +231,7 @@ public final class Messages {
   }
 
   public static void register(RegisterPayloadHandlersEvent event) {
-    var registrar = event.registrar("7");
+    var registrar = event.registrar("8");
     registrar
         .executesOn(HandlerThread.NETWORK)
         .playToServer(

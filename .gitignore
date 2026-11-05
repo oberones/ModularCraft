@@ -1,6 +1,35 @@
+# Gradle caches and build output
 .gradle/
 build/
+*.class
+
+# Local Minecraft instances (including saves and generated configuration)
 run/
+
+# IDE metadata and compiler output
+.idea/
+*.iml
+*.ipr
+*.iws
+.classpath
+.project
+.settings/
+/bin/
+/out/
+
+# Logs and JVM diagnostics
 *.log
-.DS_Store
+hs_err_pid*
+replay_pid*
+*.hprof
+
+# Python helper-script bytecode
 __pycache__/
+*.pyc
+*.pyo
+
+# Operating-system metadata
+.DS_Store
+._*
+Thumbs.db
+Desktop.ini

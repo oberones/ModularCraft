@@ -15,6 +15,7 @@ FONT={
 'N':['101','111','111','111','101'],'T':['111','010','010','010','010'],'U':['101','101','101','101','111'],
 'K':['101','110','100','110','101'],'B':['110','101','110','101','110'],'Y':['101','101','010','010','010'],
 '0':['111','101','101','101','111'],'1':['010','110','010','010','111'],'2':['110','001','010','100','111'],
+'3':['110','001','010','001','110'],'X':['101','101','010','101','101'],
 '4':['101','101','111','001','001'],'8':['111','101','111','101','111'],' ':['000']*5,
 }
 class Drawing:
@@ -46,7 +47,7 @@ def panel():
  d=Drawing();d.rect(0,0,64,64,'#151b23');d.rect(2,2,60,60,'#34434e');d.rect(4,4,56,56,'#202d37')
  for x,y in [(5,5),(58,5),(5,58),(58,58)]:d.circle(x,y,1,'#b1b9b8');d.rect(x,y,1,1,'#46515b')
  return d
-MODULES=[('lfo','LFO','#e5a1e8',['CO','CI']),('square_oscillator','SQR','#65d7e5',['AO','PI']),('oscillator','SAW','#65d7e5',['AO','PI']),('filter','LPF','#91c79a',['AI','CI','AO','RC']),('envelope','ADSR','#ffc36a',['CO','GT','A','D','S','R']),('speaker','AMP','#d69bbd',['AI','GI']),('keyboard','KEYS','#b3a3ef',['CV','GO']),('euclidean_sequencer','EUCLID','#65d7e5',['CI','RI','CO','A','B','C','D'])]
+MODULES=[('mixer','MIX','#65d7e5',['1','2','3','4','AO']),('lfo','LFO','#e5a1e8',['CO','CI']),('square_oscillator','SQR','#65d7e5',['AO','PI']),('oscillator','SAW','#65d7e5',['AO','PI']),('filter','LPF','#91c79a',['AI','CI','AO','RC']),('envelope','ADSR','#ffc36a',['CO','GT','A','D','S','R']),('speaker','AMP','#d69bbd',['AI','GI']),('keyboard','KEYS','#b3a3ef',['CV','GO']),('euclidean_sequencer','EUCLID','#65d7e5',['CI','RI','CO','A','B','C','D'])]
 for name,title,accent,ports in MODULES:
  d=panel();d.rect(9,8,46,2,accent);d.text(title,20 if name=='euclidean_sequencer' else 12,12 if name=='euclidean_sequencer' else 13,accent,1 if name=='euclidean_sequencer' else 2)
  if name in ('oscillator','square_oscillator'):
@@ -60,6 +61,9 @@ for name,title,accent,ports in MODULES:
  elif name=='lfo':
   d.rect(9,27,46,17,'#101820')
   for x in range(11,53):d.rect(x,35-round(6*math.sin((x-11)*math.pi/20)),1,2,accent)
+ elif name=='mixer':
+  for i in range(5):
+   x=12+i*10;d.rect(x,25,2,18,'#0e141b');d.rect(x-2,28+(i%3)*4,6,3,accent if i<4 else '#ffc36a')
  elif name=='filter':
   for x in range(11,53):d.rect(x,30+int(10/(1+math.exp(-(x-34)/3))),1,1,accent)
   for x in [17,32,47]:d.circle(x,42,4,'#0e141b');d.rect(x,38,1,4,'#d9e4dc')
@@ -129,7 +133,17 @@ for key,label in {'control_out':'CO → LFO Control Out (−1…1 / 0…1)', 're
  lang['port.modularcraft.'+key]=label
 for key,values in {'lfo_wave':['Sine','Triangle','Rising saw','Falling saw','Square'], 'lfo_polarity':['Bipolar −1…+1','Unipolar 0…1'], 'lfo_division':['1/16 note · 1 pulse','1/8 note · 2 pulses','Quarter note · 4 pulses','Half note · 8 pulses','Whole note · 16 pulses','Two bars (4/4) · 32 pulses','Four bars (4/4) · 64 pulses']}.items():
  for index,label in enumerate(values):lang[f'modularcraft.lfo.{key}.{index}']=label
+lang['block.modularcraft.mixer']='Audio Mixer'
+for i in range(1,5):lang[f'port.modularcraft.audio_in_{i}']=f'{i} ← Audio Input {i}'
+for i in ['1','2','3','4','master']:
+ for control in ['level','mute','solo']:
+  if i=='master' and control=='solo':continue
+  lang[f'parameter.modularcraft.mix_{i}_{control}']=f'{"Master" if i=="master" else "Input "+i} {control.title()}'
+for key,label in {'master':'Master', 'input':'Input %s', 'mute_on':'Mute: ON', 'mute_off':'Mute: off', 'solo_on':'Solo: ON', 'solo_off':'Solo: off', 'mute_help':'Mute %s without changing its level.', 'solo_help':'Listen to selected solos together. Mute takes precedence.', 'level_help':'%s level: 0–100%. Drag to audition; arrows adjust by 1%.', 'level':'%s level: %s%%', 'overload':'OVER', 'inactive':'Audio inactive · Enable a connected speaker and local audio.'}.items():
+ lang['modularcraft.mixer.'+key]=label
 errors={
+'mixer_timeout':'No edit acknowledgment. Reopen the mixer to refresh its state.',
+
 'lfo_free':'Free-running · Hz controls the rate.',
 'lfo_sync':'Clock synchronized · Hz is saved for disconnection.',
 'lfo_waiting':'Waiting for clock · phase held; start the sequencer.',
@@ -163,7 +177,7 @@ errors={
 'patch_unloaded':'Patch suspended: load all chunks, restart sequencers, and enable speakers.',
 'unloaded':'Endpoint unavailable. Load both modules and try again.',
 'disabled':'Speaker disabled. Enable it to play; restart and chunk unload disable speakers.',
-'missing_audio':'No audio input. Connect Oscillator or Filter Audio Out to Audio In.',
+'missing_audio':'No audio input. Connect an Audio Out to Audio In.',
 'released':'Envelope released. Hold Gate or apply redstone power.',
 'ready':'Ready. Master, Records, local volume and distance affect what you hear.',
 'awaiting':'Waiting for the server to accept this value.',
@@ -208,4 +222,4 @@ errors={
  'throttled':'Edit rate limited: 20/s per player, 200/s per world. Wait and retry refreshed values.'}
 lang.update({'modularcraft.error.'+k:v for k,v in errors.items()})
 p=ASSETS/'lang/en_us.json';p.parent.mkdir(parents=True,exist_ok=True);p.write_text(json.dumps(lang,indent=2,ensure_ascii=False)+'\n')
-print('Wrote eight complete block sets, tool, localization, and editable SVG sources.')
+print('Wrote nine complete block sets, tool, localization, and editable SVG sources.')

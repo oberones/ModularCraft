@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.malevolentgods.modularcraft.MixerTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-11-05T20:49:04.621Z" hostname="Calliope.local" time="6.631">
+  <properties/>
+  <testcase name="chainedMixersRemainLinearAndFeedbackIsRefused()" classname="com.malevolentgods.modularcraft.MixerTest" time="0.003"/>
+  <testcase name="persistenceProtocolAndConnectionRules()" classname="com.malevolentgods.modularcraft.MixerTest" time="0.001"/>
+  <testcase name="weightedSumMuteSoloSilenceAndNoAutomaticNormalization()" classname="com.malevolentgods.modularcraft.MixerTest" time="0.009"/>
+  <testcase name="defaultsValidationAndAuthority()" classname="com.malevolentgods.modularcraft.MixerTest" time="0.0"/>
+  <testcase name="maximumMixerLoadIsBoundedAndFinalOutputProtected()" classname="com.malevolentgods.modularcraft.MixerTest" time="6.616"/>
+  <testcase name="partialAndForeignMixerSaveSchemasAreRejected()" classname="com.malevolentgods.modularcraft.MixerTest" time="0.001"/>
+  <system-out><![CDATA[64 module / 96 cable / 8 speaker DSP p95 ms=0.467042, oscillators=[OSCILLATOR, SQUARE_OSCILLATOR, OSCILLATOR, SQUARE_OSCILLATOR, OSCILLATOR, SQUARE_OSCILLATOR, OSCILLATOR, SQUARE_OSCILLATOR, OSCILLATOR, SQUARE_OSCILLATOR, OSCILLATOR, SQUARE_OSCILLATOR, OSCILLATOR, SQUARE_OSCILLATOR, OSCILLATOR, SQUARE_OSCILLATOR], measured allocation bytes=0
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

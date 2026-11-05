@@ -417,6 +417,11 @@ public final class ModuleGameTests {
         });
   }
 
+  @GameTest(template = "empty", templateNamespace = ModularCraft.ID)
+  public static void mixerEditsPersistAndRejectInvalidForeignStaleRequests(GameTestHelper h) {
+    assertParameterEdits(h, ModuleKind.MIXER, Parameter.MIX_1_LEVEL, 37.125);
+  }
+
   private static void assertParameterEdits(
       GameTestHelper h, ModuleKind kind, Parameter parameter, double value) {
     UUID owner = UUID.randomUUID();

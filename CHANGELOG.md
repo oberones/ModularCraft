@@ -96,3 +96,11 @@ a newly inspected module. Protocol/snapshot 7 requires updating both client and 
 world schema 1 migrates exact old filter/envelope records with zero depths. Back up before
 upgrading and restore the backup to downgrade. Human listening and sustained multiplayer
 acceptance remain separate from automated checks; no release/publication is implied.
+
+Audio Mixer extension (2026-11-05): ninth module, four mono audio inputs and one output;
+input level/mute/multi-solo, master level/mute, live vertical faders and local peak meters.
+Defaults: inputs 100%, master 25%. Ten-millisecond gain ramps, no automatic normalization,
+and existing final output protection. World schema 1 retains existing records; network
+and snapshots now require version 8 on every peer. Back up worlds before upgrade; restore
+the backup before downgrade. RP-007 and mixer native/load probes added. Human listening,
+multiplayer and sustained acceptance remain separately tracked; no release is implied.

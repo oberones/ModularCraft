@@ -82,3 +82,14 @@ Evidence: [square review](../../validation/square/review.md) and
 - [ ] LF10 Qualify 30-minute native load and resolve the observed underrun; retain prior release gates.
 
 Evidence: [LFO review](../../validation/lfo/review.md) and [results](../../validation/lfo/results.json).
+
+## Audio Mixer extension (MX-001–MX-006)
+
+- [x] MX01 Add append-only mixer kind, four audio ports and 14 validated parameters; preserve world-v1 records and require protocol 8.
+- [x] MX02 Implement linear mixing, mute/multi-solo and 480-sample effective gain transitions with graph adoption.
+- [x] MX03 Add bounded local peak meters, decay/overload hold, graph retirement and inactive-state handling.
+- [x] MX04 Add responsive mixer strips, precise entry and coalesced 10 Hz authoritative live edits.
+- [x] MX05 Generate original matching block/item/loot/localization assets and extend delivery inspection.
+- [x] MX06 Add regression tests, packaged authority/NBT/jack/removal GameTests and native panel/load fixtures.
+- [x] MX07 Document RP-007, compatibility, validation evidence and explicit self-review.
+- [ ] MX08 Human listening/narrator, two-client, disk-restart and 30-minute native qualification; retain prior release gates.

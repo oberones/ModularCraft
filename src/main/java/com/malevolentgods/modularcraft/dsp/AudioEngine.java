@@ -16,7 +16,8 @@ public final class AudioEngine {
   private final EventQueue<RenderGraph> scheduled = new EventQueue<>();
   private final float[] currentBuffer = new float[256], oldBuffer = new float[256];
   private final Output left = new Output(), right = new Output();
-  private RenderGraph graph = new RenderGraph(List.of()), old;
+  private volatile RenderGraph graph = new RenderGraph(List.of());
+  private RenderGraph old;
   private int fade;
   private long lastSequence = -1;
   private volatile boolean failed;
@@ -76,6 +77,12 @@ public final class AudioEngine {
       }
       frame += length;
     }
+  }
+
+  public MixerMeter.Reading meter(java.util.UUID id, long now) {
+    RenderGraph current = graph;
+    MixerMeter.Reading reading = current.meter(id, now);
+    return failed || graph != current ? null : reading;
   }
 
   public boolean failed() {

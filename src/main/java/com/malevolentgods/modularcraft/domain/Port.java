@@ -22,7 +22,11 @@ public enum Port {
   ATTACK_IN(false, Role.CONTROL),
   DECAY_IN(false, Role.CONTROL),
   SUSTAIN_IN(false, Role.CONTROL),
-  RELEASE_IN(false, Role.CONTROL);
+  RELEASE_IN(false, Role.CONTROL),
+  AUDIO_IN_1(false, Role.AUDIO),
+  AUDIO_IN_2(false, Role.AUDIO),
+  AUDIO_IN_3(false, Role.AUDIO),
+  AUDIO_IN_4(false, Role.AUDIO);
 
   public enum Role {
     AUDIO,

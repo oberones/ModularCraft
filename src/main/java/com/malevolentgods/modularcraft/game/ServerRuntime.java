@@ -481,6 +481,10 @@ public final class ServerRuntime {
           retrigger(before.id(), sample);
       }
       changed(affected, sample);
+      // Mixer controls also need acknowledgments after returning from local audio settings.
+      if (before.kind() == ModuleKind.MIXER
+          && !before.id().equals(inspecting.get(player.getUUID())))
+        sendView(player, module, false, status(module.state()));
       for (ServerPlayer listener : server.getPlayerList().getPlayers()) {
         UUID target = inspecting.get(listener.getUUID());
         ModuleEntity inspected = target == null ? null : loaded.get(target);

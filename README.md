@@ -1,7 +1,7 @@
 # ModularCraft
 
-Build a shared modular synthesizer from eight Minecraft blocks: **Saw Oscillator**, **Square Oscillator**,
-**Low-Pass Filter**, **Envelope Generator**, **Amplifier / Speaker**, **Keyboard**, **Euclidean Sequencer**, and **LFO**. Connect their
+Build a shared modular synthesizer from nine Minecraft blocks: **Saw Oscillator**, **Square Oscillator**,
+**Low-Pass Filter**, **Envelope Generator**, **Amplifier / Speaker**, **Keyboard**, **Euclidean Sequencer**, **LFO**, and **Audio Mixer**. Connect their
 ports with the Patching Tool; nearby players synthesize the accepted performance locally.
 No prerecorded loops, accounts, internet audio, external services, or extra audio software
 are required. Creative access is sufficient; there are no survival recipes in this MVP.
@@ -219,7 +219,7 @@ for recovery. The global registry is `data/modularcraft.dat`; per-module data is
 its owning block entity. World-save schema remains version 1; older oscillators receive Detune 0 without changing
 their saved Frequency or Level. Back up the world before upgrading; restore that backup
 if downgrading, since older builds cannot interpret the new control. Network and
-performance-snapshot protocol is version 7: update both server and clients together.
+performance-snapshot protocol is version 8: update both server and clients together.
 
 ## Troubleshooting
 
@@ -318,7 +318,7 @@ envelopes, and two speakers (11 modules, 12 cables):
 Settings and cables survive saves. Running state, held pulses and positions do not:
 world reload and chunk suspension require Start, and speakers must be enabled again.
 Closing the editor, disabling speakers, and local mute leave a loaded sequencer running.
-Back up worlds before upgrading; install protocol-v7 builds on every client and server.
+Back up worlds before upgrading; install protocol-v8 builds on every client and server.
 This version does not add presets, manual step editing, swing, probability, variable gate
 lengths, clock division, pitch sequences, MIDI clock, or redstone clock conversion.
 
@@ -402,9 +402,45 @@ Build these RP-006 variations with blocks two blocks apart, all owned by the sam
    needed. All waveforms/settings not changed above retain variation 1 values.
 
 World schema remains **1**; exact legacy filter/envelope records gain zero-valued depths,
-so existing patches keep their settings. Network/snapshot protocol is **7**: update clients
+so existing patches keep their settings. Network/snapshot protocol is **8**: update clients
 and server together. Back up the world before upgrading; restore that backup when returning
 to an older binary, which cannot understand LFO records. Unknown/malformed records remain
 preserved rather than silently repaired. Transient phase is not saved across world/chunk
 reload; speakers still restart disabled. Native listening and multiplayer acceptance are
 tracked separately in the [ledger](validation/ledger.md).
+
+## Audio Mixer and RP-007: four-source blend
+
+Place an **Audio Mixer** from the Creative inventory. Its lower front has inputs **1–4**
+and **AO** (Audio Out). Connect each source to a numbered input, then AO to a speaker or
+filter. Right-click the mixer for four input strips and a Master strip.
+
+All levels span 0–100%. Inputs start at 100%, Master at 25% to leave room for four sources.
+Faders audition while dragging; arrow keys adjust 1%, Home/End select 0/100%, and numeric
+entry with Apply or Enter accepts fractional percentages. Scroll or use PgUp/PgDn on
+small windows. Mute preserves the level. Multiple solos play together; mute takes precedence.
+Master mute silences the mix. These controls are shared, saved patch settings; local audio
+settings and the local mute key remain independent.
+
+Meters show each input after its level/mute/solo and the mix after Master, before speaker
+volume, distance or local volume. OVER holds for one second above nominal full scale;
+lower the input or Master levels to reduce it. Summing does not automatically normalize
+or clip the signal. Final speaker output protection still applies. Audio inactive means
+there is no locally rendered patch: enable a connected speaker, load the patch, and enable
+local audio. Meters do not start sound themselves.
+
+**RP-007:** Place two Saw Oscillators, two Square Oscillators, one Mixer and one Speaker,
+all owned by you and within cable range. Set sources to 110 Hz saw, 220 Hz square, 330 Hz
+saw and 440 Hz square, all Level 50%; saw Detune 0, square PWM 50%. Connect their Audio
+Outs respectively to Mixer inputs 1, 2, 3, 4; Mixer AO → Speaker Audio In. Keep mixer input
+levels 100%, Master 25%, all mute/solo off, speaker Volume 10%, then enable the speaker.
+Expect a sustained four-tone blend. Lower input 1 to 25%; solo 2 then also 4; mute 2 while
+both solos remain on; clear mute/solos; lower Master to 10%; toggle Master mute. Changes
+should be smooth. An empty soloed channel yields silence. Disconnecting a cable does not
+change other levels. Disable the speaker when finished. Further mixers can be chained
+within the existing patch/cable limits; feedback is refused.
+
+World schema stays **1**; network/snapshot protocol is **8**. Update every client and server
+together. Back up worlds before upgrading and restore the backup for downgrade; older
+builds cannot interpret mixer records. Human RP-007 listening and multiplayer qualification
+remain separate from the automated evidence in [the ledger](validation/ledger.md).

@@ -82,11 +82,11 @@ with a minimum 48-sample separation and 1,920-sample lead. Cleanup bypasses edit
 queue overload releases and invalidates the affected session. Subsequent snapshots cannot
 rewind pending performance timestamps. Renewal never starts/retriggers a note.
 
-Pitch CV and gate have separate port roles. Snapshot v7 carries keyboard MIDI note numbers
+Pitch CV and gate have separate port roles. Snapshot v8 carries keyboard MIDI note numbers
 0–127 and gate booleans; CV = (note−60)/12 V and Hz = 440×2^((note−69)/12). Server-side
 external gates feed analytic envelope checkpoints. RenderGraph resolves pitch cables into
 smoothed frequency targets, preserves oscillator phase, and leaves envelope control routing
-unchanged. World v1 persists octave only, using existing named records; network v7 rejects
+unchanged. World v1 persists octave only, using existing named records; network v8 rejects
 old peers. Snapshot recovery restores current pitch/gate, not historical note events.
 
 
@@ -143,7 +143,7 @@ keeps server-receive scheduling (minimum 48 samples between accepted events, 1,9
 lead), existing revision/permission/range checks, and the 20/player and 200/world edit budgets.
 MIDI device timestamps are ignored; sample-accurate hardware-input timing is not claimed.
 
-Network/snapshot v7 deliberately refuses older peers/snapshots; world v1 and saved octave
+Network/snapshot v8 deliberately refuses older peers/snapshots; world v1 and saved octave
 remain unchanged. The SHA-256 of the device name/vendor/description/version is a local
 selection descriptor, not a hardware identity. Only unique matches restore automatically;
 explicit selection can distinguish duplicate ports for the current focused session. Device
@@ -169,7 +169,7 @@ spread. Native performance/listening/two-client gates remain distinct.
 World schema v1 and block schema v1 accept only the exact legacy Frequency/Level key set
 as a migration to Detune 0. Other incomplete/extra/non-finite records retain rejection or
 opaque quarantine. The complete named control set is written on next save, and repeated
-loads are stable. Snapshot/network v7 refuses older formats and does not apply this stored
+loads are stable. Snapshot/network v8 refuses older formats and does not apply this stored
 record migration. Existing parameter ordinals are retained by appending DETUNE.
 
 
@@ -192,7 +192,7 @@ advance them on the sample timeline. Late recovery advances state without replay
 The renderer prepares all routing and mutable runtimes outside processing; it does not
 allocate buffers, perform I/O, acquire locks, or touch world objects while advancing.
 
-World/block schema v1 stores 17 named controls and cables only. Snapshot/network v7 adds
+World/block schema v1 stores 17 named controls and cables only. Snapshot/network v8 adds
 bounded per-module sequencer checkpoints and manual/redstone envelope baselines; matching
 peers are mandatory. The parameter decoder now uses the selected module's bounded control
 count. Legacy oscillator migration and byte-preserving quarantine remain in place.
@@ -216,7 +216,7 @@ world changes discard projections; integrated pause freezes the visual sample co
 SQUARE_OSCILLATOR appends a module kind and PULSE_WIDTH appends a fractional 5–95% control;
 integer-only parameters are classified explicitly. Shared pitch preparation and note UI use
 both oscillator kinds; the server reports CV pitch precedence without mentioning saw detune.
-World v1 keeps named records and exact legacy saw migration. Network/snapshot v7 refuses
+World v1 keeps named records and exact legacy saw migration. Network/snapshot v8 refuses
 older peers; square records require exactly Frequency, Pulse Width and Level.
 
 PulseOscillator has one phase/history, frequency/width smoothers, four internal samples per
@@ -252,7 +252,7 @@ their analytic behavior, so short sequencer notes and legacy envelope sweeps are
 Surviving CV smoother state transfers with filter/oscillator state during graph adoption.
 No audio processing allocates, performs I/O, or reads mutable Minecraft state.
 
-Snapshot protocol 7 adds a bounded UUID→LFO checkpoint map containing phase/rate anchors,
+Snapshot protocol 8 adds a bounded UUID→LFO checkpoint map containing phase/rate anchors,
 clock input level/interval/pulse count, and waveform transition state. Existing envelope
 checkpoints also carry effective next-stage values and active sustain ramps. Decode validates
 numbers, identities, cable/clock consistency, sizes and duplicate entries before adoption.
@@ -264,3 +264,24 @@ UI scrolling is confined to the parameter area; gate, local audio and Done stay 
 Selectors use localized named values, never raw enum numbers. A delayed CLOSE for a previous
 module cannot release the currently inspected module's session. Server ownership, range,
 revision checks, and cleanup priority otherwise follow the existing paths.
+
+## Audio Mixer
+
+`MixerSettings` defines 14 persisted controls and four mono inputs. `Mixer` owns five
+480-sample effective gain smoothers; mute/solo decisions are prepared outside processing.
+`RenderGraph` resolves fixed input indices, evaluates each source once, sums inputs and
+adopts gains/meter envelopes at block boundaries. Audio remains mono until speakers.
+The AudioEngine exposes meters only from its current graph, never its fading predecessor.
+
+Each mixer owns five preallocated peak/decay/overload values and a sequence-stamped meter
+publication. The sole sound-executor writer publishes once per processing chunk; the UI
+copies a consistent publication at 20 Hz or skips contention. This adds no network traffic,
+locks or steady-state audio allocation. 300 ms linear decay and one-second overload hold
+run in sample time; publications stale after 500 ms of wall time become unavailable.
+
+`MixerEdits` owns an at-most-14-entry coalescing queue, one outstanding edit and 100 ms
+minimum send spacing. Only accepted server revisions drive audio; UI drafts stay separate.
+Rejected edits cancel pending changes; a two-second timeout requires reopening/retrying.
+Mixer parameter requests receive authoritative views even after the local-settings detour
+has closed inspection. Screen close cancels unsent changes. All validation remains on the
+existing logical-server path. World schema 1 is unchanged; protocol 8 refuses older peers.

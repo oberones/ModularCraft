@@ -66,7 +66,10 @@ public enum ModuleKind {
           Parameter.LFO_FREQUENCY,
           Parameter.LFO_POLARITY,
           Parameter.LFO_DIVISION),
-      List.of(Port.CONTROL_OUT, Port.CLOCK_IN));
+      List.of(Port.CONTROL_OUT, Port.CLOCK_IN)),
+  MIXER(
+      MixerSettings.PARAMETERS,
+      List.of(Port.AUDIO_IN_1, Port.AUDIO_IN_2, Port.AUDIO_IN_3, Port.AUDIO_IN_4, Port.AUDIO_OUT));
   public final List<Parameter> parameters;
   public final List<Port> ports;
 

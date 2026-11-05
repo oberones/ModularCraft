@@ -131,7 +131,13 @@ public final class ClientRuntime {
                     .findFirst()
                     .orElseThrow();
             Minecraft mc = Minecraft.getInstance();
-            if (module.kind() == ModuleKind.EUCLIDEAN_SEQUENCER) {
+            if (module.kind() == ModuleKind.MIXER) {
+              if (message.open())
+                mc.setScreen(new MixerScreen(module, message.editable(), message.status()));
+              else if (mc.screen instanceof MixerScreen screen
+                  && screen.identity().equals(module.id()))
+                screen.accept(module, message.editable(), message.status());
+            } else if (module.kind() == ModuleKind.EUCLIDEAN_SEQUENCER) {
               if (message.open())
                 mc.setScreen(new SequencerScreen(module, message.editable(), message.status()));
               else if (mc.screen instanceof SequencerScreen screen
@@ -166,6 +172,12 @@ public final class ClientRuntime {
 
   public static List<PatchSnapshot> patches() {
     return List.copyOf(patches.values());
+  }
+
+  public static com.malevolentgods.modularcraft.dsp.MixerMeter.Reading mixerMeter(UUID id) {
+    return engine == null || PREFERENCES.muted || paused
+        ? null
+        : engine.meter(id, System.nanoTime());
   }
 
   public static String audioStats() {

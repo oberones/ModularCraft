@@ -39,7 +39,21 @@ public enum Parameter {
   ATTACK_DEPTH(-100, 100, 0, "%"),
   DECAY_DEPTH(-100, 100, 0, "%"),
   SUSTAIN_DEPTH(-100, 100, 0, "%"),
-  RELEASE_DEPTH(-100, 100, 0, "%");
+  RELEASE_DEPTH(-100, 100, 0, "%"),
+  MIX_1_LEVEL(0, 100, 100, "%"),
+  MIX_1_MUTE(0, 1, 0, ""),
+  MIX_1_SOLO(0, 1, 0, ""),
+  MIX_2_LEVEL(0, 100, 100, "%"),
+  MIX_2_MUTE(0, 1, 0, ""),
+  MIX_2_SOLO(0, 1, 0, ""),
+  MIX_3_LEVEL(0, 100, 100, "%"),
+  MIX_3_MUTE(0, 1, 0, ""),
+  MIX_3_SOLO(0, 1, 0, ""),
+  MIX_4_LEVEL(0, 100, 100, "%"),
+  MIX_4_MUTE(0, 1, 0, ""),
+  MIX_4_SOLO(0, 1, 0, ""),
+  MIX_MASTER_LEVEL(0, 100, 25, "%"),
+  MIX_MASTER_MUTE(0, 1, 0, "");
   public final double min, max, initial;
   public final String unit;
 
@@ -52,7 +66,16 @@ public enum Parameter {
 
   private boolean integer() {
     return switch (this) {
-      case LFO_WAVE,
+      case MIX_1_MUTE,
+          MIX_1_SOLO,
+          MIX_2_MUTE,
+          MIX_2_SOLO,
+          MIX_3_MUTE,
+          MIX_3_SOLO,
+          MIX_4_MUTE,
+          MIX_4_SOLO,
+          MIX_MASTER_MUTE,
+          LFO_WAVE,
           LFO_POLARITY,
           LFO_DIVISION,
           OCTAVE,

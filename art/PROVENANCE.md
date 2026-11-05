@@ -31,3 +31,7 @@ LFO/CV extension (2026-11-05): original procedural lavender LFO sine-trace panel
 CO/CI sockets; filter gains RC and envelope gains A/D/S/R socket labels. Editable SVG,
 deterministic 64px PNG, block/item models and loot use the existing generator and MIT
 license. No external assets, fonts, image services, or dependency changes.
+
+Audio Mixer (2026-11-05): original code-authored MIX panel with five fader motifs, cyan
+input jacks 1–4 and AO, shared chassis and master accent. Editable SVG and deterministic
+64px PNG originate in generate-assets.py under the existing MIT license. No external art.

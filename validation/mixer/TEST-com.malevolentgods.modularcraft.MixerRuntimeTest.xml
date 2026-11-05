@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.malevolentgods.modularcraft.MixerRuntimeTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-11-05T20:48:43.396Z" hostname="Calliope.local" time="0.058">
+  <properties/>
+  <testcase name="gainRampsAndAdoptionAreContinuous()" classname="com.malevolentgods.modularcraft.MixerRuntimeTest" time="0.023"/>
+  <testcase name="liveEditsCoalesceThrottleAndWaitForAcknowledgment()" classname="com.malevolentgods.modularcraft.MixerRuntimeTest" time="0.003"/>
+  <testcase name="liveEditsAcceptNegativeMonotonicClockOrigins()" classname="com.malevolentgods.modularcraft.MixerRuntimeTest" time="0.002"/>
+  <testcase name="meterHistorySurvivesParameterEdits()" classname="com.malevolentgods.modularcraft.MixerRuntimeTest" time="0.0"/>
+  <testcase name="meterAttackDecayOverloadAndFreshness()" classname="com.malevolentgods.modularcraft.MixerRuntimeTest" time="0.002"/>
+  <testcase name="rejectionCloseAndTimeoutCancelPendingWork()" classname="com.malevolentgods.modularcraft.MixerRuntimeTest" time="0.001"/>
+  <testcase name="retiredGraphMetersAreNeverExposed()" classname="com.malevolentgods.modularcraft.MixerRuntimeTest" time="0.018"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

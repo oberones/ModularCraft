@@ -1,0 +1,79 @@
+{
+  "date": "2026-11-05",
+  "status": "IMPLEMENTED; automated checks PASS; release qualification incomplete",
+  "runtime_sha256": "de2bedad0f061d50e9649f56995d5618c028844f1ca35c85e8386e67481afcc5",
+  "world_schema": 1,
+  "network_snapshot_protocol": 8,
+  "hardware": {
+    "model": "Mac14,9",
+    "cpu": "Apple M2 Pro",
+    "memory_bytes": 17179869184,
+    "os": "macOS 26.6.2 (25G83)",
+    "java": "21.0.12.1"
+  },
+  "automated": {
+    "command": "make verify GAMETEST_DIR=run/make/mixer-gametest-final",
+    "junit_tests": 157,
+    "junit_failures": 0,
+    "packaged_gametests": 32,
+    "launcher_tests": 12,
+    "format_checkstyle_pmd": "PASS",
+    "asset_sets": 9,
+    "local_document_links": "PASS"
+  },
+  "synthetic_load": {
+    "modules": 64,
+    "cables": 96,
+    "speakers": 8,
+    "p95_ms": 0.467042,
+    "allocation_bytes": 0,
+    "measured_blocks": 10000,
+    "warmup_blocks": 5000
+  },
+  "native_panel": {
+    "command": "make smoke GRADLE_ARGS=-PqaMixer TICKS=600",
+    "status": "PASS",
+    "instance": "run/make/smoke-6l59v3tx",
+    "checks": [
+      "drag updates before release and retains final value",
+      "mute/multi-solo/master",
+      "meter mute and retired graph",
+      "fractional and invalid entry",
+      "full and compact layout",
+      "local mute and settings return",
+      "NBT roundtrip",
+      "removal",
+      "five recovery cycles"
+    ]
+  },
+  "native_load": {
+    "command": "make smoke-load GRADLE_ARGS=-PqaMixer TICKS=1200",
+    "duration_ticks": 1200,
+    "audio_max_reported_p95_ms": 0.624834,
+    "audio_final_p95_ms": 0.531375,
+    "audio_max_ms": 5.185708,
+    "underruns": 1,
+    "server_samples": 1080,
+    "server_p95_ms": 0.440625,
+    "server_measured_window_max_ms": 1.377709,
+    "p95_budgets": "PASS",
+    "zero_underruns": "FAIL",
+    "runtime_sha256": "31bd7a084711929ea2c4be8fa2cc4f32ecae9afd21e6d0ac64aa213b77c26a89",
+    "dsp_meter_server_byte_parity_with_final": "PASS",
+    "classes_changed_since_load": [
+      "com/malevolentgods/modularcraft/client/MixerScreen$Fader.class",
+      "com/malevolentgods/modularcraft/client/MixerScreen.class",
+      "com/malevolentgods/modularcraft/domain/MixerEdits.class"
+    ]
+  },
+  "pending": [
+    "human RP-007 listening",
+    "narrator",
+    "two-client timing/lifecycle",
+    "disk restart and actual chunk reload",
+    "30-minute sustained load",
+    "earlier hardware/security/platform/release gates"
+  ],
+  "self_review": "review.md",
+  "commit_push_publish": "NOT PERFORMED"
+}

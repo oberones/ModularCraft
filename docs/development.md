@@ -189,3 +189,16 @@ scrolling and invalid input), and captures `lfo-*.png` screenshots in that insta
 and reports audio counters plus server p95/max. Each smoke run needs a fresh QA directory.
 For repeated packaged GameTests, select a fresh `GAMETEST_DIR` to avoid accumulating
 persisted test identities against world quotas; do not delete or reset manual worlds.
+
+Mixer probes (fresh managed worlds; retain the launcher-selected artifact path in evidence):
+
+```sh
+make verify GAMETEST_DIR=run/make/mixer-gametest
+make smoke GRADLE_ARGS=-PqaMixer TICKS=600
+make smoke-load GRADLE_ARGS=-PqaMixer TICKS=1200
+```
+
+The panel probe edits real widgets, validates live drag completion and mute/solo, captures
+full/compact/world views, tests local mute/settings return, NBT roundtrip and removal.
+The load probe reports server p95 and ordinary native audio counters. Neither is a human
+listening test, two-client session, real disk restart acceptance or 30-minute load run.

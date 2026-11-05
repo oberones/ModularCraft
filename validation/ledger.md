@@ -533,3 +533,45 @@ These results extend, rather than replace, the historical evidence above.
 
 Earlier security, platform, hardware and release gates remain applicable. No commit, push,
 publication, or dependency changes occurred; existing manual worlds and AGENTS.md were preserved.
+
+## Audio Mixer extension — 2026-11-05
+
+Implemented four mono inputs, linear summing, five live faders/meters, input mute/multi-solo
+and master mute, with default input 100% / master 25%. World schema 1, matching protocol 8.
+Changes remain uncommitted. [Self-review](mixer/review.md), [results](mixer/results.json),
+[verification](mixer/verify.txt), [native panel](mixer/native.txt), [native load](mixer/load.txt),
+[full panel](mixer/full.png), [compact panel](mixer/compact.png), [block](mixer/world.png).
+
+| Evidence | Status | Result / limit |
+|---|---|---|
+| TDD | PASS | Absent-module behavioral red; support-type compilation red explicitly separated; signed-clock-origin behavioral regression and green coverage |
+| Automated verification | PASS | 157 JUnit, 12 launcher tests, formatting, Checkstyle, PMD, build and archive inspection |
+| Packaged integration | PASS | 32 GameTests; mixer authority/stale/invalid edits, all 14 NBT controls, five jacks in four facings, removal/cable cleanup |
+| Resource/package coverage | PASS | Nine complete block asset sets; original SVG/PNG, localized mixer controls/ports, append-only identifiers |
+| Synthetic mixer load | PASS | Four patches, 64 modules / 96 cables / 8 speakers; 0.467042 ms DSP p95, zero measured allocation over 10,000 blocks after 5,000 warmup blocks |
+| Native panel/visual/cleanup | PASS | Real drag updates before release, final values, mute/multi-solo/master, meters, exact/invalid numeric entry, compact controls, local mute/settings return, NBT, removal, five recovery cycles; screenshots inspected |
+| Short native load p95 budgets | PASS | Audio p95 at most 0.624834 ms (final window 0.531375 ms); server p95 0.440625 ms over 1,080 measured ticks |
+| Native zero-underrun qualification | FAIL | One underrun; audio max 5.185708 ms; measured server-window max 1.377709 ms, startup-inclusive max 4.523834 ms retained |
+| Human listening / narrator | PENDING | RP-007 audition, acoustic and accessibility acceptance require observation |
+| Two-client / restart / sustained | PENDING | Shared timing/lifecycle, actual disk restart/chunk reload and 30-minute load qualification |
+| Self-review | PASS | Authority, compatibility, audio ownership, bounded edits/meters, lifecycle, assets and evidence limits reviewed |
+
+Machine: Apple M2 Pro (Mac14,9), 16 GiB, macOS 26.6.2 (25G83), Java 21.0.12.1.
+Final runtime SHA-256: `de2bedad0f061d50e9649f56995d5618c028844f1ca35c85e8386e67481afcc5`.
+The load probe preceded final UI/edit-throttle refinements; DSP/meter/server class bytes
+were verified identical to the final artifact. Full binary identity is not claimed.
+Earlier security, platform, hardware and release gates remain applicable. No commit, push,
+publication or dependency changes; manual worlds and AGENTS.md preserved.
+
+## Git ignore review — 2026-11-05
+
+- **PASS — configuration checks.** Reviewed Gradle and Make launch/output paths;
+  retained existing build, runtime, log and Python-cache exclusions. Added Java IDE
+  metadata/compiler output, standalone Python bytecode, JVM diagnostics and OS metadata.
+  `git -c core.excludesFile=/dev/null check-ignore --no-index --stdin` verified 27
+  representative generated paths are ignored, 19 source/dependency/asset/evidence paths
+  remain trackable, and none of the 372 tracked files match ignore rules.
+- **PASS — self-review and whitespace.** `git diff --check` passed. Wrapper artifacts,
+  dependency pins, shared configuration, assets and structured validation evidence remain
+  trackable. No executable behavior changed; runtime suites were not rerun. Earlier
+  native, listening, multiplayer and release gates remain unchanged.

@@ -109,7 +109,7 @@ public final class StateCodec {
     for (int i = 0; i < n; i++)
       if (values.put(Parameter.valueOf(in.readUTF()), in.readDouble()) != null)
         throw new IllegalArgumentException("duplicate_parameter");
-    // Only legacy stored saws have this exact two-control schema. Network v7 must be complete.
+    // Only legacy stored saws have this exact two-control schema. Network v8 must be complete.
     if (stored
         && kind == ModuleKind.OSCILLATOR
         && values.keySet().equals(java.util.Set.of(Parameter.FREQUENCY, Parameter.LEVEL)))
@@ -273,7 +273,7 @@ public final class StateCodec {
         MAX_PATCH,
         out -> {
           out.writeInt(MAGIC);
-          out.writeShort(7);
+          out.writeShort(8);
           uuid(out, p.id());
           out.writeLong(p.revision());
           out.writeLong(p.sequence());
@@ -393,7 +393,7 @@ public final class StateCodec {
 
   public static PatchSnapshot decode(byte[] bytes) {
     try (DataInputStream in = input(bytes, MAX_PATCH)) {
-      if (in.readInt() != MAGIC || in.readUnsignedShort() != 7)
+      if (in.readInt() != MAGIC || in.readUnsignedShort() != 8)
         throw new IllegalArgumentException("protocol");
       UUID id = uuid(in);
       long revision = in.readLong(), sequence = in.readLong(), sample = in.readLong();

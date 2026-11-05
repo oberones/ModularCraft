@@ -1,0 +1,20 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "modularcraft:block/mixer",
+      "y": 0
+    },
+    "facing=east": {
+      "model": "modularcraft:block/mixer",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "modularcraft:block/mixer",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "modularcraft:block/mixer",
+      "y": 270
+    }
+  }
+}

@@ -25,6 +25,7 @@ public final class NativeProbe {
           if (Boolean.getBoolean("modularcraft.qa.detune")
               || Boolean.getBoolean("modularcraft.qa.square")) oscillator();
           if (Boolean.getBoolean("modularcraft.qa.sequencer")) sequencer();
+          if (Boolean.getBoolean("modularcraft.qa.mixer")) MixerProbe.tick(ticks);
           if (Boolean.getBoolean("modularcraft.qa.lfo")) LfoProbe.tick(ticks);
           if (ticks == 1)
             System.out.println(
