@@ -3,7 +3,10 @@ package com.malevolentgods.modularcraft.dsp;
 import com.malevolentgods.modularcraft.domain.Cable;
 import com.malevolentgods.modularcraft.domain.Graph;
 import com.malevolentgods.modularcraft.domain.KeyboardState;
+import com.malevolentgods.modularcraft.domain.LfoSettings;
+import com.malevolentgods.modularcraft.domain.ModuleKind;
 import com.malevolentgods.modularcraft.domain.ModuleState;
+import com.malevolentgods.modularcraft.domain.Parameter;
 import com.malevolentgods.modularcraft.domain.Port;
 import java.util.HashMap;
 import java.util.List;
@@ -16,13 +19,18 @@ import java.util.UUID;
 public final class ControlTimeline {
   private static final class Node {
     final UUID id;
+    final ModuleState module;
+    final Lfo lfo;
+    final Node[] cv = new Node[4];
     final Sequencer sequencer;
     final Envelope envelope;
     boolean base, key;
     Node clock, reset, gate;
     Port clockPort, resetPort, gatePort;
 
-    Node(ModuleState module, Sequencer sequencer, Envelope envelope) {
+    Node(ModuleState module, Sequencer sequencer, Envelope envelope, Lfo lfo) {
+      this.module = module;
+      this.lfo = lfo;
       id = module.id();
       this.sequencer = sequencer;
       this.envelope = envelope;
@@ -35,6 +43,12 @@ public final class ControlTimeline {
     }
   }
 
+  private static final Parameter[] VALUES = {
+    Parameter.ATTACK, Parameter.DECAY, Parameter.SUSTAIN, Parameter.RELEASE
+  };
+  private static final Parameter[] DEPTHS = {
+    Parameter.ATTACK_DEPTH, Parameter.DECAY_DEPTH, Parameter.SUSTAIN_DEPTH, Parameter.RELEASE_DEPTH
+  };
   private final Node[] nodes;
   private final Map<UUID, Node> indices = new HashMap<>();
   private long sample, nextEvent = Long.MAX_VALUE;
@@ -48,12 +62,45 @@ public final class ControlTimeline {
       Map<UUID, Boolean> baseGates,
       Map<UUID, KeyboardState> keyboards,
       long sample) {
+    this(
+        modules,
+        cables,
+        sequencers,
+        envelopes,
+        baseGates,
+        keyboards,
+        initialLfos(modules, sample),
+        sample);
+  }
+
+  public static Map<UUID, Lfo> initialLfos(List<ModuleState> modules, long sample) {
+    Map<UUID, Lfo> result = new HashMap<>();
+    for (ModuleState module : modules)
+      if (module.kind() == ModuleKind.LFO)
+        result.put(module.id(), new Lfo(LfoSettings.from(module), sample));
+    return result;
+  }
+
+  public ControlTimeline(
+      List<ModuleState> modules,
+      List<Cable> cables,
+      Map<UUID, Sequencer> sequencers,
+      Map<UUID, Envelope> envelopes,
+      Map<UUID, Boolean> baseGates,
+      Map<UUID, KeyboardState> keyboards,
+      Map<UUID, Lfo> lfos,
+      long sample) {
     List<ModuleState> ordered = Graph.compile(modules, cables);
     this.sample = sample;
     nodes = new Node[ordered.size()];
     for (int i = 0; i < nodes.length; i++) {
       ModuleState module = ordered.get(i);
-      Node node = new Node(module, sequencers.get(module.id()), envelopes.get(module.id()));
+      Node node =
+          new Node(
+              module,
+              sequencers.get(module.id()),
+              envelopes.get(module.id()),
+              lfos.get(module.id()));
       node.base = baseGates.getOrDefault(module.id(), false);
       node.key = keyboards.containsKey(module.id()) && keyboards.get(module.id()).gate();
       nodes[i] = node;
@@ -74,6 +121,10 @@ public final class ControlTimeline {
           to.gate = from;
           to.gatePort = cable.output();
         }
+        case ATTACK_IN -> to.cv[0] = from;
+        case DECAY_IN -> to.cv[1] = from;
+        case SUSTAIN_IN -> to.cv[2] = from;
+        case RELEASE_IN -> to.cv[3] = from;
         default -> {}
       }
     }
@@ -97,19 +148,35 @@ public final class ControlTimeline {
 
   /** Call only for authoritative cable changes, not snapshot recovery. */
   public void rewire(ControlTimeline previous, long at) {
+    rewireAll(previous == null ? List.of() : List.of(previous), at);
+  }
+
+  /**
+   * Preserve each source's wiring history even when components split or merge. Preparation only.
+   */
+  public void rewireAll(List<ControlTimeline> previous, long at) {
     for (Node node : nodes) {
-      if (node.sequencer == null) continue;
-      Node old = previous == null ? null : previous.indices.get(node.id);
+      if (node.sequencer == null && node.lfo == null) continue;
+      Node old = null;
+      for (ControlTimeline timeline : previous) {
+        old = timeline.indices.get(node.id);
+        if (old != null) break;
+      }
       if (old == null
+          || node.lfo != old.lfo
           || !same(node.clock, old.clock)
           || node.clockPort != old.clockPort
           || !same(node.reset, old.reset)
-          || node.resetPort != old.resetPort)
-        node.sequencer.connect(
-            node.clock != null,
-            signal(node.clock, node.clockPort, at),
-            signal(node.reset, node.resetPort, at),
-            at);
+          || node.resetPort != old.resetPort) {
+        if (node.sequencer != null)
+          node.sequencer.connect(
+              node.clock != null,
+              signal(node.clock, node.clockPort, at),
+              signal(node.reset, node.resetPort, at),
+              at);
+        if (node.lfo != null)
+          node.lfo.connect(node.clock != null, signal(node.clock, node.clockPort, at), at);
+      }
     }
     findNext();
   }
@@ -139,8 +206,17 @@ public final class ControlTimeline {
         node.sequencer.advance(at);
         transitions += (int) (node.sequencer.transitions() - before);
       }
-      if (node.envelope != null)
+      if (node.lfo != null) node.lfo.input(signal(node.clock, node.clockPort, at), at);
+      if (node.envelope != null) {
+        boolean boundary = node.envelope.nextEvent() <= at;
+        boolean heldUpdate = at % 480 == 0 || node.cv[2] == null;
+        prepare(node, at, heldUpdate);
         node.envelope.gate(node.base || signal(node.gate, node.gatePort, at), at);
+        if (boundary
+            || (heldUpdate
+                && node.cv[2] != null
+                && node.module.value(Parameter.SUSTAIN_DEPTH) != 0)) transitions++;
+      }
     }
     sample = at;
     findNext();
@@ -149,8 +225,14 @@ public final class ControlTimeline {
 
   private void findNext() {
     nextEvent = Long.MAX_VALUE;
-    for (Node node : nodes)
+    for (Node node : nodes) {
       if (node.sequencer != null) nextEvent = Math.min(nextEvent, node.sequencer.nextEvent());
+      if (node.envelope != null) {
+        nextEvent = Math.min(nextEvent, node.envelope.nextEvent());
+        if (node.cv[2] != null && node.module.value(Parameter.SUSTAIN_DEPTH) != 0)
+          nextEvent = Math.min(nextEvent, (sample / 480 + 1) * 480);
+      }
+    }
   }
 
   /** Returns consumed transitions; overflow stops this component and never retains a backlog. */
@@ -181,6 +263,40 @@ public final class ControlTimeline {
     }
     sample = at;
     nextEvent = Long.MAX_VALUE;
+  }
+
+  private static double control(Node node, long at) {
+    if (node == null) return 0;
+    if (node.lfo != null) return node.lfo.value(at);
+    return node.envelope == null ? 0 : node.envelope.value(at);
+  }
+
+  private static double parameter(Node node, int index, long at) {
+    double base = node.module.value(VALUES[index]);
+    double amount = control(node.cv[index], at) * node.module.value(DEPTHS[index]) / 100;
+    return index == 2
+        ? Math.clamp(base / 100 + amount, 0, 1)
+        : Math.clamp(base * Math.pow(2, 4 * amount), .001, 10);
+  }
+
+  private static void prepare(Node node, long at, boolean heldUpdate) {
+    node.envelope.prepare(
+        parameter(node, 0, at),
+        parameter(node, 1, at),
+        parameter(node, 2, at),
+        parameter(node, 3, at),
+        at,
+        heldUpdate);
+  }
+
+  public void retrigger(UUID id, long at) {
+    advanceTo(at, 1024);
+    Node node = indices.get(id);
+    if (node != null && node.envelope != null) {
+      prepare(node, at, false);
+      node.envelope.retrigger(at);
+      findNext();
+    }
   }
 
   public boolean overloaded() {

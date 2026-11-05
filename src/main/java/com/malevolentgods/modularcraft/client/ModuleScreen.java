@@ -35,7 +35,11 @@ public final class ModuleScreen extends Screen {
   private long renewed;
   private final Map<Parameter, EditBox> fields = new EnumMap<>(Parameter.class);
   private final Map<Parameter, ValueSlider> sliders = new EnumMap<>(Parameter.class);
-  private Button enabled;
+  private Button enabled, gateButton;
+  private final Map<Parameter, Button> selectors = new EnumMap<>(Parameter.class);
+  private final Map<AbstractWidget, Integer> positions = new java.util.LinkedHashMap<>();
+  private boolean scrolling;
+  private int scroll, contentBottom, maximumScroll;
 
   public ModuleScreen(ModuleState state, boolean editable, String status) {
     super(
@@ -66,6 +70,7 @@ public final class ModuleScreen extends Screen {
     if (enabled != null)
       enabled.setMessage(
           Component.translatable(state.enabled() ? "modularcraft.disable" : "modularcraft.enable"));
+    selectors.forEach((p, button) -> button.setMessage(choice(p)));
     updateEditing();
     if (!editable) release();
   }
@@ -78,25 +83,78 @@ public final class ModuleScreen extends Screen {
     return Component.translatable("parameter.modularcraft." + p.name().toLowerCase(Locale.ROOT));
   }
 
+  private static boolean categorical(Parameter p) {
+    return p == Parameter.LFO_WAVE || p == Parameter.LFO_POLARITY || p == Parameter.LFO_DIVISION;
+  }
+
+  private Component choice(Parameter p, int value) {
+    return Component.translatable(
+        "modularcraft.lfo." + p.name().toLowerCase(Locale.ROOT) + "." + value);
+  }
+
+  private Component choice(Parameter p) {
+    return choice(p, (int) state.value(p));
+  }
+
+  private void layoutScroll() {
+    scroll = Math.clamp(scroll, 0, maximumScroll);
+    positions.forEach(
+        (widget, y) -> {
+          widget.setY(y - scroll);
+          widget.visible =
+              widget.getY() >= top + headerHeight
+                  && widget.getY() + widget.getHeight() <= contentBottom;
+        });
+  }
+
   @Override
   protected void init() {
     fields.clear();
     sliders.clear();
     editing.clear();
     enabled = null;
+    gateButton = null;
+    selectors.clear();
+    positions.clear();
+    scrolling =
+        state.kind() == ModuleKind.ENVELOPE
+            || state.kind() == ModuleKind.FILTER
+            || state.kind() == ModuleKind.LFO;
     compact = note != null && height < 280;
-    rowHeight = compact ? 34 : 38;
+    rowHeight = scrolling && height < 280 ? 32 : compact ? 34 : 38;
     headerHeight = compact ? 26 : 30;
     panelHeight =
         headerHeight
             + state.kind().parameters.size() * rowHeight
             + (note == null ? 0 : compact ? 42 : 48)
-            + (note == null ? 70 : compact ? 56 : 74);
+            + (scrolling
+                ? state.kind() == ModuleKind.ENVELOPE ? 76 : 50
+                : note == null ? 70 : compact ? 56 : 74);
     panelWidth = Math.min(420, width - 16);
     left = (width - panelWidth) / 2;
     top = Math.max(6, (height - panelHeight) / 2);
+    if (scrolling) {
+      panelHeight = Math.min(panelHeight, height - 12);
+      top = Math.max(6, (height - panelHeight) / 2);
+    }
+    contentBottom = top + panelHeight - (state.kind() == ModuleKind.ENVELOPE ? 76 : 50);
     int row = top + headerHeight;
     for (Parameter p : state.kind().parameters) {
+      if (categorical(p)) {
+        Button selector =
+            Button.builder(
+                    choice(p),
+                    button ->
+                        apply(p, Integer.toString(((int) state.value(p) + 1) % ((int) p.max + 1))))
+                .bounds(left + 10, row + 13, panelWidth - 20, 18)
+                .build();
+        selector.setTooltip(Tooltip.create(label(p)));
+        selectors.put(p, selector);
+        addRenderableWidget(selector);
+        editing.add(selector);
+        row += rowHeight;
+        continue;
+      }
       EditBox field = new EditBox(font, left + panelWidth - 138, row + 13, 76, 18, label(p));
       field.setMaxLength(16);
       field.setValue(format(state.value(p)));
@@ -124,11 +182,18 @@ public final class ModuleScreen extends Screen {
         row += compact ? 42 : 48;
       }
     }
+    if (scrolling) {
+      maximumScroll = Math.max(0, row - contentBottom);
+      for (AbstractWidget widget : editing) positions.put(widget, widget.getY());
+      layoutScroll();
+      row = contentBottom + 4;
+    }
     if (state.kind() == ModuleKind.ENVELOPE) {
       Button hold =
           Button.builder(Component.translatable("modularcraft.hold_gate"), button -> hold())
               .bounds(left + 10, row, 190, 20)
               .build();
+      gateButton = hold;
       hold.active = editable;
       addRenderableWidget(hold);
       editing.add(hold);
@@ -150,11 +215,19 @@ public final class ModuleScreen extends Screen {
         Button.builder(
                 Component.translatable("modularcraft.local_audio"),
                 button -> minecraft.setScreen(new AudioSettingsScreen(this)))
-            .bounds(left + 10, row + (compact ? 8 : 28), 150, 20)
+            .bounds(
+                left + 10,
+                row + (scrolling && state.kind() != ModuleKind.ENVELOPE ? 0 : compact ? 8 : 28),
+                150,
+                20)
             .build());
     addRenderableWidget(
         Button.builder(Component.translatable("gui.done"), button -> onClose())
-            .bounds(left + panelWidth - 90, row + (compact ? 8 : 28), 80, 20)
+            .bounds(
+                left + panelWidth - 90,
+                row + (scrolling && state.kind() != ModuleKind.ENVELOPE ? 0 : compact ? 8 : 28),
+                80,
+                20)
             .build());
   }
 
@@ -243,6 +316,11 @@ public final class ModuleScreen extends Screen {
       menu.scroll(vertical);
       return true;
     }
+    if (scrolling && y >= top + headerHeight && y <= contentBottom) {
+      scroll -= (int) (vertical * rowHeight);
+      layoutScroll();
+      return true;
+    }
     return super.mouseScrolled(x, y, horizontal, vertical);
   }
 
@@ -274,6 +352,13 @@ public final class ModuleScreen extends Screen {
 
   @Override
   public void tick() {
+    if (state.kind() == ModuleKind.LFO) {
+      long sample = ClientRuntime.visualSample();
+      SequencerVisuals.advance(sample);
+      var lfo = SequencerVisuals.lfo(state.id());
+      if (lfo != null && !status.equals("range") && !status.equals("awaiting"))
+        status = !lfo.external() ? "lfo_free" : lfo.waiting(sample) ? "lfo_waiting" : "lfo_sync";
+    }
     if (gate && System.nanoTime() - renewed > 200_000_000L) {
       renewed = System.nanoTime();
       ClientRuntime.send(state, Messages.Action.GATE, Parameter.SUSTAIN, 1);
@@ -299,11 +384,26 @@ public final class ModuleScreen extends Screen {
     }
     if (key == GLFW.GLFW_KEY_SPACE
         && state.kind() == ModuleKind.ENVELOPE
-        && !(getFocused() instanceof EditBox)) {
+        && (getFocused() == null || getFocused() == gateButton)) {
       hold();
       return true;
     }
-    return super.keyPressed(key, scan, modifiers);
+    if (scrolling && (key == GLFW.GLFW_KEY_PAGE_DOWN || key == GLFW.GLFW_KEY_PAGE_UP)) {
+      scroll += key == GLFW.GLFW_KEY_PAGE_DOWN ? rowHeight * 2 : -rowHeight * 2;
+      layoutScroll();
+      return true;
+    }
+    boolean handled = super.keyPressed(key, scan, modifiers);
+    if (scrolling
+        && getFocused() instanceof AbstractWidget widget
+        && positions.containsKey(widget)) {
+      int y = positions.get(widget);
+      if (y - scroll < top + headerHeight) scroll = y - top - headerHeight;
+      if (y - scroll + widget.getHeight() > contentBottom)
+        scroll = y + widget.getHeight() - contentBottom;
+      layoutScroll();
+    }
+    return handled;
   }
 
   @Override
@@ -336,20 +436,42 @@ public final class ModuleScreen extends Screen {
     graphics.fill(
         left, top, left + panelWidth, Math.min(height - 4, top + panelHeight), 0xf018212a);
     graphics.drawString(font, title, left + 10, top + 10, 0xffd9edf1);
-    int row = top + headerHeight;
+    if (scrolling && maximumScroll > 0) {
+      graphics.drawString(
+          font,
+          Component.translatable("modularcraft.scroll_help"),
+          left + panelWidth - 88,
+          top + 10,
+          0xffa6c7cf);
+      int view = contentBottom - top - headerHeight;
+      int thumb = Math.max(12, view * view / (view + maximumScroll));
+      int y = top + headerHeight + scroll * (view - thumb) / maximumScroll;
+      graphics.fill(
+          left + panelWidth - 5,
+          top + headerHeight,
+          left + panelWidth - 3,
+          contentBottom,
+          0xff34434e);
+      graphics.fill(left + panelWidth - 5, y, left + panelWidth - 3, y + thumb, 0xffa6c7cf);
+    }
+    int row = top + headerHeight - (scrolling ? scroll : 0);
+    if (scrolling)
+      graphics.enableScissor(left, top + headerHeight, left + panelWidth, contentBottom);
     for (Parameter p : state.kind().parameters) {
       graphics.drawString(
           font,
-          label(p).getString()
-              + " · "
-              + format(state.value(p))
-              + " "
-              + p.unit
-              + " ["
-              + format(p.min)
-              + "–"
-              + format(p.max)
-              + "]",
+          categorical(p)
+              ? label(p).getString()
+              : label(p).getString()
+                  + " · "
+                  + format(state.value(p))
+                  + " "
+                  + p.unit
+                  + " ["
+                  + format(p.min)
+                  + "–"
+                  + format(p.max)
+                  + "]",
           left + 10,
           row,
           0xffa6c7cf);
@@ -367,8 +489,15 @@ public final class ModuleScreen extends Screen {
         row += compact ? 42 : 48;
       }
     }
+    if (scrolling) {
+      graphics.disableScissor();
+      row = contentBottom + 4;
+    }
     Component message = Component.translatable("modularcraft.error." + status);
-    int statusY = Math.min(height - 12, row + (compact ? 34 : 53));
+    int statusY =
+        Math.min(
+            height - 12,
+            row + (scrolling && state.kind() != ModuleKind.ENVELOPE ? 25 : compact ? 34 : 53));
     if (note != null)
       graphics.drawWordWrap(font, message, left + 10, statusY, panelWidth - 20, 0xffe2c88c);
     else graphics.drawString(font, message, left + 10, statusY, 0xffe2c88c);

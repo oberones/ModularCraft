@@ -3,6 +3,7 @@ package com.malevolentgods.modularcraft.dsp;
 import com.malevolentgods.modularcraft.domain.Cable;
 import com.malevolentgods.modularcraft.domain.Graph;
 import com.malevolentgods.modularcraft.domain.KeyboardState;
+import com.malevolentgods.modularcraft.domain.LfoSettings;
 import com.malevolentgods.modularcraft.domain.ModuleKind;
 import com.malevolentgods.modularcraft.domain.ModuleState;
 import com.malevolentgods.modularcraft.domain.Parameter;
@@ -31,7 +32,11 @@ public final class RenderGraph {
     final Smoother[] parameters = new Smoother[Parameter.values().length];
     final Smoother left = new Smoother(0), right = new Smoother(0);
     Envelope envelope;
-    int audio = -1, control = -1, pitch = -1, patch;
+    Lfo lfo;
+    final Smoother cutoffCv = new Smoother(0),
+        resonanceCv = new Smoother(0),
+        gainCv = new Smoother(1);
+    int audio = -1, control = -1, resonance = -1, pitch = -1, patch;
 
     Node(ModuleState module, Envelope.Checkpoint checkpoint) {
       this.module = module;
@@ -79,9 +84,14 @@ public final class RenderGraph {
       PatchSnapshot patch = patches.get(p);
       Map<UUID, Envelope> envelopes = new HashMap<>();
       Map<UUID, Sequencer> sequencers = new HashMap<>();
+      Map<UUID, Lfo> lfos = new HashMap<>();
       for (ModuleState module : patch.modules()) {
         Node node = nodes[indices.get(module.id())];
         node.patch = p;
+        if (module.kind() == ModuleKind.LFO) {
+          node.lfo = new Lfo(LfoSettings.from(module), patch.lfos().get(module.id()));
+          lfos.put(module.id(), node.lfo);
+        }
         if (module.kind() == ModuleKind.ENVELOPE) envelopes.put(module.id(), node.envelope);
         if (module.kind() == ModuleKind.EUCLIDEAN_SEQUENCER)
           sequencers.put(
@@ -96,6 +106,7 @@ public final class RenderGraph {
               envelopes,
               patch.baseGates(),
               patch.keyboards(),
+              lfos,
               patch.sample());
     }
     Map<UUID, KeyboardState> keyboards = new HashMap<>();
@@ -103,6 +114,7 @@ public final class RenderGraph {
     for (Cable c : cables) {
       Node n = nodes[indices.get(c.destination())];
       if (c.input() == Port.AUDIO_IN) n.audio = indices.get(c.source());
+      else if (c.input() == Port.RESONANCE_IN) n.resonance = indices.get(c.source());
       else if (c.input() == Port.PITCH_IN) n.pitch = indices.get(c.source());
       else if (c.input() == Port.CUTOFF_IN || c.input() == Port.GAIN_IN)
         n.control = indices.get(c.source());
@@ -133,6 +145,9 @@ public final class RenderGraph {
           if (node.oscillator != null) node.oscillator.adopt(old.oscillator);
           if (node.pulse != null) node.pulse.adopt(old.pulse);
           node.filter.copyFrom(old.filter);
+          node.cutoffCv.reset(old.cutoffCv.current());
+          node.resonanceCv.reset(old.resonanceCv.current());
+          node.gainCv.reset(old.gainCv.current());
           for (Parameter p : node.module.kind().parameters) {
             node.parameters[p.ordinal()].reset(old.parameters[p.ordinal()].current());
             node.parameters[p.ordinal()].target(node.module.value(p));
@@ -187,19 +202,34 @@ public final class RenderGraph {
         switch (n.module.kind()) {
           case OSCILLATOR -> signals[i] = n.oscillator.next(n.next(Parameter.LEVEL) / 100);
           case SQUARE_OSCILLATOR -> signals[i] = n.pulse.next(n.next(Parameter.LEVEL) / 100);
+          case LFO -> signals[i] = n.lfo.value(sample + frame);
           case KEYBOARD, EUCLIDEAN_SEQUENCER -> signals[i] = 0;
           case ENVELOPE -> signals[i] = n.envelope.value(sample + frame);
           case FILTER -> {
+            if (n.control >= 0
+                && nodes[n.control].envelope != null
+                && nodes[n.control].module.kind() == ModuleKind.ENVELOPE) n.cutoffCv.reset(control);
+            else n.cutoffCv.target(control);
+            n.resonanceCv.target(n.resonance < 0 ? 0 : signals[n.resonance]);
             double cutoff =
-                Filter.cutoff(n.next(Parameter.CUTOFF), control, n.next(Parameter.AMOUNT) / 100);
-            double value = n.filter.next(audio, cutoff, n.next(Parameter.RESONANCE));
+                Filter.cutoff(
+                    n.next(Parameter.CUTOFF), n.cutoffCv.next(), n.next(Parameter.AMOUNT) / 100);
+            double resonance =
+                Math.clamp(
+                    n.next(Parameter.RESONANCE)
+                        + n.resonanceCv.next() * n.next(Parameter.RESONANCE_DEPTH) / 100 * 95,
+                    0,
+                    95);
+            double value = n.filter.next(audio, cutoff, resonance);
             signals[i] = n.audio < 0 ? 0 : value;
           }
           case SPEAKER -> {
+            if (n.control >= 0 && nodes[n.control].module.kind() == ModuleKind.ENVELOPE)
+              n.gainCv.reset(Math.clamp(control, 0, 1));
+            else n.gainCv.target(n.control < 0 ? 1 : Math.clamp(control, 0, 1));
+            double gain = n.gainCv.next();
             signals[i] =
-                timelines[n.patch].overloaded()
-                    ? 0
-                    : audio * n.next(Parameter.VOLUME) / 100 * (n.control < 0 ? 1 : control);
+                timelines[n.patch].overloaded() ? 0 : audio * n.next(Parameter.VOLUME) / 100 * gain;
             left += signals[i] * n.left.next();
             right += signals[i] * n.right.next();
           }

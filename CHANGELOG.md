@@ -85,3 +85,14 @@ the pulse/filter patch. No new dependencies; native listening/multiplayer remain
 Fixed Shift-right-click cable removal: sneaking tool use now reaches the module's existing
 port handler instead of falling through to selection cancellation. Removal still targets
 one destination input and respects ownership; the overlay now names the right mouse button.
+
+LFO/CV extension (2026-11-05): eighth module with five waves, 0.01–20 Hz free frequency,
+bipolar/unipolar output and automatic pulse-measured clock divisions. Add signed resonance
+and four ADSR CV depths; capture time CV at stage entry and smoothly track held sustain.
+Existing cutoff CV gains a bipolar downward sweep and the label Cutoff CV Amount. Legacy
+positive envelope mapping and short-note ADSR gain remain unchanged. Panels scroll with
+fixed gate/local-audio controls. Delayed previous-panel close messages no longer invalidate
+a newly inspected module. Protocol/snapshot 7 requires updating both client and server;
+world schema 1 migrates exact old filter/envelope records with zero depths. Back up before
+upgrading and restore the backup to downgrade. Human listening and sustained multiplayer
+acceptance remain separate from automated checks; no release/publication is implied.

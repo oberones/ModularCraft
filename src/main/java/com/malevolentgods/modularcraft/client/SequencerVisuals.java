@@ -1,9 +1,11 @@
 package com.malevolentgods.modularcraft.client;
 
+import com.malevolentgods.modularcraft.domain.LfoSettings;
 import com.malevolentgods.modularcraft.domain.ModuleState;
 import com.malevolentgods.modularcraft.domain.PatchSnapshot;
 import com.malevolentgods.modularcraft.domain.SequencerSettings;
 import com.malevolentgods.modularcraft.dsp.ControlTimeline;
+import com.malevolentgods.modularcraft.dsp.Lfo;
 import com.malevolentgods.modularcraft.dsp.Sequencer;
 import java.util.Collection;
 import java.util.HashMap;
@@ -14,6 +16,7 @@ import java.util.UUID;
 public final class SequencerVisuals {
   public static final int[] COLORS = {0xff65d7e5, 0xffffc36a, 0xff91c79a, 0xffd69bbd};
   private static final Map<UUID, Projection> PATCHES = new HashMap<>();
+  private static final Map<UUID, Lfo> LFOS = new HashMap<>();
   private static final Map<UUID, Sequencer> MODULES = new HashMap<>();
   private static final double[][] X = new double[17][16], Y = new double[17][16];
 
@@ -38,6 +41,7 @@ public final class SequencerVisuals {
 
   private static final class Projection {
     final Map<UUID, Sequencer> sequencers = new HashMap<>();
+    final Map<UUID, Lfo> lfos = new HashMap<>();
     final ControlTimeline timeline;
 
     Projection(PatchSnapshot patch) {
@@ -46,6 +50,9 @@ public final class SequencerVisuals {
           sequencers.put(
               module.id(),
               new Sequencer(SequencerSettings.from(module), patch.sequencers().get(module.id())));
+      for (ModuleState module : patch.modules())
+        if (patch.lfos().containsKey(module.id()))
+          lfos.put(module.id(), new Lfo(LfoSettings.from(module), patch.lfos().get(module.id())));
       timeline =
           new ControlTimeline(
               patch.modules(),
@@ -54,6 +61,7 @@ public final class SequencerVisuals {
               Map.of(),
               Map.of(),
               patch.keyboards(),
+              lfos,
               patch.sample());
     }
   }
@@ -63,10 +71,11 @@ public final class SequencerVisuals {
   public static void accept(Collection<PatchSnapshot> patches) {
     clear();
     for (PatchSnapshot patch : patches) {
-      if (patch.sequencers().isEmpty()) continue;
+      if (patch.sequencers().isEmpty() && patch.lfos().isEmpty()) continue;
       Projection projection = new Projection(patch);
       PATCHES.put(patch.id(), projection);
       MODULES.putAll(projection.sequencers);
+      LFOS.putAll(projection.lfos);
     }
   }
 
@@ -80,7 +89,12 @@ public final class SequencerVisuals {
     return MODULES.get(id);
   }
 
+  public static Lfo lfo(UUID id) {
+    return LFOS.get(id);
+  }
+
   public static void clear() {
+    LFOS.clear();
     PATCHES.clear();
     MODULES.clear();
     advanced = -1;

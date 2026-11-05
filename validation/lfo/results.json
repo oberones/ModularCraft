@@ -1,0 +1,76 @@
+{
+  "date": "2026-11-05",
+  "baseline_revision": "aa231cbd488ec974b28320b4d747602101f2e839",
+  "branch": "001-modular-synth-mvp",
+  "platform": "Apple M2 Pro, 16 GiB RAM, macOS 26.6.2 (25G83), arm64, Eclipse Adoptium 21.0.12.1",
+  "runtime_jar_sha256": "57d9444afc8668f2bec13cd5e424a539405a0c3b9f7c398bf3f754e2c4c2c637",
+  "automated": {
+    "tests": 144,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "launcher_tests": 12,
+  "packaged_gametests": 29,
+  "asset_sets": 8,
+  "synthetic_dsp": {
+    "p95_ms": 0.266083,
+    "allocation_bytes": 136,
+    "allocation_gate_bytes": 4096,
+    "sample_rate_hz": 48000,
+    "frames_per_block": 128,
+    "warmup_blocks": 5000,
+    "measured_blocks": 10000,
+    "modules": 64,
+    "cables": 96,
+    "speakers": 8
+  },
+  "native_ui": {
+    "directory": "run/make/lfo-native-final",
+    "runtime_jar_sha256": "0a88f70c4138435bcbf2330f358b5d5b313191061e315856818325adfc45f4dd",
+    "functional": "PASS",
+    "max_reported_underruns": 1,
+    "maximum_audio_block_ns": 13640834,
+    "final_audio_counters": {
+      "p95BlockNs": 99709,
+      "blocks": 194,
+      "underruns": 0,
+      "maxBlockNs": 152042,
+      "peak": 0.0589376837015152,
+      "maxQueued": 12
+    },
+    "server_samples": 480,
+    "server_p95_ns": 338959,
+    "server_measured_max_ns": 1305500,
+    "cleanup_cycles": 10
+  },
+  "native_load": {
+    "directory": "run/make/lfo-load-20261105a",
+    "runtime_jar_sha256": "747887c54b80dc4a910f7fa1ef3c2d4e57b6d9dcd649b8607869633c5a7637aa",
+    "functional": "PASS",
+    "max_reported_underruns": 1,
+    "maximum_audio_block_ns": 5158000,
+    "final_audio_counters": {
+      "p95BlockNs": 299334,
+      "blocks": 22423,
+      "underruns": 1,
+      "maxBlockNs": 5158000,
+      "peak": 0.15524470806121826,
+      "maxQueued": 12
+    },
+    "server_samples": 1080,
+    "server_p95_ns": 593292,
+    "server_measured_max_ns": 8516292,
+    "cleanup_cycles": 0
+  },
+  "measurement_scope": "Native artifacts preceded the final phase-preserving destination-removal correction; final runtime passed the packaged removal regression and full verify. DSP code is identical in the native load and final runtime.",
+  "pending": [
+    "human RP-006 listening/acoustic acceptance",
+    "two-client timing and late join",
+    "30-minute native sustained load and zero-underrun qualification",
+    "all earlier security/platform/hardware/release gates"
+  ],
+  "self_review": "PASS; see review.md",
+  "committed": false,
+  "published": false
+}

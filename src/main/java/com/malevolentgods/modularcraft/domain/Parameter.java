@@ -30,7 +30,16 @@ public enum Parameter {
   D_HITS(0, 16, 9, ""),
   D_ROTATION(0, 15, 0, ""),
   D_MUTE(0, 1, 0, ""),
-  PULSE_WIDTH(5, 95, 50, "%");
+  PULSE_WIDTH(5, 95, 50, "%"),
+  LFO_FREQUENCY(.01, 20, 1, "Hz"),
+  LFO_WAVE(0, 4, 0, ""),
+  LFO_POLARITY(0, 1, 0, ""),
+  LFO_DIVISION(0, 6, 2, ""),
+  RESONANCE_DEPTH(-100, 100, 0, "%"),
+  ATTACK_DEPTH(-100, 100, 0, "%"),
+  DECAY_DEPTH(-100, 100, 0, "%"),
+  SUSTAIN_DEPTH(-100, 100, 0, "%"),
+  RELEASE_DEPTH(-100, 100, 0, "%");
   public final double min, max, initial;
   public final String unit;
 
@@ -43,7 +52,10 @@ public enum Parameter {
 
   private boolean integer() {
     return switch (this) {
-      case OCTAVE,
+      case LFO_WAVE,
+          LFO_POLARITY,
+          LFO_DIVISION,
+          OCTAVE,
           TEMPO,
           A_STEPS,
           A_HITS,

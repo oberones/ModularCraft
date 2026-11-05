@@ -1,7 +1,7 @@
 # ModularCraft
 
-Build a shared modular synthesizer from seven Minecraft blocks: **Saw Oscillator**, **Square Oscillator**,
-**Low-Pass Filter**, **Envelope Generator**, **Amplifier / Speaker**, **Keyboard**, and **Euclidean Sequencer**. Connect their
+Build a shared modular synthesizer from eight Minecraft blocks: **Saw Oscillator**, **Square Oscillator**,
+**Low-Pass Filter**, **Envelope Generator**, **Amplifier / Speaker**, **Keyboard**, **Euclidean Sequencer**, and **LFO**. Connect their
 ports with the Patching Tool; nearby players synthesize the accepted performance locally.
 No prerecorded loops, accounts, internet audio, external services, or extra audio software
 are required. Creative access is sufficient; there are no survival recipes in this MVP.
@@ -33,8 +33,7 @@ Audio settings are also available from the title screen, pause menu, and module 
 4. Select **Envelope CO → Envelope Out**, then **Speaker GI ← Gain Control In**.
 5. Put the tool away. Right-click the speaker and choose **Enable speaker**. Its default
    volume is 10%. The envelope is initially released, so silence here is expected.
-6. Right-click the envelope. **Hold Gate** with the mouse, or hold **Space** when a numeric
-   field is not focused. Hold for two seconds, then release. The 220 Hz note attacks,
+6. Right-click the envelope. **Hold Gate** with the mouse, or hold **Space** with the Hold Gate button focused. Hold for two seconds, then release. The 220 Hz note attacks,
    settles to sustain, then fades out. Closing the screen releases its manual gate.
 7. Press **M** to stop local sound. Press it again to hear the current shared performance.
    Muting yourself never stops the instrument for other players.
@@ -48,8 +47,8 @@ Default RP-001 settings, including every parameter:
 | Module | Settings |
 |---|---|
 | Oscillator | Frequency 220 Hz; Detune 0 cents; Level 50% |
-| Filter | Cutoff 5,000 Hz; Resonance 0%; Envelope Amount 0% |
-| Envelope | Attack 0.010 s; Decay 0.200 s; Sustain 70%; Release 0.300 s |
+| Filter | Cutoff 5,000 Hz; Resonance 0%; Cutoff CV Amount 0%; Resonance CV depth 0% |
+| Envelope | Attack 0.010 s; Decay 0.200 s; Sustain 70%; Release 0.300 s; all four CV depths 0% |
 | Speaker | Volume 10%; Enabled on after step 5 |
 
 For a continuous drone, **Shift-right-click Speaker Gain In** with the tool to remove
@@ -103,7 +102,7 @@ Set every module as follows:
 | Module | Settings |
 |---|---|
 | Oscillator | Frequency 220 Hz; Detune 0 cents; Level 50% |
-| Filter | Cutoff 500 Hz; Resonance 0%; Envelope Amount 50% |
+| Filter | Cutoff 500 Hz; Resonance 0%; Cutoff CV Amount 50% |
 | Envelope | Attack 0.500 s; Decay 0.500 s; Sustain 30%; Release 1.000 s |
 | Speaker | Volume 10%; Enabled on |
 
@@ -220,7 +219,7 @@ for recovery. The global registry is `data/modularcraft.dat`; per-module data is
 its owning block entity. World-save schema remains version 1; older oscillators receive Detune 0 without changing
 their saved Frequency or Level. Back up the world before upgrading; restore that backup
 if downgrading, since older builds cannot interpret the new control. Network and
-performance-snapshot protocol is version 6: update both server and clients together.
+performance-snapshot protocol is version 7: update both server and clients together.
 
 ## Troubleshooting
 
@@ -319,7 +318,7 @@ envelopes, and two speakers (11 modules, 12 cables):
 Settings and cables survive saves. Running state, held pulses and positions do not:
 world reload and chunk suspension require Start, and speakers must be enabled again.
 Closing the editor, disabling speakers, and local mute leave a loaded sequencer running.
-Back up worlds before upgrading; install protocol-v6 builds on every client and server.
+Back up worlds before upgrading; install protocol-v7 builds on every client and server.
 This version does not add presets, manual step editing, swing, probability, variable gate
 lengths, clock division, pitch sequences, MIDI clock, or redstone clock conversion.
 
@@ -330,7 +329,7 @@ Place a **Square Oscillator**, **Low-Pass Filter**, and **Amplifier / Speaker** 
 apart. Connect Square Audio Out → Filter Audio In → Speaker Audio In. Leave the filter's
 Cutoff Control In and speaker's Gain Control In disconnected for a sustained drone.
 Use Frequency **220 Hz**, Level **50%**, filter Cutoff **5,000 Hz**, Resonance **0%**,
-Envelope Amount **0%**, and speaker Volume **10%**; enable the speaker.
+Cutoff CV Amount **0%**, and speaker Volume **10%**; enable the speaker.
 
 The square panel has the same Frequency, Note/Octave, Set Note, and Level controls as the
 saw. **PWM (pulse width)** replaces Detune: enter fractional percentages from **5–95%**,
@@ -350,3 +349,62 @@ restart disabled. Human listening and multiplayer qualification remain separate 
 The new block requires protocol **6** clients/server. World schema remains **1** and
 existing saw blocks retain their identifiers and sound. Back up worlds before upgrading;
 restore the backup before downgrading to a build that does not know the square block.
+
+## LFO and parameter modulation: RP-006
+
+The **LFO** provides sine (default), triangle, rising saw, falling saw, and square waves.
+Click a selector or focus it with Tab and press Enter/Space to cycle choices. Frequency
+is **0.01–20 Hz**, default **1 Hz**. Output polarity defaults to bipolar **−1…+1**;
+unipolar **0…1** is available for upward sweeps. Square duty is fixed at 50%.
+The LFO runs while its patch is loaded, independently of speaker enable and local mute.
+
+Connect Sequencer **Clock Out → LFO Clock In** for automatic synchronization. Cycle lengths
+are 1/16, 1/8, quarter (default), half, whole note, two bars, and four bars; bar labels mean
+4/4. A sequencer emits four pulses per quarter note, so the default quarter-note LFO runs
+at **2 Hz at 120 BPM**. The saved Hz remains editable and resumes when the clock cable is
+removed. The first two rising edges acquire timing. After two missing pulse intervals,
+phase holds and the panel shows **Waiting for clock**. Restarting the clock reacquires
+phase; stopping audio locally does not stop the shared clock. Clock inputs also accept
+other gate-role outputs, but irregular triggers produce irregular synchronization.
+
+Filter **Cutoff CV Amount** retains the former Envelope Amount behavior for positive CV.
+Negative CV sweeps toward 20 Hz. Filter **Resonance CV In**, and envelope **A/D/S/R CV In**,
+have individual signed depth controls, **−100…100%**, default **0%**. A cable alone does
+not change a zero-depth parameter. Negative depth reverses modulation. Resonance and
+sustain add a fraction of their allowed range; time CV multiplies the base time by
+`2^(4 × CV × depth/100)`, clamped to 1 ms–10 s. At 25% depth, bipolar time CV spans
+half to twice the base duration. Each time is captured when its stage begins; sustain
+follows CV through 10 ms ramps while held. Inputs also accept another envelope's output.
+
+Use the mouse wheel or **Page Up/Page Down** to scroll longer panels. Tab selects visible
+controls; exact numeric entry and Apply remain available. The lower controls stay visible.
+Every input accepts one source; each output can fan out to four inputs. Feedback is refused.
+LFO → Speaker Gain In supports tremolo; bipolar negative values clamp to zero gain.
+
+Build these RP-006 variations with blocks two blocks apart, all owned by the same player:
+
+1. **Free filter sweep:** Saw Audio Out → Filter Audio In → Speaker Audio In;
+   LFO Control Out → Filter Cutoff In and Resonance In. Use saw 220 Hz, Detune 0, Level 50%;
+   speaker 10%, enabled; filter cutoff 5,000 Hz, resonance 25%, Amount 30%, resonance depth
+   20%; LFO sine, 1 Hz, bipolar, quarter division (inactive without a clock). Expect one
+   bright/dark sweep per second. Compare all five waves, then unipolar and bipolar.
+2. **Clocked sweep:** Add Sequencer Clock Out → LFO Clock In to variation 1. Use tempo
+   120 BPM and default channel patterns, then Start. Quarter division gives two sweeps per
+   second; whole note gives one every two seconds. Change tempo to 90 BPM, Stop, Start,
+   and disconnect Clock In; verify held phase, reacquisition, and restoration of 1 Hz.
+3. **ADSR CV:** Starting from variation 1, add Envelope Out → Speaker Gain In, LFO Control
+   Out → Envelope Attack In and Sustain In (four destinations total). Use attack .100 s,
+   decay .200 s, sustain 50%, release .300 s; attack/sustain depths 25%, other depths 0%.
+   Hold the envelope gate for two seconds, release for one second, repeat. Attack durations
+   vary between notes and sustain moves while held. Then remove the Attack/Sustain CV cables,
+   set those depths to 0%, connect LFO to Decay/Release instead, and set those depths to 25%.
+   Repeat the gate pattern to hear decay/release variation. No redstone or external gate is
+   needed. All waveforms/settings not changed above retain variation 1 values.
+
+World schema remains **1**; exact legacy filter/envelope records gain zero-valued depths,
+so existing patches keep their settings. Network/snapshot protocol is **7**: update clients
+and server together. Back up the world before upgrading; restore that backup when returning
+to an older binary, which cannot understand LFO records. Unknown/malformed records remain
+preserved rather than silently repaired. Transient phase is not saved across world/chunk
+reload; speakers still restart disabled. Native listening and multiplayer acceptance are
+tracked separately in the [ledger](validation/ledger.md).

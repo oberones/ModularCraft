@@ -1,6 +1,7 @@
 package com.malevolentgods.modularcraft.domain;
 
 import com.malevolentgods.modularcraft.dsp.Envelope;
+import com.malevolentgods.modularcraft.dsp.Lfo;
 import com.malevolentgods.modularcraft.dsp.Sequencer;
 import java.util.List;
 import java.util.Map;
@@ -16,7 +17,47 @@ public record PatchSnapshot(
     Map<UUID, Envelope.Checkpoint> envelopes,
     Map<UUID, KeyboardState> keyboards,
     Map<UUID, Sequencer.Checkpoint> sequencers,
-    Map<UUID, Boolean> baseGates) {
+    Map<UUID, Boolean> baseGates,
+    Map<UUID, Lfo.Checkpoint> lfos) {
+  public PatchSnapshot(
+      UUID id,
+      long revision,
+      long sequence,
+      long sample,
+      List<ModuleState> modules,
+      List<Cable> cables,
+      Map<UUID, Envelope.Checkpoint> envelopes,
+      Map<UUID, KeyboardState> keyboards,
+      Map<UUID, Sequencer.Checkpoint> sequencers,
+      Map<UUID, Boolean> baseGates) {
+    this(
+        id,
+        revision,
+        sequence,
+        sample,
+        modules,
+        cables,
+        envelopes,
+        keyboards,
+        sequencers,
+        baseGates,
+        initialLfos(modules, cables, sample));
+  }
+
+  private static Map<UUID, Lfo.Checkpoint> initialLfos(
+      List<ModuleState> modules, List<Cable> cables, long sample) {
+    Map<UUID, Lfo.Checkpoint> result = new java.util.HashMap<>();
+    for (ModuleState module : modules)
+      if (module.kind() == ModuleKind.LFO) {
+        Lfo lfo = new Lfo(LfoSettings.from(module), sample);
+        if (cables.stream()
+            .anyMatch(c -> c.destination().equals(module.id()) && c.input() == Port.CLOCK_IN))
+          lfo.connect(true, false, sample);
+        result.put(module.id(), lfo.checkpoint(sample));
+      }
+    return result;
+  }
+
   public PatchSnapshot(
       UUID id,
       long revision,
@@ -86,6 +127,7 @@ public record PatchSnapshot(
   }
 
   public PatchSnapshot {
+    lfos = Map.copyOf(lfos);
     modules = List.copyOf(modules);
     cables = List.copyOf(cables);
     envelopes = Map.copyOf(envelopes);
@@ -101,6 +143,7 @@ public record PatchSnapshot(
         || envelopes.size() > 16
         || keyboards.size() > 16
         || sequencers.size() > 16
+        || lfos.size() > 16
         || baseGates.size() > 16) throw new IllegalArgumentException("snapshot_bounds");
     java.util.Map<UUID, ModuleState> map = new java.util.HashMap<>();
     for (ModuleState m : modules)
@@ -124,6 +167,18 @@ public record PatchSnapshot(
                   .active()
                   .equals(SequencerSettings.from(map.get(entry.getKey())))))
         throw new IllegalArgumentException("sequencer_checkpoint");
+    }
+    for (ModuleState module : modules)
+      if ((module.kind() == ModuleKind.LFO) != lfos.containsKey(module.id()))
+        throw new IllegalArgumentException("lfo_identity");
+    for (var entry : lfos.entrySet()) {
+      boolean connected =
+          cables.stream()
+              .anyMatch(c -> c.destination().equals(entry.getKey()) && c.input() == Port.CLOCK_IN);
+      if (!map.containsKey(entry.getKey())
+          || entry.getValue().sample() != sample
+          || entry.getValue().external() != connected)
+        throw new IllegalArgumentException("lfo_checkpoint");
     }
     if (!baseGates.keySet().equals(envelopes.keySet()))
       throw new IllegalArgumentException("envelope_gate_identity");

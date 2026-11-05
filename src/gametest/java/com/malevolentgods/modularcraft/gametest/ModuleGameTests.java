@@ -259,6 +259,164 @@ public final class ModuleGameTests {
     h.succeed();
   }
 
+  @GameTest(template = "empty", templateNamespace = ModularCraft.ID)
+  public static void lfoFrequencyPersistsAndRejectsInvalidStaleAndForeignEdits(GameTestHelper h) {
+    assertParameterEdits(h, ModuleKind.LFO, Parameter.LFO_FREQUENCY, 3.125);
+  }
+
+  @GameTest(template = "empty", templateNamespace = ModularCraft.ID)
+  public static void filterResonanceDepthPersists(GameTestHelper h) {
+    assertParameterEdits(h, ModuleKind.FILTER, Parameter.RESONANCE_DEPTH, -25.125);
+  }
+
+  @GameTest(template = "empty", templateNamespace = ModularCraft.ID)
+  public static void envelopeAttackDepthPersists(GameTestHelper h) {
+    assertParameterEdits(h, ModuleKind.ENVELOPE, Parameter.ATTACK_DEPTH, -25.125);
+  }
+
+  @GameTest(template = "empty", templateNamespace = ModularCraft.ID)
+  public static void lfoClockCablingReloadAndRemoval(GameTestHelper h) {
+    UUID owner = UUID.randomUUID();
+    BlockPos a = new BlockPos(1, 1, 1), b = new BlockPos(2, 1, 1);
+    h.setBlock(a, ModularCraft.MODULES.get(ModuleKind.LFO).get());
+    h.setBlock(b, ModularCraft.MODULES.get(ModuleKind.EUCLIDEAN_SEQUENCER).get());
+    var lfo = (ModuleEntity) h.getLevel().getBlockEntity(h.absolutePos(a));
+    var seq = (ModuleEntity) h.getLevel().getBlockEntity(h.absolutePos(b));
+    lfo.initialize(owner);
+    seq.initialize(owner);
+    var runtime = com.malevolentgods.modularcraft.game.ServerRuntime.get(h.getLevel().getServer());
+    var cable =
+        new com.malevolentgods.modularcraft.domain.Cable(
+            seq.state().id(),
+            com.malevolentgods.modularcraft.domain.Port.CLOCK_OUT,
+            lfo.state().id(),
+            com.malevolentgods.modularcraft.domain.Port.CLOCK_IN);
+    runtime.state().connect(owner, false, cable, seq.state().revision(), lfo.state().revision());
+    runtime.attach(seq);
+    runtime.attach(lfo);
+    var patch = runtime.currentPatch(lfo.state().id());
+    h.assertTrue(patch.lfos().get(lfo.state().id()).external(), "LFO acquires connected clock");
+    h.assertTrue(
+        patch.equals(
+            com.malevolentgods.modularcraft.domain.StateCodec.decode(
+                com.malevolentgods.modularcraft.domain.StateCodec.encode(patch))),
+        "LFO checkpoint roundtrip");
+    var saved = lfo.saveWithFullMetadata(h.getLevel().registryAccess());
+    var restored =
+        (ModuleEntity)
+            BlockEntity.loadStatic(
+                lfo.getBlockPos(), lfo.getBlockState(), saved, h.getLevel().registryAccess());
+    h.assertTrue(
+        restored != null && restored.state().id().equals(lfo.state().id()),
+        "LFO identity survives NBT");
+    h.assertTrue(
+        !ModularCraft.MODULES.get(ModuleKind.LFO).get().asItem().getDefaultInstance().isEmpty(),
+        "LFO item registered");
+    runtime.unload(lfo.state().id());
+    runtime.currentPatch(seq.state().id());
+    runtime.attach(lfo);
+    h.assertTrue(
+        runtime.currentPatch(lfo.state().id()).lfos().get(lfo.state().id()).external(),
+        "Reload primes clock");
+    h.setBlock(a, net.minecraft.world.level.block.Blocks.AIR);
+    h.assertTrue(!runtime.state().cables().contains(cable), "Removal cleans clock cable");
+    h.succeed();
+  }
+
+  @GameTest(template = "empty", templateNamespace = ModularCraft.ID)
+  public static void delayedCloseOfPreviousPanelDoesNotReleaseCurrentPanel(GameTestHelper h) {
+    UUID owner = UUID.randomUUID();
+    var player = FakePlayerFactory.get(h.getLevel(), new GameProfile(owner, "PanelOwner"));
+    var runtime = com.malevolentgods.modularcraft.game.ServerRuntime.get(h.getLevel().getServer());
+    ModuleEntity[] modules = new ModuleEntity[2];
+    ModuleKind[] kinds = {ModuleKind.LFO, ModuleKind.KEYBOARD};
+    for (int i = 0; i < 2; i++) {
+      BlockPos pos = h.absolutePos(new BlockPos(1 + i, 1, 1));
+      h.getLevel().setBlock(pos, ModularCraft.MODULES.get(kinds[i]).get().defaultBlockState(), 3);
+      modules[i] = (ModuleEntity) h.getLevel().getBlockEntity(pos);
+      modules[i].initialize(owner);
+    }
+    var keyboard = modules[1];
+    player.setPos(keyboard.getBlockPos().getCenter());
+    runtime.inspect(player, modules[0], true);
+    runtime.inspect(player, keyboard, true);
+    UUID session = runtime.keyboardSession(player);
+    com.malevolentgods.modularcraft.game.ServerRuntime.enqueue(
+        player,
+        new com.malevolentgods.modularcraft.network.Messages.Control(
+            modules[0].state().id(),
+            modules[0].state().revision(),
+            com.malevolentgods.modularcraft.network.Messages.Action.CLOSE,
+            Parameter.LEVEL,
+            0));
+    com.malevolentgods.modularcraft.game.ServerRuntime.enqueue(
+        player,
+        new com.malevolentgods.modularcraft.network.Messages.Keyboard(
+            keyboard.state().id(),
+            keyboard.state().revision(),
+            session,
+            0,
+            73,
+            false,
+            false,
+            true));
+    h.runAfterDelay(
+        3,
+        () -> {
+          var note =
+              runtime.currentPatch(keyboard.state().id()).keyboards().get(keyboard.state().id());
+          // FakePlayer's gate is released by lease cleanup; retained pitch proves acceptance.
+          h.assertTrue(
+              note.note() == 73 && !note.gate(),
+              "Current panel remains eligible after delayed old close");
+          h.succeed();
+        });
+  }
+
+  @GameTest(template = "empty", templateNamespace = ModularCraft.ID)
+  public static void removingDestinationPreservesLfoPhase(GameTestHelper h) {
+    UUID owner = UUID.randomUUID();
+    BlockPos a = new BlockPos(1, 1, 1), b = new BlockPos(2, 1, 1);
+    h.setBlock(a, ModularCraft.MODULES.get(ModuleKind.LFO).get());
+    h.setBlock(b, ModularCraft.MODULES.get(ModuleKind.FILTER).get());
+    var lfo = (ModuleEntity) h.getLevel().getBlockEntity(h.absolutePos(a));
+    var filter = (ModuleEntity) h.getLevel().getBlockEntity(h.absolutePos(b));
+    lfo.initialize(owner);
+    filter.initialize(owner);
+    var runtime = com.malevolentgods.modularcraft.game.ServerRuntime.get(h.getLevel().getServer());
+    runtime
+        .state()
+        .connect(
+            owner,
+            false,
+            new com.malevolentgods.modularcraft.domain.Cable(
+                lfo.state().id(),
+                com.malevolentgods.modularcraft.domain.Port.CONTROL_OUT,
+                filter.state().id(),
+                com.malevolentgods.modularcraft.domain.Port.CUTOFF_IN),
+            lfo.state().revision(),
+            filter.state().revision());
+    runtime.attach(lfo);
+    runtime.attach(filter);
+    runtime.currentPatch(lfo.state().id());
+    h.runAfterDelay(
+        3,
+        () -> {
+          var before = runtime.currentPatch(lfo.state().id()).lfos().get(lfo.state().id());
+          h.setBlock(b, net.minecraft.world.level.block.Blocks.AIR);
+          var after = runtime.currentPatch(lfo.state().id()).lfos().get(lfo.state().id());
+          var settings = com.malevolentgods.modularcraft.domain.LfoSettings.from(lfo.state());
+          double expected =
+              new com.malevolentgods.modularcraft.dsp.Lfo(settings, before).phase(after.sample());
+          double actual =
+              new com.malevolentgods.modularcraft.dsp.Lfo(settings, after).phase(after.sample());
+          h.assertTrue(
+              Math.abs(expected - actual) < 1e-10,
+              "Surviving LFO retains phase after destination removal");
+          h.succeed();
+        });
+  }
+
   private static void assertParameterEdits(
       GameTestHelper h, ModuleKind kind, Parameter parameter, double value) {
     UUID owner = UUID.randomUUID();

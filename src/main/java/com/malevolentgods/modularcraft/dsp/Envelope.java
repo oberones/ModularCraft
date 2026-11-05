@@ -79,6 +79,26 @@ public final class Envelope {
     sustain = s;
   }
 
+  /**
+   * Prepare stage-entry values before advancing a boundary; sustain ramps only on control frames.
+   */
+  public void prepare(double a, double d, double s, double r, long sample, boolean heldUpdate) {
+    attack = a;
+    decay = d;
+    release = r;
+    if (stage == Stage.SUSTAIN && heldUpdate && target != s) {
+      double position = Math.clamp((double) (sample - start) / duration, 0, 1);
+      enter(Stage.SUSTAIN, sample, from + (target - from) * position, s, .01);
+    }
+    sustain = s;
+  }
+
+  public long nextEvent() {
+    return stage == Stage.ATTACK || stage == Stage.DECAY || stage == Stage.RELEASE
+        ? start + duration
+        : Long.MAX_VALUE;
+  }
+
   public void gate(boolean value, long sample) {
     double current = value(sample);
     if (gate == value) return;

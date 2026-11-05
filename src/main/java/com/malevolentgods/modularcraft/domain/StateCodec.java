@@ -1,6 +1,7 @@
 package com.malevolentgods.modularcraft.domain;
 
 import com.malevolentgods.modularcraft.dsp.Envelope;
+import com.malevolentgods.modularcraft.dsp.Lfo;
 import com.malevolentgods.modularcraft.dsp.Sequencer;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -108,11 +109,27 @@ public final class StateCodec {
     for (int i = 0; i < n; i++)
       if (values.put(Parameter.valueOf(in.readUTF()), in.readDouble()) != null)
         throw new IllegalArgumentException("duplicate_parameter");
-    // Only legacy stored saws have this exact two-control schema. Network v6 must be complete.
+    // Only legacy stored saws have this exact two-control schema. Network v7 must be complete.
     if (stored
         && kind == ModuleKind.OSCILLATOR
         && values.keySet().equals(java.util.Set.of(Parameter.FREQUENCY, Parameter.LEVEL)))
       values.put(Parameter.DETUNE, 0.0);
+    if (stored
+        && ((kind == ModuleKind.FILTER
+                && values
+                    .keySet()
+                    .equals(
+                        java.util.Set.of(Parameter.CUTOFF, Parameter.RESONANCE, Parameter.AMOUNT)))
+            || (kind == ModuleKind.ENVELOPE
+                && values
+                    .keySet()
+                    .equals(
+                        java.util.Set.of(
+                            Parameter.ATTACK,
+                            Parameter.DECAY,
+                            Parameter.SUSTAIN,
+                            Parameter.RELEASE)))))
+      for (Parameter parameter : kind.parameters) values.putIfAbsent(parameter, parameter.initial);
     return new ModuleState(
         id, owner, kind, dim, x, y, z, revision, values, in.readBoolean(), in.readBoolean());
   }
@@ -256,7 +273,7 @@ public final class StateCodec {
         MAX_PATCH,
         out -> {
           out.writeInt(MAGIC);
-          out.writeShort(6);
+          out.writeShort(7);
           uuid(out, p.id());
           out.writeLong(p.revision());
           out.writeLong(p.sequence());
@@ -293,6 +310,23 @@ public final class StateCodec {
               p.sequencers().entrySet().stream().sorted(Map.Entry.comparingByKey()).toList()) {
             uuid(out, entry.getKey());
             sequencer(out, entry.getValue());
+          }
+          out.writeShort(p.lfos().size());
+          for (var entry :
+              p.lfos().entrySet().stream().sorted(Map.Entry.comparingByKey()).toList()) {
+            uuid(out, entry.getKey());
+            var c = entry.getValue();
+            out.writeLong(c.anchor());
+            out.writeDouble(c.phase());
+            out.writeDouble(c.fromRate());
+            out.writeDouble(c.rate());
+            out.writeBoolean(c.external());
+            out.writeBoolean(c.high());
+            out.writeLong(c.lastClock());
+            out.writeLong(c.interval());
+            out.writeByte(c.pulse());
+            out.writeLong(c.transition());
+            out.writeDouble(c.fromValue());
           }
           out.writeShort(p.baseGates().size());
           for (var entry :
@@ -359,7 +393,7 @@ public final class StateCodec {
 
   public static PatchSnapshot decode(byte[] bytes) {
     try (DataInputStream in = input(bytes, MAX_PATCH)) {
-      if (in.readInt() != MAGIC || in.readUnsignedShort() != 6)
+      if (in.readInt() != MAGIC || in.readUnsignedShort() != 7)
         throw new IllegalArgumentException("protocol");
       UUID id = uuid(in);
       long revision = in.readLong(), sequence = in.readLong(), sample = in.readLong();
@@ -398,6 +432,26 @@ public final class StateCodec {
       for (int i = 0; i < n; i++)
         if (sequencers.put(uuid(in), sequencer(in, sample)) != null)
           throw new IllegalArgumentException("duplicate_sequencer");
+      Map<UUID, Lfo.Checkpoint> lfos = new HashMap<>();
+      n = count(in, 16);
+      for (int i = 0; i < n; i++) {
+        UUID module = uuid(in);
+        Lfo.Checkpoint c =
+            new Lfo.Checkpoint(
+                sample,
+                in.readLong(),
+                in.readDouble(),
+                in.readDouble(),
+                in.readDouble(),
+                in.readBoolean(),
+                in.readBoolean(),
+                in.readLong(),
+                in.readLong(),
+                in.readUnsignedByte(),
+                in.readLong(),
+                in.readDouble());
+        if (lfos.put(module, c) != null) throw new IllegalArgumentException("duplicate_lfo");
+      }
       Map<UUID, Boolean> baseGates = new HashMap<>();
       n = count(in, 16);
       for (int i = 0; i < n; i++)
@@ -414,7 +468,8 @@ public final class StateCodec {
           envelopes,
           keyboards,
           sequencers,
-          baseGates);
+          baseGates,
+          lfos);
     } catch (IOException e) {
       throw new IllegalArgumentException("snapshot_bytes", e);
     }

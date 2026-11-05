@@ -24,7 +24,7 @@ L1 coefficient normalization bounds oscillator peaks at the selected level.
 
 ## Budgets and ordering
 
-Retain every SS-003 quota. Version 1 world saves; version 6 network/snapshots; edits 4 KiB, snapshots 32 KiB,
+Retain every SS-003 quota. Version 1 world saves; version 7 network/snapshots; edits 4 KiB, snapshots 32 KiB,
 world storage 2 MiB. 20 edits/s/player, 200/world; queues 64/player, 256/world.
 Cleanup and gate release bypass ordinary throttling. Outbound 128 KiB/s/listener,
 2 MiB/s/server. One preparation worker, eight pending jobs, 1,024 client events,
@@ -70,7 +70,7 @@ Do not clamp effective side pitches to the base Frequency limits.
 
 Keep world schema 1: migrate only the exact legacy oscillator Frequency/Level parameter
 set to Detune 0 in stored world/block records. Preserve other malformed/unknown records.
-Network/snapshot v6 requires all three controls and matching peers; append the enum value
+Network/snapshot v7 requires all three controls and matching peers; append the enum value
 to retain existing control ordinals. No dependencies or ownership changes. At most three
 voices per oscillator, with side DSP skipped at settled zero spread; existing graph/module/
 traffic caps stay fixed. Include maximum spread in the existing DSP load measurement.
@@ -84,7 +84,7 @@ traffic caps stay fixed. Include maximum spread in the existing DSP load measure
 | V | Three-voice spread contract, unchanged CV semantics, RP-001/RP-003 detune variations |
 | VI | Measured center/side pitches, 10 ms phase-continuous edits, normalized finite output |
 | VII | Three voices/oscillator, inactive side DSP skipped, unchanged quotas, load measurement |
-| VIII | Exact legacy save migration, repeatable roundtrips, v6 peer refusal and backup guidance |
+| VIII | Exact legacy save migration, repeatable roundtrips, v7 peer refusal and backup guidance |
 | IX | Existing pinned toolchain/dependencies, packaged artifact checks |
 | X | Localized slider/numeric control, units/range, native screenshot and audition procedure |
 
@@ -134,7 +134,7 @@ listening pass or two-client timing qualification. Record results in validation/
 Implement MI-001–006 with the existing Java 21 `javax.sound.midi` API and no dependency changes.
 The client owns local device preferences, a bounded asynchronous adapter, and combined GUI/MIDI
 priority. The logical server accepts relative GUI or absolute MIDI notes through its existing
-session/revision/permission checks. Network/snapshot v6 carries expanded pitch to 0–127; world v1 remains
+session/revision/permission checks. Network/snapshot v7 carries expanded pitch to 0–127; world v1 remains
 unchanged. Native input providers are initially qualified on macOS only when actual evidence
 exists. Detailed ownership, failure and timing contracts are in `docs/architecture.md`.
 
@@ -147,7 +147,7 @@ exists. Detailed ownership, failure and timing contracts are in `docs/architectu
 | V composition | Existing CV/gate ports, fixed gate, monophonic sustain/fallback; RP-003 extension |
 | VI timing | Existing server receive/sample ordering and smoothing; SC-003/004 retained, no hardware timing claim |
 | VII bounds | One worker, four task slots, one input/helper, 64 ports, two bounded 256-event queues, 64/tick, 2,061 holds; timeout/overflow tests |
-| VIII persistence | Only local device/channel preferences; world v1 preserved, protocol/snapshot v6 refuses older peers |
+| VIII persistence | Only local device/channel preferences; world v1 preserved, protocol/snapshot v7 refuses older peers |
 | IX dependencies | Built-in Java Sound only; all dependency and host pins retained |
 | X controls | Opt-in device/channel, Refresh, Release Notes, localized diagnostics, local mute, guide and screenshots |
 
@@ -169,7 +169,7 @@ Physical timing qualification remains separate from helper lifecycle evidence.
 
 Implement EU-001–008 using immutable prepared channel settings and a shared pure-Java
 sample-domain control DAG. Extend the existing module/parameter/port registration and v1
-named save records; network/snapshot v6 carries sequence checkpoints and envelope baseline
+named save records; network/snapshot v7 carries sequence checkpoints and envelope baseline
 gates. Server components advance autonomous clocks independently of audible activation,
 while clients render exact edges between ticks. Control source identity includes output port.
 Use the existing ownership, quota and 40 ms scheduling contracts; apply the 1,024-per-patch /
@@ -204,7 +204,7 @@ and release gates remain applicable; no commit, push or publication is implied.
 Append SQUARE_OSCILLATOR and PULSE_WIDTH (5–95%, default 50); explicitly classify integer
 parameters. Shared oscillator pitch resolution and note UI cover both kinds. Keep mono
 Audio Out/Pitch In, Frequency/Level defaults, world schema 1, pins and all existing budgets.
-Network/snapshot v6 refuses older peers; exact old saw migration remains unchanged.
+Network/snapshot v7 refuses older peers; exact old saw migration remains unchanged.
 
 PulseOscillator owns a single phase, 95-tap history, and 480-sample frequency/width ramps.
 Use four-sample PolyBLEP edges at 192 kHz and an 18 kHz L1-normalized decimator; compensate
@@ -212,7 +212,39 @@ mean `2*duty-1` and divide by `2*max(duty,1-duty)` before decimation. Transfer p
 at graph adoption; Level uses the existing smoother. No audio-thread allocations or dependencies.
 The 18 kHz decimator corner and wider edge kernel address aliasing measured at narrow 8 kHz pulses.
 
-Extend deterministic original assets and seven-set package checks. Use red–green domain/DSP
+Extend deterministic original assets and eight-set package checks. Use red–green domain/DSP
 regressions, independent oversampled alias/DC measurements, square/mixed load fixtures,
 packaged parameter/lifecycle tests, `make verify`, and `make smoke GRADLE_ARGS=-PqaSquare TICKS=600`.
 Record self-review and evidence; listening, multiplayer, hardware and release gates stay explicit.
+
+## LFO and parameter CV extension (2026-11-05)
+
+Implement LF-001–006 using immutable LfoSettings, analytic Lfo checkpoints, and the shared
+ControlTimeline. Persist zero-default signed depths and append identifiers; world v1 migrates
+only exact legacy filter/envelope records. Network/snapshot v7 requires matching peers.
+ControlTimeline owns stage-entry CV, 480-sample sustain frames and keyboard retriggers;
+RenderGraph owns sample-rate filter/gain modulation and inherited 480-sample smoothers.
+No new dependencies or resources outside existing quotas; LFO checkpoints stay within 32 KiB.
+
+| Constitution principle | Design and evidence |
+|---|---|
+| I world safety | Logical-server edits, no chunk loading, disposable tests; preserve manual worlds |
+| II boundaries | Finite/range/identity/cable checkpoint checks, exact migration, stale/foreign edit tests |
+| III TDD | Observed failing domain, DSP, modulation, codec, rendered-audio and panel-close regressions |
+| IV ownership | Pure Java LFO/control timeline, immutable snapshots, isolated client projection |
+| V composition | Typed CV, signed depth, exact mappings, stage-entry semantics, RP-006 and DAG limits |
+| VI timing/audio | Analytic phase, sample boundaries, recovery equivalence, 10 ms transitions |
+| VII bounds | Existing transitions/module/traffic caps, finite overload suspension, 64-module benchmark |
+| VIII persistence | World v1 exact legacy migration; protocol 7; phase is transient; backup guidance |
+| IX reproducibility | Existing pinned dependencies/toolchain, regenerated original art, packaged checks |
+| X player control | Localized selectors, scrollable fields, fixed local-audio/gate controls, native screenshots |
+
+Validate with `make verify GAMETEST_DIR=run/make/lfo-gametest-final` and fresh-instance
+`make smoke GRADLE_ARGS=-PqaLfo TICKS=600`, plus
+`make smoke-load GRADLE_ARGS=-PqaLfo TICKS=1200`. The maximum fixture has four patches of
+16 modules/24 cables/two speakers: sequencer, three LFOs, detuned saw, seven filters,
+two envelopes, two speakers. Tempo 300; LFO divisions 1/16; waveforms triangle/rising/falling
+saw; filter/ADSR depths 50%; ordinary remaining defaults. Three clock cables, nine audio,
+two trigger, two gain, four ADSR CV and four filter CV cables. Measure <1 ms audio p95 and
+<2 ms mod-server p95 on the recorded machine, retain underruns/tail failures explicitly.
+A short native run does not replace the 30-minute/two-client/listening qualification.

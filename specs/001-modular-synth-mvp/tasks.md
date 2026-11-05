@@ -67,3 +67,18 @@ No commit, push or publication is included.
 
 Evidence: [square review](../../validation/square/review.md) and
 [results](../../validation/square/results.json). Earlier release gates remain applicable.
+
+## LFO and parameter CV extension
+
+- [x] LF01 Observe failing module/port, signed-cutoff, LFO waveform/clock, ADSR CV, codec and audio contracts.
+- [x] LF02 Implement analytic LFO phase, frequency/shape transitions, pulse-measured synchronization and loss recovery.
+- [x] LF03 Add signed resonance/ADSR CV depths, exact stage-entry capture and shared sustain control frames.
+- [x] LF04 Integrate server/client timelines, protocol 7 checkpoints, exact legacy world-v1 migrations and lifecycle handling.
+- [x] LF05 Add original assets, labeled ports, selectors, grouped/scrollable controls and native widget assertions.
+- [x] LF06 Preserve legacy short-note behavior and LFO phase across topology changes; fix delayed previous-panel close.
+- [x] LF07 Pass full automated checks and 29 packaged GameTests; measure maximum DSP/native workloads.
+- [x] LF08 Inspect native screenshots and ten cleanup cycles; document RP-006, compatibility and explicit self-review.
+- [ ] LF09 Complete human listening/acoustic and two-client timing/late-join acceptance.
+- [ ] LF10 Qualify 30-minute native load and resolve the observed underrun; retain prior release gates.
+
+Evidence: [LFO review](../../validation/lfo/review.md) and [results](../../validation/lfo/results.json).

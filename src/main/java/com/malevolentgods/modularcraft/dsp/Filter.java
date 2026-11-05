@@ -10,7 +10,8 @@ public final class Filter {
   }
 
   public static double cutoff(double base, double control, double amount) {
-    return Math.clamp(base + (20000 - base) * control * amount, 20, 20000);
+    return Math.clamp(
+        base + (control >= 0 ? 20000 - base : base - 20) * control * amount, 20, 20000);
   }
 
   public static double q(double resonance) {

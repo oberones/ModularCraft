@@ -16,7 +16,13 @@ public enum Port {
   TRIGGER_A(true, Role.GATE),
   TRIGGER_B(true, Role.GATE),
   TRIGGER_C(true, Role.GATE),
-  TRIGGER_D(true, Role.GATE);
+  TRIGGER_D(true, Role.GATE),
+  CONTROL_OUT(true, Role.CONTROL),
+  RESONANCE_IN(false, Role.CONTROL),
+  ATTACK_IN(false, Role.CONTROL),
+  DECAY_IN(false, Role.CONTROL),
+  SUSTAIN_IN(false, Role.CONTROL),
+  RELEASE_IN(false, Role.CONTROL);
 
   public enum Role {
     AUDIO,

@@ -4,6 +4,7 @@ import com.malevolentgods.modularcraft.domain.Cable;
 import com.malevolentgods.modularcraft.domain.KeyboardPerformance;
 import com.malevolentgods.modularcraft.domain.KeyboardSession;
 import com.malevolentgods.modularcraft.domain.KeyboardState;
+import com.malevolentgods.modularcraft.domain.LfoSettings;
 import com.malevolentgods.modularcraft.domain.ModuleKind;
 import com.malevolentgods.modularcraft.domain.ModuleState;
 import com.malevolentgods.modularcraft.domain.Parameter;
@@ -14,6 +15,7 @@ import com.malevolentgods.modularcraft.domain.StateCodec;
 import com.malevolentgods.modularcraft.domain.WorldState;
 import com.malevolentgods.modularcraft.dsp.ControlTimeline;
 import com.malevolentgods.modularcraft.dsp.Envelope;
+import com.malevolentgods.modularcraft.dsp.Lfo;
 import com.malevolentgods.modularcraft.dsp.Sequencer;
 import com.malevolentgods.modularcraft.network.Messages;
 import com.malevolentgods.modularcraft.transport.Budgets;
@@ -74,6 +76,7 @@ public final class ServerRuntime {
   private final EditInbox<Queued> queue = new EditInbox<>();
   private final Map<UUID, Long> lastNotice = new HashMap<>();
   private final Set<UUID> throttled = new HashSet<>();
+  private final Map<UUID, Lfo> lfos = new HashMap<>();
   private final Map<UUID, Sequencer> sequencers = new HashMap<>();
   private final Map<UUID, Boolean> baseGates = new HashMap<>();
   private final Map<UUID, ControlTimeline> timelines = new HashMap<>();
@@ -237,11 +240,15 @@ public final class ServerRuntime {
   public void remove(UUID id) {
     if (!state.contains(id)) return;
     Set<UUID> affected = state.component(id);
-    clearPerformance(affected);
+    // Silence held voices as before, but retain surviving LFO phase and wiring history.
+    clearVoices(affected);
+    affected.forEach(sequencers::remove);
+    lfos.remove(id);
     state.remove(id);
     updateEnvelopes(transport.sample() + 1920);
     loaded.remove(id);
     envelopes.remove(id);
+    lfos.remove(id);
     held.entrySet().removeIf(e -> e.getValue().module.equals(id));
     selections.entrySet().removeIf(e -> e.getValue().module.equals(id));
     changed(affected, transport.sample());
@@ -275,8 +282,14 @@ public final class ServerRuntime {
       for (Cable c : state.cables())
         if (c.destination().equals(m.id()) && c.input() == Port.GAIN_IN) {
           Envelope e = envelopes.get(c.source());
-          if (e == null || e.value(transport.sample()) == 0) return "released";
+          if (e != null && e.value(transport.sample()) == 0) return "released";
         }
+    }
+    if (m.kind() == ModuleKind.LFO) {
+      Lfo lfo = lfos.get(m.id());
+      return lfo == null || !lfo.external()
+          ? "lfo_free"
+          : lfo.waiting(transport.sample()) ? "lfo_waiting" : "lfo_sync";
     }
     if (m.kind().isOscillator()
         && state.cables().stream()
@@ -391,6 +404,8 @@ public final class ServerRuntime {
     if (player.hasDisconnected()) return;
     if (request.action() == Messages.Action.CLOSE
         || (request.action() == Messages.Action.GATE && request.value() == 0)) {
+      // Opening another panel can precede the old screen's asynchronous close packet.
+      if (!request.id().equals(inspecting.get(player.getUUID()))) return;
       release(player.getUUID());
       if (request.action() == Messages.Action.CLOSE) inspecting.remove(player.getUUID());
       return;
@@ -558,7 +573,11 @@ public final class ServerRuntime {
       boolean redstone =
           entity != null && entity.getLevel().hasNeighborSignal(entity.getBlockPos());
       Envelope envelope = envelopes.get(id);
-      if (envelope != null && !manual && !redstone) envelope.retrigger(sample);
+      if (envelope != null && !manual && !redstone) {
+        UUID root = state.component(id).stream().min(UUID::compareTo).orElseThrow();
+        ControlTimeline timeline = timelines.get(root);
+        if (timeline != null) timeline.retrigger(id, sample);
+      }
     }
   }
 
@@ -596,6 +615,7 @@ public final class ServerRuntime {
     long sample = Math.max(requestedSample, Math.max(performanceSample, controlSample));
     advanceControls(Math.max(controlSample, sample - 1));
     boolean rebuild = controlsDirty || controlRevision != state.revision();
+    List<ControlTimeline> previousTimelines = List.copyOf(timelines.values());
     Set<UUID> retained = new HashSet<>();
     for (Set<UUID> ids : state.components()) {
       UUID root = ids.stream().min(UUID::compareTo).orElseThrow();
@@ -604,6 +624,15 @@ public final class ServerRuntime {
       boolean allLoaded = ids.stream().allMatch(id -> state.get(id).loaded());
       for (UUID id : ids) {
         ModuleState m = state.get(id);
+        if (m.kind() == ModuleKind.LFO) {
+          if (!allLoaded) lfos.remove(id);
+          Lfo lfo = lfos.get(id);
+          if (lfo == null) {
+            lfo = new Lfo(LfoSettings.from(m), sample);
+            lfos.put(id, lfo);
+            rebuild = true;
+          } else if (rebuild) lfo.configure(LfoSettings.from(m), sample);
+        }
         if (m.kind() == ModuleKind.EUCLIDEAN_SEQUENCER) {
           Sequencer seq = sequencers.get(id);
           if (seq == null) {
@@ -623,13 +652,6 @@ public final class ServerRuntime {
           envelopes.put(id, new Envelope());
           rebuild = true;
         }
-        Envelope envelope = envelopes.get(id);
-        envelope.configure(
-            m.value(Parameter.ATTACK),
-            m.value(Parameter.DECAY),
-            m.value(Parameter.SUSTAIN) / 100,
-            m.value(Parameter.RELEASE),
-            sample);
         ModuleEntity entity = loaded.get(id);
         boolean redstone =
             entity != null && entity.getLevel().hasNeighborSignal(entity.getBlockPos());
@@ -643,8 +665,9 @@ public final class ServerRuntime {
         Map<UUID, KeyboardState> notes = new HashMap<>();
         for (UUID id : ids) if (keyboards.containsKey(id)) notes.put(id, keyboards.get(id).state());
         ControlTimeline next =
-            new ControlTimeline(modules, cables, sequencers, envelopes, baseGates, notes, sample);
-        next.rewire(timeline, sample);
+            new ControlTimeline(
+                modules, cables, sequencers, envelopes, baseGates, notes, lfos, sample);
+        next.rewireAll(previousTimelines, sample);
         timeline = next;
         timelines.put(root, timeline);
       }
@@ -684,6 +707,7 @@ public final class ServerRuntime {
   private void clearPerformance(Set<UUID> ids) {
     clearVoices(ids);
     ids.forEach(sequencers::remove);
+    ids.forEach(lfos::remove);
     timelines.entrySet().removeIf(entry -> ids.contains(entry.getKey()));
   }
 
@@ -730,7 +754,9 @@ public final class ServerRuntime {
                     KeyboardState.note((int) module.value(Parameter.OCTAVE), 0), false));
     Map<UUID, Sequencer.Checkpoint> rhythms = new HashMap<>();
     Map<UUID, Boolean> bases = new HashMap<>();
+    Map<UUID, Lfo.Checkpoint> modulation = new HashMap<>();
     for (UUID member : ids) {
+      if (lfos.containsKey(member)) modulation.put(member, lfos.get(member).checkpoint(sample));
       if (sequencers.containsKey(member))
         rhythms.put(member, sequencers.get(member).checkpoint(sample));
       if (checkpoints.containsKey(member)) bases.put(member, baseGates.getOrDefault(member, false));
@@ -745,7 +771,8 @@ public final class ServerRuntime {
         checkpoints,
         notes,
         rhythms,
-        bases);
+        bases,
+        modulation);
   }
 
   private void changed(Set<UUID> affected, long sample) {

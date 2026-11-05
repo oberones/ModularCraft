@@ -26,3 +26,8 @@ manual artwork, logos, or third-party textures are copied or bundled.
 Square oscillator extension (2026-11-04): original procedural SQR panel, square-wave trace,
 matching cyan saw accent/chassis and AO/PI sockets. Editable SVG and deterministic 64px PNG
 come from the same script; no external artwork or dependencies.
+
+LFO/CV extension (2026-11-05): original procedural lavender LFO sine-trace panel with
+CO/CI sockets; filter gains RC and envelope gains A/D/S/R socket labels. Editable SVG,
+deterministic 64px PNG, block/item models and loot use the existing generator and MIT
+license. No external assets, fonts, image services, or dependency changes.

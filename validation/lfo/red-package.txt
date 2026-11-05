@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/Users/oberon/Projects/coding/mods/minecraft/ModularCraft/scripts/check-delivery.py", line 33, in <module>
+    assert path in names, path
+           ^^^^^^^^^^^^^
+AssertionError: validation/lfo/results.json

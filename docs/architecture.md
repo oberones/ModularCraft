@@ -82,11 +82,11 @@ with a minimum 48-sample separation and 1,920-sample lead. Cleanup bypasses edit
 queue overload releases and invalidates the affected session. Subsequent snapshots cannot
 rewind pending performance timestamps. Renewal never starts/retriggers a note.
 
-Pitch CV and gate have separate port roles. Snapshot v6 carries keyboard MIDI note numbers
+Pitch CV and gate have separate port roles. Snapshot v7 carries keyboard MIDI note numbers
 0–127 and gate booleans; CV = (note−60)/12 V and Hz = 440×2^((note−69)/12). Server-side
 external gates feed analytic envelope checkpoints. RenderGraph resolves pitch cables into
 smoothed frequency targets, preserves oscillator phase, and leaves envelope control routing
-unchanged. World v1 persists octave only, using existing named records; network v6 rejects
+unchanged. World v1 persists octave only, using existing named records; network v7 rejects
 old peers. Snapshot recovery restores current pitch/gate, not historical note events.
 
 
@@ -143,7 +143,7 @@ keeps server-receive scheduling (minimum 48 samples between accepted events, 1,9
 lead), existing revision/permission/range checks, and the 20/player and 200/world edit budgets.
 MIDI device timestamps are ignored; sample-accurate hardware-input timing is not claimed.
 
-Network/snapshot v6 deliberately refuses older peers/snapshots; world v1 and saved octave
+Network/snapshot v7 deliberately refuses older peers/snapshots; world v1 and saved octave
 remain unchanged. The SHA-256 of the device name/vendor/description/version is a local
 selection descriptor, not a hardware identity. Only unique matches restore automatically;
 explicit selection can distinguish duplicate ports for the current focused session. Device
@@ -169,7 +169,7 @@ spread. Native performance/listening/two-client gates remain distinct.
 World schema v1 and block schema v1 accept only the exact legacy Frequency/Level key set
 as a migration to Detune 0. Other incomplete/extra/non-finite records retain rejection or
 opaque quarantine. The complete named control set is written on next save, and repeated
-loads are stable. Snapshot/network v6 refuses older formats and does not apply this stored
+loads are stable. Snapshot/network v7 refuses older formats and does not apply this stored
 record migration. Existing parameter ordinals are retained by appending DETUNE.
 
 
@@ -192,7 +192,7 @@ advance them on the sample timeline. Late recovery advances state without replay
 The renderer prepares all routing and mutable runtimes outside processing; it does not
 allocate buffers, perform I/O, acquire locks, or touch world objects while advancing.
 
-World/block schema v1 stores 17 named controls and cables only. Snapshot/network v6 adds
+World/block schema v1 stores 17 named controls and cables only. Snapshot/network v7 adds
 bounded per-module sequencer checkpoints and manual/redstone envelope baselines; matching
 peers are mandatory. The parameter decoder now uses the selected module's bounded control
 count. Legacy oscillator migration and byte-preserving quarantine remain in place.
@@ -216,7 +216,7 @@ world changes discard projections; integrated pause freezes the visual sample co
 SQUARE_OSCILLATOR appends a module kind and PULSE_WIDTH appends a fractional 5–95% control;
 integer-only parameters are classified explicitly. Shared pitch preparation and note UI use
 both oscillator kinds; the server reports CV pitch precedence without mentioning saw detune.
-World v1 keeps named records and exact legacy saw migration. Network/snapshot v6 refuses
+World v1 keeps named records and exact legacy saw migration. Network/snapshot v7 refuses
 older peers; square records require exactly Frequency, Pulse Width and Level.
 
 PulseOscillator has one phase/history, frequency/width smoothers, four internal samples per
@@ -227,3 +227,40 @@ normalize by twice the longer duty fraction before decimation. This bounds peaks
 RMS compensation; narrow pulses are quieter. Frequency/width/level ramp over 480 frames.
 Graph adoption copies state only between matching IDs and module kinds. Preparation stays
 off the audio owner; processing remains bounded and allocation-free. Saw DSP is unchanged.
+
+## LFO and continuous parameter CV
+
+`LfoSettings` is immutable; `Lfo` owns analytic phase/rate anchors and clock acquisition.
+Frequency edits integrate a 480-sample linear rate ramp; waveform/polarity edits crossfade
+from the current output over 480 samples. Free-running phase uses the sample timeline,
+not accumulated tick/frame deltas. Sync uses accepted rising edges (minimum 960 samples),
+pulse-count phase anchors, measured intervals, and a two-interval timeout. No timer queue
+or per-sample server work is introduced. Component merge/split rewiring retains the prior
+source identity from every old timeline, avoiding accidental clock reacquisition.
+
+ControlTimeline now includes ADSR stage boundaries and transport-aligned 480-sample control
+frames for connected nonzero sustain CV. At each event, sources are resolved in DAG order,
+effective time/sustain values are prepared, then stage/gate transitions occur. Keyboard
+retriggers use this same path. Time controls are captured at stage entry, while held sustain
+uses 480-sample linear ramps. Envelope sources can modulate other envelopes without recursion;
+cycles are rejected before preparation. Events consume the existing 1,024-per-component /
+4,096-per-server-tick budget and suspend on overflow, without catch-up backlog.
+
+Audio evaluates LFO controls at 48 kHz. Filter LFO cutoff and resonance CV, and LFO gain CV,
+use 480-sample target ramps; gain is clamped to 0…1. Existing envelope cutoff/gain paths keep
+their analytic behavior, so short sequencer notes and legacy envelope sweeps are preserved.
+Surviving CV smoother state transfers with filter/oscillator state during graph adoption.
+No audio processing allocates, performs I/O, or reads mutable Minecraft state.
+
+Snapshot protocol 7 adds a bounded UUID→LFO checkpoint map containing phase/rate anchors,
+clock input level/interval/pulse count, and waveform transition state. Existing envelope
+checkpoints also carry effective next-stage values and active sustain ramps. Decode validates
+numbers, identities, cable/clock consistency, sizes and duplicate entries before adoption.
+World schema 1 persists only named settings/cables; exact old filter and ADSR parameter sets
+migrate by adding zero depths. Partial malformed sets remain refused. New enum identifiers
+are appended. No dependency, loader, graph, packet, or storage quota changes are required.
+
+UI scrolling is confined to the parameter area; gate, local audio and Done stay fixed.
+Selectors use localized named values, never raw enum numbers. A delayed CLOSE for a previous
+module cannot release the currently inspected module's session. Server ownership, range,
+revision checks, and cleanup priority otherwise follow the existing paths.

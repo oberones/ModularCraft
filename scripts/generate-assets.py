@@ -46,7 +46,7 @@ def panel():
  d=Drawing();d.rect(0,0,64,64,'#151b23');d.rect(2,2,60,60,'#34434e');d.rect(4,4,56,56,'#202d37')
  for x,y in [(5,5),(58,5),(5,58),(58,58)]:d.circle(x,y,1,'#b1b9b8');d.rect(x,y,1,1,'#46515b')
  return d
-MODULES=[('square_oscillator','SQR','#65d7e5',['AO','PI']),('oscillator','SAW','#65d7e5',['AO','PI']),('filter','LPF','#91c79a',['AI','CI','AO']),('envelope','ADSR','#ffc36a',['CO','GT']),('speaker','AMP','#d69bbd',['AI','GI']),('keyboard','KEYS','#b3a3ef',['CV','GO']),('euclidean_sequencer','EUCLID','#65d7e5',['CI','RI','CO','A','B','C','D'])]
+MODULES=[('lfo','LFO','#e5a1e8',['CO','CI']),('square_oscillator','SQR','#65d7e5',['AO','PI']),('oscillator','SAW','#65d7e5',['AO','PI']),('filter','LPF','#91c79a',['AI','CI','AO','RC']),('envelope','ADSR','#ffc36a',['CO','GT','A','D','S','R']),('speaker','AMP','#d69bbd',['AI','GI']),('keyboard','KEYS','#b3a3ef',['CV','GO']),('euclidean_sequencer','EUCLID','#65d7e5',['CI','RI','CO','A','B','C','D'])]
 for name,title,accent,ports in MODULES:
  d=panel();d.rect(9,8,46,2,accent);d.text(title,20 if name=='euclidean_sequencer' else 12,12 if name=='euclidean_sequencer' else 13,accent,1 if name=='euclidean_sequencer' else 2)
  if name in ('oscillator','square_oscillator'):
@@ -57,6 +57,9 @@ for name,title,accent,ports in MODULES:
     d.rect(x,32 if (x-11)%12<6 else 40,1,1,accent)
     if (x-11)%6==0:d.rect(x,32,1,9,accent)
   d.circle(46,35,8,'#0e141b');d.circle(46,35,6,'#667b83');d.rect(45,29,2,6,'#e4edea')
+ elif name=='lfo':
+  d.rect(9,27,46,17,'#101820')
+  for x in range(11,53):d.rect(x,35-round(6*math.sin((x-11)*math.pi/20)),1,2,accent)
  elif name=='filter':
   for x in range(11,53):d.rect(x,30+int(10/(1+math.exp(-(x-34)/3))),1,1,accent)
   for x in [17,32,47]:d.circle(x,42,4,'#0e141b');d.rect(x,38,1,4,'#d9e4dc')
@@ -95,7 +98,7 @@ for i in range(34):d.rect(12+i,48-i,7,7,'#111b25');d.rect(14+i,49-i,3,4,'#65d7e5
 d.rect(39,10,12,14,'#84999f');d.rect(43,4,4,11,'#e2c88c');d.rect(6,45,15,12,'#84999f');d.save('patching_tool','item')
 p=ASSETS/'models/item/patching_tool.json';p.write_text(json.dumps({'parent':'minecraft:item/handheld','textures':{'layer0':'modularcraft:item/patching_tool'}},indent=2)+'\n')
 lang={'block.modularcraft.square_oscillator':'Square Oscillator','tab.modularcraft':'ModularCraft Instruments','block.modularcraft.keyboard':'Keyboard','block.modularcraft.oscillator':'Saw Oscillator','block.modularcraft.filter':'Low-Pass Filter','block.modularcraft.envelope':'Envelope Generator','block.modularcraft.speaker':'Amplifier / Speaker','item.modularcraft.patching_tool':'Patching Tool','key.modularcraft.mute':'Mute ModularCraft','key.modularcraft.settings':'ModularCraft Audio Settings','key.categories.modularcraft':'ModularCraft','modularcraft.local_audio':'ModularCraft Audio','modularcraft.local_volume':'Local volume: %s%%','modularcraft.volume_help':'Minecraft Master + Records also apply','modularcraft.apply':'Apply','modularcraft.enable':'Enable speaker','modularcraft.disable':'Disable speaker','modularcraft.hold_gate':'Hold Gate (or Space)','modularcraft.mute':'Mute locally','modularcraft.unmute':'Unmute locally','modularcraft.recover':'Resynchronize audio','modularcraft.selected':'Selected %s at %s, %s, %s. Choose an input.','modularcraft.tool_help':'Ports are on the lower front face. Right-click air to cancel.','modularcraft.port_hint':'%s · Right-click to patch; Shift-right-click an input to remove.','modularcraft.gain_warning':'Removing Gain In makes connected audio a sustained drone.'}
-for key,label in {'pulse_width':'PWM (pulse width)','frequency':'Frequency','detune':'Detune (unison spread)','level':'Level','cutoff':'Cutoff','resonance':'Resonance','amount':'Envelope Amount','attack':'Attack','decay':'Decay','sustain':'Sustain','release':'Release','volume':'Volume','octave':'Octave'}.items():lang['parameter.modularcraft.'+key]=label
+for key,label in {'pulse_width':'PWM (pulse width)','frequency':'Frequency','detune':'Detune (unison spread)','level':'Level','cutoff':'Cutoff','resonance':'Resonance','amount':'Cutoff CV Amount','attack':'Attack','decay':'Decay','sustain':'Sustain','release':'Release','volume':'Volume','octave':'Octave'}.items():lang['parameter.modularcraft.'+key]=label
 for key,label in {'audio_out':'AO → Audio Out','audio_in':'AI ← Audio In','envelope_out':'CO → Envelope Out','cutoff_in':'CI ← Cutoff Control In','gain_in':'GI ← Gain Control In','cv_out':'CV → Pitch CV Out','pitch_in':'PI ← Pitch CV In','gate_out':'GO → Gate Out','gate_in':'GT ← Gate In'}.items():lang['port.modularcraft.'+key]=label
 lang.update({'modularcraft.note.letter': 'Note: %s ▾', 'modularcraft.note.octave': 'Octave: %s ▾', 'modularcraft.note.set': 'Set Note', 'modularcraft.note.preview': 'Selected: %s = %s Hz', 'modularcraft.note.range': 'Below 20 Hz. Choose E0 or higher.', 'modularcraft.note.help': 'Sets manual frequency (A4 = 440 Hz). Connected Pitch In controls the sounding pitch.', 'modularcraft.note.menu_help': 'Up/Down selects; Home/End jumps; Enter confirms; Escape cancels. Tab moves to the next control.'})
 lang.update({'modularcraft.octave_down':'Octave −','modularcraft.octave_up':'Octave +',
@@ -118,9 +121,21 @@ for port,label in {'clock_in':'CI ← Clock In (rising edge)','reset_in':'RI ←
  lang['port.modularcraft.'+port]=label
 for key,label in {'start':'Start / Resume','stop':'Stop','reset':'Reset','mute':'Mute channel','unmute':'Unmute channel','set':'Set','up':'↑','down':'↓','bpm':'BPM','steps':'Steps','hits':'Hits','rotation':'Rotate','pending':'Next clock…','stopped':'Stopped','external':'External clock','internal':'Internal · 1/16','channel':'Channel %s','range':'%s: %s–%s (hits/rotation limited by Steps)','fast_clock':'Clock above 50 Hz ignored. Slow the source.','legend':'Filled: hit · Hollow: rest · White: playhead'}.items():
  lang['modularcraft.euclidean.'+key]=label
+lang['modularcraft.scroll_help']='PgUp / PgDn'
+lang['block.modularcraft.lfo']='Low-Frequency Oscillator'
+for key,label in {'lfo_wave':'Waveform', 'lfo_frequency':'Frequency (free-running)', 'lfo_polarity':'Output polarity', 'lfo_division':'Clock cycle length', 'resonance_depth':'Resonance CV depth', 'attack_depth':'Attack CV depth', 'decay_depth':'Decay CV depth', 'sustain_depth':'Sustain CV depth', 'release_depth':'Release CV depth'}.items():
+ lang['parameter.modularcraft.'+key]=label
+for key,label in {'control_out':'CO → LFO Control Out (−1…1 / 0…1)', 'resonance_in':'RC ← Resonance CV In', 'attack_in':'A ← Attack CV In', 'decay_in':'D ← Decay CV In', 'sustain_in':'S ← Sustain CV In', 'release_in':'R ← Release CV In'}.items():
+ lang['port.modularcraft.'+key]=label
+for key,values in {'lfo_wave':['Sine','Triangle','Rising saw','Falling saw','Square'], 'lfo_polarity':['Bipolar −1…+1','Unipolar 0…1'], 'lfo_division':['1/16 note · 1 pulse','1/8 note · 2 pulses','Quarter note · 4 pulses','Half note · 8 pulses','Whole note · 16 pulses','Two bars (4/4) · 32 pulses','Four bars (4/4) · 64 pulses']}.items():
+ for index,label in enumerate(values):lang[f'modularcraft.lfo.{key}.{index}']=label
 errors={
+'lfo_free':'Free-running · Hz controls the rate.',
+'lfo_sync':'Clock synchronized · Hz is saved for disconnection.',
+'lfo_waiting':'Waiting for clock · phase held; start the sequencer.',
+'lfo_checkpoint':'Invalid LFO state. Resynchronize audio.',
 'sequencer_pattern':'Hits must be 0–Steps; rotation must be 0–Steps−1.',
-'sequencer_overload':'Sequencer overload: reduce clock/load, then Start and enable speakers.',
+'sequencer_overload':'Control timeline overload: reduce modulation/clock load, then restart sequencers and enable speakers.',
 'keyboard_unavailable':'Keyboard unavailable. Move within six blocks and reopen its panel.',
 'midi_off':'MIDI off. Select an input device to play.',
 'midi_ready':'MIDI connected. Exact pitch; sustain pedal supported.',
@@ -193,4 +208,4 @@ errors={
  'throttled':'Edit rate limited: 20/s per player, 200/s per world. Wait and retry refreshed values.'}
 lang.update({'modularcraft.error.'+k:v for k,v in errors.items()})
 p=ASSETS/'lang/en_us.json';p.parent.mkdir(parents=True,exist_ok=True);p.write_text(json.dumps(lang,indent=2,ensure_ascii=False)+'\n')
-print('Wrote seven complete block sets, tool, localization, and editable SVG sources.')
+print('Wrote eight complete block sets, tool, localization, and editable SVG sources.')

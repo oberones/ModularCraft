@@ -42,6 +42,7 @@ public final class NativeFixture {
         (ServerTickEvent.Post event) -> {
           if (performer == null || event.getServer() != performer.getServer()) return;
           if (++ticks == 20) build(performer);
+          if (Boolean.getBoolean("modularcraft.qa.lfo")) NativeLfoFixture.tick(performer, ticks);
           if (!SEQUENCERS.isEmpty()) {
             var runtime = ServerRuntime.get(event.getServer());
             if (ticks == 40)
@@ -123,6 +124,10 @@ public final class NativeFixture {
       for (int z = -2; z < 18; z++)
         level.setBlock(
             new BlockPos(originX + x, y - 1, originZ + z), Blocks.STONE.defaultBlockState(), 3);
+    if (Boolean.getBoolean("modularcraft.qa.lfo")) {
+      NativeLfoFixture.build(player, originX, y, originZ);
+      return;
+    }
     if (Boolean.getBoolean("modularcraft.qa.sequencer")) {
       buildSequencer(player, runtime, originX, y, originZ);
       return;

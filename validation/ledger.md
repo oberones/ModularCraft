@@ -510,3 +510,26 @@ Runtime JAR SHA-256: `3fea40a61bc656b764d80e6730e61fc591432ae0695671ba6e74e1f4d4
 Local raw logs: `validation/cable-removal-{red,green,verify,native}.log`.
 Runtime JAR SHA-256: `8e84f9edfed73f507588bbe8431668506de6e53e995a21bb07592464699675de`.
 No commit, push or publication.
+
+## LFO and parameter CV extension — 2026-11-05
+
+Baseline `aa231cbd488ec974b28320b4d747602101f2e839`, branch `001-modular-synth-mvp`;
+implemented changes remain uncommitted. [Review](lfo/review.md), [results](lfo/results.json),
+[red evidence](lfo/red.txt), [full verification](lfo/verify.txt), [LFO panel](lfo/panel.png).
+These results extend, rather than replace, the historical evidence above.
+
+| Evidence | Status | Result / limit |
+|---|---|---|
+| Full automated checks | PASS | 144 JUnit, 12 launcher tests, formatting, Checkstyle, PMD, Java 21 build |
+| Packaged headless integration | PASS | 29 GameTests, including LFO persistence/cabling/unload, authority, old-panel close and phase-preserving destination removal |
+| Resource/package inspection | PASS | Eight complete block asset sets, protocol 7, exact old filter/envelope world-v1 migration |
+| Synthetic maximum DSP | PASS | 64 modules / 96 cables / eight speakers; p95 0.266083 ms; 136 measured allocation bytes over 10,000 blocks |
+| Native controls / visual / cleanup | PASS | Actual widget edits, compact scrolling, invalid input, inspected screenshots, ten zero-handle recovery cycles; artifact scope in review |
+| Short native load p95 budgets | PASS | Audio 0.299334 ms; server 0.593292 ms over 1,080 samples, approximately one minute on Apple M2 Pro / 16 GiB |
+| Native zero-underrun qualification | FAIL | One underrun observed; audio max 5.158 ms and server max 8.516292 ms retained; no sustained qualification claim |
+| Human RP-006 listening / acoustic | PENDING | All waveform, polarity, sync and ADSR reference-patch variations require audition |
+| Two-client / 30-minute load | PENDING | Shared timing, late join, pause/recovery and sustained performance need native qualification |
+| Self-review | PASS | Boundaries, ownership, compatibility, timing, cleanup, localization and provenance reviewed; see review |
+
+Earlier security, platform, hardware and release gates remain applicable. No commit, push,
+publication, or dependency changes occurred; existing manual worlds and AGENTS.md were preserved.

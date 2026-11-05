@@ -9,11 +9,25 @@ public enum ModuleKind {
       List.of(Parameter.FREQUENCY, Parameter.DETUNE, Parameter.LEVEL),
       List.of(Port.AUDIO_OUT, Port.PITCH_IN)),
   FILTER(
-      List.of(Parameter.CUTOFF, Parameter.RESONANCE, Parameter.AMOUNT),
-      List.of(Port.AUDIO_IN, Port.CUTOFF_IN, Port.AUDIO_OUT)),
+      List.of(Parameter.CUTOFF, Parameter.AMOUNT, Parameter.RESONANCE, Parameter.RESONANCE_DEPTH),
+      List.of(Port.AUDIO_IN, Port.CUTOFF_IN, Port.AUDIO_OUT, Port.RESONANCE_IN)),
   ENVELOPE(
-      List.of(Parameter.ATTACK, Parameter.DECAY, Parameter.SUSTAIN, Parameter.RELEASE),
-      List.of(Port.ENVELOPE_OUT, Port.GATE_IN)),
+      List.of(
+          Parameter.ATTACK,
+          Parameter.ATTACK_DEPTH,
+          Parameter.DECAY,
+          Parameter.DECAY_DEPTH,
+          Parameter.SUSTAIN,
+          Parameter.SUSTAIN_DEPTH,
+          Parameter.RELEASE,
+          Parameter.RELEASE_DEPTH),
+      List.of(
+          Port.ENVELOPE_OUT,
+          Port.GATE_IN,
+          Port.ATTACK_IN,
+          Port.DECAY_IN,
+          Port.SUSTAIN_IN,
+          Port.RELEASE_IN)),
   SPEAKER(List.of(Parameter.VOLUME), List.of(Port.AUDIO_IN, Port.GAIN_IN)),
   KEYBOARD(List.of(Parameter.OCTAVE), List.of(Port.CV_OUT, Port.GATE_OUT)),
   EUCLIDEAN_SEQUENCER(
@@ -45,7 +59,14 @@ public enum ModuleKind {
           Port.TRIGGER_D)),
   SQUARE_OSCILLATOR(
       List.of(Parameter.FREQUENCY, Parameter.PULSE_WIDTH, Parameter.LEVEL),
-      List.of(Port.AUDIO_OUT, Port.PITCH_IN));
+      List.of(Port.AUDIO_OUT, Port.PITCH_IN)),
+  LFO(
+      List.of(
+          Parameter.LFO_WAVE,
+          Parameter.LFO_FREQUENCY,
+          Parameter.LFO_POLARITY,
+          Parameter.LFO_DIVISION),
+      List.of(Port.CONTROL_OUT, Port.CLOCK_IN));
   public final List<Parameter> parameters;
   public final List<Port> ports;
 

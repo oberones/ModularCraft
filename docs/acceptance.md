@@ -68,7 +68,7 @@ A one-client development probe does **not** satisfy two-client packaged SC-005.
 ## Packaged play and timing
 
 1. Install only the candidate JAR plus the exact loader on a fresh Creative client and
-   a normal headless dedicated server. Confirm seven blocks/tool, all textures/models,
+   a normal headless dedicated server. Confirm eight blocks/tool, all textures/models,
    labeled ports, cable arrows, and every panel control. Confirm no client/audio class
    loads on the server. Obtain/accept any host licensing terms as the server operator.
 2. Build both README reference patches using only their instructions. Test every listed
@@ -212,7 +212,19 @@ release gates remain applicable until independently observed.
 Run README RP-005 and record width 50/25/5%, filter comparison, keyboard/MIDI pitch,
 width edits while held, CV removal, Level 0, enable/disable/mute, save/reload, chunk unload,
 block removal and reconnect. Confirm saved saw patches retain their original settings/sound.
-On two matching protocol-v6 clients verify shared PWM edits, late join, authority and timing
+On two matching protocol-v7 clients verify shared PWM edits, late join, authority and timing
 against existing SC-003/004 limits. Listen for clicks, stuck tones, harsh aliasing and intended
 pulse-tone changes; automated samples/screenshots do not establish listening acceptance.
 Use a disposable `make smoke GRADLE_ARGS=-PqaSquare TICKS=600` for widgets and screenshots.
+
+## LFO / CV acceptance (RP-006)
+
+Follow every RP-006 variation in README, including all shapes/polarities, tempo edits,
+clock stop/resume/disconnect, each ADSR input, inverted depths and zero-depth restoration.
+Capture the same held/released notes with two clients; join during attack and a sustain
+ramp, recover audio, mute/unmute, pause/resume singleplayer, and unload/reload the patch.
+Confirm current phase on listener recovery and fresh transient phase after reload, disabled
+speakers after unload, no replay backlog, clicks, stuck gates, or unexpected gain inversion.
+Record listening separately from numerical measurements and synthetic native UI assertions.
+Use the LFO load fixture for a 30-minute/two-client qualification; the short automated fixture
+is only functional/performance evidence for its recorded duration and machine.

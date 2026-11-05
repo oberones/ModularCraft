@@ -20,9 +20,17 @@ class CableGeometryTest {
 
   @Test
   void endpointsMatchThePaintedJacksOnEveryFacing() {
-    int[][] paintedCenters = {{32}, {16, 48}, {11, 32, 53}};
+    int[][] paintedCenters = {
+      {32},
+      {16, 48},
+      {11, 32, 53},
+      {8, 24, 40, 56},
+      {6, 19, 32, 45, 58},
+      {5, 16, 27, 37, 48, 59},
+      {5, 14, 23, 32, 41, 50, 59}
+    };
     for (Facing face : Facing.values()) {
-      for (int count = 1; count <= 3; count++) {
+      for (int count = 1; count <= 7; count++) {
         for (int index = 0; index < count; index++) {
           Point point = CableGeometry.port(0, 0, 0, face, index, count);
           Assertions.assertEquals(.125, point.y(), 1e-12);

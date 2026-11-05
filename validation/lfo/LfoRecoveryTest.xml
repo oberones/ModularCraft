@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.malevolentgods.modularcraft.LfoRecoveryTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-11-05T16:40:58.786Z" hostname="Calliope.local" time="0.006">
+  <properties/>
+  <testcase name="hostileCheckpointNumbersAndSettingsAreRejected()" classname="com.malevolentgods.modularcraft.LfoRecoveryTest" time="0.001"/>
+  <testcase name="liveFrequencyAndShapeChangesPreservePhaseAndCheckpointTransition()" classname="com.malevolentgods.modularcraft.LfoRecoveryTest" time="0.001"/>
+  <testcase name="releasingUnconnectedClockDoesNotResetPhaseOnOrdinaryRebuild()" classname="com.malevolentgods.modularcraft.LfoRecoveryTest" time="0.0"/>
+  <testcase name="checkpointRecoveryMatchesMidStageAndSustainRamps()" classname="com.malevolentgods.modularcraft.LfoRecoveryTest" time="0.003"/>
+  <testcase name="mergingComponentsKeepsExistingClockLock()" classname="com.malevolentgods.modularcraft.LfoRecoveryTest" time="0.0"/>
+  <testcase name="fastEdgesAreIgnoredAndTempoChangesAnchorToPulseCount()" classname="com.malevolentgods.modularcraft.LfoRecoveryTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

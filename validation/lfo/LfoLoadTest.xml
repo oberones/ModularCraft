@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.malevolentgods.modularcraft.LfoLoadTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-11-05T16:40:55.060Z" hostname="Calliope.local" time="3.723">
+  <properties/>
+  <testcase name="fourMaximumPatchesWithClockAndAllEnvelopeCvStayWithinAudioBudget()" classname="com.malevolentgods.modularcraft.LfoLoadTest" time="3.723"/>
+  <system-out><![CDATA[64 module / 96 cable / 8 speaker DSP p95 ms=0.266083, oscillators=[OSCILLATOR, OSCILLATOR, OSCILLATOR, OSCILLATOR], measured allocation bytes=136
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

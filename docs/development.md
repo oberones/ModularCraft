@@ -179,3 +179,13 @@ envelope/speaker fixture, exercises fractional PWM, slider maximum, invalid reje
 restoration to 50%, note selection and compact bounds, then exits. Screenshots and logs live
 in the newly created managed QA directory; existing worlds are never reused. This is a
 functional/visual probe, not a human audition or multiplayer timing pass.
+
+### LFO native fixtures
+
+`make smoke GRADLE_ARGS=-PqaLfo TICKS=600` creates a disposable 16-module patch, drives
+all LFO selectors/frequency, resonance depth and four ADSR depths (including compact
+scrolling and invalid input), and captures `lfo-*.png` screenshots in that instance.
+`make smoke-load GRADLE_ARGS=-PqaLfo TICKS=1200` exercises four 16-module/24-cable patches
+and reports audio counters plus server p95/max. Each smoke run needs a fresh QA directory.
+For repeated packaged GameTests, select a fresh `GAMETEST_DIR` to avoid accumulating
+persisted test identities against world quotas; do not delete or reset manual worlds.
