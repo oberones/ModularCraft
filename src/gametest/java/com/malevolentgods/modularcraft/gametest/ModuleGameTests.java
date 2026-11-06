@@ -9,6 +9,7 @@ import java.util.UUID;
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.gametest.framework.GameTestSequence;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.common.util.FakePlayerFactory;
@@ -19,6 +20,18 @@ import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
 @PrefixGameTestTemplate(false)
 public final class ModuleGameTests {
   private ModuleGameTests() {}
+
+  private static void afterRequests(
+      GameTestHelper h, GameTestSequence sequence, Runnable assertions) {
+    // All tests share the bounded server inbox. A fixed number of ticks cannot guarantee
+    // completion on a cold/contended runner. Wait for consumption, then assert once so
+    // rejected edits cannot pass merely because their requests have not run yet.
+    var runtime = com.malevolentgods.modularcraft.game.ServerRuntime.get(h.getLevel().getServer());
+    sequence
+        .thenWaitUntil(
+            () -> h.assertTrue(runtime.pendingRequests() == 0, "Server requests drained"))
+        .thenExecute(assertions);
+  }
 
   @GameTest(template = "empty", templateNamespace = ModularCraft.ID)
   public static void sequencerTransportRejectsForeignStaleAndInvalidCommands(GameTestHelper h) {
@@ -55,8 +68,10 @@ public final class ModuleGameTests {
             com.malevolentgods.modularcraft.network.Messages.Action.SEQUENCER_START,
             Parameter.TEMPO,
             1));
-    h.runAfterDelay(
-        3,
+    var sequence = h.startSequence();
+    afterRequests(
+        h,
+        sequence,
         () -> {
           h.assertTrue(
               !runtime.currentPatch(id).sequencers().get(id).running()
@@ -71,8 +86,9 @@ public final class ModuleGameTests {
                   Parameter.TEMPO,
                   0));
         });
-    h.runAfterDelay(
-        6,
+    afterRequests(
+        h,
+        sequence,
         () -> {
           h.assertTrue(
               runtime.currentPatch(id).sequencers().get(id).running(), "Owner starts rhythm");
@@ -93,8 +109,9 @@ public final class ModuleGameTests {
                   Parameter.TEMPO,
                   0));
         });
-    h.runAfterDelay(
-        9,
+    afterRequests(
+        h,
+        sequence,
         () -> {
           h.assertTrue(
               runtime.currentPatch(id).sequencers().get(id).running(),
@@ -108,8 +125,9 @@ public final class ModuleGameTests {
                   Parameter.TEMPO,
                   0));
         });
-    h.runAfterDelay(
-        12,
+    afterRequests(
+        h,
+        sequence,
         () -> {
           h.assertTrue(
               !runtime.currentPatch(id).sequencers().get(id).running()
@@ -361,8 +379,10 @@ public final class ModuleGameTests {
             false,
             false,
             true));
-    h.runAfterDelay(
-        3,
+    var sequence = h.startSequence();
+    afterRequests(
+        h,
+        sequence,
         () -> {
           var note =
               runtime.currentPatch(keyboard.state().id()).keyboards().get(keyboard.state().id());
@@ -452,8 +472,10 @@ public final class ModuleGameTests {
     } finally {
       bytes.release();
     }
-    h.runAfterDelay(
-        3,
+    var sequence = h.startSequence();
+    afterRequests(
+        h,
+        sequence,
         () -> {
           h.assertTrue(module.state().value(parameter) == value, "Server accepts exact parameter");
           var saved = module.saveWithFullMetadata(h.getLevel().registryAccess());
@@ -477,6 +499,16 @@ public final class ModuleGameTests {
                     com.malevolentgods.modularcraft.network.Messages.Action.PARAMETER,
                     parameter,
                     actor == player ? parameter.min - 1 : parameter.initial));
+        });
+    afterRequests(
+        h,
+        sequence,
+        () -> {
+          h.assertTrue(
+              module.state().value(parameter) == value && module.state().revision() == revision + 1,
+              "Invalid and foreign edits preserve accepted value/revision");
+          // Drain the invalid edit before submitting another update for the same key;
+          // otherwise inbox coalescing would discard it without testing validation.
           com.malevolentgods.modularcraft.game.ServerRuntime.enqueue(
               player,
               new com.malevolentgods.modularcraft.network.Messages.Control(
@@ -484,10 +516,11 @@ public final class ModuleGameTests {
                   revision,
                   com.malevolentgods.modularcraft.network.Messages.Action.PARAMETER,
                   parameter,
-                  75));
+                  parameter.initial));
         });
-    h.runAfterDelay(
-        6,
+    afterRequests(
+        h,
+        sequence,
         () -> {
           h.assertTrue(
               module.state().value(parameter) == value && module.state().revision() == revision + 1,
@@ -514,8 +547,10 @@ public final class ModuleGameTests {
         player,
         new com.malevolentgods.modularcraft.network.Messages.Keyboard(
             module.state().id(), module.state().revision(), session, 0, 127, false, false, true));
-    h.runAfterDelay(
-        3,
+    var sequence = h.startSequence();
+    afterRequests(
+        h,
+        sequence,
         () -> {
           var note = runtime.currentPatch(module.state().id()).keyboards().get(module.state().id());
           // Fake players are absent from PlayerList, so lease cleanup runs in the same tick.
@@ -530,8 +565,9 @@ public final class ModuleGameTests {
                   Parameter.OCTAVE,
                   6));
         });
-    h.runAfterDelay(
-        6,
+    afterRequests(
+        h,
+        sequence,
         () -> {
           var note = runtime.currentPatch(module.state().id()).keyboards().get(module.state().id());
           h.assertTrue(
@@ -542,8 +578,9 @@ public final class ModuleGameTests {
               new com.malevolentgods.modularcraft.network.Messages.Keyboard(
                   module.state().id(), module.state().revision(), session, 1, 9, false, false));
         });
-    h.runAfterDelay(
-        9,
+    afterRequests(
+        h,
+        sequence,
         () -> {
           var note = runtime.currentPatch(module.state().id()).keyboards().get(module.state().id());
           h.assertTrue(note.note() == 93 && !note.gate(), "GUI pitch still uses selected octave");
@@ -563,8 +600,9 @@ public final class ModuleGameTests {
               new com.malevolentgods.modularcraft.network.Messages.Keyboard(
                   module.state().id(), module.state().revision(), session, 3, -1, false, false));
         });
-    h.runAfterDelay(
-        12,
+    afterRequests(
+        h,
+        sequence,
         () -> {
           var note = runtime.currentPatch(module.state().id()).keyboards().get(module.state().id());
           h.assertTrue(note.note() == 0 && !note.gate(), "MIDI zero and release retain order");
@@ -584,8 +622,9 @@ public final class ModuleGameTests {
                   false,
                   true));
         });
-    h.runAfterDelay(
-        15,
+    afterRequests(
+        h,
+        sequence,
         () -> {
           var note = runtime.currentPatch(module.state().id()).keyboards().get(module.state().id());
           h.assertTrue(note.note() == 0 && !note.gate(), "Closed MIDI session cannot revive sound");
@@ -668,8 +707,10 @@ public final class ModuleGameTests {
         guest,
         new com.malevolentgods.modularcraft.network.Messages.Keyboard(
             module.state().id(), revision, runtime.keyboardSession(guest), 0, 10, false, false));
-    h.runAfterDelay(
-        3,
+    var sequence = h.startSequence();
+    afterRequests(
+        h,
+        sequence,
         () -> {
           var note = runtime.currentPatch(module.state().id()).keyboards().get(module.state().id());
           h.assertTrue(note.note() == 64 && !note.gate(), "Only ordered authorized E4 survives");
@@ -682,8 +723,9 @@ public final class ModuleGameTests {
               new com.malevolentgods.modularcraft.network.Messages.Keyboard(
                   module.state().id(), revision, current, 5, 2, false, false));
         });
-    h.runAfterDelay(
-        6,
+    afterRequests(
+        h,
+        sequence,
         () -> {
           var note = runtime.currentPatch(module.state().id()).keyboards().get(module.state().id());
           h.assertTrue(note.note() == 64 && !note.gate(), "Closed session cannot revive a note");
@@ -741,8 +783,10 @@ public final class ModuleGameTests {
         player,
         new com.malevolentgods.modularcraft.network.Messages.Keyboard(
             keyboard.state().id(), revision, session, 1, -1, false, false));
-    h.runAfterDelay(
-        3,
+    var sequence = h.startSequence();
+    afterRequests(
+        h,
+        sequence,
         () -> {
           var note =
               runtime.currentPatch(keyboard.state().id()).keyboards().get(keyboard.state().id());
@@ -884,8 +928,10 @@ public final class ModuleGameTests {
             com.malevolentgods.modularcraft.network.Messages.Action.GATE,
             Parameter.SUSTAIN,
             0));
-    h.runAfterDelay(
-        3,
+    var sequence = h.startSequence();
+    afterRequests(
+        h,
+        sequence,
         () -> {
           var checkpoint =
               runtime.currentPatch(envelope.state().id()).envelopes().get(envelope.state().id());

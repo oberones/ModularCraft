@@ -766,3 +766,68 @@ PENDING/FAIL/BLOCKED results into passes. No runtime synthesis or world schema c
   the complete Linux build and packaged GameTest result. Native, listening, multiplayer
   and security acceptance remain separate and retain their previous pending gates.
   No commit, tag, push, publication or hosted workflow rerun was performed.
+
+## Packaged GameTest request-completion synchronization — 2026-11-05
+
+- **FAIL — reported Linux CI regression.** The supplied 0.1.1 server log ran all
+  32 GameTests, then exited with code 3 for MIDI 127 acceptance, square PWM edits,
+  and LFO frequency edits. Each asserted queued-request results after exactly three
+  ticks. The shared inbox consumes requests within a 1.5 ms per-tick budget, so that
+  delay does not establish completion. A fresh macOS baseline passed all 32, confirming
+  that the failure is not consistently reproduced by the old timing on every machine.
+- **FAIL — Linux reproduction before the fix.** A disposable Ubuntu 24.04 x64 /
+  Temurin 21.0.12.1+1 run under local emulation reproduced all three reported failures
+  and six additional queued-control timing failures (nine of 32 tests failed).
+  Reused the original portable compiled classes and mapped Minecraft inputs, then
+  assembled and launched the original runtime JAR in a fresh server world. The old
+  assertions ran before the bounded inbox had finished processing the shared batch.
+- **CHANGE — wait for completion, then assert once.** Added a read-only
+  `ServerRuntime.pendingRequests()` diagnostic and GameTest sequences that wait for
+  an empty inbox on the server thread before executing state assertions. Applied this
+  to all 14 queued-control tests, including their rejection/cleanup stages. Preserved
+  all 32 tests, the 100-tick timeout, strict dependency verification, runtime processing
+  budget, and authorization checks. No retries or longer sleeps were added.
+- **CHANGE — distinct rejection coverage.** Parameter tests now drain invalid/foreign
+  edits before submitting a stale edit, preventing coalescing from silently discarding
+  the invalid owner request. The stale request uses an in-range value so its old
+  revision is the reason it must be rejected.
+- **PASS — full macOS automated verification.** `make ci` with Java 21 and a fresh
+  managed GameTest directory passed: 25 Python tests, 157 JUnit tests, formatting,
+  Checkstyle, PMD, 36 dependency configurations, all 32 packaged GameTests, and delivery
+  inspection. Runtime JAR SHA-256:
+  `5a48f87179e774273c2568df83029bee1fba7ba9562f97bf5cbcdf3b57fc2715`.
+- **PASS — Linux compilation and static checks.** In an isolated Ubuntu 24.04 x64 /
+  Temurin 21.0.12.1+1 container under emulation, ran `make ci` with strict verification,
+  two workers and `-x createMinecraftArtifacts`, reusing previously mapped Minecraft
+  inputs and cached assets. Main, test and GameTest sources compiled on Linux;
+  all 36 dependency configurations, formatting, Checkstyle and PMD passed. Python:
+  23 passed, two optional Commitizen tests skipped because `cz` was absent. The runtime
+  JAR is byte-identical to the macOS artifact (SHA-256 above).
+- **FAIL — emulated DSP timing checks.** The broader Linux JUnit run completed with
+  150 of 157 tests passing. Seven DSP benchmarks (LFO, square/mixed, maximum unison,
+  fixed load, mixer and two sequencer loads) exceeded the existing p95 <1 ms limit;
+  measured p95 values were 4.103–7.327 ms. These tests passed in the native macOS run.
+  No DSP code, limits or CI exclusions were changed; this emulated run cannot be
+  reported as a full CI pass.
+- **Validation setup correction.** The first separate Linux GameTest attempt failed
+  at asset download because the read-only local asset seed lacked 143 objects. Reused
+  the complete writable cache from the original Linux reproduction for the retry;
+  no application/build configuration change was made for this local setup error.
+- **BLOCKED — corrected Linux GameTest execution.** The complete-cache retry loaded
+  the corrected runtime JAR, then the server and Gradle JVMs failed with
+  `ClassFormatError` before tests began. The host filesystem was full (113 MiB free).
+  Removed only task-owned disposable source copies and the temporary Java-action
+  installation, preserving logs, Linux JUnit reports, repository changes and the
+  actual project's `run/` worlds; free space recovered to about 6 GiB. A retry then
+  failed in Docker itself with `hosts: input/output error`. No corrected Linux
+  GameTest pass is claimed. Did not restart the shared VM or alter unrelated containers.
+- **PASS — self-review.** Verified that all queued stages use completion checks,
+  assertions execute once, and failures cannot later become successes (checked the
+  pinned GameTest sequence implementation). Remaining fixed-tick tests exercise
+  timed sequencer/LFO behavior rather than queued controls. Reviewed source identity
+  between the working tree and Linux compilation, identical runtime JAR hashes,
+  distinct rejection coverage and unchanged budgets/timeouts. `git diff --check` passed.
+- **PENDING — hosted Linux confirmation and existing acceptance gates.** A new hosted
+  run must verify the corrected packaged GameTests. Native multiplayer, acoustic,
+  listening and security acceptance retain their previous status. No commit, tag,
+  push, publication or hosted workflow rerun was performed.

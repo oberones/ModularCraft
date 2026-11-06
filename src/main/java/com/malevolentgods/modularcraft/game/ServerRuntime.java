@@ -924,6 +924,13 @@ public final class ServerRuntime {
     return maxTickNanos;
   }
 
+  /**
+   * Pending network requests for diagnostics; inspect on the server thread after tick processing.
+   */
+  public int pendingRequests() {
+    return queue.size();
+  }
+
   /** Server-side inspection token for integration fixtures; never grants edit authority. */
   public UUID keyboardSession(ServerPlayer player) {
     KeyboardSession session = sessions.get(player.getUUID());

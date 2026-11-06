@@ -101,6 +101,12 @@ listening, or two-client acceptance.
 | `make verify` | Launcher tests, dependency preflight, complete Gradle build/check, packaged GameTests, delivery inspection |
 | `make ci` | `verify` with `--no-daemon`; headless, no game window or external audit service |
 
+GameTests for queued controls wait for the server inbox to drain before checking results.
+The server processes requests within a 1.5 ms budget per tick, so a fixed three-tick
+delay is not a completion guarantee on CI. These tests retain their 100-tick timeout
+and assert accepted/rejected state once processing completes; they do not increase
+the runtime budget or retry failed assertions.
+
 ## Tagged releases
 
 The mod version is recorded in `.cz.toml` and `gradle.properties` (`mod_version`).
