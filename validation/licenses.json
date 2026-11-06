@@ -763,7 +763,7 @@
       "review": "Upstream POM declaration"
     },
     {
-      "coordinate": "io.github.llamalad7:mixinextras-neoforge:0.5.3",
+      "coordinate": "io.github.llamalad7:mixinextras-neoforge:0.5.0",
       "licenses": [
         {
           "name": "MIT License",
@@ -1327,7 +1327,7 @@
       "review": "Upstream POM declaration"
     },
     {
-      "coordinate": "net.neoforged:neoforge:21.1.234",
+      "coordinate": "net.neoforged:neoforge:21.1.218",
       "licenses": [
         {
           "name": "LGPL 2.1",

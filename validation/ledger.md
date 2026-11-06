@@ -867,3 +867,27 @@ PENDING/FAIL/BLOCKED results into passes. No runtime synthesis or world schema c
 - **PENDING — native acceptance.** Native client mixin/audio, listening, device lifecycle,
   and multiplayer requalification on 21.1.234 remain pending. Automated dedicated-server
   tests do not establish those gates. No commit, push, or publication performed.
+
+
+## Restored NeoForge 21.1.218 (2026-11-05 local)
+
+- **CHANGE — corrected user request.** Restored the exact build/runtime pin to
+  NeoForge 21.1.218 and its MixinExtras 0.5.0 dependency, superseding the upgrade
+  above. Restored both platform locks, checksum metadata, current documentation,
+  and dependency/license inventories to the pre-upgrade versions. Mod version
+  remains 0.2.0; Minecraft 1.21.1, Java 21, save and network schemas are unchanged.
+- **PASS — integrity and self-review.** Both locks match their pre-upgrade versions;
+  all 494 retained checksum entries have passing upstream integrity evidence.
+  No new checksums were introduced. Restored the historical OSV scan for this
+  matrix, explicitly distinguished from a fresh query in `security-review.md`.
+  Reviewed version consistency and built-JAR metadata (`[21.1.218]`).
+  `git diff --check` passed.
+- **PASS — macOS automated verification.** With Java 21, ran
+  `make verify GAMETEST_DIR=run/make/gametest-neoforge-21.1.218-restored` under strict
+  dependency verification: 25 Python tests, 157 JUnit tests, formatting, Checkstyle,
+  PMD, dependency resolution, all 32 packaged GameTests, and delivery inspection
+  passed. Runtime JAR SHA-256:
+  `c57e84c9706191a4456415aabb64d8a6e17e4e4c0df47824b29b4e7dbbfc8913`.
+- **PENDING — existing acceptance gates.** Linux execution and native client,
+  multiplayer, listening, device lifecycle, and security qualification were not
+  repeated here; prior outstanding gates remain open. No commit, push, or publication.

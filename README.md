@@ -12,7 +12,7 @@ measurements, user-reported listening, and outstanding release acceptance.
 
 ## Install
 
-Use **Minecraft 1.21.1**, **NeoForge 21.1.234**, and **Java 21**. Put
+Use **Minecraft 1.21.1**, **NeoForge 21.1.218**, and **Java 21**. Put
 the release's `modularcraft-<version>.jar` (or the local build under `build/libs/`) in the
 client and server `mods` directories. Every
 participant needs the same protocol-compatible mod. The initial playback target is macOS;

@@ -5,7 +5,16 @@ No public release is authorized or security-qualified. The reviewed Minecraft 1.
 NeoForge 21.1.218 matrix was pinned; replacing host libraries inside a mod would
 change that matrix and requires independent compatibility qualification.
 
-## NeoForge 21.1.234 update (2026-11-05 local)
+## Restored NeoForge 21.1.218 (2026-11-05 local)
+
+The user corrected the requested loader version back to NeoForge 21.1.218 and
+MixinExtras 0.5.0. Restored the original dependency/license inventories and OSV
+scan for that exact matrix; the scan is historical evidence, not a fresh query.
+All 494 retained verification entries have passing upstream integrity records.
+The 21.1.234 review below records the superseded upgrade. Existing security
+qualification and exposure-review limitations remain open.
+
+## NeoForge 21.1.234 update (2026-11-05 local; superseded)
 
 The requested loader upgrade pins NeoForge 21.1.234 and its MixinExtras 0.5.3
 compile dependency; other resolved component versions are unchanged. Reviewed the

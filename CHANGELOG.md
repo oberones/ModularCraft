@@ -1,9 +1,9 @@
 # 0.1.0 development candidate
 
-Updated the exact supported NeoForge version from 21.1.218 to 21.1.234 for
-Minecraft 1.21.1, including the loader-required MixinExtras 0.5.3 dependency.
-Clients and servers must install NeoForge 21.1.234; save and network schemas are
-unchanged. Native client and multiplayer requalification remain pending.
+Restored the exact supported NeoForge version to 21.1.218 for Minecraft 1.21.1,
+including its MixinExtras 0.5.0 dependency, superseding the 21.1.234 update.
+Clients and servers must install NeoForge 21.1.218; save and network schemas are
+unchanged.
 
 Added version-tag GitHub Releases after full automated verification. Commitizen now
 updates the Gradle mod version before tagging; archive names, mod/test metadata, and

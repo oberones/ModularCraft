@@ -493,14 +493,6 @@
             <sha256 value="6e4d152c0f10acd56dc7f606df83ed14f156f49ad28c8abcacff0657e5faa11c" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
          </artifact>
       </component>
-      <component group="io.github.llamalad7" name="mixinextras-neoforge" version="0.5.3">
-         <artifact name="mixinextras-neoforge-0.5.3.jar">
-            <sha256 value="9822e773bd9f42d36ed53ea3d67486207291747a7bfacc29beeb92040721bc9b" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
-         </artifact>
-         <artifact name="mixinextras-neoforge-0.5.3.pom">
-            <sha256 value="ccba91c3ad44b04749e232e79abe6a2e2ae52ec19f66ce8010167304eab54f6c" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
-         </artifact>
-      </component>
       <component group="io.netty" name="netty-bom" version="4.1.104.Final">
          <artifact name="netty-bom-4.1.104.Final.pom">
             <sha256 value="5a65e06a159d20d3b4800624a570c646dbee710b2b539b3449a268558c289e9c" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
@@ -806,23 +798,6 @@
          </artifact>
          <artifact name="neoforge-21.1.218.module">
             <sha256 value="f21723f7ccf93a9481334e0b426af53abd1478d5ecf6dbdf00f02bee4d4cebe5" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
-         </artifact>
-      </component>
-      <component group="net.neoforged" name="neoforge" version="21.1.234">
-         <artifact name="neoforge-21.1.234-moddev-config.json">
-            <sha256 value="13739589d3ea576486e7191523374b70820a78bd064239062b9166cac2344da2" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
-         </artifact>
-         <artifact name="neoforge-21.1.234-sources.jar">
-            <sha256 value="56298bbc779838d93eaa05bcb9fb53894d5a01b1e28019d7b21ba503e62dfd02" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
-         </artifact>
-         <artifact name="neoforge-21.1.234-universal.jar">
-            <sha256 value="5855aebcccce0ba5016187d1c524dd8360d330b774498b1ee0e5434f5700eb46" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
-         </artifact>
-         <artifact name="neoforge-21.1.234-userdev.jar">
-            <sha256 value="e8d9ae715ea508c8690be569a902f451ec66c455ee249d4f6f1033d4095dc201" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
-         </artifact>
-         <artifact name="neoforge-21.1.234.module">
-            <sha256 value="5cc45f98231415e24b05c43a2ff5fe25394f3726a8a3807d8f77651ab5424890" origin="Independently checked against official upstream repositories; see validation/upstream-integrity.json"/>
          </artifact>
       </component>
       <component group="net.neoforged" name="neoform" version="1.21.1-20240808.144430">
