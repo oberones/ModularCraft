@@ -57,8 +57,9 @@ panning are calculated before final protection.
 Client-only mixins expose three private host properties and observe sound teardown and
 integrated-server pause. Vanilla's standard `AudioStream` path queues one-second blocks,
 so it cannot meet this plan's buffer budget unchanged. The access surface is pinned to
-1.21.1/NeoForge 21.1.218 and is covered by native loading/streaming probes, with device
-switch and external audio-mod compatibility still separate acceptance gates.
+1.21.1/NeoForge 21.1.234. Native loading/streaming probes previously covered 21.1.218;
+requalification on 21.1.234, device switch, and external audio-mod compatibility
+remain separate acceptance gates.
 
 Resource reload, disconnect, dimension change, mute, pause, device loss, and stop paths
 close the native channel and buffers, cancel the timer, retire graph preparation, and

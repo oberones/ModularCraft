@@ -831,3 +831,39 @@ PENDING/FAIL/BLOCKED results into passes. No runtime synthesis or world schema c
   run must verify the corrected packaged GameTests. Native multiplayer, acoustic,
   listening and security acceptance retain their previous status. No commit, tag,
   push, publication or hosted workflow rerun was performed.
+
+
+## NeoForge 21.1.234 support (2026-11-05 local)
+
+- **CHANGE — requested compatibility matrix.** Updated the build pin and exact
+  runtime requirement from NeoForge 21.1.218 to 21.1.234, retaining Minecraft 1.21.1
+  and Java 21. Updated current documentation and dependency/license inventories;
+  prior native evidence remains attributed to its original loader version.
+  World-save and network schemas are unchanged.
+- **PASS — dependency review.** Regenerated the macOS lock with Gradle and compared
+  official upstream module metadata. Only NeoForge and its required MixinExtras
+  compile dependency (0.5.0 → 0.5.3) changed versions. Synchronized those same two
+  coordinates into the Linux lock without changing platform configuration memberships.
+  `verifyDependencies dependencyInventory` resolved all configurations. All seven
+  added checksums independently match upstream; `scripts/verify-upstream.py` reports
+  501 PASS, zero FAIL/UNVERIFIED (including retained historical checksum entries).
+  Reviewed LGPL 2.1/MIT upstream POM declarations. Refreshed OSV scan: 143 packages,
+  the same 35 advisory IDs, no matches for either upgraded coordinate. Existing
+  security qualification remains open; see `security-review.md`.
+- **PASS — full macOS automated verification.** With Java 21, ran
+  `make verify GAMETEST_DIR=run/make/gametest-neoforge-21.1.234` under strict dependency
+  verification. All 25 Python tests, 157 JUnit tests, formatting, Checkstyle, PMD,
+  dependency checks, all 32 packaged GameTests, and delivery inspection passed.
+  Inspected the built JAR's metadata: exact NeoForge requirement `[21.1.234]`.
+  Runtime JAR SHA-256:
+  `02ff8292410a5c2d0f12d7ecea53f4f031415a11d2cd9863fac26a538ac980c5`.
+- **PASS — self-review.** Reviewed build/runtime/documentation consistency, verified
+  both lock diffs contain exactly the two expected version substitutions, and matched
+  every verification checksum to passing upstream evidence. `git diff --check` passed.
+  No application behavior changed or new behavior-only tests were needed.
+- **BLOCKED — Linux execution.** Docker is unavailable (Rancher Desktop socket absent),
+  so the synchronized Linux lock has not been regenerated or verified on Linux here.
+  Hosted Linux verification remains required.
+- **PENDING — native acceptance.** Native client mixin/audio, listening, device lifecycle,
+  and multiplayer requalification on 21.1.234 remain pending. Automated dedicated-server
+  tests do not establish those gates. No commit, push, or publication performed.

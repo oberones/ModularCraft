@@ -8,7 +8,7 @@ native libraries. Minecraft's installed LWJGL/OpenAL supplies playback.
 | Component | Pin | Purpose | License / provenance |
 |---|---|---|---|
 | Minecraft | 1.21.1, official Mojang mappings | Host game | Mojang EULA; obtained by loader/build tooling, not redistributed |
-| NeoForge | 21.1.218 | Host APIs and loader | LGPL-2.1; https://github.com/neoforged/NeoForge |
+| NeoForge | 21.1.234 | Host APIs and loader | LGPL-2.1; https://github.com/neoforged/NeoForge |
 | Java | 21 | Runtime/toolchain | Installed separately; local Temurin 21.0.12.1+1, GPL-2.0 with Classpath Exception |
 | ModDevGradle | 2.0.148 | NeoForge build integration | LGPL-2.1; https://github.com/neoforged/ModDevGradle |
 | Gradle | 8.13 | Build wrapper | Apache-2.0; https://gradle.org/releases/ |

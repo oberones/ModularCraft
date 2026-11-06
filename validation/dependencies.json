@@ -2187,17 +2187,17 @@
         "configuration": "compileClasspath",
         "group": "io.github.llamalad7",
         "name": "mixinextras-neoforge",
-        "version": "0.5.0",
-        "file": "mixinextras-neoforge-0.5.0.jar",
-        "sha256": "9c617719248f8b89847348fc7ea5e705739c147ae5e172551264d225bc9f2507"
+        "version": "0.5.3",
+        "file": "mixinextras-neoforge-0.5.3.jar",
+        "sha256": "9822e773bd9f42d36ed53ea3d67486207291747a7bfacc29beeb92040721bc9b"
     },
     {
         "configuration": "gametestCompileClasspath",
         "group": "io.github.llamalad7",
         "name": "mixinextras-neoforge",
-        "version": "0.5.0",
-        "file": "mixinextras-neoforge-0.5.0.jar",
-        "sha256": "9c617719248f8b89847348fc7ea5e705739c147ae5e172551264d225bc9f2507"
+        "version": "0.5.3",
+        "file": "mixinextras-neoforge-0.5.3.jar",
+        "sha256": "9822e773bd9f42d36ed53ea3d67486207291747a7bfacc29beeb92040721bc9b"
     },
     {
         "configuration": "additionalRuntimeClasspath",
@@ -4251,9 +4251,9 @@
         "configuration": "neoForgeConfigOnly",
         "group": "net.neoforged",
         "name": "neoforge",
-        "version": "21.1.218",
-        "file": "neoforge-21.1.218-moddev-config.json",
-        "sha256": "fc5e5155cb2866801a0205499175217911188f342421ea609c4584833844a432"
+        "version": "21.1.234",
+        "file": "neoforge-21.1.234-moddev-config.json",
+        "sha256": "13739589d3ea576486e7191523374b70820a78bd064239062b9166cac2344da2"
     },
     {
         "configuration": "additionalRuntimeClasspath",

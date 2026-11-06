@@ -5,7 +5,7 @@ The [specification](spec.md) remains authoritative. Existing Spec Kit files are 
 
 ## Target and architecture
 
-Minecraft **1.21.1**, NeoForge **21.1.218**, Java **21**, ModDevGradle **2.0.148**,
+Minecraft **1.21.1**, NeoForge **21.1.234**, Java **21**, ModDevGradle **2.0.148**,
 Gradle **8.13**. macOS is the initial playback target; other loaders/platforms are
 unqualified. Official references: [setup](https://docs.neoforged.net/docs/1.21.1/gettingstarted/),
 [payloads](https://docs.neoforged.net/docs/1.21.1/networking/payload/),

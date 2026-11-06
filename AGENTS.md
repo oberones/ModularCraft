@@ -2,7 +2,7 @@
 
 ## Project Structure & Module Organization
 
-ModularCraft targets Minecraft 1.21.1, NeoForge 21.1.218, and Java 21.
+ModularCraft targets Minecraft 1.21.1, NeoForge 21.1.234, and Java 21.
 
 - `src/main/java/com/malevolentgods/modularcraft/`: pure Java `domain`, `dsp`, and `transport`; Minecraft adapters in `game`, `network`, and `client`.
 - `src/main/resources/`: mod metadata, localization, models, textures, and loot tables. Editable SVGs and provenance live in `art/`.

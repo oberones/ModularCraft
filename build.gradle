@@ -20,7 +20,7 @@ configurations {
     gametestRuntimeOnly.extendsFrom runtimeOnly
 }
 neoForge {
-    version = '21.1.218'
+    version = '21.1.234'
     addModdingDependenciesTo(sourceSets.gametest)
     runs {
         client {

@@ -10,7 +10,7 @@ description='''Build and play a shared modular synthesizer from four instrument 
 [[dependencies.modularcraft]]
 modId="neoforge"
 type="required"
-versionRange="[21.1.218]"
+versionRange="[21.1.234]"
 ordering="NONE"
 side="BOTH"
 [[dependencies.modularcraft]]

@@ -1,11 +1,25 @@
 # Dependency security review
 
 Reviewed on 2026-11-04 UTC (2026-11-03 local), for this uncommitted development candidate.
-No public release is authorized or security-qualified. The required Minecraft 1.21.1 /
-NeoForge 21.1.218 matrix remains pinned; replacing host libraries inside a mod would
+No public release is authorized or security-qualified. The reviewed Minecraft 1.21.1 /
+NeoForge 21.1.218 matrix was pinned; replacing host libraries inside a mod would
 change that matrix and requires independent compatibility qualification.
 
-## Evidence and scope
+## NeoForge 21.1.234 update (2026-11-05 local)
+
+The requested loader upgrade pins NeoForge 21.1.234 and its MixinExtras 0.5.3
+compile dependency; other resolved component versions are unchanged. Reviewed the
+official NeoForge module metadata and POM plus the MixinExtras POM: their declared
+licenses remain LGPL 2.1 and MIT respectively. These are upstream patch updates to
+existing host dependencies, with no new library or bundled binary introduced.
+
+The refreshed OSV scan still covers 143 coordinates and reports the same 35 unique
+advisory IDs. Neither upgraded coordinate has an OSV advisory match. The prior
+exposure assessment below remains provisional; this is not release security approval.
+All 501 recorded verification entries now have passing upstream integrity evidence,
+including seven new artifact hashes and retained historical version entries.
+
+## Evidence and scope (original review)
 
 `scripts/audit-dependencies.py` queried the public OSV API for 143 resolved Maven binary
 coordinates; it transmitted only public package names and versions. The complete results,
