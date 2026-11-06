@@ -116,6 +116,12 @@ and snapshots now require version 8 on every peer. Back up worlds before upgrade
 the backup before downgrade. RP-007 and mixer native/load probes added. Human listening,
 multiplayer and sustained acceptance remain separately tracked; no release is implied.
 
+## v0.2.0 (2026-11-05)
+
+### Feat
+
+- update neoforge support to 21.1.234
+
 ## v0.1.2 (2026-11-05)
 
 ### Fix
