@@ -1,0 +1,5 @@
+PASS: Java 21 artifacts, nine complete asset sets, no test fixtures or bundled host/runtime libraries.
+PASS: no executable/test fixture sources in modularcraft-0.2.1.jar
+PASS: no executable/test fixture sources in modularcraft-0.2.1-sources.jar
+PASS: current README, guide, ten images packaged; capture source in rebuildable project ZIP only
+PASS: runtime artifact matches native capture SHA-256

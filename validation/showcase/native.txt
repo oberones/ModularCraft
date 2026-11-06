@@ -1,0 +1,164 @@
+"./gradlew" -PqaShowcase --dependency-verification strict runtimeArtifact
+> Task :createMinecraftArtifacts UP-TO-DATE
+> Task :compileJava UP-TO-DATE
+> Task :processResources UP-TO-DATE
+> Task :classes UP-TO-DATE
+> Task :jarJar NO-SOURCE
+> Task :jar UP-TO-DATE
+> Task :runtimeArtifact UP-TO-DATE
+
+[Incubating] Problems report is available at: file:///Users/oberon/Projects/coding/mods/minecraft/ModularCraft/build/reports/problems/problems-report.html
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 9.0.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/8.13/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD SUCCESSFUL in 510ms
+5 actionable tasks: 5 up-to-date
+"python3" scripts/run_validation.py smoke --ticks "1200" 
+Staged modularcraft-0.2.1.jar SHA-256 20b57e03e261abd66f0d76b10cfdcf84e9fa0bab7faed1d5559ac00df63f8036
+Validation instance: /Users/oberon/Projects/coding/mods/minecraft/ModularCraft/run/make/smoke-4x5myrwq
+> Task :createMinecraftArtifacts UP-TO-DATE
+> Task :compileJava UP-TO-DATE
+> Task :processResources UP-TO-DATE
+> Task :classes UP-TO-DATE
+> Task :compileGametestJava
+> Task :processGametestResources UP-TO-DATE
+> Task :gametestClasses
+> Task :downloadAssets UP-TO-DATE
+> Task :writeClientLegacyClasspath UP-TO-DATE
+> Task :prepareClientRun UP-TO-DATE
+
+> Task :runClient
+WARN StatusConsoleListener Advanced terminal features are not available in this environment
+[12:52:37] [main/INFO] [cp.mo.mo.Launcher/MODLAUNCHER]: ModLauncher running: args [--launchTarget, forgeclientdev, --version, 21.1.218, --assetIndex, 17, --assetsDir, /Users/oberon/.gradle/caches/neoformruntime/assets, --gameDir, ., --fml.fmlVersion, 4.0.42, --fml.mcVersion, 1.21.1, --fml.neoForgeVersion, 21.1.218, --fml.neoFormVersion, 20240808.144430, --width, 1920, --height, 1080, --quickPlaySingleplayer, ModularCraft-QA]
+[12:52:37] [main/INFO] [cp.mo.mo.Launcher/MODLAUNCHER]: JVM identified as Eclipse Adoptium OpenJDK 64-Bit Server VM 21.0.12.1+1-LTS
+[12:52:37] [main/INFO] [cp.mo.mo.Launcher/MODLAUNCHER]: ModLauncher 11.0.5+main.901c6ea8 starting: java version 21.0.12.1 by Eclipse Adoptium; OS Mac OS X arch aarch64 version 26.6.2
+[12:52:37] [main/INFO] [ne.ne.fm.lo.ImmediateWindowHandler/]: Loading ImmediateWindowProvider fmlearlywindow
+[12:52:38] [main/INFO] [EARLYDISPLAY/]: Trying GL version 4.6
+[12:52:38] [main/INFO] [EARLYDISPLAY/]: Trying GL version 4.5
+[12:52:38] [main/INFO] [EARLYDISPLAY/]: Trying GL version 4.4
+[12:52:38] [main/INFO] [EARLYDISPLAY/]: Trying GL version 4.3
+[12:52:38] [main/INFO] [EARLYDISPLAY/]: Trying GL version 4.2
+[12:52:38] [main/INFO] [EARLYDISPLAY/]: Trying GL version 4.1
+[12:52:38] [main/INFO] [EARLYDISPLAY/]: Requested GL version 4.1 got version 4.1
+[12:52:38] [main/INFO] [mixin/]: SpongePowered MIXIN Subsystem Version=0.8.7 Source=union:/Users/oberon/.gradle/caches/modules-2/files-2.1/net.fabricmc/sponge-mixin/0.15.2+mixin.0.8.7/2af2f021d8e02a0220dc27a7a72b4666d66d44ca/sponge-mixin-0.15.2+mixin.0.8.7.jar%23132!/ Service=ModLauncher Env=CLIENT
+[12:52:38] [main/INFO] [ne.ne.fm.lo.mo.lo.JarInJarDependencyLocator/]: Found 2 dependencies adding them to mods collection
+[12:52:38] [main/INFO] [ne.ne.fm.lo.mo.ModDiscoverer/]: 
+     Mod List:
+		Name Version (Mod Id)
+
+		Minecraft 1.21.1 (minecraft)
+		ModularCraft 0.2.1 (modularcraft)
+		ModularCraft GameTests (development only) 0.2.1 (modularcraft_tests)
+		NeoForge 21.1.218 (neoforge)
+[12:52:38] [pool-2-thread-1/INFO] [EARLYDISPLAY/]: GL info: Apple M2 Pro GL version 4.1 Metal - 90.5, Apple
+[12:52:38] [main/INFO] [mixin/]: Compatibility level set to JAVA_21
+[12:52:38] [main/INFO] [cp.mo.mo.LaunchServiceHandler/MODLAUNCHER]: Launching target 'forgeclientdev' with arguments [--version, 21.1.218, --gameDir, ., --assetsDir, /Users/oberon/.gradle/caches/neoformruntime/assets, --assetIndex, 17, --width, 1920, --height, 1080, --quickPlaySingleplayer, ModularCraft-QA]
+[12:52:39] [Datafixer Bootstrap/INFO] [mojang/DataFixerBuilder]: 229 Datafixer optimizations took 145 milliseconds
+[12:52:40] [pool-8-thread-1/INFO] [MixinExtras|Service/]: Initializing MixinExtras via com.llamalad7.mixinextras.service.MixinExtrasServiceImpl(version=0.5.0).
+[12:52:42] [main/WARN] [minecraft/Commands]: Ambiguity between arguments [teleport, location] and [teleport, destination] with inputs: [0.1 -0.5 .9, 0 0 0]
+[12:52:42] [main/WARN] [minecraft/Commands]: Ambiguity between arguments [teleport, location] and [teleport, targets] with inputs: [0.1 -0.5 .9, 0 0 0]
+[12:52:42] [main/WARN] [minecraft/Commands]: Ambiguity between arguments [teleport, destination] and [teleport, targets] with inputs: [Player, 0123, @e, dd12be42-52a9-4a91-a8a1-11c01849e498]
+[12:52:42] [main/WARN] [minecraft/Commands]: Ambiguity between arguments [teleport, targets] and [teleport, destination] with inputs: [Player, 0123, dd12be42-52a9-4a91-a8a1-11c01849e498]
+[12:52:42] [main/WARN] [minecraft/Commands]: Ambiguity between arguments [teleport, targets, location] and [teleport, targets, destination] with inputs: [0.1 -0.5 .9, 0 0 0]
+[12:52:42] [Render thread/WARN] [minecraft/VanillaPackResourcesBuilder]: Assets URL 'union:/Users/oberon/Projects/coding/mods/minecraft/ModularCraft/build/moddev/artifacts/neoforge-21.1.218.jar%23185!/assets/.mcassetsroot' uses unexpected schema
+[12:52:42] [Render thread/WARN] [minecraft/VanillaPackResourcesBuilder]: Assets URL 'union:/Users/oberon/Projects/coding/mods/minecraft/ModularCraft/build/moddev/artifacts/neoforge-21.1.218.jar%23185!/data/.mcassetsroot' uses unexpected schema
+[12:52:42] [Render thread/INFO] [mojang/YggdrasilAuthenticationService]: Environment: Environment[sessionHost=https://sessionserver.mojang.com, servicesHost=https://api.minecraftservices.com, name=PROD]
+[12:52:42] [Render thread/INFO] [minecraft/Minecraft]: Setting user: Dev
+[12:52:43] [Render thread/INFO] [minecraft/Minecraft]: Backend library: LWJGL version 3.3.3+5
+UNSUPPORTED (log once): POSSIBLE ISSUE: unit 0 GLD_TEXTURE_INDEX_2D is unloadable and bound to sampler type (Float) - using zero texture because texture unloadable
+[12:52:43] [modloading-worker-0/INFO] [ne.ne.ne.co.NeoForgeMod/NEOFORGE-MOD]: NeoForge mod loading, version 21.1.218, for MC 1.21.1
+[12:52:43] [Render thread/INFO] [ne.ne.ne.ga.GameTestHooks/]: Enabled Gametest Namespaces: []
+[12:52:44] [Render thread/INFO] [minecraft/ReloadableResourceManager]: Reloading ResourceManager: vanilla, mod_resources, mod/modularcraft, mod/modularcraft_tests, mod/neoforge
+[12:52:44] [Worker-Main-7/INFO] [minecraft/UnihexProvider]: Found unifont_all_no_pua-15.1.05.hex, loading
+[12:52:44] [Worker-Main-6/INFO] [minecraft/UnihexProvider]: Found unifont_jp_patch-15.1.05.hex, loading
+[12:52:45] [Render thread/WARN] [minecraft/SoundEngine]: Missing sound for event: minecraft:item.goat_horn.play
+[12:52:45] [Render thread/WARN] [minecraft/SoundEngine]: Missing sound for event: minecraft:entity.goat.screaming.horn_break
+[12:52:45] [Render thread/INFO] [mojang/Library]: OpenAL initialized on device Scarlett 18i8 USB
+[12:52:45] [Render thread/INFO] [minecraft/SoundEngine]: Sound engine started
+[12:52:45] [Render thread/INFO] [minecraft/TextureAtlas]: Created: 1024x512x4 minecraft:textures/atlas/blocks.png-atlas
+[12:52:45] [Render thread/INFO] [minecraft/TextureAtlas]: Created: 256x256x4 minecraft:textures/atlas/signs.png-atlas
+[12:52:45] [Render thread/INFO] [minecraft/TextureAtlas]: Created: 512x512x4 minecraft:textures/atlas/shield_patterns.png-atlas
+[12:52:45] [Render thread/INFO] [minecraft/TextureAtlas]: Created: 512x512x4 minecraft:textures/atlas/banner_patterns.png-atlas
+[12:52:45] [Render thread/INFO] [minecraft/TextureAtlas]: Created: 1024x1024x4 minecraft:textures/atlas/armor_trims.png-atlas
+[12:52:45] [Render thread/INFO] [minecraft/TextureAtlas]: Created: 256x256x4 minecraft:textures/atlas/chest.png-atlas
+[12:52:45] [Render thread/INFO] [minecraft/TextureAtlas]: Created: 128x64x4 minecraft:textures/atlas/decorated_pot.png-atlas
+[12:52:45] [Render thread/INFO] [minecraft/TextureAtlas]: Created: 512x256x4 minecraft:textures/atlas/beds.png-atlas
+[12:52:45] [Render thread/INFO] [minecraft/TextureAtlas]: Created: 512x256x4 minecraft:textures/atlas/shulker_boxes.png-atlas
+[12:52:45] [Render thread/INFO] [minecraft/TextureAtlas]: Created: 512x256x0 minecraft:textures/atlas/particles.png-atlas
+[12:52:45] [Render thread/INFO] [minecraft/TextureAtlas]: Created: 512x256x0 minecraft:textures/atlas/paintings.png-atlas
+[12:52:45] [Render thread/INFO] [minecraft/TextureAtlas]: Created: 256x128x0 minecraft:textures/atlas/mob_effects.png-atlas
+[12:52:45] [Render thread/INFO] [minecraft/TextureAtlas]: Created: 64x64x0 minecraft:textures/atlas/map_decorations.png-atlas
+[12:52:45] [Render thread/INFO] [minecraft/TextureAtlas]: Created: 1024x512x0 minecraft:textures/atlas/gui.png-atlas
+[12:52:45] [Render thread/WARN] [minecraft/ShaderInstance]: Shader rendertype_entity_translucent_emissive could not find sampler named Sampler2 in the specified shader program.
+[12:52:45] [Render thread/INFO] [ne.ne.ne.cl.en.an.js.AnimationLoader/]: Loaded 0 entity animations
+[12:52:45] [Render thread/WARN] [ne.ne.ne.co.CommonHooks/WP]: The following mods have version differences that were not resolved:
+modularcraft (version 0.1.0 -> 0.2.1)
+modularcraft_tests (version 0.1.0 -> 0.2.1)
+Things may not work well.
+[12:52:46] [Render thread/INFO] [minecraft/RecipeManager]: Loaded 1291 recipes
+[12:52:46] [Render thread/INFO] [minecraft/AdvancementTree]: Loaded 1400 advancements
+[12:52:46] [Server thread/INFO] [minecraft/IntegratedServer]: Starting integrated minecraft server version 1.21.1
+[12:52:46] [Server thread/INFO] [minecraft/MinecraftServer]: Generating keypair
+[12:52:46] [Server thread/INFO] [minecraft/MinecraftServer]: Preparing start region for dimension minecraft:overworld
+[12:52:46] [progressListener/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 0%
+[12:52:47] [Server thread/INFO] [ne.ne.ne.se.pe.PermissionAPI/]: Successfully initialized permission handler neoforge:default_handler
+[12:52:47] [progressListener/INFO] [minecraft/LoggerChunkProgressListener]: Time elapsed: 340 ms
+[12:52:47] [Server thread/INFO] [minecraft/IntegratedServer]: Changing view distance to 12, from 10
+[12:52:47] [Server thread/INFO] [minecraft/IntegratedServer]: Changing simulation distance to 8, from 0
+[12:52:48] [Server thread/INFO] [minecraft/PlayerList]: Dev[local:E:78101d72] logged in with entity id 1 at (10.5, -60.0, 10.5)
+[12:52:48] [Server thread/INFO] [minecraft/MinecraftServer]: Dev joined the game
+[12:52:48] [Render thread/INFO] [minecraft/AdvancementTree]: Loaded 2 advancements
+MODULARCRAFT_QA artifact=union:/Users/oberon/Projects/coding/mods/minecraft/ModularCraft/run/make/smoke-4x5myrwq/mods/modularcraft-0.2.1.jar%23187!/
+MODULARCRAFT_QA showcase accepted modules=9 cables=10 speaker=enabled sequencer=running PASS
+MODULARCRAFT_QA client p95BlockNs=133291 blocks=1801 underruns=3 maxBlockNs=1419083 peak=0.0067313918843865395 maxQueued=12 failed=false
+MODULARCRAFT_QA Saved screenshot as synth-setup.png
+MODULARCRAFT_QA client p95BlockNs=110375 blocks=3673 underruns=3 maxBlockNs=1419083 peak=0.0067313918843865395 maxQueued=12 failed=false
+MODULARCRAFT_QA Saved screenshot as saw-oscillator.png
+MODULARCRAFT_QA Saved screenshot as low-pass-filter.png
+MODULARCRAFT_QA client p95BlockNs=56667 blocks=5545 underruns=3 maxBlockNs=1419083 peak=0.0067313918843865395 maxQueued=12 failed=false
+MODULARCRAFT_QA Saved screenshot as envelope-generator.png
+MODULARCRAFT_QA client p95BlockNs=56083 blocks=7421 underruns=3 maxBlockNs=1419083 peak=0.0067313918843865395 maxQueued=12 failed=false
+MODULARCRAFT_QA Saved screenshot as amplifier-speaker.png
+MODULARCRAFT_QA client p95BlockNs=55250 blocks=9298 underruns=3 maxBlockNs=1419083 peak=0.0067313918843865395 maxQueued=12 failed=false
+MODULARCRAFT_QA Saved screenshot as keyboard.png
+MODULARCRAFT_QA client p95BlockNs=55250 blocks=11178 underruns=3 maxBlockNs=1419083 peak=0.0067313918843865395 maxQueued=12 failed=false
+MODULARCRAFT_QA Saved screenshot as euclidean-sequencer.png
+MODULARCRAFT_QA Saved screenshot as square-oscillator.png
+MODULARCRAFT_QA client p95BlockNs=84125 blocks=13032 underruns=3 maxBlockNs=20772083 peak=0.0067313918843865395 maxQueued=12 failed=false
+MODULARCRAFT_QA Saved screenshot as lfo.png
+MODULARCRAFT_QA client p95BlockNs=97000 blocks=14909 underruns=3 maxBlockNs=20772083 peak=0.0067313918843865395 maxQueued=12 failed=false
+MODULARCRAFT_QA Saved screenshot as audio-mixer.png
+MODULARCRAFT_QA client p95BlockNs=88541 blocks=16785 underruns=3 maxBlockNs=20772083 peak=0.0067313918843865395 maxQueued=12 failed=false
+MODULARCRAFT_QA client p95BlockNs=53958 blocks=18662 underruns=3 maxBlockNs=20772083 peak=0.0067313918843865395 maxQueued=12 failed=false
+MODULARCRAFT_QA showcase screenshots=10 PASS
+MODULARCRAFT_QA client p95BlockNs=52875 blocks=20534 underruns=3 maxBlockNs=20772083 peak=0.0067313918843865395 maxQueued=12 failed=false
+MODULARCRAFT_QA client p95BlockNs=56500 blocks=22410 underruns=3 maxBlockNs=20772083 peak=0.0067313918843865395 maxQueued=12 failed=false
+[12:53:48] [Render thread/INFO] [minecraft/Minecraft]: Stopping!
+[12:53:48] [Server thread/INFO] [minecraft/ServerGamePacketListenerImpl]: Dev lost connection: Disconnected
+[12:53:48] [Server thread/INFO] [minecraft/MinecraftServer]: Dev left the game
+[12:53:48] [Server thread/INFO] [minecraft/ServerCommonPacketListenerImpl]: Stopping singleplayer server as player logged out
+[12:53:48] [Server thread/INFO] [minecraft/MinecraftServer]: Stopping server
+[12:53:48] [Server thread/INFO] [minecraft/MinecraftServer]: Saving players
+[12:53:48] [Server thread/INFO] [minecraft/MinecraftServer]: Saving worlds
+[12:53:48] [Server thread/INFO] [minecraft/MinecraftServer]: Saving chunks for level 'ServerLevel[Test Level]'/minecraft:overworld
+[12:53:48] [Server thread/INFO] [minecraft/MinecraftServer]: Saving chunks for level 'ServerLevel[Test Level]'/minecraft:the_nether
+[12:53:49] [Server thread/INFO] [minecraft/MinecraftServer]: Saving chunks for level 'ServerLevel[Test Level]'/minecraft:the_end
+[12:53:49] [Server thread/INFO] [minecraft/MinecraftServer]: ThreadedAnvilChunkStorage (ModularCraft-QA): All chunks are saved
+[12:53:49] [Server thread/INFO] [minecraft/MinecraftServer]: ThreadedAnvilChunkStorage (DIM-1): All chunks are saved
+[12:53:49] [Server thread/INFO] [minecraft/MinecraftServer]: ThreadedAnvilChunkStorage (DIM1): All chunks are saved
+[12:53:49] [Server thread/INFO] [minecraft/MinecraftServer]: ThreadedAnvilChunkStorage: All dimensions are saved
+
+[Incubating] Problems report is available at: file:///Users/oberon/Projects/coding/mods/minecraft/ModularCraft/build/reports/problems/problems-report.html
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 9.0.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/8.13/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD SUCCESSFUL in 1m 14s
+9 actionable tasks: 2 executed, 7 up-to-date

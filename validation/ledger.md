@@ -891,3 +891,30 @@ PENDING/FAIL/BLOCKED results into passes. No runtime synthesis or world schema c
 - **PENDING — existing acceptance gates.** Linux execution and native client,
   multiplayer, listening, device lifecycle, and security qualification were not
   repeated here; prior outstanding gates remain open. No commit, push, or publication.
+
+## 2026-11-06 — User-facing README and native block gallery
+
+Replaced the long README with a player-oriented overview, nine-block screenshot gallery,
+installation and first-patch instructions. Preserved detailed controls and reference
+patches in [the user guide](../docs/user-guide.md), corrected stale protocol/connection
+text, and added the all-nine-block showcase wiring. Added an opt-in, test-only
+`qaShowcase` fixture; production runtime, protocols, saves, and dependency pins are unchanged.
+
+- **PASS:** `make check` — 25 launcher/release tests, 157 JUnit tests, formatting,
+  Checkstyle, and PMD.
+- **PASS:** packaged headless GameTests — all 32 passed with
+  `make gametest GAMETEST_DIR=run/make/gametest-showcase-20261106`. The initial reused-world
+  attempt failed 26 tests with quarantine/eligibility errors; that evidence and world are
+  retained, and no recovery claim is made for the old state.
+- **PASS:** `make smoke GRADLE_ARGS=-PqaShowcase TICKS=1200` — one accepted nine-module,
+  ten-cable synth with all nine kinds, enabled speaker and running sequencer; ten native
+  screenshots, each 1920×1052, copied unchanged to `docs/images/`.
+- **PASS:** visual self-review of every image and local rendered README at desktop and
+  narrow widths; documentation links/anchors checked. Capture hashes and exact provenance
+  are in [the showcase review](showcase/review.md) and [results](showcase/results.json).
+- **PASS:** archive assembly and delivery inspection; README, guide, and images are
+  packaged, test fixtures are excluded from both JARs, and the runtime hash matches
+  the native capture. See [artifact checks](showcase/artifacts.txt).
+- **PENDING/BLOCKED unchanged:** listening, hardware, two-client timing, sustained load,
+  security and release gates. The capture run had three audio underruns; it is not audio
+  or performance acceptance. No commit, push, or publication was performed.

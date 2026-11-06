@@ -1,0 +1,100 @@
+{
+  "date": "2026-11-06",
+  "baseline": "205290b1e1a169854951c6e8a38b29ef838ecdd0",
+  "status": "PASS",
+  "scope": "native screenshot capture and accepted showcase state only",
+  "instance": "run/make/smoke-4x5myrwq",
+  "runtime_jar": "modularcraft-0.2.1.jar",
+  "runtime_sha256": "20b57e03e261abd66f0d76b10cfdcf84e9fa0bab7faed1d5559ac00df63f8036",
+  "showcase": {
+    "modules": 9,
+    "kinds": 9,
+    "cables": 10,
+    "speaker_enabled": true,
+    "sequencer_running": true
+  },
+  "checks": {
+    "python_tests": 25,
+    "junit_tests": 157,
+    "fresh_packaged_gametests": 32
+  },
+  "observations": {
+    "audio_underruns": 3,
+    "max_audio_block_ns": 20772083,
+    "listening": "PENDING",
+    "multiplayer": "PENDING",
+    "performance": "NOT_QUALIFIED"
+  },
+  "images": [
+    {
+      "path": "docs/images/amplifier-speaker.png",
+      "width": 1920,
+      "height": 1052,
+      "bytes": 408078,
+      "sha256": "4a68268c12ba7e812946f74a56d8b31cd521d55b9f4d6afa20ad2813c0c74c29"
+    },
+    {
+      "path": "docs/images/audio-mixer.png",
+      "width": 1920,
+      "height": 1052,
+      "bytes": 413441,
+      "sha256": "988921ecd4a4a7cf50de067cd84b87c101cd554a3f89ee89f8d7fd5c93ebc054"
+    },
+    {
+      "path": "docs/images/envelope-generator.png",
+      "width": 1920,
+      "height": 1052,
+      "bytes": 409276,
+      "sha256": "5bb8c1eb2d10fc7231979a5a207c4a70e54c424fc203e50c7a371eeafc261714"
+    },
+    {
+      "path": "docs/images/euclidean-sequencer.png",
+      "width": 1920,
+      "height": 1052,
+      "bytes": 422747,
+      "sha256": "7b457b75ae5ee44209d41b9720ecf66772f7e3218582c7c2d7e1abbdbc9fc004"
+    },
+    {
+      "path": "docs/images/keyboard.png",
+      "width": 1920,
+      "height": 1052,
+      "bytes": 413319,
+      "sha256": "dd0df364358777f2f3b6d158be6e04b3f46cba3b13ff34d89d148c9852093233"
+    },
+    {
+      "path": "docs/images/lfo.png",
+      "width": 1920,
+      "height": 1052,
+      "bytes": 407588,
+      "sha256": "45f9fab22249ca77a144db777a79c423c789556a33f4c172340710b44c9ebf2f"
+    },
+    {
+      "path": "docs/images/low-pass-filter.png",
+      "width": 1920,
+      "height": 1052,
+      "bytes": 405403,
+      "sha256": "cc62d2c4a352811a1755efe48ba7af93c9cf116564221acc2c5c9ba1ed25db32"
+    },
+    {
+      "path": "docs/images/saw-oscillator.png",
+      "width": 1920,
+      "height": 1052,
+      "bytes": 408862,
+      "sha256": "2853920f640d7bcd7ff8440a885bbcaf3784a659d897574d75f843c2347fc6cf"
+    },
+    {
+      "path": "docs/images/square-oscillator.png",
+      "width": 1920,
+      "height": 1052,
+      "bytes": 409258,
+      "sha256": "ada871d3fdb3d99c62a2891500694697d1fe28b0122ba6238d7176acc40eed7a"
+    },
+    {
+      "path": "docs/images/synth-setup.png",
+      "width": 1920,
+      "height": 1052,
+      "bytes": 802391,
+      "sha256": "8f00c1fd198f8a2ebb86d134de923e259dc0d50be05d101620911685ec506623"
+    }
+  ]
+}

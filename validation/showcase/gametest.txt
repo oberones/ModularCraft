@@ -1,0 +1,171 @@
+"./gradlew"  --dependency-verification strict runtimeArtifact
+> Task :createMinecraftArtifacts UP-TO-DATE
+> Task :compileJava UP-TO-DATE
+> Task :processResources UP-TO-DATE
+> Task :classes UP-TO-DATE
+> Task :jarJar NO-SOURCE
+> Task :jar UP-TO-DATE
+> Task :runtimeArtifact UP-TO-DATE
+
+[Incubating] Problems report is available at: file:///Users/oberon/Projects/coding/mods/minecraft/ModularCraft/build/reports/problems/problems-report.html
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 9.0.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/8.13/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD SUCCESSFUL in 825ms
+5 actionable tasks: 5 up-to-date
+"python3" scripts/run_validation.py gametest --run-dir "run/make/gametest"
+Staged modularcraft-0.2.1.jar SHA-256 20b57e03e261abd66f0d76b10cfdcf84e9fa0bab7faed1d5559ac00df63f8036
+Validation instance: /Users/oberon/Projects/coding/mods/minecraft/ModularCraft/run/make/gametest
+> Task :createMinecraftArtifacts UP-TO-DATE
+> Task :compileJava UP-TO-DATE
+> Task :processResources UP-TO-DATE
+> Task :classes UP-TO-DATE
+> Task :compileGametestJava UP-TO-DATE
+> Task :processGametestResources UP-TO-DATE
+> Task :gametestClasses UP-TO-DATE
+> Task :downloadAssets UP-TO-DATE
+> Task :writeGameTestServerLegacyClasspath UP-TO-DATE
+> Task :prepareGameTestServerRun UP-TO-DATE
+
+> Task :runGameTestServer
+WARN StatusConsoleListener Advanced terminal features are not available in this environment
+[12:54:07] [main/INFO] [cp.mo.mo.Launcher/MODLAUNCHER]: ModLauncher running: args [--launchTarget, forgeserverdev, --gameDir, ., --fml.fmlVersion, 4.0.42, --fml.mcVersion, 1.21.1, --fml.neoForgeVersion, 21.1.218, --fml.neoFormVersion, 20240808.144430]
+[12:54:07] [main/INFO] [cp.mo.mo.Launcher/MODLAUNCHER]: JVM identified as Eclipse Adoptium OpenJDK 64-Bit Server VM 21.0.12.1+1-LTS
+[12:54:07] [main/INFO] [cp.mo.mo.Launcher/MODLAUNCHER]: ModLauncher 11.0.5+main.901c6ea8 starting: java version 21.0.12.1 by Eclipse Adoptium; OS Mac OS X arch aarch64 version 26.6.2
+[12:54:07] [main/INFO] [ne.ne.fm.lo.ImmediateWindowHandler/]: ImmediateWindowProvider not loading because launch target is forgeserverdev
+[12:54:07] [main/INFO] [mixin/]: SpongePowered MIXIN Subsystem Version=0.8.7 Source=union:/Users/oberon/.gradle/caches/modules-2/files-2.1/net.fabricmc/sponge-mixin/0.15.2+mixin.0.8.7/2af2f021d8e02a0220dc27a7a72b4666d66d44ca/sponge-mixin-0.15.2+mixin.0.8.7.jar%2394!/ Service=ModLauncher Env=SERVER
+[12:54:08] [main/INFO] [ne.ne.fm.lo.mo.lo.JarInJarDependencyLocator/]: Found 2 dependencies adding them to mods collection
+[12:54:08] [main/INFO] [ne.ne.fm.lo.mo.ModDiscoverer/]: 
+     Mod List:
+		Name Version (Mod Id)
+
+		Minecraft 1.21.1 (minecraft)
+		ModularCraft 0.2.1 (modularcraft)
+		ModularCraft GameTests (development only) 0.2.1 (modularcraft_tests)
+		NeoForge 21.1.218 (neoforge)
+[12:54:08] [main/INFO] [mixin/]: Compatibility level set to JAVA_21
+[12:54:08] [main/INFO] [cp.mo.mo.LaunchServiceHandler/MODLAUNCHER]: Launching target 'forgeserverdev' with arguments [--gameDir, .]
+[12:54:09] [main/INFO] [MixinExtras|Service/]: Initializing MixinExtras via com.llamalad7.mixinextras.service.MixinExtrasServiceImpl(version=0.5.0).
+[12:54:12] [main/WARN] [minecraft/Commands]: Ambiguity between arguments [teleport, location] and [teleport, destination] with inputs: [0.1 -0.5 .9, 0 0 0]
+[12:54:12] [main/WARN] [minecraft/Commands]: Ambiguity between arguments [teleport, location] and [teleport, targets] with inputs: [0.1 -0.5 .9, 0 0 0]
+[12:54:12] [main/WARN] [minecraft/Commands]: Ambiguity between arguments [teleport, destination] and [teleport, targets] with inputs: [Player, 0123, @e, dd12be42-52a9-4a91-a8a1-11c01849e498]
+[12:54:12] [main/WARN] [minecraft/Commands]: Ambiguity between arguments [teleport, targets] and [teleport, destination] with inputs: [Player, 0123, dd12be42-52a9-4a91-a8a1-11c01849e498]
+[12:54:12] [main/WARN] [minecraft/Commands]: Ambiguity between arguments [teleport, targets, location] and [teleport, targets, destination] with inputs: [0.1 -0.5 .9, 0 0 0]
+[12:54:12] [modloading-worker-0/INFO] [ne.ne.ne.co.NeoForgeMod/NEOFORGE-MOD]: NeoForge mod loading, version 21.1.218, for MC 1.21.1
+[12:54:12] [main/INFO] [mojang/YggdrasilAuthenticationService]: Environment: Environment[sessionHost=https://sessionserver.mojang.com, servicesHost=https://api.minecraftservices.com, name=PROD]
+[12:54:12] [main/WARN] [ne.ne.ne.co.CommonHooks/WP]: The following mods have version differences that were not resolved:
+modularcraft (version 0.1.0 -> 0.2.1)
+modularcraft_tests (version 0.1.0 -> 0.2.1)
+Things may not work well.
+[12:54:12] [main/WARN] [minecraft/VanillaPackResourcesBuilder]: Assets URL 'union:/Users/oberon/Projects/coding/mods/minecraft/ModularCraft/build/moddev/artifacts/neoforge-21.1.218.jar%23126!/assets/.mcassetsroot' uses unexpected schema
+[12:54:12] [main/WARN] [minecraft/VanillaPackResourcesBuilder]: Assets URL 'union:/Users/oberon/Projects/coding/mods/minecraft/ModularCraft/build/moddev/artifacts/neoforge-21.1.218.jar%23126!/data/.mcassetsroot' uses unexpected schema
+[12:54:12] [main/INFO] [ne.ne.ne.ga.GameTestHooks/]: Enabled Gametest Namespaces: [modularcraft]
+[12:54:13] [main/INFO] [minecraft/RecipeManager]: Loaded 1291 recipes
+[12:54:13] [main/INFO] [minecraft/AdvancementTree]: Loaded 1400 advancements
+[12:54:13] [Server thread/INFO] [minecraft/MinecraftServer]: Preparing start region for dimension minecraft:overworld
+[12:54:13] [worldgen/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 2%
+[12:54:13] [Server thread/INFO] [minecraft/LoggerChunkProgressListener]: Time elapsed: 69 ms
+[12:54:13] [Server thread/INFO] [minecraft/GameTestServer]: Started game test server
+[12:54:13] [Server thread/INFO] [ne.ne.ne.se.pe.PermissionAPI/]: Successfully initialized permission handler neoforge:default_handler
+[12:54:13] [Server thread/INFO] [minecraft/GameTestServer]: 32 tests are now running at position 11612031, -59, 10067963!
+[12:54:14] [Server thread/INFO] [minecraft/GameTestRunner]: Running test batch 'defaultBatch:0' (32 tests)...
+[12:54:14] [Server thread/INFO] [minecraft/GameTestServer]: [                                ]
+[12:54:14] [Server thread/ERROR] [minecraft/LogTestReporter]: airandnonportclickscancelselection failed at 11612031, -60, 10067963! quarantined
+[12:54:14] [Server thread/ERROR] [minecraft/LogTestReporter]: placedidentityandpermissions failed at 11612051, -60, 10067963! Nearby owner can edit
+[12:54:14] [Server thread/ERROR] [minecraft/LogTestReporter]: sequencerrunswithoutspeakerandsuspendsonunload failed at 11612061, -60, 10067963! quarantined
+[12:54:14] [Server thread/ERROR] [minecraft/LogTestReporter]: filterresonancedepthpersists failed at 11612071, -60, 10067963! quarantined
+[12:54:14] [Server thread/ERROR] [minecraft/LogTestReporter]: sneakremovalthroughgamemode failed at 11612041, -60, 10067974! quarantined
+[12:54:14] [Server thread/ERROR] [minecraft/LogTestReporter]: keyboardportspersistenceandorderedrelease failed at 11612051, -60, 10067974! Owner may play keyboard
+[12:54:14] [Server thread/ERROR] [minecraft/LogTestReporter]: squarenotefrequencypersists failed at 11612061, -60, 10067974! quarantined
+[12:54:14] [Server thread/ERROR] [minecraft/LogTestReporter]: mixerreloadandremovalpreserveworldintegrity failed at 11612081, -60, 10067974! quarantined
+[12:54:14] [Server thread/ERROR] [minecraft/LogTestReporter]: notefrequencypersistsandrejectsinvalidstaleandforeignedits failed at 11612091, -60, 10067974! quarantined
+[12:54:14] [Server thread/ERROR] [minecraft/LogTestReporter]: keyboardrejectsoldsessionsreorderednotesandguests failed at 11612051, -60, 10067985! quarantined
+[12:54:14] [Server thread/ERROR] [minecraft/LogTestReporter]: delayedcloseofpreviouspaneldoesnotreleasecurrentpanel failed at 11612061, -60, 10067985! quarantined
+[12:54:14] [Server thread/ERROR] [minecraft/LogTestReporter]: squareplacementcablingreloadandremoval failed at 11612071, -60, 10067985! quarantined
+[12:54:14] [Server thread/ERROR] [minecraft/LogTestReporter]: sneakremovalwithoccupiedoffhand failed at 11612081, -60, 10067985! quarantined
+MODULARCRAFT_TEST_ARTIFACT union:/Users/oberon/Projects/coding/mods/minecraft/ModularCraft/run/make/gametest/mods/modularcraft-0.2.1.jar%23128!/
+[12:54:14] [Server thread/ERROR] [minecraft/LogTestReporter]: copieditemdatacannotchooseplacedidentityorowner failed at 11612081, -60, 10067963! Placement creates a usable module
+[12:54:14] [Server thread/ERROR] [minecraft/LogTestReporter]: invalidandforeignremovalpreservescable failed at 11612091, -60, 10067963! quarantined
+[12:54:14] [Server thread/INFO] [minecraft/GameTestServer]: [X+XXXXX  XXX+XX  +XXXX+         ]
+[12:54:14] [Server thread/ERROR] [minecraft/LogTestReporter]: detunecontrolpersistsandrejectsinvalidstaleandforeignedits failed at 11612031, -60, 10067974! quarantined
+[12:54:14] [Server thread/ERROR] [minecraft/LogTestReporter]: releasecannotbeovertakenbyqueuedgatepress failed at 11612031, -60, 10067985! quarantined
+[12:54:14] [Server thread/ERROR] [minecraft/LogTestReporter]: mixereditspersistandrejectinvalidforeignstalerequests failed at 11612101, -60, 10067963! quarantined
+[12:54:14] [Server thread/ERROR] [minecraft/LogTestReporter]: modulesaveroundtripandreplacement failed at 11612101, -60, 10067974! quarantined
+[12:54:14] [Server thread/ERROR] [minecraft/LogTestReporter]: envelopeattackdepthpersists failed at 11612101, -60, 10067985! quarantined
+[12:54:14] [Server thread/ERROR] [minecraft/LogTestReporter]: midiorderedpitchesandclosedsessioncannotreviveit failed at 11612031, -60, 10067996! quarantined
+[12:54:14] [Server thread/ERROR] [minecraft/LogTestReporter]: removingdestinationpreserveslfophase failed at 11612051, -60, 10067996! quarantined
+[12:54:14] [Server thread/ERROR] [minecraft/LogTestReporter]: sequencertransportrejectsforeignstaleandinvalidcommands failed at 11612061, -60, 10067996! quarantined
+[12:54:14] [Server thread/ERROR] [minecraft/LogTestReporter]: lfoclockcablingreloadandremoval failed at 11612071, -60, 10067996! quarantined
+[12:54:14] [Server thread/ERROR] [minecraft/LogTestReporter]: squarepwmpersistsandrejectsinvalidstaleandforeignedits failed at 11612091, -60, 10067996! quarantined
+[12:54:14] [Server thread/ERROR] [minecraft/LogTestReporter]: lfofrequencypersistsandrejectsinvalidstaleandforeignedits failed at 11612101, -60, 10067996! quarantined
+[12:54:14] [Server thread/INFO] [minecraft/GameTestServer]: [X+XXXXXXXXXX+XXXX+XXXX+XX+XXX+XX]
+[12:54:14] [Server thread/INFO] [minecraft/GameTestServer]: ========= 32 GAME TESTS COMPLETE IN 552.7 ms ======================
+[12:54:14] [Server thread/INFO] [minecraft/GameTestServer]: 26 required tests failed :(
+[12:54:14] [Server thread/INFO] [minecraft/GameTestServer]:    - airandnonportclickscancelselection
+[12:54:14] [Server thread/INFO] [minecraft/GameTestServer]:    - placedidentityandpermissions
+[12:54:14] [Server thread/INFO] [minecraft/GameTestServer]:    - sequencerrunswithoutspeakerandsuspendsonunload
+[12:54:14] [Server thread/INFO] [minecraft/GameTestServer]:    - filterresonancedepthpersists
+[12:54:14] [Server thread/INFO] [minecraft/GameTestServer]:    - copieditemdatacannotchooseplacedidentityorowner
+[12:54:14] [Server thread/INFO] [minecraft/GameTestServer]:    - invalidandforeignremovalpreservescable
+[12:54:14] [Server thread/INFO] [minecraft/GameTestServer]:    - mixereditspersistandrejectinvalidforeignstalerequests
+[12:54:14] [Server thread/INFO] [minecraft/GameTestServer]:    - detunecontrolpersistsandrejectsinvalidstaleandforeignedits
+[12:54:14] [Server thread/INFO] [minecraft/GameTestServer]:    - sneakremovalthroughgamemode
+[12:54:14] [Server thread/INFO] [minecraft/GameTestServer]:    - keyboardportspersistenceandorderedrelease
+[12:54:14] [Server thread/INFO] [minecraft/GameTestServer]:    - squarenotefrequencypersists
+[12:54:14] [Server thread/INFO] [minecraft/GameTestServer]:    - mixerreloadandremovalpreserveworldintegrity
+[12:54:14] [Server thread/INFO] [minecraft/GameTestServer]:    - notefrequencypersistsandrejectsinvalidstaleandforeignedits
+[12:54:14] [Server thread/INFO] [minecraft/GameTestServer]:    - modulesaveroundtripandreplacement
+[12:54:14] [Server thread/INFO] [minecraft/GameTestServer]:    - releasecannotbeovertakenbyqueuedgatepress
+[12:54:14] [Server thread/INFO] [minecraft/GameTestServer]:    - keyboardrejectsoldsessionsreorderednotesandguests
+[12:54:14] [Server thread/INFO] [minecraft/GameTestServer]:    - delayedcloseofpreviouspaneldoesnotreleasecurrentpanel
+[12:54:14] [Server thread/INFO] [minecraft/GameTestServer]:    - squareplacementcablingreloadandremoval
+[12:54:14] [Server thread/INFO] [minecraft/GameTestServer]:    - sneakremovalwithoccupiedoffhand
+[12:54:14] [Server thread/INFO] [minecraft/GameTestServer]:    - envelopeattackdepthpersists
+[12:54:14] [Server thread/INFO] [minecraft/GameTestServer]:    - midiorderedpitchesandclosedsessioncannotreviveit
+[12:54:14] [Server thread/INFO] [minecraft/GameTestServer]:    - removingdestinationpreserveslfophase
+[12:54:14] [Server thread/INFO] [minecraft/GameTestServer]:    - sequencertransportrejectsforeignstaleandinvalidcommands
+[12:54:14] [Server thread/INFO] [minecraft/GameTestServer]:    - lfoclockcablingreloadandremoval
+[12:54:14] [Server thread/INFO] [minecraft/GameTestServer]:    - squarepwmpersistsandrejectsinvalidstaleandforeignedits
+[12:54:14] [Server thread/INFO] [minecraft/GameTestServer]:    - lfofrequencypersistsandrejectsinvalidstaleandforeignedits
+[12:54:14] [Server thread/INFO] [minecraft/GameTestServer]: ====================================================
+[12:54:14] [Server thread/INFO] [minecraft/MinecraftServer]: Stopping server
+[12:54:14] [Server thread/INFO] [minecraft/MinecraftServer]: Saving players
+[12:54:14] [Server thread/INFO] [minecraft/MinecraftServer]: Saving worlds
+[12:54:14] [Server thread/INFO] [minecraft/MinecraftServer]: Saving chunks for level 'ServerLevel[Test Level]'/minecraft:overworld
+[12:54:14] [Server thread/INFO] [minecraft/MinecraftServer]: Saving chunks for level 'ServerLevel[Test Level]'/minecraft:the_end
+[12:54:14] [Server thread/INFO] [minecraft/MinecraftServer]: Saving chunks for level 'ServerLevel[Test Level]'/minecraft:the_nether
+[12:54:14] [Server thread/INFO] [minecraft/MinecraftServer]: ThreadedAnvilChunkStorage (world): All chunks are saved
+[12:54:14] [Server thread/INFO] [minecraft/MinecraftServer]: ThreadedAnvilChunkStorage (DIM1): All chunks are saved
+[12:54:14] [Server thread/INFO] [minecraft/MinecraftServer]: ThreadedAnvilChunkStorage (DIM-1): All chunks are saved
+[12:54:14] [Server thread/INFO] [minecraft/MinecraftServer]: ThreadedAnvilChunkStorage: All dimensions are saved
+[12:54:15] [Server thread/INFO] [minecraft/GameTestServer]: Game test server shutting down
+
+> Task :runGameTestServer FAILED
+
+[Incubating] Problems report is available at: file:///Users/oberon/Projects/coding/mods/minecraft/ModularCraft/build/reports/problems/problems-report.html
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':runGameTestServer'.
+> Process 'command '/Users/oberon/.gradle/jdks/eclipse_adoptium-21-aarch64-os_x.2/jdk-21.0.12.1+1/Contents/Home/bin/java'' finished with non-zero exit value 26
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights.
+> Get more help at https://help.gradle.org.
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 9.0.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/8.13/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD FAILED in 8s
+9 actionable tasks: 1 executed, 8 up-to-date
+make: *** [gametest] Error 1

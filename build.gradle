@@ -33,12 +33,13 @@ neoForge {
                 systemProperty 'modularcraft.qa.keyboard', project.hasProperty('qaKeyboard').toString()
                 systemProperty 'modularcraft.qa.sequencer', project.hasProperty('qaSequencer').toString()
                 systemProperty 'modularcraft.qa.mixer', project.hasProperty('qaMixer').toString()
+                systemProperty 'modularcraft.qa.showcase', project.hasProperty('qaShowcase').toString()
                 systemProperty 'modularcraft.qa.lfo', project.hasProperty('qaLfo').toString()
                 systemProperty 'modularcraft.qa.square', project.hasProperty('qaSquare').toString()
                 systemProperty 'modularcraft.qa.detune', project.hasProperty('qaDetune').toString()
                 systemProperty 'modularcraft.qa.cables', project.hasProperty('qaCables').toString()
                 systemProperty 'modularcraft.qa.cableRemoval', project.hasProperty('qaCableRemoval').toString()
-                if (project.hasProperty('qaCables') || project.hasProperty('qaSequencer')) {
+                if (project.hasProperty('qaCables') || project.hasProperty('qaSequencer') || project.hasProperty('qaShowcase')) {
                     programArguments.addAll('--width', '1920', '--height', '1080')
                 }
                 programArguments.addAll('--quickPlaySingleplayer', 'ModularCraft-QA')
@@ -148,7 +149,7 @@ tasks.named('sourcesJar') {
     from('scripts/generate-assets.py') { into 'scripts' }
     from('docs') { into 'docs' }
     from('README.md', 'LICENSE', 'THIRD_PARTY_NOTICES.md')
-    from('validation') { include '*.md', '*.json', 'midi/**', 'detune/**', 'sequencer/**', 'square/**', 'mixer/**', 'lfo/*.md', 'lfo/*.json', 'lfo/*.xml', 'lfo/*.txt', 'lfo/*.png'; into 'validation' }
+    from('validation') { include '*.md', '*.json', 'showcase/**', 'midi/**', 'detune/**', 'sequencer/**', 'square/**', 'mixer/**', 'lfo/*.md', 'lfo/*.json', 'lfo/*.xml', 'lfo/*.txt', 'lfo/*.png'; into 'validation' }
 }
 tasks.register('projectSources', Zip) {
     archiveBaseName = 'modularcraft'
@@ -157,7 +158,7 @@ tasks.register('projectSources', Zip) {
     from('.') {
         include 'src/**', 'art/**', 'config/**', 'docs/**', 'scripts/**', 'gradle/**',
             '.github/**', 'specs/**', '.specify/memory/constitution.md',
-            'validation/*.md', 'validation/*.json', 'validation/*.xml', 'validation/midi/**', 'validation/detune/**', 'validation/sequencer/**', 'validation/square/**', 'validation/mixer/**', 'validation/lfo/*.md', 'validation/lfo/*.json', 'validation/lfo/*.xml', 'validation/lfo/*.txt', 'validation/lfo/*.png',
+            'validation/*.md', 'validation/*.json', 'validation/*.xml', 'validation/showcase/**', 'validation/midi/**', 'validation/detune/**', 'validation/sequencer/**', 'validation/square/**', 'validation/mixer/**', 'validation/lfo/*.md', 'validation/lfo/*.json', 'validation/lfo/*.xml', 'validation/lfo/*.txt', 'validation/lfo/*.png',
             'Makefile', 'build.gradle', 'settings.gradle', 'gradle.properties', 'gradle.lockfile',
             'gradlew', 'gradlew.bat', '.gitignore', '.cz.toml', 'AGENTS.md', 'README.md',
             'CHANGELOG.md', 'LICENSE', 'THIRD_PARTY_NOTICES.md'

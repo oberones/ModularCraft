@@ -17,7 +17,7 @@ make smoke-load TICKS=1200           # 64 modules / 96 cables / eight speakers, 
 ```
 
 `make run` and `make play` are aliases for `make client`. The interactive client opens
-Minecraft normally: create or select a world and use the [player guide](../README.md).
+Minecraft normally: create or select a world and use the [player guide](user-guide.md).
 It uses `run/make/client`; worlds, options, local audio preferences, and screenshots persist
 between launches. Close Minecraft normally when finished. `make client-dev` instead uses
 development classes in `run/client`, including any existing worlds there.
@@ -281,3 +281,20 @@ The panel probe edits real widgets, validates live drag completion and mute/solo
 full/compact/world views, tests local mute/settings return, NBT roundtrip and removal.
 The load probe reports server p95 and ordinary native audio counters. Neither is a human
 listening test, two-client session, real disk restart acceptance or 30-minute load run.
+
+
+### README showcase screenshots
+
+`make smoke GRADLE_ARGS=-PqaShowcase TICKS=1200` builds a fresh, packaged nine-module,
+ten-cable instrument and captures `synth-setup.png` plus nine individual block PNGs in
+that instance's `screenshots/` directory. Use this flag alone, without other QA variants.
+The test-only fixture sets daylight, clear weather, a neutral platform, spectator camera,
+and hidden HUD. It requests a 1920×1080 window; actual framebuffer dimensions depend on
+the host display. A separate display pedestal cycles through the nine blocks without
+altering the connected instrument. Client assertions require all nine kinds, an enabled
+speaker, a running sequencer, and all ten saved screenshots. Use at least 1200 ticks.
+
+Inspect the images before copying them to `docs/images/`; keep original captures and
+logs in the generated run directory. The reproducible patch and settings are in the
+[user guide](user-guide.md#showcase-all-nine-blocks-together). This is visual documentation
+evidence, not a listening, multiplayer, or performance qualification run.

@@ -42,6 +42,10 @@ public final class NativeFixture {
         (ServerTickEvent.Post event) -> {
           if (performer == null || event.getServer() != performer.getServer()) return;
           if (++ticks == 20) build(performer);
+          if (Boolean.getBoolean("modularcraft.qa.showcase")) {
+            NativeShowcaseFixture.tick(performer, ticks);
+            return;
+          }
           if (Boolean.getBoolean("modularcraft.qa.mixer"))
             NativeMixerFixture.tick(performer, ticks);
           if (Boolean.getBoolean("modularcraft.qa.lfo")) NativeLfoFixture.tick(performer, ticks);
@@ -121,6 +125,10 @@ public final class NativeFixture {
     ServerRuntime runtime = ServerRuntime.get(player.getServer());
     int y = player.blockPosition().getY();
     int originX = player.blockPosition().getX(), originZ = player.blockPosition().getZ() + 4;
+    if (Boolean.getBoolean("modularcraft.qa.showcase")) {
+      NativeShowcaseFixture.build(player, originX, y, originZ);
+      return;
+    }
     boolean cableVisuals = Boolean.getBoolean("modularcraft.qa.cables");
     for (int x = -2; x < 18; x++)
       for (int z = -2; z < 18; z++)

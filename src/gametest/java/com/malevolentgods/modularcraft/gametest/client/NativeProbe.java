@@ -19,6 +19,7 @@ public final class NativeProbe {
         (ClientTickEvent.Post event) -> {
           if (Minecraft.getInstance().level == null) return;
           ticks++;
+          if (Boolean.getBoolean("modularcraft.qa.showcase")) ShowcaseProbe.tick(ticks);
           if (Boolean.getBoolean("modularcraft.qa.cableRemoval")) NativeCableProbe.tick(ticks);
           if (Boolean.getBoolean("modularcraft.qa.cables")) captureCables();
           if (Boolean.getBoolean("modularcraft.qa.keyboard")) keyboard();

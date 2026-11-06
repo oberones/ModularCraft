@@ -1,0 +1,2 @@
+PASS: rendered README, ten loaded images; desktop 1280px and mobile 390px previews
+PASS: 51 local image/document links and anchors

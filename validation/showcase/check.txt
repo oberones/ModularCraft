@@ -1,0 +1,86 @@
+"python3" scripts/release.py check
+0.2.1
+"python3" -m unittest discover -s scripts/tests -v
+test_prerelease_bump_updates_gradle_changelog_commit_and_tag (test_commitizen.CommitizenTest.test_prerelease_bump_updates_gradle_changelog_commit_and_tag) ... ok
+test_stable_bump_updates_gradle_changelog_commit_and_tag (test_commitizen.CommitizenTest.test_stable_bump_updates_gradle_changelog_commit_and_tag) ... ok
+test_exact_artifacts_and_embedded_versions (test_release.ReleaseTest.test_exact_artifacts_and_embedded_versions) ... ok
+test_missing_descriptor_artifacts_fail (test_release.ReleaseTest.test_missing_descriptor_artifacts_fail) ... ok
+test_missing_supporting_record_fails_before_staging (test_release.ReleaseTest.test_missing_supporting_record_fails_before_staging) ... ok
+test_publish_rejects_tampered_assets (test_release.ReleaseTest.test_publish_rejects_tampered_assets) ... ok
+test_publish_uses_verified_tag_and_propagates_existing_release_failure (test_release.ReleaseTest.test_publish_uses_verified_tag_and_propagates_existing_release_failure) ... ok
+test_repository_and_tag_must_agree (test_release.ReleaseTest.test_repository_and_tag_must_agree) ... ok
+test_semantic_tags_and_prereleases (test_release.ReleaseTest.test_semantic_tags_and_prereleases) ... ok
+test_stable_publish_is_not_marked_prerelease (test_release.ReleaseTest.test_stable_publish_is_not_marked_prerelease) ... ok
+test_stage_contains_only_selected_assets_and_complete_checksums (test_release.ReleaseTest.test_stage_contains_only_selected_assets_and_complete_checksums) ... ok
+test_stale_descriptor_version_fails (test_release.ReleaseTest.test_stale_descriptor_version_fails) ... ok
+test_wrong_descriptor_path_fails (test_release.ReleaseTest.test_wrong_descriptor_path_fails) ... ok
+test_bad_artifact_and_seed_symlink_are_refused (test_run_validation.ValidationRunTest.test_bad_artifact_and_seed_symlink_are_refused) ... Staged modularcraft-0.1.0.jar SHA-256 51adc75834c3aee3b18db5ba6ee1baf9a85addc9f800f4b823dfd4a154e82b23
+Staged modularcraft-0.1.0.jar SHA-256 51adc75834c3aee3b18db5ba6ee1baf9a85addc9f800f4b823dfd4a154e82b23
+Validation instance: /private/var/folders/f5/rhvgpl9j7gn7znm94p8jdz080000gn/T/modularcraft launcher 4x0widz8/run/make/client with spaces
+ok
+test_ci_keeps_no_daemon_when_user_supplies_gradle_flags (test_run_validation.ValidationRunTest.test_ci_keeps_no_daemon_when_user_supplies_gradle_flags) ... ok
+test_failed_seed_server_never_launches_client (test_run_validation.ValidationRunTest.test_failed_seed_server_never_launches_client) ... Staged modularcraft-0.1.0.jar SHA-256 51adc75834c3aee3b18db5ba6ee1baf9a85addc9f800f4b823dfd4a154e82b23
+Validation instance: /private/var/folders/f5/rhvgpl9j7gn7znm94p8jdz080000gn/T/modularcraft launcher mt2n8fnr/run/make/client with spaces
+Staged modularcraft-0.1.0.jar SHA-256 51adc75834c3aee3b18db5ba6ee1baf9a85addc9f800f4b823dfd4a154e82b23
+Validation instance: /private/var/folders/f5/rhvgpl9j7gn7znm94p8jdz080000gn/T/modularcraft launcher mt2n8fnr/run/make/gametest
+ok
+test_fresh_fixture_never_reuses_a_world (test_run_validation.ValidationRunTest.test_fresh_fixture_never_reuses_a_world) ... Staged modularcraft-0.1.0.jar SHA-256 51adc75834c3aee3b18db5ba6ee1baf9a85addc9f800f4b823dfd4a154e82b23
+ok
+test_launch_uses_packaged_mode_and_preserves_space_in_path (test_run_validation.ValidationRunTest.test_launch_uses_packaged_mode_and_preserves_space_in_path) ... Staged modularcraft-0.1.0.jar SHA-256 51adc75834c3aee3b18db5ba6ee1baf9a85addc9f800f4b823dfd4a154e82b23
+Validation instance: /private/var/folders/f5/rhvgpl9j7gn7znm94p8jdz080000gn/T/modularcraft launcher 3y7jdgac/run/make/client with spaces
+ok
+test_refuses_modified_managed_jar_instead_of_overwriting_it (test_run_validation.ValidationRunTest.test_refuses_modified_managed_jar_instead_of_overwriting_it) ... Staged modularcraft-0.1.0.jar SHA-256 51adc75834c3aee3b18db5ba6ee1baf9a85addc9f800f4b823dfd4a154e82b23
+ok
+test_refuses_outside_run_root_and_symlinks (test_run_validation.ValidationRunTest.test_refuses_outside_run_root_and_symlinks) ... ok
+test_refuses_unmanaged_nonempty_directory (test_run_validation.ValidationRunTest.test_refuses_unmanaged_nonempty_directory) ... ok
+test_same_instance_cannot_be_launched_concurrently (test_run_validation.ValidationRunTest.test_same_instance_cannot_be_launched_concurrently) ... ok
+test_server_launch_does_not_accept_or_replace_eula (test_run_validation.ValidationRunTest.test_server_launch_does_not_accept_or_replace_eula) ... Staged modularcraft-0.1.0.jar SHA-256 51adc75834c3aee3b18db5ba6ee1baf9a85addc9f800f4b823dfd4a154e82b23
+Validation instance: /private/var/folders/f5/rhvgpl9j7gn7znm94p8jdz080000gn/T/modularcraft launcher icw_c6kv/run/make/client with spaces
+Staged modularcraft-0.1.0.jar SHA-256 51adc75834c3aee3b18db5ba6ee1baf9a85addc9f800f4b823dfd4a154e82b23
+Validation instance: /private/var/folders/f5/rhvgpl9j7gn7znm94p8jdz080000gn/T/modularcraft launcher icw_c6kv/run/make/client with spaces
+ok
+test_smoke_bootstraps_seed_then_launches_a_fresh_fixture (test_run_validation.ValidationRunTest.test_smoke_bootstraps_seed_then_launches_a_fresh_fixture) ... Staged modularcraft-0.1.0.jar SHA-256 51adc75834c3aee3b18db5ba6ee1baf9a85addc9f800f4b823dfd4a154e82b23
+Validation instance: /private/var/folders/f5/rhvgpl9j7gn7znm94p8jdz080000gn/T/modularcraft launcher 5yxj1sa7/run/make/client with spaces
+Staged modularcraft-0.1.0.jar SHA-256 51adc75834c3aee3b18db5ba6ee1baf9a85addc9f800f4b823dfd4a154e82b23
+Validation instance: /private/var/folders/f5/rhvgpl9j7gn7znm94p8jdz080000gn/T/modularcraft launcher 5yxj1sa7/run/make/gametest
+ok
+test_stages_exact_runtime_jar_and_preserves_world_on_upgrade (test_run_validation.ValidationRunTest.test_stages_exact_runtime_jar_and_preserves_world_on_upgrade) ... Staged modularcraft-0.1.0.jar SHA-256 51adc75834c3aee3b18db5ba6ee1baf9a85addc9f800f4b823dfd4a154e82b23
+Staged modularcraft-0.2.0.jar SHA-256 1a438f8533ef60b4b40881c6999026820a85cf2b2bc4ab7ca051613234e13a45
+ok
+
+----------------------------------------------------------------------
+Ran 25 tests in 2.095s
+
+OK
+"./gradlew"  --dependency-verification strict check
+Starting a Gradle Daemon, 1 busy Daemon could not be reused, use --status for details
+> Task :createMinecraftArtifacts UP-TO-DATE
+> Task :compileJava UP-TO-DATE
+> Task :processResources UP-TO-DATE
+> Task :classes UP-TO-DATE
+> Task :compileGametestJava UP-TO-DATE
+> Task :processGametestResources UP-TO-DATE
+> Task :gametestClasses UP-TO-DATE
+> Task :compileTestJava UP-TO-DATE
+> Task :processTestResources NO-SOURCE
+> Task :testClasses UP-TO-DATE
+> Task :formatCheck
+> Task :checkstyleGametest
+> Task :checkstyleTest
+> Task :pmdTest
+> Task :pmdMain
+> Task :pmdGametest
+> Task :checkstyleMain
+> Task :test
+> Task :check
+
+[Incubating] Problems report is available at: file:///Users/oberon/Projects/coding/mods/minecraft/ModularCraft/build/reports/problems/problems-report.html
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 9.0.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/8.13/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD SUCCESSFUL in 43s
+14 actionable tasks: 8 executed, 6 up-to-date
