@@ -111,6 +111,12 @@ and snapshots now require version 8 on every peer. Back up worlds before upgrade
 the backup before downgrade. RP-007 and mixer native/load probes added. Human listening,
 multiplayer and sustained acceptance remain separately tracked; no release is implied.
 
+## v0.1.1 (2026-11-05)
+
+### Fix
+
+- update builds to use linux runners
+
 ## v0.1.0 (2026-11-05)
 
 ### Feat
