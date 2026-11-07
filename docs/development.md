@@ -248,10 +248,11 @@ allocation/timing. These synthetic checks do not establish listening or multipla
 
 ### Euclidean sequencer probe
 
-`make smoke GRADLE_ARGS=-PqaSequencer TICKS=650` launches the packaged JAR in a fresh world,
+`make smoke GRADLE_ARGS=-PqaSequencer TICKS=780` launches the packaged JAR in a fresh world,
 creates an autonomous four-channel/two-voice patch and three clock followers, edits the
-editor through native widgets, captures the panel and all four facing directions, and
-checks 20 audio teardown/recovery cycles. It retains the generated world/log/screenshots
+editor through native widgets, verifies keyboard redstone toggling, disabled Start/Stop,
+powered/unpowered snapshots and compact layout, captures the panel and all four facing
+directions, and checks 20 audio teardown/recovery cycles. It retains the generated world/log/screenshots
 under the printed `run/make/smoke-*` directory. Do not use an existing manual world.
 Run `make test TEST='*Sequencer*Test'` for focused musical and persistence regressions;
 `make verify` includes the packaged lifecycle GameTest and artifact/resource checks.

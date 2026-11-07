@@ -201,7 +201,7 @@ across device reopen; it adds no installed dependencies and never keeps notes fr
 MIDI shares the existing traffic limits, including renewals, so dense controller/arpeggiator
 streams can be rejected. Queue overflow stops the session and requires reopening the panel.
 Only supported notes/pedal/reset messages consume the MIDI queue. All clients and the server
-must use protocol **9**; existing world saves remain version **2**. Physical MIDI devices,
+must use protocol **10**; existing world saves remain version **2**. Physical MIDI devices,
 listening, and multiplayer timing still need the acceptance procedure below.
 
 ## Patching, permissions, and saved work
@@ -247,7 +247,7 @@ Unknown or corrupt records are quarantined and preserved, including connected af
 components. Do not edit the save to guess missing values. Back up the entire world, use
 a compatible mod version or restore a known-good backup, and retain the original data
 for recovery. The global registry is `data/modularcraft.dat`; per-module data is also in
-its owning block entity. World/block saves use schema 2; protocol/snapshots use version 9.
+its owning block entity. World/block saves use schema 2; protocol/snapshots use version 10.
 See [upgrading existing patches](#upgrading-existing-patches) before loading an old world.
 
 
@@ -294,6 +294,19 @@ changes wait for the next clock while running; a pending label identifies that t
 Shortening Steps also reduces an excessive hit count and wraps rotation. Muting releases
 an active pulse without stopping the channel's position; unmuting waits for a future hit.
 
+**Redstone Mode: On/Off** (beside Tempo) defaults to Off. Turn it On to let redstone
+power control playback: any nonzero signal resumes the next step, and no signal stops
+and releases the pulses. Start/Stop are grayed out; Reset and pattern editing still work.
+Enabling the mode immediately follows the current signal. Turning it Off keeps the
+current running/stopped state and restores the buttons. It does not reset the pattern
+or convert redstone pulses into step clocks: tempo or Clock In still controls stepping.
+
+For a redstone variation of RP-004, place a lever on a neighboring solid block that
+powers the sequencer, enable Redstone Mode, then switch the lever on/off. Confirm
+playback resumes/stops and that returning power continues the pattern. Signal strength
+and the side receiving power do not change playback speed. Redstone is sampled on
+server updates, with the usual playback scheduling lead.
+
 The internal clock defaults to **120 BPM**, with four sixteenth-note steps per quarter
 note; tempo is 30–300 integer BPM. **Clock Out** pulses on every step, even when all channels
 are muted. Connecting **Clock In** selects external clocking automatically: one rising
@@ -310,9 +323,12 @@ For separate brightness accents, use standalone Envelopes to modulate filter cut
 Optionally connect Clock Out to another sequencer's Clock In and verify step locking.
 
 Settings and cables survive saves. Running state, held pulses and positions do not:
-world reload and chunk suspension require Start; Speakers retain their enabled setting.
+world reload and chunk suspension require Start in manual mode. Redstone mode is saved
+and follows current power once the complete patch loads; positions still start fresh
+after reload. Speakers retain their enabled setting.
 Closing the editor, disabling speakers, and local mute leave a loaded sequencer running.
-Back up worlds before upgrading; install protocol-v9 builds on every client and server.
+Existing sequencers migrate with Redstone Mode Off. Back up worlds before upgrading;
+install protocol-v10 builds on every client and server. Restore the backup before downgrading.
 This version does not add presets, manual step editing, swing, probability, variable gate
 lengths, clock division, pitch sequences, MIDI clock, or redstone clock conversion.
 
@@ -341,7 +357,7 @@ Amp Gain Control In, using default envelope controls. Disable the speaker or pre
 local mute to stop. Save/reload retains width, frequency, level and cables; Speakers
 retain their enabled setting. Human listening and multiplayer qualification remain separate gates.
 
-The new block requires protocol **9** clients/server. World schema is now **2** and
+The new block requires protocol **10** clients/server. World schema is now **2** and
 existing saw blocks retain their identifiers and sound. Back up worlds before upgrading;
 restore the backup before downgrading to a build that does not know the square block.
 
@@ -397,7 +413,7 @@ Build these RP-006 variations with blocks two blocks apart, all owned by the sam
    needed. All waveforms/settings not changed above retain variation 1 values.
 
 World schema is now **2**; exact legacy filter/envelope records gain zero-valued depths,
-so existing patches keep their settings. Network/snapshot protocol is **9**: update clients
+so existing patches keep their settings. Network/snapshot protocol is **10**: update clients
 and server together. Back up the world before upgrading; restore that backup when returning
 to an older binary, which cannot understand LFO records. Unknown/malformed records remain
 preserved rather than silently repaired. Transient phase is not saved across world/chunk
@@ -435,7 +451,7 @@ should be smooth. An empty soloed channel yields silence. Disconnecting a cable 
 change other levels. Disable the speaker when finished. Further mixers can be chained
 within the existing patch/cable limits; feedback is refused.
 
-World schema is now **2**; network/snapshot protocol is **9**. Update every client and server
+World schema is now **2**; network/snapshot protocol is **10**. Update every client and server
 together. Back up worlds before upgrading and restore the backup for downgrade; older
 builds cannot interpret mixer records. Human RP-007 listening and multiplayer qualification
 remain separate from the automated evidence in [the ledger](../validation/ledger.md).
@@ -532,7 +548,7 @@ Use one sequencer, four oscillators, four Amps, one Mixer, and one Speaker:
 ## Upgrading existing patches
 
 Back up the entire world before installing this version on every client and server.
-Network/snapshot version 9 requires matching peers. World and block saves now use schema 2;
+Network/snapshot version 10 requires matching peers. World and block saves now use schema 2;
 schema-1 records migrate automatically. Downgrade by restoring the backup with the old build.
 
 Existing Amplifier / Speaker blocks and inventory items become **Amp**. Their UUID,

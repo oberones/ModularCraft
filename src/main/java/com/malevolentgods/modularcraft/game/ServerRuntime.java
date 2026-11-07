@@ -78,6 +78,7 @@ public final class ServerRuntime {
   private final Set<UUID> throttled = new HashSet<>();
   private final Map<UUID, Lfo> lfos = new HashMap<>();
   private final Map<UUID, Sequencer> sequencers = new HashMap<>();
+  private final Set<UUID> pendingSequencerChanges = new HashSet<>();
   private final Map<UUID, Boolean> baseGates = new HashMap<>();
   private final Map<UUID, ControlTimeline> timelines = new HashMap<>();
   private final Set<UUID> pendingSuspensions = new HashSet<>();
@@ -470,6 +471,9 @@ public final class ServerRuntime {
         case SEQUENCER_START, SEQUENCER_STOP, SEQUENCER_RESET -> {
           if (before.kind() != ModuleKind.EUCLIDEAN_SEQUENCER || request.value() != 0)
             throw new IllegalArgumentException("action");
+          if (before.value(Parameter.REDSTONE_MODE) == 1
+              && request.action() != Messages.Action.SEQUENCER_RESET)
+            throw new IllegalArgumentException("redstone_controlled");
           for (UUID id : affected)
             if (!state.get(id).loaded()) throw new IllegalArgumentException("patch_unloaded");
           updateEnvelopes(Math.max(0, sample - 1));
@@ -662,7 +666,18 @@ public final class ServerRuntime {
             sequencers.put(id, seq);
             rebuild = true;
           } else if (rebuild) seq.configure(SequencerSettings.from(m), sample);
-          if (!allLoaded) seq.stop(sample);
+          boolean running = allLoaded && seq.running();
+          if (allLoaded && m.value(Parameter.REDSTONE_MODE) == 1) {
+            ModuleEntity entity = loaded.get(id);
+            running = sequencerPowered(entity);
+          }
+          // Treat redstone as a level-controlled transport, not a clock or repeated trigger.
+          // Reconcile on the server at the same sample boundary as manual transport controls.
+          if (running != seq.running()) {
+            if (running) seq.start(sample);
+            else seq.stop(sample);
+            pendingSequencerChanges.add(id);
+          }
         }
         if (!m.kind().hasEnvelope()) continue;
         if (!audible) {
@@ -716,6 +731,15 @@ public final class ServerRuntime {
     controlRevision = state.revision();
     controlsDirty = false;
     controlSample = sample;
+  }
+
+  private static boolean sequencerPowered(ModuleEntity entity) {
+    if (entity == null) return false;
+    var pos = entity.getBlockPos();
+    // Vanilla signal evaluation may inspect one block beyond an adjacent conductor.
+    // Refuse a partially loaded neighborhood rather than implicitly fetching its chunks.
+    return entity.getLevel().hasChunksAt(pos.offset(-2, 0, -2), pos.offset(2, 0, 2))
+        && entity.getLevel().hasNeighborSignal(pos);
   }
 
   private void clearVoices(Set<UUID> ids) {
@@ -798,6 +822,7 @@ public final class ServerRuntime {
   }
 
   private void changed(Set<UUID> affected, long sample) {
+    pendingSequencerChanges.removeAll(affected);
     sequence++;
     data.setDirty();
     for (UUID id : affected) {
@@ -917,6 +942,8 @@ public final class ServerRuntime {
     Map<UUID, Boolean> gates = new HashMap<>(baseGates);
     updateEnvelopes(sample);
     Set<UUID> changedGates = new HashSet<>();
+    changedGates.addAll(pendingSequencerChanges);
+    pendingSequencerChanges.clear();
     baseGates.forEach(
         (id, gate) -> {
           if (gate != gates.getOrDefault(id, false)) changedGates.add(id);

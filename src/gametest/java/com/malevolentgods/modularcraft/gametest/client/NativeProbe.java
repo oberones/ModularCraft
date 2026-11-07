@@ -120,14 +120,15 @@ public final class NativeProbe {
         System.out.println("MODULARCRAFT_QA sequencer tick=" + ticks + " running=" + seq.running());
       }
     }
-    if (ticks == 212) {
+    SequencerRedstoneProbe.tick(ticks);
+    if (ticks == 350) {
       mc.options.guiScale().set(4);
       mc.resizeDisplay();
     }
-    if (ticks == 214
+    if (ticks == 352
         && mc.screen instanceof com.malevolentgods.modularcraft.client.SequencerScreen screen)
       for (int i = 0; i < 3; i++) screen.keyPressed(org.lwjgl.glfw.GLFW.GLFW_KEY_PAGE_DOWN, 0, 0);
-    if (ticks == 216
+    if (ticks == 354
         && mc.screen instanceof com.malevolentgods.modularcraft.client.SequencerScreen screen) {
       long visible =
           screen.children().stream()
@@ -138,30 +139,30 @@ public final class NativeProbe {
       if (visible < 4)
         throw new IllegalStateException("Compact sequencer controls are inaccessible");
     }
-    if (ticks == 218) {
+    if (ticks == 356) {
       mc.options.guiScale().set(2);
       mc.resizeDisplay();
     }
-    if (ticks == 220 && mc.screen != null) mc.screen.onClose();
-    if (ticks == 216
+    if (ticks == 360 && mc.screen != null) mc.screen.onClose();
+    if (ticks == 354
         || ticks == 90
         || ticks == 130
         || ticks == 170
-        || ticks == 240
-        || ticks == 280
-        || ticks == 320
-        || ticks == 360)
+        || ticks == 380
+        || ticks == 420
+        || ticks == 460
+        || ticks == 500)
       Screenshot.grab(
           mc.gameDirectory,
           "sequencer-" + ticks + ".png",
           mc.getMainRenderTarget(),
           message -> System.out.println("MODULARCRAFT_QA " + message.getString()));
-    if (ticks >= 410 && ticks <= 600 && ticks % 10 == 0) {
+    if (ticks >= 550 && ticks <= 740 && ticks % 10 == 0) {
       ClientRuntime.recover("resync");
       if (com.malevolentgods.modularcraft.client.AudioOutput.channels() != 0
           || com.malevolentgods.modularcraft.client.AudioOutput.timers() != 0)
         throw new IllegalStateException("Sequencer native cleanup leaked resources");
-      System.out.println("MODULARCRAFT_QA sequencer cleanup=" + ((ticks - 410) / 10 + 1));
+      System.out.println("MODULARCRAFT_QA sequencer cleanup=" + ((ticks - 550) / 10 + 1));
     }
   }
 
@@ -333,7 +334,7 @@ public final class NativeProbe {
         && ClientRuntime.patches().stream()
             .anyMatch(p -> p.keyboards().values().stream().anyMatch(k -> k.gate())))
       throw new IllegalStateException("Screen close left a held keyboard gate");
-    if (ticks == 216
+    if (ticks == 354
         || ticks == 90
         || ticks == 130
         || ticks == 180

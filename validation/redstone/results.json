@@ -1,0 +1,54 @@
+{
+  "date": "2026-11-07",
+  "feature": "EU-009 Euclidean redstone transport",
+  "status": "implemented; local automated/native UI checks passed; release gates pending",
+  "runtime_jar": "build/libs/modularcraft-0.3.1.jar",
+  "sha256": "9576146785910cba3bea8313fc817818939f5d5c3e3737ab4014c1d4309a2667",
+  "world_block_schema": 2,
+  "network_snapshot_protocol": 10,
+  "validation": {
+    "junit": {
+      "passed": 180,
+      "failed": 0,
+      "skipped": 0
+    },
+    "packaged_gametests": {
+      "passed": 41,
+      "failed": 0
+    },
+    "launcher_tests": {
+      "passed": 25
+    },
+    "strict_dependency_verification": "PASS",
+    "format_checkstyle_pmd": "PASS",
+    "artifact_checks": "PASS",
+    "native_ui_keyboard_power_snapshots_compact_layout": "PASS",
+    "native_cleanup_cycles": 20,
+    "screenshot_review": "PASS",
+    "local_documentation_links_and_localization": "PASS"
+  },
+  "native_environment": {
+    "os": "macOS 26.6.2",
+    "architecture": "arm64",
+    "java": "21",
+    "minecraft": "1.21.1",
+    "neoforge": "21.1.218",
+    "ticks": 780,
+    "workload": "four sequencers, two oscillators, four envelopes, two filters, two Amps, two Speakers; 17 cables"
+  },
+  "native_diagnostic_counters": {
+    "underruns": 1,
+    "largest_reported_audio_p95_ns": 139375,
+    "max_audio_block_ns": 2404792,
+    "max_server_work_ns": 5678042,
+    "server_p95": "not measured; short UI probe is not performance qualification"
+  },
+  "pending": [
+    "Human listening/acoustic acceptance",
+    "Two-client multiplayer and timing",
+    "Sustained load, tails and underrun qualification",
+    "Earlier platform/security/release gates"
+  ],
+  "self_review": "PASS",
+  "commit_push_publish": false
+}

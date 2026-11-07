@@ -988,3 +988,27 @@ zero measured steady allocation. Native probe recorded one underrun and a 2.0157
 maximum block: listening, multiplayer, sustained/tail qualification and earlier release
 gates remain PENDING. Pins/manual worlds preserved. No commit, push, publication or
 remote review-thread mutation performed.
+
+
+## 2026-11-07 — Euclidean redstone transport (EU-009)
+
+Implemented persistent Redstone Mode (default Off), powered resume/unpowered stop,
+Start/Stop disabling and authoritative rejection, unchanged Reset/external clock semantics,
+power reconciliation after complete patch reload, exact old-record migration and protocol 10.
+World/block schema remains 2. Turning the mode off preserves current playback state.
+
+**PASS:** `make verify GAMETEST_DIR=run/make/redstone-verify`: 180 JUnit / 41 packaged
+GameTests / 25 launcher tests, strict dependencies, formatting/static analysis and artifacts.
+**PASS:** disposable `make smoke GRADLE_ARGS=-PqaSequencer TICKS=780
+QA_DIR=run/make/redstone-native-final`: keyboard/mouse toggle, powered/unpowered snapshots,
+gray Start/Stop with active Reset, compact layout, screenshot review and 20 cleanup cycles.
+The initial status-text overlap was corrected and visually rechecked. Local documentation
+links/localization and diff checks passed. [Evidence and self-review](redstone/README.md),
+[results](redstone/results.json) and [native screenshot](redstone/screenshots/sequencer-redstone-265.png).
+
+Native diagnostics retain one underrun, 2.404792 ms maximum audio block and 5.678042 ms
+maximum server work; largest reported audio p95 0.139375 ms, server p95 not measured.
+Listening/acoustic, two-client timing, sustained/tail/underrun and earlier security/platform/
+release gates remain **PENDING**. Self-review PASS; no release qualification claimed.
+Pins, AGENTS.md and manual worlds preserved. No commit, push, play-instance installation
+or publication. Runtime JAR SHA-256: `9576146785910cba3bea8313fc817818939f5d5c3e3737ab4014c1d4309a2667`.

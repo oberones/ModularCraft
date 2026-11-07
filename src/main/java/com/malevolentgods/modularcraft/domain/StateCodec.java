@@ -121,7 +121,12 @@ public final class StateCodec {
       values.put(Parameter.AMP_LEVEL, level);
       values.put(Parameter.DRONE, 1.0);
     }
-    // Only legacy stored saws have this exact two-control schema. Network v9 must be complete.
+    // Migrate only exact legacy stored parameter sets. Network v10 must be complete.
+    if (stored && kind == ModuleKind.EUCLIDEAN_SEQUENCER) {
+      var legacy = java.util.EnumSet.copyOf(kind.parameters);
+      legacy.remove(Parameter.REDSTONE_MODE);
+      if (values.keySet().equals(legacy)) values.put(Parameter.REDSTONE_MODE, 0.0);
+    }
     if (stored
         && kind == ModuleKind.OSCILLATOR
         && values.keySet().equals(java.util.Set.of(Parameter.FREQUENCY, Parameter.LEVEL)))
@@ -312,7 +317,7 @@ public final class StateCodec {
         MAX_PATCH,
         out -> {
           out.writeInt(MAGIC);
-          out.writeShort(9);
+          out.writeShort(10);
           uuid(out, p.id());
           out.writeLong(p.revision());
           out.writeLong(p.sequence());
@@ -432,7 +437,7 @@ public final class StateCodec {
 
   public static PatchSnapshot decode(byte[] bytes) {
     try (DataInputStream in = input(bytes, MAX_PATCH)) {
-      if (in.readInt() != MAGIC || in.readUnsignedShort() != 9)
+      if (in.readInt() != MAGIC || in.readUnsignedShort() != 10)
         throw new IllegalArgumentException("protocol");
       UUID id = uuid(in);
       long revision = in.readLong(), sequence = in.readLong(), sample = in.readLong();

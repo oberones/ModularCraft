@@ -190,7 +190,7 @@ public final class ModuleGameTests {
                       position, module.getBlockState(), tag, h.getLevel().registryAccess());
           h.assertTrue(
               restored != null && restored.state().values().equals(module.state().values()),
-              "Seventeen controls persist");
+              "Sequencer controls persist");
           runtime.unload(id);
           h.assertTrue(
               !runtime.currentPatch(id).sequencers().get(id).running(), "Unload stops rhythm");

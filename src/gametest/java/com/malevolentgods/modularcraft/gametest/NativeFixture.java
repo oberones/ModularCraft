@@ -73,8 +73,16 @@ public final class NativeFixture {
                   (ModuleEntity) performer.serverLevel().getBlockEntity(SEQUENCERS.getFirst()),
                   true);
             }
-            if (ticks == 220 || ticks == 260 || ticks == 300 || ticks == 340) {
-              int view = (ticks - 220) / 40;
+            if (ticks == 245 || ticks == 285) {
+              performer
+                  .serverLevel()
+                  .setBlock(
+                      SEQUENCERS.getFirst().above(),
+                      (ticks == 245 ? Blocks.REDSTONE_BLOCK : Blocks.AIR).defaultBlockState(),
+                      3);
+            }
+            if (ticks == 360 || ticks == 400 || ticks == 440 || ticks == 480) {
+              int view = (ticks - 360) / 40;
               BlockPos position = SEQUENCERS.get(view);
               double x = position.getX() + .5, z = position.getZ() + .5;
               if (view == 0) performer.connection.teleport(x, position.getY() - .6, z - 2, 0, 10);

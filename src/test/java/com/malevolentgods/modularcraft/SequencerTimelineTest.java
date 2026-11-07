@@ -25,6 +25,43 @@ class SequencerTimelineTest {
       ModuleState.create(new UUID(1, 3), owner, ModuleKind.ENVELOPE, 2, 64, 0);
 
   @Test
+  void transportStopReleasesDownstreamGateAndResumeKeepsNextStep() {
+    ModuleState controlled =
+        source.withValue(Parameter.REDSTONE_MODE, 1).withValue(Parameter.A_HITS, 16);
+    Sequencer seq = new Sequencer(SequencerSettings.from(controlled), 0);
+    Envelope env = new Envelope();
+    var timeline =
+        new ControlTimeline(
+            List.of(controlled, envelope),
+            List.of(new Cable(source.id(), Port.TRIGGER_A, envelope.id(), Port.GATE_IN)),
+            Map.of(source.id(), seq),
+            Map.of(envelope.id(), env),
+            Map.of(),
+            Map.of(),
+            0);
+    seq.start(0);
+    timeline.refresh(0);
+    timeline.advanceTo(239, 1024);
+    Assertions.assertTrue(env.checkpoint(239).gate());
+    seq.stop(240);
+    timeline.refresh(240);
+    Assertions.assertFalse(env.checkpoint(240).gate());
+    Assertions.assertEquals(Envelope.Stage.RELEASE, env.stage(240));
+    Assertions.assertFalse(seq.output(4, 240));
+    Assertions.assertEquals(1, seq.checkpoint(240).channels().getFirst().next());
+    seq.start(1000);
+    timeline.refresh(1000);
+    Assertions.assertEquals(1, seq.step(0));
+    Assertions.assertTrue(env.checkpoint(1000).gate());
+    seq.reset(1100);
+    timeline.refresh(1100);
+    Assertions.assertFalse(env.checkpoint(1100).gate());
+    timeline.advanceTo(7000, 1024);
+    Assertions.assertEquals(0, seq.step(0));
+    Assertions.assertTrue(env.checkpoint(7000).gate());
+  }
+
+  @Test
   void independentOutputsAndClockChainDriveEnvelopesBetweenTicks() {
     Sequencer a = new Sequencer(SequencerSettings.from(source), 0);
     Sequencer b = new Sequencer(SequencerSettings.from(follower), 0);

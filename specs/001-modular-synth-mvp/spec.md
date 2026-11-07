@@ -2,7 +2,8 @@
 
 **Current output contract:** AS-001–006 at the end of this specification supersede the
 original combined Amplifier/Speaker and restart-disabled behavior. Amp and Speaker are
-separate; saves use schema 2 and network/snapshots use version 9.
+separate; saves use schema 2 and network/snapshots use version 10. EU-009 supersedes earlier
+sequencer transport/lifecycle and protocol statements below.
 
 
 **Feature Branch**: `001-modular-synth-mvp`
@@ -320,12 +321,12 @@ Velocity expression, pitch bend, polyphony and recording remain excluded. MIDI s
   changing running state, ordered before a simultaneous clock. Mute releases immediately
   while counters continue. Other musical edits apply next clock (immediately while stopped).
 - **EU-005 — Authority/state:** Server-owned accepted revisions, unchanged permission/range
-  checks and traffic quotas. Snapshot v8 contains active/pending configuration, positions,
+  checks and traffic quotas. Snapshot v10 contains active/pending configuration, positions,
   phase, input levels, pulse endings and envelope baseline gates. Join/recovery preserves
   current progress without restarting others or playing a missed-note backlog.
 - **EU-006 — Lifecycle:** Loaded sequencers continue with panels closed, speakers disabled
-  and local audio muted. Persist settings/cables only; placement/restart is stopped, and
-  chunk suspension requires explicit Start. No new dependencies or forced chunk loading.
+  and local audio muted. Persist settings/cables only; manual mode requires Start after
+  placement/restart or chunk suspension. Redstone mode reconciles current power after load. No new dependencies or forced chunk loading.
 - **EU-007 — Interaction:** Four labeled animated rings in a responsive scrollable editor
   and on the block face. Precise numeric controls, keyboard navigation, localized feedback,
   non-color hit/rest/playhead/mute indicators and pending-edit state. World display is
@@ -467,3 +468,26 @@ Velocity expression, pitch bend, polyphony and recording remain excluded. MIDI s
 Earlier RP-001 uses a standalone Envelope with Amp Gain In and an additional Amp→Speaker
 cable; direct gate-to-Amp is the compact alternative. Historic combined-speaker gain
 contracts and restart-disabled requirements are replaced by AS-001–006.
+
+
+## Euclidean redstone control (EU-009)
+
+Persist a sequencer-only boolean REDSTONE_MODE (default 0). While enabled, any neighboring
+nonzero redstone signal starts/resumes the next step; no signal stops and lowers outputs.
+Only running-state transitions invoke Start/Stop, without resetting pattern positions.
+Enabling follows current power immediately; disabling preserves the current state.
+Start/Stop are disabled in the menu and rejected by the server; Reset remains available.
+Tempo and connected Clock In retain their existing roles. All edits retain ownership,
+range, revision and budget checks. Keep loaded sequencers independent of speaker activity.
+
+Unloaded components remain stopped; after the entire patch loads, redstone mode follows
+current power. Do not force chunks to load or persist transient transport positions.
+Sample power in the existing server control update, use the normal scheduled sample,
+and promptly publish affected snapshots through existing bandwidth limits.
+
+Append REDSTONE_MODE to parameters. Keep world/block schema 2, migrate only exact old
+17-control sequencer records to mode Off, preserve malformed/unknown records, and require
+network/snapshot protocol 10 with complete records. DSP checkpoints and pins are unchanged.
+Provide localized toggle/help, keyboard access, gray Start/Stop, and compact-layout support.
+Extend RP-004 and automated/native acceptance; listening and two-client evidence remain
+separate gates. No commit, push, publication, or edits to existing player worlds are implied.

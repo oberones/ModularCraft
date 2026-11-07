@@ -57,7 +57,8 @@ public enum Parameter {
   AMP_LEVEL(0, 100, 100, "%"),
   DRONE(0, 1, 0, ""),
   SPEAKER_ENABLED(0, 1, 1, ""),
-  SPEAKER_SUSPENDED(0, 1, 0, "");
+  SPEAKER_SUSPENDED(0, 1, 0, ""),
+  REDSTONE_MODE(0, 1, 0, "");
   public final double min, max, initial;
   public final String unit;
 
@@ -70,7 +71,8 @@ public enum Parameter {
 
   private boolean integer() {
     return switch (this) {
-      case DRONE,
+      case REDSTONE_MODE,
+          DRONE,
           SPEAKER_ENABLED,
           SPEAKER_SUSPENDED,
           MIX_1_MUTE,

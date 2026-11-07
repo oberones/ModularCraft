@@ -1,7 +1,7 @@
 # Architecture and ownership
 
-Current saves use schema 2 and network/snapshots use version 9. The
-[Amp / Speaker contract](#amp--speaker-split-schema-2-protocol-9) below supersedes
+Current saves use schema 2 and network/snapshots use version 10. The
+[Amp / Speaker contract](#amp--speaker-split-schema-2-protocol-9) and [redstone transport contract](#euclidean-redstone-transport-protocol-10) below supersede
 historical combined-output and restart-disabled details in earlier extension notes.
 
 `domain` defines immutable module/control/port snapshots, deterministic graph validation,
@@ -332,3 +332,26 @@ transition and traffic budgets. `qaAmp` supplies a 15-module/17-cable native ref
 four 16-module/18-cable load patches (64 modules/72 cables/eight Speakers). Existing
 96-cable stress fixtures remain and now route former speaker gain cables to filter
 resonance inputs. Automated performance and native listening evidence remain distinct.
+
+
+## Euclidean redstone transport (protocol 10)
+
+REDSTONE_MODE is the eighteenth named sequencer parameter, a persisted boolean defaulting
+Off. Exact legacy stored sequencer parameter sets gain Off; incomplete or foreign sets
+are still refused/quarantined. World/block schema remains 2. Protocol/snapshots require
+version 10 and complete parameter sets; no DSP checkpoint fields change.
+
+The logical server samples neighboring power during its existing bounded control update,
+after advancing prior events and before refreshing gates at the scheduled sample. Only
+changes in desired running state invoke start/stop. A pending changed-ID set ensures
+redstone transport changes publish affected component snapshots during the same server
+tick; ordinary control acknowledgements coalesce those pending changes. Existing traffic
+and transition budgets apply. There is no new audio-thread world access or chunk ticket.
+
+Redstone mode follows power immediately when enabled and after full component reload;
+unloaded components stop. A partially unloaded two-block signal neighborhood is treated
+as unpowered until loaded, preventing indirect conductor reads from fetching chunks.
+Disabling preserves running state. Start/Stop packets are
+rejected while enabled, but Reset still works. Internal tempo, external clock, pulse
+release and next-step resume semantics are unchanged. Earlier manual-only restart and
+protocol descriptions are superseded by this section.

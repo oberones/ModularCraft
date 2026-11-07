@@ -33,6 +33,7 @@ public final class SequencerScreen extends Screen {
   private final List<Positioned> scrolling = new ArrayList<>();
   private final List<AbstractWidget> editing = new ArrayList<>();
   private final Button[] mutes = new Button[4];
+  private Button start, stop, redstone;
 
   public SequencerScreen(ModuleState state, boolean editable, String status) {
     super(Component.translatable("block.modularcraft.euclidean_sequencer"));
@@ -73,10 +74,21 @@ public final class SequencerScreen extends Screen {
     top = Math.max(4, (height - (74 + 4 / columns * 112 + 44)) / 2);
     contentTop = top + 74;
     contentBottom = Math.min(height - 46, contentTop + 4 / columns * 112);
-    command("start", Messages.Action.SEQUENCER_START, left + 8, top + 23);
-    command("stop", Messages.Action.SEQUENCER_STOP, left + 92, top + 23);
+    start = command("start", Messages.Action.SEQUENCER_START, left + 8, top + 23);
+    stop = command("stop", Messages.Action.SEQUENCER_STOP, left + 92, top + 23);
     command("reset", Messages.Action.SEQUENCER_RESET, left + 176, top + 23);
     numeric(Parameter.TEMPO, left + 46, top + 47, false);
+    redstone =
+        Button.builder(
+                text("redstone_off"),
+                b ->
+                    submit(
+                        Parameter.REDSTONE_MODE, state.value(Parameter.REDSTONE_MODE) == 0 ? 1 : 0))
+            .bounds(left + 142, top + 47, Math.min(160, panel - 150), 18)
+            .tooltip(Tooltip.create(text("redstone_help")))
+            .build();
+    addRenderableWidget(redstone);
+    editing.add(redstone);
     for (int channel = 0; channel < 4; channel++) {
       int c = channel,
           x = left + channel % columns * card,
@@ -123,7 +135,7 @@ public final class SequencerScreen extends Screen {
     update();
   }
 
-  private void command(String label, Messages.Action action, int x, int y) {
+  private Button command(String label, Messages.Action action, int x, int y) {
     Button button =
         Button.builder(
                 text(label),
@@ -138,6 +150,7 @@ public final class SequencerScreen extends Screen {
             .build();
     addRenderableWidget(button);
     editing.add(button);
+    return button;
   }
 
   private void numeric(Parameter parameter, int x, int y, boolean moves) {
@@ -189,6 +202,10 @@ public final class SequencerScreen extends Screen {
 
   private void update() {
     for (AbstractWidget widget : editing) widget.active = editable && !awaiting;
+    boolean controlled = state.value(Parameter.REDSTONE_MODE) == 1;
+    if (start != null) start.active = editable && !awaiting && !controlled;
+    if (stop != null) stop.active = editable && !awaiting && !controlled;
+    if (redstone != null) redstone.setMessage(text(controlled ? "redstone_on" : "redstone_off"));
     fields.values().forEach(field -> field.setEditable(editable && !awaiting));
     for (int c = 0; c < 4; c++)
       if (mutes[c] != null)
@@ -271,7 +288,8 @@ public final class SequencerScreen extends Screen {
         runtime == null || !runtime.running()
             ? "stopped"
             : runtime.external() ? "external" : "internal";
-    graphics.drawString(font, text(mode), left + 140, top + 52, 0xffd9edf1);
+    graphics.drawString(
+        font, text(mode), left + panel - 8 - font.width(text(mode)), top + 6, 0xffd9edf1);
     graphics.enableScissor(left, contentTop, left + panel, contentBottom);
     for (int c = 0; c < 4; c++) {
       int x = left + c % columns * card, y = contentTop + c / columns * 112 - scroll;

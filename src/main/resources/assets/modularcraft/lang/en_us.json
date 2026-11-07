@@ -257,5 +257,10 @@
   "modularcraft.error.reloading": "Resources reloading. Playback will resume at the current musical position.",
   "modularcraft.error.settings_read": "Could not read local settings. Check the config file permissions.",
   "modularcraft.error.settings_write": "Could not save local settings. Check the config directory permissions.",
-  "modularcraft.error.throttled": "Edit rate limited: 20/s per player, 200/s per world. Wait and retry refreshed values."
+  "modularcraft.error.throttled": "Edit rate limited: 20/s per player, 200/s per world. Wait and retry refreshed values.",
+  "parameter.modularcraft.redstone_mode": "Redstone Mode",
+  "modularcraft.euclidean.redstone_off": "Redstone Mode: Off",
+  "modularcraft.euclidean.redstone_on": "Redstone Mode: On",
+  "modularcraft.euclidean.redstone_help": "Powered: resume. Unpowered: stop. Start/Stop are disabled; Reset remains available. Turning this off keeps the current playback state.",
+  "modularcraft.error.redstone_controlled": "Redstone controls playback. Turn Redstone Mode off to use Start/Stop."
 }

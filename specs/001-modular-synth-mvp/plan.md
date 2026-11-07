@@ -24,7 +24,7 @@ L1 coefficient normalization bounds oscillator peaks at the selected level.
 
 ## Budgets and ordering
 
-Retain every SS-003 quota. Version 2 world saves; version 9 network/snapshots; edits 4 KiB, snapshots 32 KiB,
+Retain every SS-003 quota. Version 2 world saves; version 10 network/snapshots; edits 4 KiB, snapshots 32 KiB,
 world storage 2 MiB. 20 edits/s/player, 200/world; queues 64/player, 256/world.
 Cleanup and gate release bypass ordinary throttling. Outbound 128 KiB/s/listener,
 2 MiB/s/server. One preparation worker, eight pending jobs, 1,024 client events,
@@ -178,7 +178,7 @@ Use the existing ownership, quota and 40 ms scheduling contracts; apply the 1,02
 Keep client-only editor, visual projection and face overlay separate from audio ownership.
 Use original generated artwork, cached ring geometry and 32-block visibility. Exercise
 red–green domain/timing/codec/audio/host tests, `make verify`, and the disposable
-`make smoke GRADLE_ARGS=-PqaSequencer TICKS=650` native fixture. Measure the existing DSP
+`make smoke GRADLE_ARGS=-PqaSequencer TICKS=780` native fixture. Measure the existing DSP
 budgets with both four-channel rhythms and chained clocks; retain all prior native,
 multiplayer, listening, security and performance qualification gates. Record self-review.
 
@@ -289,3 +289,20 @@ packaged Amp GameTests, `make verify`, and fresh `make smoke GRADLE_ARGS=-PqaAmp
 plus `make smoke-load GRADLE_ARGS=-PqaAmp TICKS=1200`. Retain 1 ms DSP p95 / 2 ms server
 p95 targets; record actual counters and distinguish short probes from sustained listening,
 multiplayer and release acceptance. Preserve worlds and pins; no commit/push/publication.
+
+
+## Euclidean redstone transport extension
+
+Implement EU-009 with appended REDSTONE_MODE, strict boolean validation, exact stored-record
+migration and protocol 10. Keep world/block schema 2. ServerRuntime reconciles loaded
+sequencer power at existing control-sample boundaries, invokes Start/Stop on transitions,
+rejects manual transport commands in redstone mode, and publishes changed patches promptly.
+Use existing Sequencer start/stop/resume/reset semantics; the DSP/checkpoint format is unchanged.
+SequencerScreen adds a localized keyboard-accessible toggle beside Tempo and disables
+Start/Stop using accepted state. Turning the mode off preserves playback.
+
+Use failing-then-passing parameter/migration/codec and packaged world/lifecycle/authority
+tests, existing exact-sample sequencer tests, `make verify`, and a disposable
+`make smoke GRADLE_ARGS=-PqaSequencer TICKS=780` fixture. Check redstone snapshots,
+keyboard activation, disabled buttons, compact layout and screenshots. Preserve all budgets,
+pins, player worlds and unobserved listening/multiplayer/release gates; record self-review.

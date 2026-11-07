@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.malevolentgods.modularcraft.SequencerTimelineTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-11-07T06:15:10.339Z" hostname="Calliope.local" time="0.009">
+  <properties/>
+  <testcase name="boundedAdvanceStopsRatherThanReplayingAnUnboundedBacklog()" classname="com.malevolentgods.modularcraft.SequencerTimelineTest" time="0.0"/>
+  <testcase name="recoveryWithPendingEditsMatchesUninterruptedEnvelopeAndClock()" classname="com.malevolentgods.modularcraft.SequencerTimelineTest" time="0.008"/>
+  <testcase name="independentOutputsAndClockChainDriveEnvelopesBetweenTicks()" classname="com.malevolentgods.modularcraft.SequencerTimelineTest" time="0.001"/>
+  <testcase name="transportStopReleasesDownstreamGateAndResumeKeepsNextStep()" classname="com.malevolentgods.modularcraft.SequencerTimelineTest" time="0.0"/>
+  <testcase name="manualGateKeepsPriorityOverPulseRetriggers()" classname="com.malevolentgods.modularcraft.SequencerTimelineTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

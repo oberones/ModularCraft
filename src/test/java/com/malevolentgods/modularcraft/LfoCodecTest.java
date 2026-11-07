@@ -16,15 +16,15 @@ import org.junit.jupiter.api.Test;
 
 class LfoCodecTest {
   @Test
-  void snapshotProtocolIsNineAndRefusesEight() {
+  void snapshotProtocolIsTenAndRefusesNine() {
     ModuleState module =
         ModuleState.create(new UUID(0, 1), new UUID(0, 2), ModuleKind.LFO, 0, 0, 0);
     PatchSnapshot patch =
         new PatchSnapshot(module.id(), 0, 0, 0, List.of(module), List.of(), Map.of());
     byte[] bytes = StateCodec.encode(patch);
-    Assertions.assertEquals(9, bytes[5]);
+    Assertions.assertEquals(10, bytes[5]);
     Assertions.assertEquals(patch, StateCodec.decode(bytes));
-    bytes[5] = 8;
+    bytes[5] = 9;
     Assertions.assertThrows(IllegalArgumentException.class, () -> StateCodec.decode(bytes));
   }
 

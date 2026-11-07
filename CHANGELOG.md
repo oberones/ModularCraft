@@ -1,3 +1,13 @@
+## Unreleased — Euclidean redstone control
+
+- Add persistent Redstone Mode (default Off): powered resumes the next step; unpowered stops.
+  Start/Stop gray out while enabled; Reset remains available. Turning the mode off keeps playback state.
+- Reconcile power after full patch reload and publish transport changes to listeners. Redstone
+  gates transport; it does not replace tempo or Clock In.
+- Keep world/block schema 2 and migrate exact old sequencers to mode Off. Require protocol 10
+  on every client/server. Back up worlds before upgrading; restore backups before downgrading.
+  Earlier manual-only sequencer restart and protocol descriptions below are historical.
+
 # 0.1.0 development candidate
 
 Split the combined Amplifier / Speaker into **Amp** (built-in ADSR, Gate In, Drone,

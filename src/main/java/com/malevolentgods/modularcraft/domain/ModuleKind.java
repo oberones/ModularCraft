@@ -50,7 +50,8 @@ public enum ModuleKind {
           Parameter.D_STEPS,
           Parameter.D_HITS,
           Parameter.D_ROTATION,
-          Parameter.D_MUTE),
+          Parameter.D_MUTE,
+          Parameter.REDSTONE_MODE),
       List.of(
           Port.CLOCK_IN,
           Port.RESET_IN,
