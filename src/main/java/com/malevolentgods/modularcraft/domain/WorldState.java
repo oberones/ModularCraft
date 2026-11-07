@@ -102,7 +102,8 @@ public final class WorldState {
     bump(cable.destination());
   }
 
-  public void enable(UUID actor, boolean operator, UUID id, long expected, boolean enabled) {
+  /** Change playback intent and report every component affected by capacity admission. */
+  public Set<UUID> enable(UUID actor, boolean operator, UUID id, long expected, boolean enabled) {
     ModuleState m = authorize(actor, operator, id, expected);
     if (m.kind() != ModuleKind.SPEAKER) throw new IllegalArgumentException("not_speaker");
     modules.put(
@@ -111,7 +112,9 @@ public final class WorldState {
             .withValue(Parameter.SPEAKER_SUSPENDED, 0)
             .runtime(m.loaded(), enabled && m.enabled() && !m.suspended()));
     revision++;
-    refreshPlayback();
+    Set<UUID> changed = component(id);
+    changed.addAll(refreshPlayback());
+    return Set.copyOf(changed);
   }
 
   /** Admit loaded patches without displacing playback already admitted. Logical server only. */

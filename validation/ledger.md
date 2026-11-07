@@ -970,3 +970,21 @@ all-run server maximum 13.407791 ms remain explicit. Listening/acoustic, two-cli
 PENDING. Self-review PASS for the implemented contracts; no release qualification claimed.
 Pins and manual worlds preserved; no commit, push, play-instance installation or publication.
 Runtime JAR SHA-256: `60847b081a51735244560b75964e3fa503d29050cdf453a29197b985cd309c68`.
+
+
+## 2026-11-07 — PR #1 actionable review feedback
+
+Addressed all five comments on [PR #1](https://github.com/oberones/ModularCraft/pull/1):
+persistent quarantine framing, immediate capacity-admission snapshots, current automatic
+Speaker panel status/revisions, the native four-cable expectation, and RP-001 Amp gain wiring.
+[Review mapping, red–green evidence and self-review](amp/pr1-review.md) and
+[machine-readable results](amp/pr1-review-results.json) record the changes.
+
+PASS: `make verify GAMETEST_DIR=run/make/pr1-final` (175 JUnit / 36 packaged GameTests,
+strict dependencies, formatting/static analysis, launcher and artifact checks). Native
+`qaCableRemoval` probe passed remove/reconnect/remove with exact 3/4/3 cable sets; screenshot
+review passed. Diff and documentation links checked. Full Amp load DSP p95 0.628125 ms,
+zero measured steady allocation. Native probe recorded one underrun and a 2.015709 ms
+maximum block: listening, multiplayer, sustained/tail qualification and earlier release
+gates remain PENDING. Pins/manual worlds preserved. No commit, push, publication or
+remote review-thread mutation performed.

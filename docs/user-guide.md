@@ -52,7 +52,7 @@ pause menu, or module panels. There is no audio-settings keyboard shortcut.
    you. All front ports are on the lower strip.
 2. Hold the tool and right-click **Oscillator AO → Audio Out**, then **Filter AI ← Audio In**.
 3. Select **Filter AO → Audio Out**, then **Amp AI ← Audio In**; connect **Amp AO → Speaker AI**.
-4. Select **Envelope CO → Envelope Out**, then **Speaker GI ← Gain Control In**.
+4. Select **Envelope CO → Envelope Out**, then **Amp GI ← Gain Control In**.
 5. Put the tool away. The Speaker is enabled by default. Its default
    volume is 10%. The envelope is initially released, so silence here is expected.
 6. Right-click the envelope. **Hold Gate** with the mouse, or hold **Space** with the Hold Gate button focused. Hold for two seconds, then release. The 220 Hz note attacks,

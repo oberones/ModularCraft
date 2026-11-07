@@ -107,6 +107,57 @@ class AmpMigrationTest {
   }
 
   @Test
+  void quarantinedLegacyRecordsCannotBecomeCurrentSpeakersAfterResave() throws IOException {
+    byte[] current = StateCodec.moduleBytes(AmpAudioTest.module(3, ModuleKind.SPEAKER));
+    byte[] malformedLegacy = moduleRecord(Arrays.copyOfRange(current, 6, current.length));
+    var loaded = StateCodec.load(world(List.of(malformedLegacy)));
+    Assertions.assertTrue(loaded.state().modules().isEmpty());
+    for (int i = 0; i < 3; i++) {
+      byte[] saved = StateCodec.save(loaded.state(), loaded.quarantined());
+      loaded = StateCodec.load(saved);
+      Assertions.assertTrue(loaded.state().modules().isEmpty(), "Quarantine must never reactivate");
+      Assertions.assertEquals(1, loaded.quarantined().size());
+      Assertions.assertArrayEquals(malformedLegacy, loaded.quarantined().getFirst());
+      Assertions.assertArrayEquals(saved, StateCodec.save(loaded.state(), loaded.quarantined()));
+    }
+  }
+
+  @Test
+  void emptyMaximumAndUnknownLegacyRecordsRemainByteExact() throws IOException {
+    byte[] maximum = new byte[4096];
+    maximum[0] = 99;
+    List<byte[]> records = List.of(new byte[0], maximum, new byte[] {3, 1, 2, 3});
+    var loaded = StateCodec.load(world(records));
+    for (int i = 0; i < 3; i++) {
+      loaded = StateCodec.load(StateCodec.save(loaded.state(), loaded.quarantined()));
+      Assertions.assertTrue(loaded.state().modules().isEmpty());
+      Assertions.assertEquals(records.size(), loaded.quarantined().size());
+      for (int j = 0; j < records.size(); j++)
+        Assertions.assertArrayEquals(records.get(j), loaded.quarantined().get(j));
+    }
+  }
+
+  @Test
+  void quarantineDoesNotGrowAWorldAtTheStorageLimit() throws IOException {
+    byte[] maximum = new byte[4096];
+    maximum[0] = 99;
+    List<byte[]> records = new ArrayList<>();
+    for (int i = 0; i < 511; i++) records.add(maximum);
+    records.add(new byte[StateCodec.MAX_WORLD - 8 - 511 * 4098 - 2]);
+    byte[] original = world(records);
+    Assertions.assertEquals(StateCodec.MAX_WORLD, original.length);
+    var loaded = StateCodec.load(original);
+    byte[] saved = StateCodec.save(loaded.state(), loaded.quarantined());
+    Assertions.assertEquals(original.length, saved.length);
+    var again = StateCodec.load(saved);
+    Assertions.assertEquals(512, again.quarantined().size());
+    Assertions.assertArrayEquals(saved, StateCodec.save(again.state(), again.quarantined()));
+    Assertions.assertThrows(
+        IllegalArgumentException.class,
+        () -> StateCodec.save(again.state(), List.of(new byte[4097])));
+  }
+
+  @Test
   void malformedLegacyVolumeAndUnknownRecordsRemainOpaque() throws IOException {
     for (double value : new double[] {Double.NaN, Double.POSITIVE_INFINITY, -1, 101}) {
       byte[] bad = moduleRecord(speaker(value));

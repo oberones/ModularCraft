@@ -16,6 +16,11 @@ Sequencer transport still requires Start after reload. Earlier restart-disabled 
 combined-speaker descriptions below are historical and superseded.
 
 
+Fixed Amp/Speaker review findings: quarantined legacy records stay opaque after resaving;
+capacity admission immediately broadcasts newly active patches; open panels receive current
+status and edit revisions after automatic admission, unload, or overload suspension.
+Corrected the RP-001 gain connection to Amp and the native probe's four-cable expectation.
+
 Removed the global K shortcut for audio settings so it no longer interrupts gameplay
 or typing in screens. Use the ModularCraft Audio buttons in menus and module panels.
 

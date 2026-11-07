@@ -35,7 +35,7 @@ final class NativeCableProbe {
           || !mc.player.getOffhandItem().is(Items.STICK))
         throw new IllegalStateException("Cable fixture must equip tool and occupied offhand");
       original = cables();
-      if (original.size() != 3) throw new IllegalStateException("Expected three RP-001 cables");
+      if (original.size() != 4) throw new IllegalStateException("Expected four RP-001 cables");
       removed =
           original.stream()
               .filter(c -> c.destination().equals(module(ModuleKind.FILTER).id()))

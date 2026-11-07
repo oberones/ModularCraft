@@ -41,7 +41,9 @@ class SpeakerPlaybackTest {
     Assertions.assertFalse(state.get(waiting).enabled());
     Assertions.assertTrue(state.get(waiting).wantsPlayback());
     ModuleState active = state.get(first);
-    state.enable(active.owner(), false, first, active.revision(), false);
+    Assertions.assertEquals(
+        java.util.Set.of(first, waiting),
+        state.enable(active.owner(), false, first, active.revision(), false));
     Assertions.assertTrue(state.get(waiting).enabled());
     state.enable(active.owner(), false, first, state.get(first).revision(), true);
     Assertions.assertFalse(state.get(first).enabled());

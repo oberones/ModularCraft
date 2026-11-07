@@ -457,13 +457,15 @@ public final class ServerRuntime {
           if (request.value() != 0 && request.value() != 1)
             throw new IllegalArgumentException("range");
           boolean wasActive = active(affected);
-          state.enable(
-              player.getUUID(),
-              player.hasPermissions(2),
-              before.id(),
-              request.revision(),
-              request.value() == 1);
+          Set<UUID> playbackChanges =
+              state.enable(
+                  player.getUUID(),
+                  player.hasPermissions(2),
+                  before.id(),
+                  request.revision(),
+                  request.value() == 1);
           if (!wasActive && active(affected)) clearVoices(affected);
+          affected.addAll(playbackChanges);
         }
         case SEQUENCER_START, SEQUENCER_STOP, SEQUENCER_RESET -> {
           if (before.kind() != ModuleKind.EUCLIDEAN_SEQUENCER || request.value() != 0)
@@ -499,12 +501,6 @@ public final class ServerRuntime {
       if (before.kind() == ModuleKind.MIXER
           && !before.id().equals(inspecting.get(player.getUUID())))
         sendView(player, module, false, status(module.state()));
-      for (ServerPlayer listener : server.getPlayerList().getPlayers()) {
-        UUID target = inspecting.get(listener.getUUID());
-        ModuleEntity inspected = target == null ? null : loaded.get(target);
-        if (inspected != null && inspected.eligible(listener))
-          sendView(listener, inspected, false, status(inspected.state()));
-      }
     } catch (IllegalArgumentException rejected) {
       error(player, key(rejected));
       if (module != null && module.valid()) sendView(player, module, false, key(rejected));
@@ -809,6 +805,13 @@ public final class ServerRuntime {
       if (entity != null && state.contains(id)) entity.accepted(state.get(id));
     }
     broadcast(sample, affected, null);
+    // Automatic admission, unloading and overload suspension also invalidate open editors.
+    for (ServerPlayer listener : server.getPlayerList().getPlayers()) {
+      UUID target = inspecting.get(listener.getUUID());
+      ModuleEntity inspected = target == null ? null : loaded.get(target);
+      if (inspected != null && affected.contains(target) && inspected.eligible(listener))
+        sendView(listener, inspected, false, status(inspected.state()));
+    }
   }
 
   private void broadcast(long requestedSample, Set<UUID> affected, ServerPlayer only) {

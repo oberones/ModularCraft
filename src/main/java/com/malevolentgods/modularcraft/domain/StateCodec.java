@@ -23,6 +23,7 @@ import java.util.UUID;
 public final class StateCodec {
   public static final int MAX_WORLD = 2 * 1024 * 1024, MAX_PATCH = 32768;
   private static final int MAGIC = 0x4d435301;
+  private static final int OPAQUE_RECORD = 0x8000, MAX_RECORD = 4096;
 
   public record Stored(WorldState state, List<byte[]> quarantined) {
     public Stored {
@@ -202,6 +203,9 @@ public final class StateCodec {
                 out.writeByte(2);
                 cable(out, c);
               }));
+    // Mark quarantine in the unused high bit of its length prefix. This preserves both the
+    // original bytes/identity and the existing record/world size limits, without nesting.
+    int liveRecords = records.size();
     records.addAll(quarantined);
     if (records.size() > 1024) throw new IllegalArgumentException("record_count");
     return write(
@@ -210,9 +214,10 @@ public final class StateCodec {
           out.writeInt(MAGIC);
           out.writeShort(2);
           out.writeShort(records.size());
-          for (byte[] record : records) {
-            if (record.length > 4096) throw new IllegalArgumentException("record_size");
-            out.writeShort(record.length);
+          for (int i = 0; i < records.size(); i++) {
+            byte[] record = records.get(i);
+            if (record.length > MAX_RECORD) throw new IllegalArgumentException("record_size");
+            out.writeShort(record.length | (i >= liveRecords ? OPAQUE_RECORD : 0));
             out.write(record);
           }
         });
@@ -231,10 +236,17 @@ public final class StateCodec {
         throw new IllegalArgumentException("unsupported_world_schema");
       int n = count(in, 1024);
       for (int i = 0; i < n; i++) {
-        int length = count(in, 4096);
+        int framedLength = in.readUnsignedShort();
+        boolean opaque = schema == 2 && (framedLength & OPAQUE_RECORD) != 0;
+        int length = opaque ? framedLength & ~OPAQUE_RECORD : framedLength;
+        if (length > MAX_RECORD) throw new IllegalArgumentException("record_size");
         byte[] raw = in.readNBytes(length);
         if (raw.length != length) throw new IllegalArgumentException("truncated_record");
-        try (DataInputStream record = input(raw, 4096)) {
+        if (opaque) {
+          bad.add(raw);
+          continue;
+        }
+        try (DataInputStream record = input(raw, MAX_RECORD)) {
           int type = record.readUnsignedByte();
           if (type == 1) {
             ModuleState m = module(record, true, schema);

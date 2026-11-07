@@ -318,8 +318,12 @@ this explicit registry mapping instead of assuming enum names equal registry nam
 World and block schema 2 distinguish new Speaker records from schema-1 combined speakers.
 Exact old SPEAKER/VOLUME records migrate to AMP/AMP_LEVEL plus default ADSR and Drone on.
 Migration preserves all identity/position/owner/revision/cable data; it does not place output
-blocks. Failed/unknown records remain opaque. Block and registry reconciliation share the
-same decoder. Standalone schema-2 module bytes have an explicit magic/version prefix.
+blocks. Failed/unknown records remain opaque: schema-2 world records use the high bit of
+the unsigned 16-bit length prefix to mark quarantined data, which is never decoded as a
+live module or cable. A schema-1 rejection cannot become a live schema-2 module after
+saving. Original bytes (including identity) are retained without nested wrappers or extra
+bytes. The 4,096-byte record, 1,024-record and 2 MiB world limits are unchanged.
+Block and registry reconciliation share the same decoder. Standalone schema-2 module bytes have an explicit magic/version prefix.
 Network and snapshots use version 9 and refuse older peers. Backups are required for downgrade.
 
 All existing quotas remain: 16 modules / 24 cables / two Speakers per component; four
