@@ -25,6 +25,9 @@ class LfoAudioTest {
             .withValue(Parameter.AMOUNT, 50);
     ModuleState speaker =
         ModuleState.create(new UUID(1, 3), owner, ModuleKind.SPEAKER, 2, 0, 0).runtime(true, true);
+    ModuleState amp =
+        ModuleState.create(new UUID(1, 5), owner, ModuleKind.AMP, 4, 0, 0)
+            .withValue(Parameter.DRONE, 1);
     ModuleState lfo =
         ModuleState.create(new UUID(1, 4), owner, ModuleKind.LFO, 3, 0, 0)
             .withValue(Parameter.LFO_WAVE, wave)
@@ -33,16 +36,17 @@ class LfoAudioTest {
         new ArrayList<>(
             List.of(
                 new Cable(osc.id(), Port.AUDIO_OUT, filter.id(), Port.AUDIO_IN),
-                new Cable(filter.id(), Port.AUDIO_OUT, speaker.id(), Port.AUDIO_IN)));
+                new Cable(filter.id(), Port.AUDIO_OUT, amp.id(), Port.AUDIO_IN),
+                new Cable(amp.id(), Port.AUDIO_OUT, speaker.id(), Port.AUDIO_IN)));
     if (destination != null)
       cables.add(
           new Cable(
               lfo.id(),
               Port.CONTROL_OUT,
-              destination == Port.GAIN_IN ? speaker.id() : filter.id(),
+              destination == Port.GAIN_IN ? amp.id() : filter.id(),
               destination));
     return new PatchSnapshot(
-        osc.id(), 0, 1, 0, List.of(osc, filter, speaker, lfo), cables, Map.of());
+        osc.id(), 0, 1, 0, List.of(osc, filter, speaker, lfo, amp), cables, Map.of());
   }
 
   @Test

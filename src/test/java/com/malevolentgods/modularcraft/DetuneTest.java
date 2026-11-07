@@ -196,7 +196,10 @@ class DetuneTest {
       var quarantined = StateCodec.load(original);
       Assertions.assertEquals(1, quarantined.quarantined().size());
       Assertions.assertArrayEquals(
-          original, StateCodec.save(quarantined.state(), quarantined.quarantined()));
+          quarantined.quarantined().getFirst(),
+          StateCodec.load(StateCodec.save(quarantined.state(), quarantined.quarantined()))
+              .quarantined()
+              .getFirst());
     }
   }
 

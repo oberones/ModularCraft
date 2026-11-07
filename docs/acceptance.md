@@ -243,3 +243,24 @@ On two protocol-v8 clients verify shared edits, stale/foreign rejection, late jo
 chunk/dimension unload, removal and recovery. Run the mixer load fixture for 30 minutes,
 record hardware, tails, underruns and p95 budgets. Automated probes do not mark these
 listening, multiplayer, disk-restart or sustained gates passed.
+
+## Amp / Speaker acceptance
+
+Use RP-008 from the user guide. Solo each of four mixer inputs and verify its sequencer
+trigger independently articulates the intended voice. Compare ADSR, Drone, and external
+Envelope/LFO override; disconnect Gain In while playing, change Level, and listen for
+unintended clicks. Amps alone must never emit sound. Check spatial output at one and two
+Speakers and rejection of a third Speaker without rejecting additional Amps.
+
+New Speakers start enabled and remember their switch; this supersedes restart-disabled
+steps above. Verify enabled/disabled save/reload, whole-patch chunk availability, capacity
+waiting, and explicit overload recovery. Sequencers still need Start after reload. Test
+migration on a COPY of a schema-1 world: old combined blocks become Amps, preserve gain
+cables/volume, and need new Speakers. Verify malformed records retain their original data.
+
+Automated probes: `make smoke GRADLE_ARGS=-PqaAmp TICKS=600` and
+`make smoke-load GRADLE_ARGS=-PqaAmp TICKS=1200`. The latter contains four 16-module,
+18-cable, two-Speaker patches. Existing 24-cable fixtures cover aggregate cable bounds;
+their former Speaker Gain inputs now target filter resonance. Record native screenshots,
+DSP/server p95, allocations and underruns. Human listening, two-client skew, and 30-minute
+sustained testing must be recorded separately; short smoke runs do not establish them.

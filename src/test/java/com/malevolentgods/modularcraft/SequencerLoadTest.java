@@ -91,13 +91,13 @@ class SequencerLoadTest {
       cables.add(
           new Cable(modules.getFirst().id(), outputs[c], modules.get(10 + c).id(), Port.GATE_IN));
     for (int i = 0; i < filters + 2; i++) {
-      int destination = i < filters ? rhythms + 1 + i : 14 + i - filters;
+      int destination = i < filters ? rhythms + 1 + i : rhythms + 1 + i - filters;
       cables.add(
           new Cable(
               modules.get(10 + i % 4).id(),
               Port.ENVELOPE_OUT,
               modules.get(destination).id(),
-              i < filters ? Port.CUTOFF_IN : Port.GAIN_IN));
+              i < filters ? Port.CUTOFF_IN : Port.RESONANCE_IN));
     }
     for (int i = 1; i < rhythms; i++) {
       cables.add(

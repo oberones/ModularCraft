@@ -39,6 +39,14 @@ public record ModuleState(
         id, owner, kind, "minecraft:overworld", x, y, z, 0, kind.defaults(), true, false);
   }
 
+  public boolean wantsPlayback() {
+    return kind == ModuleKind.SPEAKER && value(Parameter.SPEAKER_ENABLED) == 1;
+  }
+
+  public boolean suspended() {
+    return kind == ModuleKind.SPEAKER && value(Parameter.SPEAKER_SUSPENDED) == 1;
+  }
+
   public double value(Parameter p) {
     return values.get(p);
   }

@@ -1,5 +1,10 @@
 # Feature Specification: Modular Synthesizer MVP
 
+**Current output contract:** AS-001–006 at the end of this specification supersede the
+original combined Amplifier/Speaker and restart-disabled behavior. Amp and Speaker are
+separate; saves use schema 2 and network/snapshots use version 9.
+
+
 **Feature Branch**: `001-modular-synth-mvp`
 **Created**: 2026-11-03
 **Status**: Draft — validated for planning
@@ -432,3 +437,33 @@ Velocity expression, pitch bend, polyphony and recording remain excluded. MIDI s
   meters, live edits, NBT persistence/removal, all five jack hitboxes, responsive UI,
   protected output and maximum-load allocations/timing. Automated native probes are
   separate from human listening, multiplayer and sustained qualification.
+
+## Amp and Speaker extension (supersedes combined-output contracts)
+
+- **AS-001:** The old combined block becomes Amp: Audio In, Gain Control In, Gate In,
+  Audio Out; Level 0–100% default 100%; ADSR defaults 0.010/0.200/70%/0.300; Drone off.
+  Manual, redstone and external gates retain envelope OR/retrigger/release semantics.
+- **AS-002:** External Gain In overrides Drone and internal ADSR, clamped 0–1. Otherwise
+  Drone gives unity gain, or ADSR controls gain. No audio input always yields silence.
+  Amp never emits spatial audio. Internal envelopes advance while overridden. Gain source
+  and Drone edits transition over 10 ms; normal envelope curves remain sample-domain.
+- **AS-003:** Separate Speaker has Audio In only, Volume default 10%, enabled by default.
+  Persist player intent and overload suspension; resume only fully loaded patches within
+  unchanged quotas, preserving active playback and admitting waiting UUIDs deterministically.
+  Explicit re-enable clears overload. Sequencers still require Start after reload/unload.
+- **AS-004:** Preserve the old speaker block/item ID for Amp and register audio_speaker for
+  Speaker. World/block v2 migrates exact v1 SPEAKER/VOLUME records to AMP/AMP_LEVEL,
+  preserving identity, settings and cables, adding ADSR defaults and Drone on. No implicit
+  world block insertion. Network/snapshot v9 requires matching peers; malformed data is
+  quarantined without overwriting source records. Document backup/downgrade and rewiring.
+- **AS-005:** RP-008 independently articulates all four sequencer channels through four
+  Amps into one Mixer and one Speaker: 11 modules/13 cables, or 15/17 with four filters;
+  two Speakers with filters use 16/18. Amps do not consume Speaker slots.
+- **AS-006:** Native panels expose ADSR, Level, Drone, Hold Gate, external override status,
+  and Speaker enabled/waiting/suspended status; use original distinct assets and localized
+  keyboard-accessible controls. Require regression, persistence, authority, lifecycle,
+  packaged-server, DSP-budget, native screenshots and explicit remaining listening gates.
+
+Earlier RP-001 uses a standalone Envelope with Amp Gain In and an additional Amp→Speaker
+cable; direct gate-to-Amp is the compact alternative. Historic combined-speaker gain
+contracts and restart-disabled requirements are replaced by AS-001–006.

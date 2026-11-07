@@ -24,7 +24,7 @@ L1 coefficient normalization bounds oscillator peaks at the selected level.
 
 ## Budgets and ordering
 
-Retain every SS-003 quota. Version 1 world saves; version 8 network/snapshots; edits 4 KiB, snapshots 32 KiB,
+Retain every SS-003 quota. Version 2 world saves; version 9 network/snapshots; edits 4 KiB, snapshots 32 KiB,
 world storage 2 MiB. 20 edits/s/player, 200/world; queues 64/player, 256/world.
 Cleanup and gate release bypass ordinary throttling. Outbound 128 KiB/s/listener,
 2 MiB/s/server. One preparation worker, eight pending jobs, 1,024 client events,
@@ -269,3 +269,23 @@ speakers. Sources at 110/220/330/440 Hz; saw Detune 100; mixers master 100%, oth
 This stresses 64 modules/96 cables/8 speakers and retained <1 ms audio / <2 ms server p95
 budgets, with final output protection. Short runs never establish sustained or listening
 acceptance. Record self-review and all outstanding gates in validation/mixer and the ledger.
+
+## Amp / Speaker implementation extension
+
+AS-001–006 supersede earlier combined-output and world-v1/protocol-v8 contracts.
+Add AMP, AMP_LEVEL, DRONE, and persisted Speaker intent/overload state. Share envelope
+classification across server, timeline, snapshots and UI; render Amp as a mono processing
+node and Speaker as the sole spatial sink. Preserve stable registry IDs using explicit
+mapping. Write version-two world/block records, migrate exact old combined speakers,
+and require protocol/snapshot 9. No dependency or toolchain changes.
+
+Use the same ownership, bounds and lifecycle architecture. Stable admission preserves
+active patches; chunk reload can resume remembered Speaker intent, but overload latches
+until explicit re-enable. Extend the generated original asset pipeline and scrollable
+module panel. Update reference patches and native fixtures to legal split routing.
+
+Validate with Amp/Speaker red–green tests, existing and four-voice DSP/allocation tests,
+packaged Amp GameTests, `make verify`, and fresh `make smoke GRADLE_ARGS=-PqaAmp TICKS=600`
+plus `make smoke-load GRADLE_ARGS=-PqaAmp TICKS=1200`. Retain 1 ms DSP p95 / 2 ms server
+p95 targets; record actual counters and distinguish short probes from sustained listening,
+multiplayer and release acceptance. Preserve worlds and pins; no commit/push/publication.

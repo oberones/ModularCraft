@@ -38,9 +38,16 @@ public final class NativeShowcaseFixture {
       for (int dz = -18; dz <= 16; dz++)
         level.setBlock(origin.offset(dx, -1, dz), Blocks.SMOOTH_STONE.defaultBlockState(), 3);
     ModuleKind[] order = {
-      ModuleKind.OSCILLATOR, ModuleKind.SQUARE_OSCILLATOR, ModuleKind.MIXER,
-      ModuleKind.FILTER, ModuleKind.ENVELOPE, ModuleKind.SPEAKER,
-      ModuleKind.KEYBOARD, ModuleKind.EUCLIDEAN_SEQUENCER, ModuleKind.LFO
+      ModuleKind.OSCILLATOR,
+      ModuleKind.SQUARE_OSCILLATOR,
+      ModuleKind.MIXER,
+      ModuleKind.FILTER,
+      ModuleKind.ENVELOPE,
+      ModuleKind.SPEAKER,
+      ModuleKind.KEYBOARD,
+      ModuleKind.EUCLIDEAN_SEQUENCER,
+      ModuleKind.LFO,
+      ModuleKind.AMP
     };
     for (int i = 0; i < order.length; i++) {
       int row = i / 3;
@@ -55,14 +62,15 @@ public final class NativeShowcaseFixture {
     connect(
         player, ModuleKind.SQUARE_OSCILLATOR, Port.AUDIO_OUT, ModuleKind.MIXER, Port.AUDIO_IN_2);
     connect(player, ModuleKind.MIXER, Port.AUDIO_OUT, ModuleKind.FILTER, Port.AUDIO_IN);
-    connect(player, ModuleKind.FILTER, Port.AUDIO_OUT, ModuleKind.SPEAKER, Port.AUDIO_IN);
+    connect(player, ModuleKind.FILTER, Port.AUDIO_OUT, ModuleKind.AMP, Port.AUDIO_IN);
     connect(player, ModuleKind.KEYBOARD, Port.CV_OUT, ModuleKind.OSCILLATOR, Port.PITCH_IN);
     connect(player, ModuleKind.KEYBOARD, Port.CV_OUT, ModuleKind.SQUARE_OSCILLATOR, Port.PITCH_IN);
     connect(
         player, ModuleKind.EUCLIDEAN_SEQUENCER, Port.TRIGGER_A, ModuleKind.ENVELOPE, Port.GATE_IN);
-    connect(player, ModuleKind.ENVELOPE, Port.ENVELOPE_OUT, ModuleKind.SPEAKER, Port.GAIN_IN);
+    connect(player, ModuleKind.ENVELOPE, Port.ENVELOPE_OUT, ModuleKind.AMP, Port.GAIN_IN);
     connect(player, ModuleKind.EUCLIDEAN_SEQUENCER, Port.CLOCK_OUT, ModuleKind.LFO, Port.CLOCK_IN);
     connect(player, ModuleKind.LFO, Port.CONTROL_OUT, ModuleKind.FILTER, Port.CUTOFF_IN);
+    connect(player, ModuleKind.AMP, Port.AUDIO_OUT, ModuleKind.SPEAKER, Port.AUDIO_IN);
     var speaker = runtime.state().get(MODULES.get(ModuleKind.SPEAKER).state().id());
     runtime.state().enable(player.getUUID(), false, speaker.id(), speaker.revision(), true);
     MODULES.values().forEach(runtime::attach);
@@ -84,7 +92,7 @@ public final class NativeShowcaseFixture {
       player.setGameMode(GameType.SPECTATOR);
       view(player, 7.5, 5.2, -9, 2.5, 1.7, 2);
     }
-    if (tick >= 180 && tick <= 820 && (tick - 180) % 80 == 0) {
+    if (tick >= 180 && tick <= 900 && (tick - 180) % 80 == 0) {
       ModuleKind kind = ModuleKind.values()[(tick - 180) / 80];
       BlockPos stage = origin.offset(12, 1, -6);
       player.serverLevel().setBlock(stage, Blocks.AIR.defaultBlockState(), 3);

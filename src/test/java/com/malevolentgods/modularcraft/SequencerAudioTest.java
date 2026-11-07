@@ -29,7 +29,10 @@ class SequencerAudioTest {
         ModuleState.create(new UUID(index, 3), owner, ModuleKind.ENVELOPE, index * 4 + 2, 64, 0)
             .withValue(Parameter.RELEASE, .001);
     ModuleState amp =
-        ModuleState.create(new UUID(index, 4), owner, ModuleKind.SPEAKER, index * 4 + 3, 64, 0)
+        ModuleState.create(new UUID(index, 4), owner, ModuleKind.AMP, index * 4 + 3, 64, 0)
+            .withValue(Parameter.AMP_LEVEL, 100);
+    ModuleState speaker =
+        ModuleState.create(new UUID(index, 5), owner, ModuleKind.SPEAKER, index * 4 + 4, 64, 0)
             .runtime(true, true);
     Sequencer runtime = new Sequencer(SequencerSettings.from(seq), 0);
     runtime.start(0);
@@ -40,11 +43,12 @@ class SequencerAudioTest {
         0,
         1,
         0,
-        List.of(seq, osc, env, amp),
+        List.of(seq, osc, env, amp, speaker),
         List.of(
             new Cable(seq.id(), Port.TRIGGER_A, env.id(), Port.GATE_IN),
             new Cable(osc.id(), Port.AUDIO_OUT, amp.id(), Port.AUDIO_IN),
-            new Cable(env.id(), Port.ENVELOPE_OUT, amp.id(), Port.GAIN_IN)),
+            new Cable(env.id(), Port.ENVELOPE_OUT, amp.id(), Port.GAIN_IN),
+            new Cable(amp.id(), Port.AUDIO_OUT, speaker.id(), Port.AUDIO_IN)),
         Map.of(env.id(), envelope.checkpoint(0)),
         Map.of(),
         Map.of(seq.id(), runtime.checkpoint(0)),

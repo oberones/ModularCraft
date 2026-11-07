@@ -275,7 +275,9 @@ public final class ServerRuntime {
     if (state.component(m.id()).stream().anyMatch(id -> !state.get(id).loaded()))
       return "patch_unloaded";
     if (m.kind() == ModuleKind.SPEAKER) {
-      if (!m.enabled()) return "disabled";
+      if (!m.wantsPlayback()) return "disabled";
+      if (m.suspended()) return "speaker_suspended";
+      if (!m.enabled()) return "speaker_waiting";
       if (state.cables().stream()
           .noneMatch(c -> c.destination().equals(m.id()) && c.input() == Port.AUDIO_IN))
         return "missing_audio";
@@ -284,6 +286,14 @@ public final class ServerRuntime {
           Envelope e = envelopes.get(c.source());
           if (e != null && e.value(transport.sample()) == 0) return "released";
         }
+    }
+    if (m.kind() == ModuleKind.AMP) {
+      if (state.cables().stream()
+          .anyMatch(c -> c.destination().equals(m.id()) && c.input() == Port.GAIN_IN))
+        return "amp_external";
+      if (m.value(Parameter.DRONE) == 1) return "amp_drone";
+      Envelope envelope = envelopes.get(m.id());
+      return envelope == null || envelope.value(transport.sample()) == 0 ? "released" : "ready";
     }
     if (m.kind() == ModuleKind.LFO) {
       Lfo lfo = lfos.get(m.id());
@@ -431,14 +441,18 @@ public final class ServerRuntime {
       long sample = Math.max(transport.sample() + 1920, Math.max(performanceSample, controlSample));
       Set<UUID> affected = state.component(before.id());
       switch (request.action()) {
-        case PARAMETER ->
-            state.edit(
-                player.getUUID(),
-                player.hasPermissions(2),
-                before.id(),
-                request.revision(),
-                request.parameter(),
-                request.value());
+        case PARAMETER -> {
+          if (request.parameter() == Parameter.SPEAKER_ENABLED
+              || request.parameter() == Parameter.SPEAKER_SUSPENDED)
+            throw new IllegalArgumentException("parameter");
+          state.edit(
+              player.getUUID(),
+              player.hasPermissions(2),
+              before.id(),
+              request.revision(),
+              request.parameter(),
+              request.value());
+        }
         case ENABLE -> {
           if (request.value() != 0 && request.value() != 1)
             throw new IllegalArgumentException("range");
@@ -464,7 +478,7 @@ public final class ServerRuntime {
           else sequencer.reset(sample);
         }
         case GATE -> {
-          if (before.kind() != ModuleKind.ENVELOPE
+          if (!before.kind().hasEnvelope()
               || request.value() != 1
               || !before.id().equals(inspecting.get(player.getUUID())))
             throw new IllegalArgumentException("gate_eligibility");
@@ -617,6 +631,14 @@ public final class ServerRuntime {
 
   private void updateEnvelopes(long requestedSample) {
     long sample = Math.max(requestedSample, Math.max(performanceSample, controlSample));
+    Set<UUID> playbackChanges = state.refreshPlayback();
+    pendingSuspensions.addAll(playbackChanges);
+    // Admission can change speakers outside the edited component. Keep their authoritative
+    // block views current before another interaction in this tick reads a revision.
+    for (ModuleState current : state.modules()) {
+      ModuleEntity entity = loaded.get(current.id());
+      if (entity != null && entity.state() != current) entity.accepted(current);
+    }
     advanceControls(Math.max(controlSample, sample - 1));
     boolean rebuild = controlsDirty || controlRevision != state.revision();
     List<ControlTimeline> previousTimelines = List.copyOf(timelines.values());
@@ -646,7 +668,7 @@ public final class ServerRuntime {
           } else if (rebuild) seq.configure(SequencerSettings.from(m), sample);
           if (!allLoaded) seq.stop(sample);
         }
-        if (m.kind() != ModuleKind.ENVELOPE) continue;
+        if (!m.kind().hasEnvelope()) continue;
         if (!audible) {
           if (envelopes.remove(id) != null) rebuild = true;
           baseGates.remove(id);

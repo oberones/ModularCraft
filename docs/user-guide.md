@@ -2,8 +2,8 @@
 
 [Back to the project overview](../README.md)
 
-Build a shared modular synthesizer from nine Minecraft blocks: **Saw Oscillator**, **Square Oscillator**,
-**Low-Pass Filter**, **Envelope Generator**, **Amplifier / Speaker**, **Keyboard**, **Euclidean Sequencer**, **LFO**, and **Audio Mixer**. Connect their
+Build a shared modular synthesizer from ten Minecraft blocks: **Saw Oscillator**, **Square Oscillator**,
+**Low-Pass Filter**, **Envelope Generator**, **Amp**, **Speaker**, **Keyboard**, **Euclidean Sequencer**, **LFO**, and **Audio Mixer**. Connect their
 ports with the Patching Tool; nearby players synthesize the accepted performance locally.
 No prerecorded loops, accounts, internet audio, external services, or extra audio software
 are required. Creative access is sufficient; there are no survival recipes in this MVP.
@@ -23,7 +23,8 @@ measurements, user-reported listening, and outstanding release acceptance.
 - [Square Oscillator](#square-oscillator--rp-005)
 - [LFO and modulation](#lfo-and-parameter-modulation-rp-006)
 - [Audio Mixer](#audio-mixer-and-rp-007-four-source-blend)
-- [All-nine-block showcase](#showcase-all-nine-blocks-together)
+- [Four-voice Amp patch](#four-voice-amp-patch-rp-008) and [upgrade instructions](#upgrading-existing-patches)
+- [All-ten-block showcase](#showcase-all-ten-blocks-together)
 
 ## Install
 
@@ -46,13 +47,13 @@ pause menu, or module panels. There is no audio-settings keyboard shortcut.
 
 ## First instrument: RP-001
 
-1. Open the **ModularCraft Instruments** Creative tab. Take an oscillator, filter, envelope, speaker, and the
+1. Open the **ModularCraft Instruments** Creative tab. Take an oscillator, filter, envelope, Amp, Speaker, and the
    **Patching Tool**. Place the modules two blocks apart, with their labeled fronts facing
    you. All front ports are on the lower strip.
 2. Hold the tool and right-click **Oscillator AO → Audio Out**, then **Filter AI ← Audio In**.
-3. Select **Filter AO → Audio Out**, then **Speaker AI ← Audio In**.
+3. Select **Filter AO → Audio Out**, then **Amp AI ← Audio In**; connect **Amp AO → Speaker AI**.
 4. Select **Envelope CO → Envelope Out**, then **Speaker GI ← Gain Control In**.
-5. Put the tool away. Right-click the speaker and choose **Enable speaker**. Its default
+5. Put the tool away. The Speaker is enabled by default. Its default
    volume is 10%. The envelope is initially released, so silence here is expected.
 6. Right-click the envelope. **Hold Gate** with the mouse, or hold **Space** with the Hold Gate button focused. Hold for two seconds, then release. The 220 Hz note attacks,
    settles to sustain, then fades out. Closing the screen releases its manual gate.
@@ -70,13 +71,13 @@ Default RP-001 settings, including every parameter:
 | Oscillator | Frequency 220 Hz; Detune 0 cents; Level 50% |
 | Filter | Cutoff 5,000 Hz; Resonance 0%; Cutoff CV Amount 0%; Resonance CV depth 0% |
 | Envelope | Attack 0.010 s; Decay 0.200 s; Sustain 70%; Release 0.300 s; all four CV depths 0% |
-| Speaker | Volume 10%; Enabled on after step 5 |
+| Amp | Level 100%; Drone off; built-in ADSR defaults (overridden by the connected Envelope) |
+| Speaker | Volume 10%; enabled by default |
 
-For a continuous drone, **Shift-right-click Speaker Gain In** with the tool to remove
-that cable. The HUD warns that disconnected gain means full control gain. With audio
-still connected, the speaker now sounds continuously. Change oscillator pitch to 440 Hz
-for one octave up. Compare filter cutoff 8,000 Hz and 500 Hz, then resonance 0% and 75%.
-Reconnect the gain cable to return to envelope-controlled notes.
+For a continuous drone, disconnect **Amp Gain In** and turn **Drone** on in Amp.
+Change oscillator pitch to 440 Hz for one octave up. Compare filter cutoff 8,000 Hz
+and 500 Hz, then resonance 0% and 75%. Turn Drone off and reconnect the Envelope
+for externally shaped notes. A connected Gain In overrides both Drone and built-in ADSR.
 
 ### Tune an oscillator by note
 
@@ -108,7 +109,7 @@ it, each at one third of the selected Level. The output remains mono. **100 cent
 one semitone on each side; **10–25 cents** produces a narrower beating/chorus effect.
 Pitch and blend changes take 10 ms. Returning to zero restores the center saw alone.
 
-For an RP-001 detune variation, use all listed defaults, remove the speaker's gain cable
+For an RP-001 detune variation, use all listed defaults, remove the Amp's gain cable and enable Drone
 for a drone, and compare Detune **0**, **12.5**, **25**, and **100** cents. The center stays
 at 220 Hz while the side voices spread symmetrically in musical pitch. At 100 cents they
 are approximately 207.652 and 233.082 Hz. Reset Detune to 0 and reconnect the gain cable.
@@ -117,7 +118,7 @@ side voices follow keyboard or MIDI notes. Detune is saved per oscillator.
 
 ## Brightness sweep: RP-002
 
-Keep all three RP-001 cables and add **Envelope Out → Filter Cutoff Control In**.
+Keep all four RP-001 cables and add **Envelope Out → Filter Cutoff Control In**.
 Set every module as follows:
 
 | Module | Settings |
@@ -137,7 +138,7 @@ Attack, decay, and release are linear. Time edits affect the next entered stage.
 
 ## Play the keyboard: RP-003
 
-Keep RP-001's three cables and all its default settings. Add a **Keyboard**, with:
+Keep RP-001's four cables and all its default settings. Add a **Keyboard**, with:
 
 1. **Keyboard CV → Pitch CV Out** → **Oscillator PI ← Pitch CV In**.
 2. **Keyboard GO → Gate Out** → **Envelope GT ← Gate In**.
@@ -200,7 +201,7 @@ across device reopen; it adds no installed dependencies and never keeps notes fr
 MIDI shares the existing traffic limits, including renewals, so dense controller/arpeggiator
 streams can be rejected. Queue overflow stops the session and requires reopening the panel.
 Only supported notes/pedal/reset messages consume the MIDI queue. All clients and the server
-must use protocol **8**; existing world saves remain version **1**. Physical MIDI devices,
+must use protocol **9**; existing world saves remain version **2**. Physical MIDI devices,
 listening, and multiplayer timing still need the acceptance procedure below.
 
 ## Patching, permissions, and saved work
@@ -209,10 +210,10 @@ Ports connect by signal type:
 
 | Output | Compatible inputs |
 |---|---|
-| Oscillator, filter, or mixer Audio Out | Filter or speaker Audio In; mixer inputs 1–4 |
-| Envelope Out or LFO Control Out | Filter cutoff/resonance; envelope A/D/S/R; speaker gain |
+| Oscillator, filter, Amp, or mixer Audio Out | Filter, Amp, or Speaker Audio In; mixer inputs 1–4 |
+| Envelope Out or LFO Control Out | Filter cutoff/resonance; envelope A/D/S/R; Amp gain |
 | Keyboard Pitch CV Out | Saw or Square Oscillator Pitch CV In |
-| Keyboard Gate Out; sequencer Clock Out or triggers A–D | Envelope Gate In; sequencer Clock/Reset In; LFO Clock In |
+| Keyboard Gate Out; sequencer Clock Out or triggers A–D | Envelope or Amp Gate In; sequencer Clock/Reset In; LFO Clock In |
 
 An input has one source; an output can feed four destinations.
 Shift-right-click a destination input to remove exactly that cable. Right-click air or
@@ -233,29 +234,30 @@ removes its cables; a replacement at the same position has a new identity and de
 | Active world playback | Four patches, eight speakers |
 | Ordinary accepted edits | 20 per second per player, 200 per second globally |
 
-Module UUIDs, owners, controls, and cable endpoints persist. **Speakers restart disabled**;
-manual/keyboard gates and live envelope progress are not saved. Keyboard octave is saved;
-its pitch resets to C in that octave on fresh activation. Enable speakers to start fresh
-from the current redstone state. Unloading any part of a patch suspends the entire patch;
-load all its chunks and explicitly enable its speakers again. Instruments never force
-chunks to stay loaded. A true singleplayer pause freezes music; module panels do not pause.
+Module UUIDs, owners, controls, and cable endpoints persist. **Speakers remember their
+on/off setting** and start enabled when newly placed. Reloaded Speakers resume once
+all patch chunks are loaded and playback capacity is available. Waiting patches retain
+their enabled setting; already-playing patches have priority. No chunks are force-loaded.
+Overload suspension stays latched until you explicitly choose **Re-enable speaker**.
+Manual/keyboard gates and live envelope progress are not saved. Keyboard octave is saved;
+pitch resets to C in that octave. Sequencers still require Start after reload or chunk
+suspension. A true singleplayer pause freezes music; module panels do not pause.
 
 Unknown or corrupt records are quarantined and preserved, including connected affected
 components. Do not edit the save to guess missing values. Back up the entire world, use
 a compatible mod version or restore a known-good backup, and retain the original data
 for recovery. The global registry is `data/modularcraft.dat`; per-module data is also in
-its owning block entity. World-save schema remains version 1; older oscillators receive Detune 0 without changing
-their saved Frequency or Level. Back up the world before upgrading; restore that backup
-if downgrading, since older builds cannot interpret the new control. Network and
-performance-snapshot protocol is version 8: update both server and clients together.
+its owning block entity. World/block saves use schema 2; protocol/snapshots use version 9.
+See [upgrading existing patches](#upgrading-existing-patches) before loading an old world.
+
 
 ## Troubleshooting
 
 - **No sound:** check local mute, local volume, Minecraft Master and Records, speaker
   enable, its Audio In cable, and the envelope gate. No audio input always means silence.
-- **“Envelope released”:** hold Gate or apply redstone; disconnecting Gain In deliberately
-  changes to a sustained drone. An unconnected filter control means zero modulation.
-- **Patch suspended:** load every member's chunk and enable the speaker again. A missing
+- **“Envelope released”:** hold Gate or apply redstone; a connected Gain In overrides the built-in envelope.
+  For continuous sound, disconnect Gain In and enable Amp Drone. An unconnected filter control means zero modulation.
+- **Patch suspended:** load every member's chunk; after overload, explicitly re-enable the Speaker. A missing
   or quarantined module keeps its component silent.
 - **Too far away:** gain is full through two blocks, then linear to silence at 32 blocks.
   Another dimension is silent. Walls do not occlude sound.
@@ -300,38 +302,27 @@ there is no automatic tempo fallback. Connecting a high source does not invent a
 Disconnecting it resumes internal clocking after one interval. Input clocks above 50 Hz
 are ignored with a visible diagnostic. **Reset In** resets on a rising edge; simultaneous
 reset and clock play step one. Outputs are normalized gates lasting exactly **10 ms**,
-compatible with Envelope Gate In, other sequencers' Clock/Reset In, and LFO Clock In. They produce no audio
+compatible with Envelope or Amp Gate In, other sequencers' Clock/Reset In, and LFO Clock In. They produce no audio
 or pitch. Existing one-cable-per-input, four-destination fan-out and no-feedback rules apply.
 
-Build a two-voice reference patch using one sequencer, two oscillators, two filters, four
-envelopes, and two speakers (11 modules, 12 cables):
-
-1. For each voice, connect Oscillator Audio Out → Filter Audio In → Speaker Audio In.
-2. Connect Trigger A/B → Envelope 1/2 Gate In; connect their Envelope Outs → the corresponding
-   Speaker Gain In. Set oscillator frequencies to 220/330 Hz, Detune 0, Level 50%.
-3. Connect Trigger C/D → Envelope 3/4 Gate In; connect their Envelope Outs → the corresponding
-   Filter Cutoff In. Set both filters to Cutoff 500 Hz, Resonance 0%, Amount 70%.
-4. Set every envelope to Attack 0.001 s, Decay 0.200 s, Sustain 70%, Release 0.080 s.
-   Remove manual/redstone gate holds. Enable both speakers at Volume 10%, then Start.
-5. Hear separate 4/16 and 5/16 note rhythms with 7/16 and 9/16 brightness accents. Change A
-   to 7 steps, 3 hits, rotation 1; mute/unmute B; Stop, Resume, and Reset. Close the editor
-   and confirm the rhythms and block playheads continue. Use local mute without stopping them.
-6. Optionally connect Clock Out → a second sequencer's Clock In, Start the follower, and
-   verify step locking. Use any compatible gate/trigger source for Reset In.
+Use [RP-008](#four-voice-amp-patch-rp-008) for four independently articulated voices.
+For separate brightness accents, use standalone Envelopes to modulate filter cutoff.
+Optionally connect Clock Out to another sequencer's Clock In and verify step locking.
 
 Settings and cables survive saves. Running state, held pulses and positions do not:
-world reload and chunk suspension require Start, and speakers must be enabled again.
+world reload and chunk suspension require Start; Speakers retain their enabled setting.
 Closing the editor, disabling speakers, and local mute leave a loaded sequencer running.
-Back up worlds before upgrading; install protocol-v8 builds on every client and server.
+Back up worlds before upgrading; install protocol-v9 builds on every client and server.
 This version does not add presets, manual step editing, swing, probability, variable gate
 lengths, clock division, pitch sequences, MIDI clock, or redstone clock conversion.
 
 
 ## Square Oscillator — RP-005
 
-Place a **Square Oscillator**, **Low-Pass Filter**, and **Amplifier / Speaker** two blocks
-apart. Connect Square Audio Out → Filter Audio In → Speaker Audio In. Leave the filter's
-Cutoff Control In and speaker's Gain Control In disconnected for a sustained drone.
+Place a **Square Oscillator**, **Low-Pass Filter**, **Amp**, and **Speaker** two blocks
+apart. Connect Square Audio Out → Filter Audio In, Filter Audio Out → Amp Audio In,
+and Amp Audio Out → Speaker Audio In. Leave the filter's
+Cutoff Control In and Amp's Gain Control In disconnected, and enable Amp Drone for a sustained tone.
 Use Frequency **220 Hz**, Level **50%**, filter Cutoff **5,000 Hz**, Resonance **0%**,
 Cutoff CV Amount **0%**, and speaker Volume **10%**; enable the speaker.
 
@@ -346,11 +337,11 @@ Optional keyboard variation: connect Keyboard CV Out → Square Pitch In, keep k
 Octave **4**, and press **H** for A4 (440 Hz). Adjust PWM while holding the note; pitch
 stays at A4. Disconnect Pitch In to return to the saved 220 Hz. Gate is independent:
 for articulated notes add Keyboard Gate Out → Envelope Gate In and Envelope Out →
-Speaker Gain Control In, using default envelope controls. Disable the speaker or press
-local mute to stop. Save/reload retains width, frequency, level and cables; speakers
-restart disabled. Human listening and multiplayer qualification remain separate gates.
+Amp Gain Control In, using default envelope controls. Disable the speaker or press
+local mute to stop. Save/reload retains width, frequency, level and cables; Speakers
+retain their enabled setting. Human listening and multiplayer qualification remain separate gates.
 
-The new block requires protocol **8** clients/server. World schema remains **1** and
+The new block requires protocol **9** clients/server. World schema is now **2** and
 existing saw blocks retain their identifiers and sound. Back up worlds before upgrading;
 restore the backup before downgrading to a build that does not know the square block.
 
@@ -383,20 +374,20 @@ follows CV through 10 ms ramps while held. Inputs also accept another envelope's
 Use the mouse wheel or **Page Up/Page Down** to scroll longer panels. Tab selects visible
 controls; exact numeric entry and Apply remain available. The lower controls stay visible.
 Every input accepts one source; each output can fan out to four inputs. Feedback is refused.
-LFO → Speaker Gain In supports tremolo; bipolar negative values clamp to zero gain.
+LFO → Amp Gain In supports tremolo; bipolar negative values clamp to zero gain.
 
 Build these RP-006 variations with blocks two blocks apart, all owned by the same player:
 
-1. **Free filter sweep:** Saw Audio Out → Filter Audio In → Speaker Audio In;
+1. **Free filter sweep:** Saw Audio Out → Filter Audio In → Amp Audio In → Speaker Audio In;
    LFO Control Out → Filter Cutoff In and Resonance In. Use saw 220 Hz, Detune 0, Level 50%;
-   speaker 10%, enabled; filter cutoff 5,000 Hz, resonance 25%, Amount 30%, resonance depth
+   Amp Drone on, Speaker 10%, enabled; filter cutoff 5,000 Hz, resonance 25%, Amount 30%, resonance depth
    20%; LFO sine, 1 Hz, bipolar, quarter division (inactive without a clock). Expect one
    bright/dark sweep per second. Compare all five waves, then unipolar and bipolar.
 2. **Clocked sweep:** Add Sequencer Clock Out → LFO Clock In to variation 1. Use tempo
    120 BPM and default channel patterns, then Start. Quarter division gives two sweeps per
    second; whole note gives one every two seconds. Change tempo to 90 BPM, Stop, Start,
    and disconnect Clock In; verify held phase, reacquisition, and restoration of 1 Hz.
-3. **ADSR CV:** Starting from variation 1, add Envelope Out → Speaker Gain In, LFO Control
+3. **ADSR CV:** Starting from variation 1, add Envelope Out → Amp Gain In, LFO Control
    Out → Envelope Attack In and Sustain In (four destinations total). Use attack .100 s,
    decay .200 s, sustain 50%, release .300 s; attack/sustain depths 25%, other depths 0%.
    Hold the envelope gate for two seconds, release for one second, repeat. Attack durations
@@ -405,12 +396,12 @@ Build these RP-006 variations with blocks two blocks apart, all owned by the sam
    Repeat the gate pattern to hear decay/release variation. No redstone or external gate is
    needed. All waveforms/settings not changed above retain variation 1 values.
 
-World schema remains **1**; exact legacy filter/envelope records gain zero-valued depths,
-so existing patches keep their settings. Network/snapshot protocol is **8**: update clients
+World schema is now **2**; exact legacy filter/envelope records gain zero-valued depths,
+so existing patches keep their settings. Network/snapshot protocol is **9**: update clients
 and server together. Back up the world before upgrading; restore that backup when returning
 to an older binary, which cannot understand LFO records. Unknown/malformed records remain
 preserved rather than silently repaired. Transient phase is not saved across world/chunk
-reload; speakers still restart disabled. Native listening and multiplayer acceptance are
+reload; Speakers remember their enabled setting. Native listening and multiplayer acceptance are
 tracked separately in the [ledger](../validation/ledger.md).
 
 ## Audio Mixer and RP-007: four-source blend
@@ -444,15 +435,18 @@ should be smooth. An empty soloed channel yields silence. Disconnecting a cable 
 change other levels. Disable the speaker when finished. Further mixers can be chained
 within the existing patch/cable limits; feedback is refused.
 
-World schema stays **1**; network/snapshot protocol is **8**. Update every client and server
+World schema is now **2**; network/snapshot protocol is **9**. Update every client and server
 together. Back up worlds before upgrading and restore the backup for downgrade; older
 builds cannot interpret mixer records. Human RP-007 listening and multiplayer qualification
 remain separate from the automated evidence in [the ledger](../validation/ledger.md).
 
 
-## Showcase: all nine blocks together
+## Showcase: all ten blocks together
 
-![Nine connected ModularCraft blocks arranged on a stepped stone display](images/synth-setup.png)
+The earlier gallery below shows the original nine-block layout before the Amp/Speaker split.
+Add the Amp and its output cable as described here.
+
+![Original nine-block layout before the split](images/synth-setup.png)
 
 This patch blends the saw and square oscillators, shapes their tone with a filter, and
 plays repeating notes. The keyboard selects pitch; the Euclidean Sequencer supplies the
@@ -461,7 +455,8 @@ rhythm; the clocked LFO sweeps the filter. Every block participates in the same 
 Place one of each block, owned by the same player, with the fronts facing you. The photo
 uses three rows of three blocks on rising stone supports, with centers two blocks apart.
 From left to right when facing the fronts: Saw / Square / Mixer on the lowest row,
-Filter / Envelope / Speaker on the middle row, and Keyboard / Sequencer / LFO on the top row.
+Filter / Envelope / Speaker on the middle row, and Keyboard / Sequencer / LFO on the top row. Add Amp behind the top row,
+within cable reach of Filter and Speaker.
 
 Hold the Patching Tool and click each output followed by its destination input:
 
@@ -470,11 +465,12 @@ Hold the Patching Tool and click each output followed by its destination input:
 | Saw Audio Out | Mixer input 1 |
 | Square Audio Out | Mixer input 2 |
 | Mixer Audio Out | Filter Audio In |
-| Filter Audio Out | Speaker Audio In |
+| Filter Audio Out | Amp Audio In |
+| Amp Audio Out | Speaker Audio In |
 | Keyboard Pitch CV Out | Saw Pitch CV In |
 | Keyboard Pitch CV Out | Square Pitch CV In |
 | Sequencer Trigger A | Envelope Gate In |
-| Envelope Out | Speaker Gain In |
+| Envelope Out | Amp Gain In |
 | Sequencer Clock Out | LFO Clock In |
 | LFO Control Out | Filter Cutoff In |
 
@@ -492,4 +488,60 @@ instrument; the last pitch remains while the loaded sequencer keeps running.
 
 Press **M** to mute locally, disable the speaker to stop this instrument's sound for
 everyone, or stop the sequencer to stop its rhythm and clock. After a world reload,
-start the sequencer and enable the speaker again.
+start the sequencer; the Speaker remembers its enabled setting.
+
+
+## Amp and Speaker
+
+Amp shapes mono audio but never emits sound into the world. Its ports are Audio In,
+Gain Control In, Gate In, and Audio Out. Level is 0–100% (default 100%). Built-in ADSR
+uses Attack 0.010 s, Decay 0.200 s, Sustain 70%, Release 0.300 s; times accept 0.001–10 s.
+Use Hold Gate/Space, redstone, or a sequencer/keyboard gate. These gate sources are
+OR-combined. Closing the panel releases its manual gate.
+
+A connected Gain In overrides Drone and ADSR, clamped to 0–1. Without Gain In, Drone
+passes continuous audio; with Drone off, the internal ADSR shapes it. No audio cable
+always means silence. Level edits and gain-source/Drone changes transition over 10 ms.
+The internal envelope keeps its timeline while overridden. Standalone Envelope blocks
+remain useful for modulation; Amp has no Envelope Out or ADSR CV inputs.
+
+Speaker has only Audio In, Volume (default 10%), and the remembered on/off switch.
+It applies spatial playback and listener controls. Its two-per-patch limit does not
+limit the number of Amps. Local mute and Minecraft audio preferences always apply.
+
+## Four-voice Amp patch: RP-008
+
+Use one sequencer, four oscillators, four Amps, one Mixer, and one Speaker:
+**11 modules / 13 cables**. Optionally add one filter per voice, giving
+**15 modules / 17 cables**. A second Speaker gives **16 modules / 18 cables**.
+
+1. Connect sequencer triggers A/B/C/D to the four Amp Gate Ins.
+2. Connect each oscillator Audio Out to its Amp Audio In, optionally through a filter.
+3. Connect the four Amp Audio Outs to Mixer inputs 1–4, then Mixer Audio Out to Speaker.
+4. Set oscillator frequencies to 110/220/330/440 Hz and Level 50%; use Amp Level 100%,
+   Drone off, Attack 0.001 s, Decay 0.200 s, Sustain 70%, Release 0.080 s.
+5. Keep mixer inputs at 100%, Master 25%, mute/solo off, Speaker Volume 10%.
+   Start the sequencer at 120 BPM with default 4/5/7/9 hits over 16 steps.
+6. Solo each mixer input to hear its independent rhythm. Stop/Resume/Reset, mute each
+   trigger, and edit ADSR. Close panels and verify playback continues. Use M to mute locally.
+
+![Amp controls](images/amp-panel.png)
+![Speaker controls](images/speaker-panel.png)
+![Four voices through a mixer](images/four-voice-amp.png)
+
+## Upgrading existing patches
+
+Back up the entire world before installing this version on every client and server.
+Network/snapshot version 9 requires matching peers. World and block saves now use schema 2;
+schema-1 records migrate automatically. Downgrade by restoring the backup with the old build.
+
+Existing Amplifier / Speaker blocks and inventory items become **Amp**. Their UUID,
+owner, position, cables, and former Volume value remain, with Volume becoming Amp Level.
+Migration enables Drone so an unpatched Gain In retains continuous gain. Connected gain
+cables still override Drone. Add a new Speaker and connect Amp Audio Out directly or
+through a Mixer. No blocks are automatically placed, and Amps alone are silent.
+
+The new Speaker adds its own volume stage. A migrated Amp at Level 10% feeding a new
+Speaker at Volume 10% is quieter than the old combined block. Set Amp Level to 100%
+for the normal new-patch gain arrangement, keeping Speaker at a conservative volume.
+Unknown/malformed data stays quarantined; retain the original backup for recovery.

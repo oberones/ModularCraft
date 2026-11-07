@@ -53,7 +53,11 @@ public enum Parameter {
   MIX_4_MUTE(0, 1, 0, ""),
   MIX_4_SOLO(0, 1, 0, ""),
   MIX_MASTER_LEVEL(0, 100, 25, "%"),
-  MIX_MASTER_MUTE(0, 1, 0, "");
+  MIX_MASTER_MUTE(0, 1, 0, ""),
+  AMP_LEVEL(0, 100, 100, "%"),
+  DRONE(0, 1, 0, ""),
+  SPEAKER_ENABLED(0, 1, 1, ""),
+  SPEAKER_SUSPENDED(0, 1, 0, "");
   public final double min, max, initial;
   public final String unit;
 
@@ -66,7 +70,10 @@ public enum Parameter {
 
   private boolean integer() {
     return switch (this) {
-      case MIX_1_MUTE,
+      case DRONE,
+          SPEAKER_ENABLED,
+          SPEAKER_SUSPENDED,
+          MIX_1_MUTE,
           MIX_1_SOLO,
           MIX_2_MUTE,
           MIX_2_SOLO,

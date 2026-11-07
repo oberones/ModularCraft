@@ -3,6 +3,7 @@ package com.malevolentgods.modularcraft;
 import com.malevolentgods.modularcraft.domain.Cable;
 import com.malevolentgods.modularcraft.domain.ModuleKind;
 import com.malevolentgods.modularcraft.domain.ModuleState;
+import com.malevolentgods.modularcraft.domain.Parameter;
 import com.malevolentgods.modularcraft.domain.PatchSnapshot;
 import com.malevolentgods.modularcraft.domain.Port;
 import com.malevolentgods.modularcraft.domain.StateCodec;
@@ -26,18 +27,26 @@ class IntegrationCoreTest {
     ModuleState o = CoreTest.module(1, OWNER, ModuleKind.OSCILLATOR, 0),
         f = CoreTest.module(2, OWNER, ModuleKind.FILTER, 2);
     ModuleState e = CoreTest.module(3, OWNER, ModuleKind.ENVELOPE, 4),
-        s = CoreTest.module(4, OWNER, ModuleKind.SPEAKER, 6).runtime(true, true);
+        s = CoreTest.module(4, OWNER, ModuleKind.SPEAKER, 6).runtime(true, true),
+        amp = CoreTest.module(5, OWNER, ModuleKind.AMP, 7).withValue(Parameter.DRONE, 1);
     var links =
         new java.util.ArrayList<>(
             List.of(
                 new Cable(o.id(), Port.AUDIO_OUT, f.id(), Port.AUDIO_IN),
-                new Cable(f.id(), Port.AUDIO_OUT, s.id(), Port.AUDIO_IN)));
-    if (gain) links.add(new Cable(e.id(), Port.ENVELOPE_OUT, s.id(), Port.GAIN_IN));
+                new Cable(f.id(), Port.AUDIO_OUT, amp.id(), Port.AUDIO_IN),
+                new Cable(amp.id(), Port.AUDIO_OUT, s.id(), Port.AUDIO_IN)));
+    if (gain) links.add(new Cable(e.id(), Port.ENVELOPE_OUT, amp.id(), Port.GAIN_IN));
     Envelope env = new Envelope();
     env.gate(true, 0);
     env.gate(false, 96000);
     return new PatchSnapshot(
-        o.id(), 1, 1, 96000, List.of(o, f, e, s), links, Map.of(e.id(), env.checkpoint(96000)));
+        o.id(),
+        1,
+        1,
+        96000,
+        List.of(o, f, e, s, amp),
+        links,
+        Map.of(e.id(), env.checkpoint(96000)));
   }
 
   @Test
@@ -99,7 +108,7 @@ class IntegrationCoreTest {
     byte[] raw = {99, 23, 42};
     var loaded = StateCodec.load(StateCodec.save(w, List.of(raw)));
     Assertions.assertEquals(w.cables(), loaded.state().cables());
-    Assertions.assertEquals(4, loaded.state().modules().size());
+    Assertions.assertEquals(5, loaded.state().modules().size());
     Assertions.assertArrayEquals(raw, loaded.quarantined().getFirst());
     for (ModuleState m : loaded.state().modules())
       Assertions.assertFalse(m.enabled() || m.loaded());
@@ -160,8 +169,9 @@ class IntegrationCoreTest {
     Assertions.assertEquals(64, w.modules().size());
     WorldState active = new WorldState();
     for (int i = 0; i < 5; i++) active.place(CoreTest.module(i, OWNER, ModuleKind.SPEAKER, i));
-    for (int i = 0; i < 4; i++) active.enable(OWNER, false, new UUID(1, i), 0, true);
-    Assertions.assertThrows(
-        IllegalArgumentException.class, () -> active.enable(OWNER, false, new UUID(1, 4), 0, true));
+    active.refreshPlayback();
+    Assertions.assertEquals(4, active.modules().stream().filter(ModuleState::enabled).count());
+    Assertions.assertFalse(active.get(new UUID(1, 4)).enabled());
+    Assertions.assertTrue(active.get(new UUID(1, 4)).wantsPlayback());
   }
 }

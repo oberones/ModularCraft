@@ -1,5 +1,9 @@
 # Architecture and ownership
 
+Current saves use schema 2 and network/snapshots use version 9. The
+[Amp / Speaker contract](#amp--speaker-split-schema-2-protocol-9) below supersedes
+historical combined-output and restart-disabled details in earlier extension notes.
+
 `domain` defines immutable module/control/port snapshots, deterministic graph validation,
 transactional global quotas, and explicit versioned binary codecs. It imports no Minecraft
 classes. `dsp` owns sample-domain mutable state, and `transport` owns monotonic arithmetic,
@@ -285,3 +289,42 @@ Rejected edits cancel pending changes; a two-second timeout requires reopening/r
 Mixer parameter requests receive authoritative views even after the local-settings detour
 has closed inspection. Screen close cancels unsent changes. All validation remains on the
 existing logical-server path. World schema 1 is unchanged; protocol 8 refuses older peers.
+
+## Amp / Speaker split (schema 2, protocol 9)
+
+This contract supersedes the combined output and restart-disabled behavior above.
+`AMP` owns Audio In, Gain In, Gate In, and Audio Out. It reuses the sample-domain
+Envelope and ControlTimeline, including authoritative manual/redstone gates, keyboard
+retriggering, checkpoints, and cleanup. Amp has Level (default 100%), four ADSR controls,
+and Drone (default off); it has no envelope output or ADSR CV inputs. Gain precedence is
+connected external control (clamped 0–1), then Drone, then internal envelope. Envelopes
+continue advancing while overridden. Normal ADSR edges retain their sample timing;
+source/Drone changes crossfade gain over 480 samples and Level uses the existing smoother.
+Only `SPEAKER` enters the spatial stereo mix and output protection. Its only port is Audio In.
+
+Speaker Volume defaults to 10%. `SPEAKER_ENABLED` stores player intent (default 1),
+`SPEAKER_SUSPENDED` stores an overload latch (default 0), and `ModuleState.enabled` is
+transient admitted playback. The UI hides these implementation parameters and uses the
+revision-protected ENABLE action; generic parameter packets cannot change them. Admission
+preserves active components, then considers waiting components by lowest UUID, and speaker
+UUID within each component. Entire components must be loaded. Capacity waits never clear
+intent or displace active playback. Chunk unload clears transient gates and activation;
+loading the whole patch resumes eligible speakers. Overload requires explicit re-enable,
+including across restart. Sequencer running state remains transient and must be restarted.
+
+The existing `modularcraft:speaker` registry entry now represents Amp. The new Speaker
+uses `modularcraft:audio_speaker`; models, inventory names, loot, and block entities use
+this explicit registry mapping instead of assuming enum names equal registry names.
+World and block schema 2 distinguish new Speaker records from schema-1 combined speakers.
+Exact old SPEAKER/VOLUME records migrate to AMP/AMP_LEVEL plus default ADSR and Drone on.
+Migration preserves all identity/position/owner/revision/cable data; it does not place output
+blocks. Failed/unknown records remain opaque. Block and registry reconciliation share the
+same decoder. Standalone schema-2 module bytes have an explicit magic/version prefix.
+Network and snapshots use version 9 and refuse older peers. Backups are required for downgrade.
+
+All existing quotas remain: 16 modules / 24 cables / two Speakers per component; four
+active patches / eight active Speakers; 32 KiB snapshots, 2 MiB world records; unchanged
+transition and traffic budgets. `qaAmp` supplies a 15-module/17-cable native reference and
+four 16-module/18-cable load patches (64 modules/72 cables/eight Speakers). Existing
+96-cable stress fixtures remain and now route former speaker gain cables to filter
+resonance inputs. Automated performance and native listening evidence remain distinct.

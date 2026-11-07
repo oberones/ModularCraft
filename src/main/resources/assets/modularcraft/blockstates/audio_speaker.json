@@ -1,0 +1,20 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "modularcraft:block/audio_speaker",
+      "y": 0
+    },
+    "facing=east": {
+      "model": "modularcraft:block/audio_speaker",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "modularcraft:block/audio_speaker",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "modularcraft:block/audio_speaker",
+      "y": 270
+    }
+  }
+}

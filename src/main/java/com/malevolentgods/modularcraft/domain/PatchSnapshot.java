@@ -186,7 +186,7 @@ public record PatchSnapshot(
       if (!map.containsKey(key) || map.get(key).kind() != ModuleKind.KEYBOARD)
         throw new IllegalArgumentException("keyboard_identity");
     for (UUID key : envelopes.keySet())
-      if (!map.containsKey(key) || map.get(key).kind() != ModuleKind.ENVELOPE)
+      if (!map.containsKey(key) || !map.get(key).kind().hasEnvelope())
         throw new IllegalArgumentException("envelope_identity");
   }
 }
