@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.malevolentgods.modularcraft.StepAudioTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-11-07T07:49:53.024Z" hostname="Calliope.local" time="0.013">
+  <properties/>
+  <testcase name="maximumMelodicSnapshotFitsExistingBudget()" classname="com.malevolentgods.modularcraft.StepAudioTest" time="0.005"/>
+  <testcase name="pitchAdvancesWithoutNetworkSnapshotsOnBothOscillators()" classname="com.malevolentgods.modularcraft.StepAudioTest" time="0.008"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

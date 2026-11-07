@@ -207,6 +207,10 @@ public final class Sequencer {
     return transitions;
   }
 
+  public long lastClock() {
+    return lastClock;
+  }
+
   public int step(int channel) {
     return step[channel];
   }

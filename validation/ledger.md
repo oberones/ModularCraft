@@ -1071,3 +1071,25 @@ explicit. Native performance qualification, 30-minute/two-client/listening and p
 security/platform/release gates remain **PENDING**. No commit, push, publication or
 play/server installation. Runtime JAR SHA-256:
 `ceeeccb393d3b1d6827ca623e349091260a3deb0fa5ba4bd0fe3bbda208af739`.
+
+## 2026-11-07 — Step Sequencer (ST-001–006)
+
+Implemented a separate 1–16-step note/rest module, acknowledged input-only piano recording,
+independent edit/play cursors, live edits, gate time, tempo/external clock/reset and redstone
+transport. Pitch advances in the shared sample timeline without per-step packets; settings
+persist in schema 2, checkpoints require protocol 12. Pins and existing quotas retained.
+
+**PASS:** `make verify GAMETEST_DIR=run/make/step-tests-20261107-3` (25 launcher,
+196 JUnit, 48 packaged GameTests, strict dependencies, formatting/static analysis and
+artifact inspection); native 500-tick UI/reference patch and 1,200-tick 80-module load.
+Final load audio p95 **0.427667 ms**, server p95 **0.641792 ms**. One underrun,
+**5.038750 ms** max audio and **8.048041 ms** full-run max server work remain explicit.
+Earlier quarantined-world, accelerated-clock and offhand-removal failures are retained;
+final isolated verification passed without relaxing assertions. Native screenshots visually
+reviewed; self-review PASS. [Evidence](step-sequencer/README.md),
+[measurements](step-sequencer/results.json).
+
+**PENDING:** listening/acoustic, physical-input/two-client, zero-underrun, 30-minute load,
+and prior security/platform/release acceptance. No commit, push, publication, or play/server
+installation. JAR SHA-256:
+`dec3110a7109045a24b52c1a05c1acd593799c1728883b537d2381f4910cb5df`.

@@ -1,9 +1,9 @@
 # Architecture and ownership
 
-Current saves use schema 2 and network/snapshots use version 11. The
+Current saves use schema 2 and network/snapshots use version 12. The
 [Amp / Speaker contract](#amp--speaker-split-schema-2-protocol-9) and [redstone transport contract](#euclidean-redstone-transport-protocol-10) below supersede
 historical combined-output and restart-disabled details in earlier extension notes. The
-[patch-capacity contract](#patch-capacity-protocol-11) fixes the current module bound and protocol.
+[patch-capacity contract](#patch-capacity-protocol-11) fixes the current module bound. The Step Sequencer extension advances the protocol to 12.
 
 `domain` defines immutable module/control/port snapshots, deterministic graph validation,
 transactional global quotas, and explicit versioned binary codecs. It imports no Minecraft
@@ -368,3 +368,15 @@ revisions. Protocol 11 supersedes the earlier network versions above, refusing o
 before they can receive larger snapshots. World/block schema 2, the 32 KiB snapshot bound,
 and all other quotas remain unchanged. Larger saved patches require the updated build;
 restore a pre-upgrade backup when downgrading.
+
+
+## Melodic step timeline (protocol 12)
+
+StepSequencer owns immutable requested/active notes and gate settings, a Sequencer clock,
+retained MIDI pitch, and gate start/end samples. The existing clock is configured with four
+silent channels of equal length; its clock edge supplies the melodic step index. ControlTimeline
+propagates clock/reset/gate edges in DAG order; RenderGraph updates oscillator pitch ramps on
+note changes, without snapshots per step. Preparation, server and visual projections own
+separate instances. Checkpoints validate clock/settings correspondence and bounded gate events.
+StepRecorder is editor-local: one pending note edit, selection advances only after a successful
+revision acknowledgement. The piano never opens a Keyboard performance session.

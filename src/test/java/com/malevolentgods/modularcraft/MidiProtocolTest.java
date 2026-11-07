@@ -32,7 +32,7 @@ class MidiProtocolTest {
               Map.of(),
               Map.of(keyboard.id(), new KeyboardState(note, true)));
       byte[] encoded = StateCodec.encode(snapshot);
-      Assertions.assertEquals(11, encoded[5]);
+      Assertions.assertEquals(12, encoded[5]);
       Assertions.assertEquals(snapshot, StateCodec.decode(encoded));
       encoded[5] = 2;
       Assertions.assertThrows(IllegalArgumentException.class, () -> StateCodec.decode(encoded));

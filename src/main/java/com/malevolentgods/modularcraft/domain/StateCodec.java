@@ -3,6 +3,7 @@ package com.malevolentgods.modularcraft.domain;
 import com.malevolentgods.modularcraft.dsp.Envelope;
 import com.malevolentgods.modularcraft.dsp.Lfo;
 import com.malevolentgods.modularcraft.dsp.Sequencer;
+import com.malevolentgods.modularcraft.dsp.StepSequencer;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
@@ -317,7 +318,7 @@ public final class StateCodec {
         MAX_PATCH,
         out -> {
           out.writeInt(MAGIC);
-          out.writeShort(11);
+          out.writeShort(12);
           uuid(out, p.id());
           out.writeLong(p.revision());
           out.writeLong(p.sequence());
@@ -354,6 +355,18 @@ public final class StateCodec {
               p.sequencers().entrySet().stream().sorted(Map.Entry.comparingByKey()).toList()) {
             uuid(out, entry.getKey());
             sequencer(out, entry.getValue());
+          }
+          out.writeShort(p.steps().size());
+          for (var entry :
+              p.steps().entrySet().stream().sorted(Map.Entry.comparingByKey()).toList()) {
+            uuid(out, entry.getKey());
+            var c = entry.getValue();
+            sequencer(out, c.clock());
+            out.writeShort(c.active().gateMillis());
+            for (int note : c.active().notes()) out.writeByte(note);
+            out.writeByte(c.note());
+            out.writeLong(c.gateStart());
+            out.writeLong(c.gateEnd());
           }
           out.writeShort(p.lfos().size());
           for (var entry :
@@ -437,7 +450,7 @@ public final class StateCodec {
 
   public static PatchSnapshot decode(byte[] bytes) {
     try (DataInputStream in = input(bytes, MAX_PATCH)) {
-      if (in.readInt() != MAGIC || in.readUnsignedShort() != 11)
+      if (in.readInt() != MAGIC || in.readUnsignedShort() != 12)
         throw new IllegalArgumentException("protocol");
       UUID id = uuid(in);
       long revision = in.readLong(), sequence = in.readLong(), sample = in.readLong();
@@ -476,6 +489,26 @@ public final class StateCodec {
       for (int i = 0; i < n; i++)
         if (sequencers.put(uuid(in), sequencer(in, sample)) != null)
           throw new IllegalArgumentException("duplicate_sequencer");
+      Map<UUID, StepSequencer.Checkpoint> steps = new HashMap<>();
+      n = count(in, WorldState.MAX_PATCH_MODULES);
+      for (int i = 0; i < n; i++) {
+        UUID module = uuid(in);
+        var clock = sequencer(in, sample);
+        int gateMillis = in.readUnsignedShort();
+        List<Integer> notes = new ArrayList<>();
+        for (int j = 0; j < 16; j++) notes.add((int) in.readByte());
+        var settings =
+            new StepSequencerSettings(
+                clock.active().tempo(),
+                clock.active().channels().getFirst().steps(),
+                gateMillis,
+                notes);
+        var checkpoint =
+            new StepSequencer.Checkpoint(
+                clock, settings, in.readUnsignedByte(), in.readLong(), in.readLong());
+        if (steps.put(module, checkpoint) != null)
+          throw new IllegalArgumentException("duplicate_step");
+      }
       Map<UUID, Lfo.Checkpoint> lfos = new HashMap<>();
       n = count(in, WorldState.MAX_PATCH_MODULES);
       for (int i = 0; i < n; i++) {
@@ -513,7 +546,8 @@ public final class StateCodec {
           keyboards,
           sequencers,
           baseGates,
-          lfos);
+          lfos,
+          steps);
     } catch (IOException e) {
       throw new IllegalArgumentException("snapshot_bytes", e);
     }

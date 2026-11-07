@@ -75,6 +75,7 @@ public final class ShowcaseProbe {
 
   private static String filename(ModuleKind kind) {
     return switch (kind) {
+      case STEP_SEQUENCER -> "step-sequencer";
       case OSCILLATOR -> "saw-oscillator";
       case SQUARE_OSCILLATOR -> "square-oscillator";
       case FILTER -> "low-pass-filter";

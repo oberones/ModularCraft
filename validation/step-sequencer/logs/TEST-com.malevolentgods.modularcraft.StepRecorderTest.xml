@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.malevolentgods.modularcraft.StepRecorderTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-11-07T07:49:53.037Z" hostname="Calliope.local" time="0.001">
+  <properties/>
+  <testcase name="advancesOnlyAfterAcceptanceAndFinishesAtLength()" classname="com.malevolentgods.modularcraft.StepRecorderTest" time="0.001"/>
+  <testcase name="selectionIsIndependentAndHiddenStepsAreClamped()" classname="com.malevolentgods.modularcraft.StepRecorderTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

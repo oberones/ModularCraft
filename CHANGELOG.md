@@ -1,3 +1,12 @@
+## Unreleased
+
+### Feat
+
+- Add a 1–16-step melodic Step Sequencer with note/rest recording, an input-only piano,
+  tempo or external clock, adjustable gate time, and optional redstone transport.
+- Keep saved world/block schema 2; require protocol/snapshot 12 on every client and server.
+  Back up worlds before upgrading and restore that backup before downgrading.
+
 ## v0.5.0 (2026-11-07)
 
 ### Feat

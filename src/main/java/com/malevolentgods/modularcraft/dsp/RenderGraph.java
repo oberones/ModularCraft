@@ -11,6 +11,7 @@ import com.malevolentgods.modularcraft.domain.Parameter;
 import com.malevolentgods.modularcraft.domain.PatchSnapshot;
 import com.malevolentgods.modularcraft.domain.Port;
 import com.malevolentgods.modularcraft.domain.SequencerSettings;
+import com.malevolentgods.modularcraft.domain.StepSequencerSettings;
 import com.malevolentgods.modularcraft.domain.WorldState;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,6 +36,8 @@ public final class RenderGraph {
     final Smoother left = new Smoother(0), right = new Smoother(0);
     Envelope envelope;
     Lfo lfo;
+    StepSequencer steps;
+    int pitchNote = -1;
     Mixer mixer;
     final int[] mixerInputs = {-1, -1, -1, -1};
     final Smoother cutoffCv = new Smoother(0),
@@ -92,10 +95,16 @@ public final class RenderGraph {
       PatchSnapshot patch = patches.get(p);
       Map<UUID, Envelope> envelopes = new HashMap<>();
       Map<UUID, Sequencer> sequencers = new HashMap<>();
+      Map<UUID, StepSequencer> steps = new HashMap<>();
       Map<UUID, Lfo> lfos = new HashMap<>();
       for (ModuleState module : patch.modules()) {
         Node node = nodes[indices.get(module.id())];
         node.patch = p;
+        if (module.kind() == ModuleKind.STEP_SEQUENCER) {
+          node.steps =
+              new StepSequencer(StepSequencerSettings.from(module), patch.steps().get(module.id()));
+          steps.put(module.id(), node.steps);
+        }
         if (module.kind() == ModuleKind.LFO) {
           node.lfo = new Lfo(LfoSettings.from(module), patch.lfos().get(module.id()));
           lfos.put(module.id(), node.lfo);
@@ -115,6 +124,7 @@ public final class RenderGraph {
               patch.baseGates(),
               patch.keyboards(),
               lfos,
+              steps,
               patch.sample());
     }
     Map<UUID, KeyboardState> keyboards = new HashMap<>();
@@ -139,7 +149,9 @@ public final class RenderGraph {
                   source.id(),
                   new KeyboardState(
                       KeyboardState.note((int) source.value(Parameter.OCTAVE), 0), false));
-          hz = KeyboardState.frequency(key.note());
+          hz =
+              KeyboardState.frequency(
+                  nodes[n.pitch].steps == null ? key.note() : nodes[n.pitch].steps.note());
         }
         if (n.module.kind() == ModuleKind.OSCILLATOR)
           n.oscillator = new UnisonSaw(hz, n.module.value(Parameter.DETUNE), sample);
@@ -231,12 +243,21 @@ public final class RenderGraph {
         Node n = nodes[i];
         double audio = n.audio < 0 ? 0 : signals[n.audio];
         double control = n.control < 0 ? 0 : signals[n.control];
+        if (n.module.kind().isOscillator() && n.pitch >= 0 && nodes[n.pitch].steps != null) {
+          int note = nodes[n.pitch].steps.note();
+          if (note != n.pitchNote) {
+            n.pitchNote = note;
+            double hz = KeyboardState.frequency(note);
+            if (n.oscillator != null) n.oscillator.pitch(hz, n.module.value(Parameter.DETUNE));
+            else n.pulse.pitch(hz);
+          }
+        }
         switch (n.module.kind()) {
           case OSCILLATOR -> signals[i] = n.oscillator.next(n.next(Parameter.LEVEL) / 100);
           case SQUARE_OSCILLATOR -> signals[i] = n.pulse.next(n.next(Parameter.LEVEL) / 100);
           case MIXER -> signals[i] = n.mixer.next(signals, n.mixerInputs);
           case LFO -> signals[i] = n.lfo.value(sample + frame);
-          case KEYBOARD, EUCLIDEAN_SEQUENCER -> signals[i] = 0;
+          case KEYBOARD, EUCLIDEAN_SEQUENCER, STEP_SEQUENCER -> signals[i] = 0;
           case ENVELOPE -> signals[i] = n.envelope.value(sample + frame);
           case FILTER -> {
             if (n.control >= 0

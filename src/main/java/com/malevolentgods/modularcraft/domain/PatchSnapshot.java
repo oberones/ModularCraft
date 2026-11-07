@@ -3,6 +3,7 @@ package com.malevolentgods.modularcraft.domain;
 import com.malevolentgods.modularcraft.dsp.Envelope;
 import com.malevolentgods.modularcraft.dsp.Lfo;
 import com.malevolentgods.modularcraft.dsp.Sequencer;
+import com.malevolentgods.modularcraft.dsp.StepSequencer;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -18,7 +19,52 @@ public record PatchSnapshot(
     Map<UUID, KeyboardState> keyboards,
     Map<UUID, Sequencer.Checkpoint> sequencers,
     Map<UUID, Boolean> baseGates,
-    Map<UUID, Lfo.Checkpoint> lfos) {
+    Map<UUID, Lfo.Checkpoint> lfos,
+    Map<UUID, StepSequencer.Checkpoint> steps) {
+  public PatchSnapshot(
+      UUID id,
+      long revision,
+      long sequence,
+      long sample,
+      List<ModuleState> modules,
+      List<Cable> cables,
+      Map<UUID, Envelope.Checkpoint> envelopes,
+      Map<UUID, KeyboardState> keyboards,
+      Map<UUID, Sequencer.Checkpoint> sequencers,
+      Map<UUID, Boolean> baseGates,
+      Map<UUID, Lfo.Checkpoint> lfos) {
+    this(
+        id,
+        revision,
+        sequence,
+        sample,
+        modules,
+        cables,
+        envelopes,
+        keyboards,
+        sequencers,
+        baseGates,
+        lfos,
+        initialSteps(modules, cables, sample));
+  }
+
+  private static Map<UUID, StepSequencer.Checkpoint> initialSteps(
+      List<ModuleState> modules, List<Cable> cables, long sample) {
+    Map<UUID, StepSequencer.Checkpoint> result = new java.util.HashMap<>();
+    for (ModuleState m : modules)
+      if (m.kind() == ModuleKind.STEP_SEQUENCER) {
+        StepSequencer seq = new StepSequencer(StepSequencerSettings.from(m), sample);
+        seq.connect(
+            cables.stream()
+                .anyMatch(c -> c.destination().equals(m.id()) && c.input() == Port.CLOCK_IN),
+            false,
+            false,
+            sample);
+        result.put(m.id(), seq.checkpoint(sample));
+      }
+    return result;
+  }
+
   public PatchSnapshot(
       UUID id,
       long revision,
@@ -127,6 +173,7 @@ public record PatchSnapshot(
   }
 
   public PatchSnapshot {
+    steps = Map.copyOf(steps);
     lfos = Map.copyOf(lfos);
     modules = List.copyOf(modules);
     cables = List.copyOf(cables);
@@ -143,6 +190,7 @@ public record PatchSnapshot(
         || envelopes.size() > WorldState.MAX_PATCH_MODULES
         || keyboards.size() > WorldState.MAX_PATCH_MODULES
         || sequencers.size() > WorldState.MAX_PATCH_MODULES
+        || steps.size() > WorldState.MAX_PATCH_MODULES
         || lfos.size() > WorldState.MAX_PATCH_MODULES
         || baseGates.size() > WorldState.MAX_PATCH_MODULES)
       throw new IllegalArgumentException("snapshot_bounds");
@@ -168,6 +216,22 @@ public record PatchSnapshot(
                   .active()
                   .equals(SequencerSettings.from(map.get(entry.getKey())))))
         throw new IllegalArgumentException("sequencer_checkpoint");
+    }
+    for (ModuleState module : modules)
+      if ((module.kind() == ModuleKind.STEP_SEQUENCER) != steps.containsKey(module.id()))
+        throw new IllegalArgumentException("step_identity");
+    for (var entry : steps.entrySet()) {
+      ModuleState m = map.get(entry.getKey());
+      var c = entry.getValue();
+      if (m == null
+          || m.kind() != ModuleKind.STEP_SEQUENCER
+          || c.clock().sample() != sample
+          || (!m.loaded() && c.clock().running())
+          || (!c.clock().running() && !c.active().equals(StepSequencerSettings.from(m)))
+          || c.clock().external()
+              != cables.stream()
+                  .anyMatch(w -> w.destination().equals(m.id()) && w.input() == Port.CLOCK_IN))
+        throw new IllegalArgumentException("step_checkpoint");
     }
     for (ModuleState module : modules)
       if ((module.kind() == ModuleKind.LFO) != lfos.containsKey(module.id()))

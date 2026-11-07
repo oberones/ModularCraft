@@ -339,3 +339,8 @@ checks Drone/Hold Gate/Speaker widgets, and captures both panels and the complet
 patches with distinct fixture owners and eight default-enabled Speakers (80 modules/88 cables). It retains existing DSP/server budgets;
 short runs and screenshots do not establish human listening or sustained acceptance.
 Use a fresh `QA_DIR` for each probe; never use a manual world directory.
+
+Step Sequencer native checks: `make smoke GRADLE_ARGS=-PqaStepSequencer TICKS=500`.
+Use `make smoke-load GRADLE_ARGS=-PqaStepSequencer TICKS=1200` for four 20-module
+melodic patches. These use fresh disposable worlds and report server/audio measurements;
+they do not establish listening or two-client acceptance.

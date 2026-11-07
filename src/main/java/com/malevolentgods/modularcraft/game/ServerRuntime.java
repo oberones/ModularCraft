@@ -12,11 +12,13 @@ import com.malevolentgods.modularcraft.domain.PatchSnapshot;
 import com.malevolentgods.modularcraft.domain.Port;
 import com.malevolentgods.modularcraft.domain.SequencerSettings;
 import com.malevolentgods.modularcraft.domain.StateCodec;
+import com.malevolentgods.modularcraft.domain.StepSequencerSettings;
 import com.malevolentgods.modularcraft.domain.WorldState;
 import com.malevolentgods.modularcraft.dsp.ControlTimeline;
 import com.malevolentgods.modularcraft.dsp.Envelope;
 import com.malevolentgods.modularcraft.dsp.Lfo;
 import com.malevolentgods.modularcraft.dsp.Sequencer;
+import com.malevolentgods.modularcraft.dsp.StepSequencer;
 import com.malevolentgods.modularcraft.network.Messages;
 import com.malevolentgods.modularcraft.transport.Budgets;
 import com.malevolentgods.modularcraft.transport.EditInbox;
@@ -77,6 +79,7 @@ public final class ServerRuntime {
   private final Map<UUID, Long> lastNotice = new HashMap<>();
   private final Set<UUID> throttled = new HashSet<>();
   private final Map<UUID, Lfo> lfos = new HashMap<>();
+  private final Map<UUID, StepSequencer> steps = new HashMap<>();
   private final Map<UUID, Sequencer> sequencers = new HashMap<>();
   private final Set<UUID> pendingSequencerChanges = new HashSet<>();
   private final Map<UUID, Boolean> baseGates = new HashMap<>();
@@ -244,6 +247,7 @@ public final class ServerRuntime {
     // Silence held voices as before, but retain surviving LFO phase and wiring history.
     clearVoices(affected);
     affected.forEach(sequencers::remove);
+    affected.forEach(steps::remove);
     lfos.remove(id);
     state.remove(id);
     updateEnvelopes(transport.sample() + 1920);
@@ -469,8 +473,9 @@ public final class ServerRuntime {
           affected.addAll(playbackChanges);
         }
         case SEQUENCER_START, SEQUENCER_STOP, SEQUENCER_RESET -> {
-          if (before.kind() != ModuleKind.EUCLIDEAN_SEQUENCER || request.value() != 0)
-            throw new IllegalArgumentException("action");
+          if ((before.kind() != ModuleKind.EUCLIDEAN_SEQUENCER
+                  && before.kind() != ModuleKind.STEP_SEQUENCER)
+              || request.value() != 0) throw new IllegalArgumentException("action");
           if (before.value(Parameter.REDSTONE_MODE) == 1
               && request.action() != Messages.Action.SEQUENCER_RESET)
             throw new IllegalArgumentException("redstone_controlled");
@@ -478,10 +483,17 @@ public final class ServerRuntime {
             if (!state.get(id).loaded()) throw new IllegalArgumentException("patch_unloaded");
           updateEnvelopes(Math.max(0, sample - 1));
           state.touch(player.getUUID(), player.hasPermissions(2), before.id(), request.revision());
-          Sequencer sequencer = sequencers.get(before.id());
-          if (request.action() == Messages.Action.SEQUENCER_START) sequencer.start(sample);
-          else if (request.action() == Messages.Action.SEQUENCER_STOP) sequencer.stop(sample);
-          else sequencer.reset(sample);
+          if (before.kind() == ModuleKind.STEP_SEQUENCER) {
+            StepSequencer seq = steps.get(before.id());
+            if (request.action() == Messages.Action.SEQUENCER_START) seq.start(sample);
+            else if (request.action() == Messages.Action.SEQUENCER_STOP) seq.stop(sample);
+            else seq.reset(sample);
+          } else {
+            Sequencer sequencer = sequencers.get(before.id());
+            if (request.action() == Messages.Action.SEQUENCER_START) sequencer.start(sample);
+            else if (request.action() == Messages.Action.SEQUENCER_STOP) sequencer.stop(sample);
+            else sequencer.reset(sample);
+          }
         }
         case GATE -> {
           if (!before.kind().hasEnvelope()
@@ -659,6 +671,22 @@ public final class ServerRuntime {
             rebuild = true;
           } else if (rebuild) lfo.configure(LfoSettings.from(m), sample);
         }
+        if (m.kind() == ModuleKind.STEP_SEQUENCER) {
+          StepSequencer seq = steps.get(id);
+          if (seq == null) {
+            seq = new StepSequencer(StepSequencerSettings.from(m), sample);
+            steps.put(id, seq);
+            rebuild = true;
+          } else if (rebuild) seq.configure(StepSequencerSettings.from(m), sample);
+          boolean running = allLoaded && seq.running();
+          if (allLoaded && m.value(Parameter.REDSTONE_MODE) == 1)
+            running = sequencerPowered(loaded.get(id));
+          if (running != seq.running()) {
+            if (running) seq.start(sample);
+            else seq.stop(sample);
+            pendingSequencerChanges.add(id);
+          }
+        }
         if (m.kind() == ModuleKind.EUCLIDEAN_SEQUENCER) {
           Sequencer seq = sequencers.get(id);
           if (seq == null) {
@@ -703,7 +731,7 @@ public final class ServerRuntime {
         for (UUID id : ids) if (keyboards.containsKey(id)) notes.put(id, keyboards.get(id).state());
         ControlTimeline next =
             new ControlTimeline(
-                modules, cables, sequencers, envelopes, baseGates, notes, lfos, sample);
+                modules, cables, sequencers, envelopes, baseGates, notes, lfos, steps, sample);
         next.rewireAll(previousTimelines, sample);
         timeline = next;
         timelines.put(root, timeline);
@@ -753,6 +781,7 @@ public final class ServerRuntime {
   private void clearPerformance(Set<UUID> ids) {
     clearVoices(ids);
     ids.forEach(sequencers::remove);
+    ids.forEach(steps::remove);
     ids.forEach(lfos::remove);
     timelines.entrySet().removeIf(entry -> ids.contains(entry.getKey()));
   }
@@ -798,10 +827,12 @@ public final class ServerRuntime {
                 ? keyboards.get(module.id()).state()
                 : new KeyboardState(
                     KeyboardState.note((int) module.value(Parameter.OCTAVE), 0), false));
+    Map<UUID, StepSequencer.Checkpoint> melodies = new HashMap<>();
     Map<UUID, Sequencer.Checkpoint> rhythms = new HashMap<>();
     Map<UUID, Boolean> bases = new HashMap<>();
     Map<UUID, Lfo.Checkpoint> modulation = new HashMap<>();
     for (UUID member : ids) {
+      if (steps.containsKey(member)) melodies.put(member, steps.get(member).checkpoint(sample));
       if (lfos.containsKey(member)) modulation.put(member, lfos.get(member).checkpoint(sample));
       if (sequencers.containsKey(member))
         rhythms.put(member, sequencers.get(member).checkpoint(sample));
@@ -818,7 +849,8 @@ public final class ServerRuntime {
         notes,
         rhythms,
         bases,
-        modulation);
+        modulation,
+        melodies);
   }
 
   private void changed(Set<UUID> affected, long sample) {

@@ -30,6 +30,10 @@ In the opening screenshot, four oscillators each pass through a filter and Amp i
 Mixer, then one Speaker. The sequencer triggers each Amp independently.
 [Build this four-voice synth](docs/user-guide.md#four-voice-amp-patch-rp-008).
 
+Record melodies with the **Step Sequencer**: enter up to 16 notes or rests using its
+small piano, then play them through an oscillator and Amp. See the
+[melody walkthrough](docs/user-guide.md#record-a-melody-rp-009).
+
 ## Install and start playing
 
 You need **Minecraft Java Edition 1.21.1**, **NeoForge 21.1.218**, and **Java 21**.
@@ -40,7 +44,7 @@ You need **Minecraft Java Edition 1.21.1**, **NeoForge 21.1.218**, and **Java 21
 2. Put the JAR in your Minecraft instance's `mods` folder. For multiplayer, install the
    same version on the server and every player's client.
 3. Enter a world in Creative mode and open the **ModularCraft Instruments** inventory
-   tab. All ten blocks and the Patching Tool are there. Survival recipes are not yet included.
+   tab. All eleven blocks and the Patching Tool are there. Survival recipes are not yet included.
 
 ModularCraft is a **development candidate**. macOS is the initial playback target;
 Windows/Linux playback is not yet qualified. See the [validation ledger](validation/ledger.md)
@@ -121,7 +125,7 @@ back together; independent Amps keep each voice's articulation intact before mix
 
 - [User guide](docs/user-guide.md): detailed controls, playable patches, MIDI, saving,
   multiplayer ownership, and troubleshooting.
-- [All-ten-block synth](docs/user-guide.md#showcase-all-ten-blocks-together): the wiring
+- [Original ten-block synth](docs/user-guide.md#showcase-all-ten-blocks-together): the wiring
   and settings used in the opening screenshot.
 - [Development guide](docs/development.md): build, run, test, and capture screenshots.
 - [Architecture](docs/architecture.md) and [validation ledger](validation/ledger.md):

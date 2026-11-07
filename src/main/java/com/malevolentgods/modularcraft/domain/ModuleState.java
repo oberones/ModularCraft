@@ -31,6 +31,7 @@ public record ModuleState(
       throw new IllegalArgumentException("parameters");
     for (var entry : values.entrySet()) entry.getKey().validate(entry.getValue());
     if (kind == ModuleKind.EUCLIDEAN_SEQUENCER) SequencerSettings.from(values);
+    if (kind == ModuleKind.STEP_SEQUENCER) StepSequencerSettings.from(values);
     if (enabled && kind != ModuleKind.SPEAKER) throw new IllegalArgumentException("not_speaker");
   }
 

@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "particle": "modularcraft:block/chassis",
+    "down": "modularcraft:block/chassis",
+    "up": "modularcraft:block/top",
+    "north": "modularcraft:block/step_sequencer_front",
+    "south": "modularcraft:block/chassis",
+    "east": "modularcraft:block/chassis",
+    "west": "modularcraft:block/chassis"
+  }
+}
