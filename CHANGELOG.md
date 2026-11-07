@@ -1,9 +1,8 @@
-## Unreleased
+## v0.5.0 (2026-11-07)
 
 ### Feat
 
-- Raise connected patches to 20 modules; retain 24 cables, two Speakers, and existing player/world quotas.
-- Require matching protocol-11 client/server builds. World schema 2 is unchanged; restore a pre-upgrade backup before downgrading worlds containing patches above 16 modules.
+- increase module limit from 16 to 20
 
 ## v0.4.0 (2026-11-07)
 
