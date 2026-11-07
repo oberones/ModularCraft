@@ -37,7 +37,7 @@ public final class ShowcaseProbe {
       if (++stableTicks == 20 && CAPTURED.add(kind)) capture(filename(kind));
     }
     if (tick == 1100) {
-      if (CAPTURED.size() != 10)
+      if (!CAPTURED.equals(EnumSet.allOf(ModuleKind.class)))
         throw new IllegalStateException("Missing individual showcase captures");
       for (ModuleKind kind : ModuleKind.values())
         if (!Files.isRegularFile(
@@ -45,7 +45,8 @@ public final class ShowcaseProbe {
           throw new IllegalStateException("Screenshot write did not complete: " + kind);
       if (!Files.isRegularFile(mc.gameDirectory.toPath().resolve("screenshots/synth-setup.png")))
         throw new IllegalStateException("Missing synth screenshot");
-      System.out.println("MODULARCRAFT_QA showcase screenshots=11 PASS");
+      System.out.println(
+          "MODULARCRAFT_QA showcase screenshots=" + (ModuleKind.values().length + 1) + " PASS");
     }
   }
 
@@ -61,7 +62,7 @@ public final class ShowcaseProbe {
         || patch.modules().stream().noneMatch(m -> m.kind() == ModuleKind.SPEAKER && m.enabled())
         || patch.sequencers().values().stream().noneMatch(s -> s.running()))
       throw new IllegalStateException(
-          "Showcase needs all ten kinds, enabled speaker and running sequencer");
+          "Showcase needs the original ten kinds, enabled speaker and running sequencer");
     var saw =
         patch.modules().stream()
             .filter(m -> m.kind() == ModuleKind.OSCILLATOR)
@@ -69,7 +70,7 @@ public final class ShowcaseProbe {
             .orElseThrow();
     stage = new BlockPos(saw.x() + 8, saw.y() + 1, saw.z() - 6);
     System.out.println(
-        "MODULARCRAFT_QA showcase accepted modules=9 cables=10 speaker=enabled sequencer=running"
+        "MODULARCRAFT_QA showcase accepted modules=10 cables=11 speaker=enabled sequencer=running"
             + " PASS");
   }
 

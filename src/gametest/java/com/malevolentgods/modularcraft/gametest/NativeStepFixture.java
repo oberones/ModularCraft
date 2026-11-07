@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.GameRules;
+import net.minecraft.world.level.GameType;
 
 /** Fresh melodic reference patch; load mode runs four 20-module patches. */
 public final class NativeStepFixture {
@@ -21,9 +23,18 @@ public final class NativeStepFixture {
 
   private NativeStepFixture() {}
 
+  // Borrowed server world remains owned by Minecraft.
+  @SuppressWarnings("PMD.CloseResource")
   public static void build(ServerPlayer player, int x, int y, int z) {
     var runtime = ServerRuntime.get(player.getServer());
     boolean load = Boolean.getBoolean("modularcraft.qa.load");
+    if (!load) {
+      var level = player.serverLevel();
+      level.setDayTime(6000);
+      level.setWeatherParameters(24000, 0, false, false);
+      level.getGameRules().getRule(GameRules.RULE_DAYLIGHT).set(false, player.getServer());
+      level.getGameRules().getRule(GameRules.RULE_WEATHER_CYCLE).set(false, player.getServer());
+    }
     for (int patch = 0; patch < (load ? 4 : 1); patch++) {
       ServerPlayer owner =
           load
@@ -44,7 +55,10 @@ public final class NativeStepFixture {
                         ? ModuleKind.AMP
                         : i == count - 1 ? ModuleKind.SPEAKER : ModuleKind.FILTER;
         BlockPos pos =
-            new BlockPos(x + patch % 2 * 10 + i % 5 * 2, y, z + patch / 2 * 10 + i / 5 * 2);
+            new BlockPos(
+                x + (load ? patch % 2 * 10 + i % 5 * 2 : 6 - i * 2),
+                y,
+                z + patch / 2 * 10 + i / 5 * 2);
         player
             .serverLevel()
             .setBlock(pos, ModularCraft.MODULES.get(kind).get().defaultBlockState(), 3);
@@ -130,6 +144,17 @@ public final class NativeStepFixture {
       var p = entity.getBlockPos();
       player.connection.teleport(p.getX() + .5, p.getY(), p.getZ() - 2, 0, 8);
       if (!Boolean.getBoolean("modularcraft.qa.load")) runtime.inspect(player, entity, true);
+    }
+    if (tick == 405 && !Boolean.getBoolean("modularcraft.qa.load")) {
+      player.setGameMode(GameType.SPECTATOR);
+      var p = SEQUENCERS.getFirst().getBlockPos();
+      double dx = -1.8, dy = -2.5, dz = 8;
+      player.connection.teleport(
+          p.getX() - .7,
+          p.getY() + 3 - player.getEyeHeight(),
+          p.getZ() - 7.5,
+          (float) Math.toDegrees(Math.atan2(-dx, dz)),
+          (float) -Math.toDegrees(Math.atan2(dy, Math.hypot(dx, dz))));
     }
     if (tick > 100) TIMES.add(runtime.lastTickNanos());
     if (tick == Integer.getInteger("modularcraft.qa.ticks", 500) - 20) {

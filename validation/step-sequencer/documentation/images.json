@@ -1,0 +1,35 @@
+{
+  "date": "2026-11-07",
+  "base_revision": "bca7486850c2fa9cc9081114c0205957b6a47677",
+  "runtime_jar": "build/libs/modularcraft-0.5.0.jar",
+  "runtime_jar_sha256": "dec3110a7109045a24b52c1a05c1acd593799c1728883b537d2381f4910cb5df",
+  "images": [
+    {
+      "source": "run/make/smoke-0ia9wjrn/screenshots/step-sequencer.png",
+      "image": "docs/images/step-sequencer.png",
+      "dimensions": [
+        1920,
+        1052
+      ],
+      "sha256": "9b20446958919eed135621772dbbd1ff522a4bf5359eb351312a52160c802824"
+    },
+    {
+      "source": "run/make/smoke-0252czri/screenshots/step-full.png",
+      "image": "docs/images/step-sequencer-panel.png",
+      "dimensions": [
+        1920,
+        1052
+      ],
+      "sha256": "2673c27cd33b75e9b4875b8a6bff0466707c15ca12de15ce00899d6334b80b24"
+    },
+    {
+      "source": "run/make/smoke-0252czri/screenshots/step-world.png",
+      "image": "docs/images/example-step-melody.png",
+      "dimensions": [
+        1920,
+        1052
+      ],
+      "sha256": "b13281eb4487ff316b669c52613da5b75e47ae42ebd913ae3a484c69bab9c93b"
+    }
+  ]
+}

@@ -92,7 +92,7 @@ public final class NativeShowcaseFixture {
       player.setGameMode(GameType.SPECTATOR);
       view(player, 7.5, 5.2, -9, 2.5, 1.7, 2);
     }
-    if (tick >= 180 && tick <= 900 && (tick - 180) % 80 == 0) {
+    if (tick >= 180 && tick < 180 + ModuleKind.values().length * 80 && (tick - 180) % 80 == 0) {
       ModuleKind kind = ModuleKind.values()[(tick - 180) / 80];
       BlockPos stage = origin.offset(12, 1, -6);
       player.serverLevel().setBlock(stage, Blocks.AIR.defaultBlockState(), 3);

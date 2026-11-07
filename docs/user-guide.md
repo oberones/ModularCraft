@@ -7,7 +7,7 @@ Build a shared modular synthesizer from eleven Minecraft blocks: **Saw Oscillato
 ports with the Patching Tool; nearby players synthesize the accepted performance locally.
 No prerecorded loops, accounts, internet audio, external services, or extra audio software
 are required. Creative access is sufficient; there are no survival recipes in this MVP.
-Recording/export and melodic sequencing are not yet supported.
+The Step Sequencer records melodic note/rest patterns. Audio recording and export are not yet supported.
 
 This is a **development candidate**, not an accepted public release. The
 [evidence ledger](../validation/ledger.md) distinguishes automated checks, native engine
@@ -214,8 +214,8 @@ Ports connect by signal type:
 |---|---|
 | Oscillator, filter, Amp, or mixer Audio Out | Filter, Amp, or Speaker Audio In; mixer inputs 1–4 |
 | Envelope Out or LFO Control Out | Filter cutoff/resonance; envelope A/D/S/R; Amp gain |
-| Keyboard Pitch CV Out | Saw or Square Oscillator Pitch CV In |
-| Keyboard Gate Out; sequencer Clock Out or triggers A–D | Envelope or Amp Gate In; sequencer Clock/Reset In; LFO Clock In |
+| Keyboard or Step Sequencer Pitch CV Out | Saw or Square Oscillator Pitch CV In |
+| Keyboard or Step Sequencer Gate Out; either sequencer’s Clock Out; Euclidean triggers A–D | Envelope or Amp Gate In; either sequencer’s Clock/Reset In; LFO Clock In |
 
 An input has one source; an output can feed four destinations.
 Shift-right-click a destination input to remove exactly that cable. Right-click air or
@@ -331,8 +331,9 @@ after reload. Speakers retain their enabled setting.
 Closing the editor, disabling speakers, and local mute leave a loaded sequencer running.
 Existing sequencers migrate with Redstone Mode Off. Back up worlds before upgrading;
 install protocol-v12 builds on every client and server. Restore the backup before downgrading.
-This version does not add presets, manual step editing, swing, probability, variable gate
-lengths, clock division, pitch sequences, MIDI clock, or redstone clock conversion.
+The Euclidean Sequencer does not provide presets, manual step editing, swing, probability,
+variable gate lengths, clock division, pitch sequences, MIDI clock, or redstone clock conversion.
+Use the separate [Step Sequencer](#record-a-melody-rp-009) to record melodies and set gate time.
 
 
 ## Square Oscillator — RP-005
@@ -636,20 +637,45 @@ Unknown/malformed data stays quarantined; retain the original backup for recover
 
 ## Record a melody: RP-009
 
-Place a **Step Sequencer**, **Saw Oscillator** (or Square), **Amp**, and **Speaker**.
-Connect Step Sequencer **CV → Pitch CV Out** to Oscillator **PI ← Pitch CV In**,
-Step Sequencer **GO → Gate Out** to Amp **GT ← Gate In**, Oscillator Audio Out to
-Amp Audio In, and Amp Audio Out to Speaker Audio In. Keep Amp Drone off. Speaker
-starts enabled with conservative volume; local audio controls still apply.
+Place a **Step Sequencer**, **Saw Oscillator** (or Square), **Amp**, and **Speaker**,
+with space between them to reach the front ports. Keep Amp Drone off. Speaker starts
+enabled at Volume 10%; local audio controls still apply.
 
-Right-click the sequencer. Set **Length** to 1–16 (default 16), select a numbered cell,
-and press **Record**. Focus the small piano with Tab or click a piano key. Use mouse
-presses or **A W S E D F T G Y H U J** to enter notes. Each accepted note advances the
-orange editing cursor; **Rest** writes silence and advances. Octave −/+ or the piano's
-Left/Right arrows cover C1–B7, initially octave 4. A held key, key repeat, or mouse drag
-cannot fill additional steps. Recording ends after the last active step; select any
-active cell and restart Record to correct it. All steps initially contain rests.
-The piano is only an entry device: it does not audition notes or accept MIDI input.
+| From | To | Purpose |
+|---|---|---|
+| Step Sequencer **CV → Pitch CV Out** | Oscillator **PI ← Pitch CV In** | Select the sounding note |
+| Step Sequencer **GO → Gate Out** | Amp **GT ← Gate In** | Start and release the Amp's envelope |
+| Oscillator **AO → Audio Out** | Amp **AI ← Audio In** | Feed the oscillator into the Amp |
+| Amp **AO → Audio Out** | Speaker **AI ← Audio In** | Play the shaped sound into the world |
+
+![Four-block melody patch with Step Sequencer, Saw Oscillator, Amp, and Speaker and all four cables visible](images/example-step-melody.png)
+
+*The Step Sequencer sends two control cables; the two audio cables carry sound through
+Oscillator → Amp → Speaker. No cable goes from the sequencer directly to Speaker.*
+
+1. Right-click the Step Sequencer. Set **Length** to 1–16 (default 16) and press **Set**.
+   For a first melody, choose **4**. Leave BPM at 120, Gate ms at 100, and octave at 4.
+2. Click the step where you want to begin (step 1 for the example), then press **Record**.
+3. Tab to the piano and use **A W S E D F T G Y H U J**, or click a piano key.
+   Each fresh press stores one note and advances after the server accepts it. For the
+   four-step example, press and release **A**, **D**, then **G** to enter **C4, E4, G4**.
+4. Press **Rest** to store a silent step and advance. Use **Octave −/+**, or Left/Right
+   while the piano is focused, for C1–B7 (initially octave 4).
+5. Recording finishes after the last active step. To correct a note, select its cell and
+   press Record again. Press the Recording button to finish editing early.
+6. Press **Start / Resume** to hear the pattern. The four-step example loops
+   **C4, E4, G4, Rest**.
+
+![Step Sequencer editor showing a recorded melody, a rest, the small input piano, orange edit selection, and cyan playback marker](images/step-sequencer-panel.png)
+
+*This screenshot shows a longer 16-step demonstration at 120 BPM and **80 ms** gate time;
+the default gate time is **100 ms**. The orange outline selects the step being edited,
+and the cyan underline tracks playback. The demonstration contains recorded notes and
+a rest; a newly placed block starts with all rests.*
+
+Holding a key, keyboard repeat, and mouse dragging cannot fill additional steps.
+The piano only enters step values: it does not audition
+notes or accept MIDI input. Only the separate Keyboard block accepts MIDI performance.
 
 **Start / Resume** plays the next step; **Stop** releases gates and remembers the next
 position. **Reset** releases gates and arms step one. The cyan underline and the placed

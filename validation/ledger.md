@@ -1093,3 +1093,29 @@ reviewed; self-review PASS. [Evidence](step-sequencer/README.md),
 and prior security/platform/release acceptance. No commit, push, publication, or play/server
 installation. JAR SHA-256:
 `dec3110a7109045a24b52c1a05c1acd593799c1728883b537d2381f4910cb5df`.
+
+## 2026-11-07 — Step Sequencer documentation and screenshots
+
+Added three native images: the pedestal portrait, unobstructed recording editor, and
+four-block melody patch. Updated the README gallery, RP-009 wiring/recording walkthrough,
+port table, CurseForge draft, and screenshot reproduction instructions. Existing guide
+anchors and the original ten-module showcase instrument remain intact.
+
+**PASS:** fresh packaged showcase (eleven portraits plus instrument, twelve PNGs) and
+500-tick Step Sequencer capture (recording inputs, compact bounds, four connected modules,
+four cables, running sequence, enabled Speaker and four PNGs). Visually reviewed all
+three documentation captures and the compact editor. Corrected the reproduced missing-Amp
+capture and tooltip obstruction; retained failed attempts and final originals/logs.
+Formatting, Checkstyle and PMD passed. Self-review PASS.
+Local Markdown links, anchors, image paths, block counts and feature claims checked;
+all original guide anchors retained. `make checksums` passed; sources and project archives
+contain all three byte-identical screenshots, with no test fixtures in the runtime JAR.
+[Evidence and reproduction](step-sequencer/documentation/README.md),
+[image hashes and original paths](step-sequencer/documentation/images.json).
+
+Documentation and opt-in QA fixture changes only; gameplay suites were not rerun. The
+runtime JAR hash is unchanged from the Step Sequencer implementation above. Both accepted
+capture runs reported one underrun; these screenshots do not establish audio qualification.
+Listening/acoustic, physical-input, multiplayer/timing, sustained/underrun and all earlier
+release gates remain **PENDING**. No gameplay, API, protocol, save-format, dependency,
+AGENTS.md, or player-world changes. No commit, push, installation or publication.

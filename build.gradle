@@ -43,7 +43,7 @@ neoForge {
                 systemProperty 'modularcraft.qa.detune', project.hasProperty('qaDetune').toString()
                 systemProperty 'modularcraft.qa.cables', project.hasProperty('qaCables').toString()
                 systemProperty 'modularcraft.qa.cableRemoval', project.hasProperty('qaCableRemoval').toString()
-                if (project.hasProperty('qaCables') || project.hasProperty('qaSequencer') || project.hasProperty('qaShowcase') || project.hasProperty('qaReadmeExample')) {
+                if (project.hasProperty('qaStepSequencer') || project.hasProperty('qaCables') || project.hasProperty('qaSequencer') || project.hasProperty('qaShowcase') || project.hasProperty('qaReadmeExample')) {
                     programArguments.addAll('--width', '1920', '--height', '1080')
                 }
                 programArguments.addAll('--quickPlaySingleplayer', 'ModularCraft-QA')

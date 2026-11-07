@@ -18,9 +18,8 @@ the Keyboard block too.
 |---|---|---|
 | **Saw Oscillator**<br>![Saw Oscillator block with its labeled front and ports](docs/images/saw-oscillator.png)<br>A bright starting point for basses, leads, and drones. Add unison detune for a thicker sound. | **Low-Pass Filter**<br>![Low-Pass Filter block with cutoff and resonance ports](docs/images/low-pass-filter.png)<br>Soften a bright tone or add a resonant edge. Modulate cutoff and resonance to make it move. | **Keyboard**<br>![Keyboard block with pitch and gate outputs](docs/images/keyboard.png)<br>Play notes with your mouse, computer keyboard, or a MIDI controller. Supplies pitch and gate signals. |
 | **Square Oscillator**<br>![Square Oscillator block with its pulse-wave front panel](docs/images/square-oscillator.png)<br>Square and pulse tones with adjustable pulse width, from a hollow sound to a thinner buzz. | **Envelope Generator**<br>![Envelope Generator block with its ADSR diagram and control ports](docs/images/envelope-generator.png)<br>Shape how notes begin, sustain, and fade with attack, decay, sustain, and release. | **Euclidean Sequencer**<br>![Euclidean Sequencer block with four circular rhythm displays](docs/images/euclidean-sequencer.png)<br>Create four rhythmic trigger patterns, clock other modules, and use Redstone Mode to start and stop playback with power. |
-| **Audio Mixer**<br>![Audio Mixer block with four numbered inputs and an audio output](docs/images/audio-mixer.png)<br>Blend up to four audio sources. Adjust each level, mute parts, or solo a combination. | **LFO**<br>![LFO block with waveform display and control output](docs/images/lfo.png)<br>Add repeating motion with five wave shapes. Run freely or synchronize to the sequencer's clock. | **Amp**<br>![Amp panel with Level, ADSR, and Drone](docs/images/amp-panel.png)<br>Shape each voice with built-in ADSR, or enable Drone for a sustained tone. Send Audio Out to a mixer or Speaker. |
-
-**Speaker**<br>![Speaker panel](docs/images/speaker-panel.png)<br>Play audio from a mixer or Amp into the world. Starts enabled at Volume 10% and remembers its on/off setting.
+| **Audio Mixer**<br>![Audio Mixer block with four numbered inputs and an audio output](docs/images/audio-mixer.png)<br>Blend up to four audio sources. Adjust each level, mute parts, or solo a combination. | **LFO**<br>![LFO block with waveform display and control output](docs/images/lfo.png)<br>Add repeating motion with five wave shapes. Run freely or synchronize to the sequencer's clock. | **Step Sequencer**<br>![Step Sequencer block with sixteen step indicators and pitch, gate, clock, and reset ports](docs/images/step-sequencer.png)<br>Record up to 16 notes or rests with its small piano, then loop the melody using tempo or an external clock. [Record your first melody](docs/user-guide.md#record-a-melody-rp-009). |
+| | **Amp**<br>![Amp panel with Level, ADSR, and Drone](docs/images/amp-panel.png)<br>Shape each voice with built-in ADSR, or enable Drone for a sustained tone. Send Audio Out to a mixer or Speaker. | **Speaker**<br>![Speaker panel](docs/images/speaker-panel.png)<br>Play audio from a mixer or Amp into the world. Starts enabled at Volume 10% and remembers its on/off setting. |
 
 The **Patching Tool** joins the blocks: right-click an output port, then a compatible
 input. Cables carry audio, modulation, pitch, or timing signals. Right-click a block
@@ -31,8 +30,12 @@ Mixer, then one Speaker. The sequencer triggers each Amp independently.
 [Build this four-voice synth](docs/user-guide.md#four-voice-amp-patch-rp-008).
 
 Record melodies with the **Step Sequencer**: enter up to 16 notes or rests using its
-small piano, then play them through an oscillator and Amp. See the
-[melody walkthrough](docs/user-guide.md#record-a-melody-rp-009).
+small piano, then play them through an oscillator and Amp.
+
+![Step Sequencer, Saw Oscillator, Amp, and Speaker connected as a four-block melody patch](docs/images/example-step-melody.png)
+
+The sequencer supplies pitch to the oscillator and gate to the Amp. The oscillator's audio
+passes through the Amp to the Speaker. [Build and record this melody](docs/user-guide.md#record-a-melody-rp-009).
 
 ## Install and start playing
 
@@ -66,8 +69,9 @@ oscillators through those Amps into the Mixer, then connect Mixer Audio Out to o
 two Speakers. Each Amp shapes a voice; the Speakers play the mix into the world.
 See the [four-voice patch](docs/user-guide.md#four-voice-amp-patch-rp-008).
 
-To control the rhythm with a lever or other redstone source, open the sequencer and turn
-**Redstone Mode** on beside Tempo (it defaults to Off). Power resumes the pattern from its current position;
+To control the rhythm with a lever or other redstone source, open the Euclidean Sequencer
+and turn **Redstone Mode** on beside Tempo. On the Step Sequencer, use **Power: On** instead.
+Both default to Off. Power resumes the pattern from its current position;
 removing power stops it. Start/Stop gray out while the mode is on, and Reset remains
 available. Turning Redstone Mode off keeps the current playback state and restores the
 buttons. Tempo or Clock In sets the rhythm's speed.

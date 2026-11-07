@@ -1,0 +1,8 @@
+PASS: 156 local Markdown file/image/anchor links in 6 documents.
+PASS: all existing user-guide anchors retained, including showcase-all-ten-blocks-together.
+PASS: README gallery and CurseForge block lists each contain eleven blocks.
+PASS: obsolete melodic-sequencing limitation removed; audio export limitation retained.
+PASS: all three screenshots match original native PNGs and recorded SHA-256 hashes.
+PASS: sources JAR and project ZIP contain all three byte-identical documentation images.
+PASS: runtime JAR excludes GameTest classes and retains the prior implementation SHA-256.
+PASS: git diff --check.

@@ -291,13 +291,15 @@ listening test, two-client session, real disk restart acceptance or 30-minute lo
 ### README showcase screenshots
 
 `make smoke GRADLE_ARGS=-PqaShowcase TICKS=1200` builds a fresh, packaged ten-module,
-eleven-cable instrument and captures `synth-setup.png` plus ten individual block PNGs in
+eleven-cable instrument and captures `synth-setup.png` plus eleven individual block PNGs in
 that instance's `screenshots/` directory. Use this flag alone, without other QA variants.
 The test-only fixture sets daylight, clear weather, a neutral platform, spectator camera,
 and hidden HUD. It requests a 1920×1080 window; actual framebuffer dimensions depend on
-the host display. A separate display pedestal cycles through the ten blocks without
-altering the connected instrument. Client assertions require all ten kinds, an enabled
-speaker, a running sequencer, and all eleven saved screenshots. Use at least 1200 ticks.
+the host display. A separate display pedestal cycles through all eleven registered blocks,
+including Step Sequencer, without altering the original ten-block connected instrument.
+Client assertions require the original instrument, an enabled speaker, a running sequencer,
+and all twelve saved screenshots. The pedestal schedule follows the module count; use at
+least 1200 ticks for the current eleven blocks.
 
 Inspect the images before copying them to `docs/images/`; keep original captures and
 logs in the generated run directory. The reproducible patch and settings are in the
@@ -340,7 +342,31 @@ patches with distinct fixture owners and eight default-enabled Speakers (80 modu
 short runs and screenshots do not establish human listening or sustained acceptance.
 Use a fresh `QA_DIR` for each probe; never use a manual world directory.
 
-Step Sequencer native checks: `make smoke GRADLE_ARGS=-PqaStepSequencer TICKS=500`.
+### Step Sequencer checks and documentation screenshots
+
+`make smoke GRADLE_ARGS=-PqaStepSequencer TICKS=500` exercises the actual recording editor
+in a fresh four-module/four-cable RP-009 patch. It requests 1920×1080, uses GUI scale 3,
+sets daylight and clear weather, hides the HUD, and moves the cursor away from controls
+before captures. At the end it closes the editor and uses a spectator camera framing all
+four blocks and their cables. The editor still distinguishes recording and playback.
+
+The native probe verifies entry, held-key suppression, rests, recording completion, compact
+bounds, accepted wiring/settings, enabled Speaker, running sequence, and screenshot files.
+Its seeded demonstration uses 16 steps, 120 BPM and **80 ms** gates (default **100 ms**),
+with a rest entered at step 3. Copy these inspected, unmodified native captures:
+
+| Fresh capture | Documentation image |
+|---|---|
+| Showcase `step-sequencer.png` | `docs/images/step-sequencer.png` |
+| Step probe `step-full.png` | `docs/images/step-sequencer-panel.png` |
+| Step probe `step-world.png` | `docs/images/example-step-melody.png` |
+
+Keep all originals and logs in their generated run directories, including compact and
+recorded-panel evidence. The screenshot probes are excluded from runtime JARs. Run each
+capture flag separately; do not combine `qaShowcase` and `qaStepSequencer`.
+The [documentation capture evidence](../validation/step-sequencer/documentation/README.md)
+records the original run locations, image hashes, and visual review.
+
 Use `make smoke-load GRADLE_ARGS=-PqaStepSequencer TICKS=1200` for four 20-module
 melodic patches. These use fresh disposable worlds and report server/audio measurements;
 they do not establish listening or two-client acceptance.
