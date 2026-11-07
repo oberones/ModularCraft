@@ -1119,3 +1119,26 @@ capture runs reported one underrun; these screenshots do not establish audio qua
 Listening/acoustic, physical-input, multiplayer/timing, sustained/underrun and all earlier
 release gates remain **PENDING**. No gameplay, API, protocol, save-format, dependency,
 AGENTS.md, or player-world changes. No commit, push, installation or publication.
+
+## 2026-11-07 — PR #3 Step Sequencer review remediation
+
+Addressed all four valid review findings: preserve pending recording across unrelated ready
+views, refresh unfocused numeric fields, prime replacement externally clocked runtimes, and
+identify accepted clock events independently of sample timestamps. Protocol 12, schema 2,
+quotas, dependencies and player worlds are unchanged.
+
+**PASS:** observed red–green DSP/timeline, native editor and packaged block-removal regressions;
+`make verify GAMETEST_DIR=run/make/pr3-review-verify` (25 launcher tests, 201 JUnit tests,
+49 packaged GameTests, strict dependency verification, formatting/static analysis, artifact
+inspection); fresh 500-tick native Step Sequencer probe with 22 added editor checks and all
+existing input/layout/reference-patch checks. Four screenshots visually reviewed; explicit
+self-review PASS. [Evidence and limitations](step-sequencer/pr3-review/README.md).
+The initial different-owner test-fixture error is retained separately from valid red evidence.
+
+The UI response tests use synthetic accepted views with native widgets; they are not
+two-client evidence. Native audio recorded one underrun and a 10.197458 ms maximum block;
+server p95 was 0.397959 ms for the measured window, while the broader maximum counter reached
+43.856083 ms. Listening/acoustic, physical-input/two-client, zero-underrun, sustained-load and
+prior release gates remain **PENDING**. No commit, push, publication, review reply or thread
+resolution. Runtime JAR SHA-256:
+`641c6865da71eaa90061ad0154f7f983347f5e9c03e1184faa631ebcc0dd3d70`.

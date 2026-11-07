@@ -5,6 +5,7 @@ import com.malevolentgods.modularcraft.domain.Cable;
 import com.malevolentgods.modularcraft.domain.ModuleKind;
 import com.malevolentgods.modularcraft.domain.Parameter;
 import com.malevolentgods.modularcraft.domain.Port;
+import com.malevolentgods.modularcraft.domain.StateCodec;
 import com.malevolentgods.modularcraft.dsp.Sequencer;
 import com.malevolentgods.modularcraft.game.ModuleEntity;
 import com.malevolentgods.modularcraft.game.ServerRuntime;
@@ -90,6 +91,62 @@ public final class StepRedstoneGameTests {
     void running(boolean expected) {
       helper.assertTrue(checkpoint().running() == expected, "Expected running=" + expected);
     }
+  }
+
+  @GameTest(template = "empty", templateNamespace = ModularCraft.ID, timeoutTicks = 200)
+  public static void stepExternalClockSurvivesRemovalElsewhereInPatch(GameTestHelper h) {
+    Fixture f = new Fixture(h);
+    BlockPos sourcePos = f.module.getBlockPos().east();
+    BlockPos removedPos = f.module.getBlockPos().west();
+    h.getLevel()
+        .setBlock(
+            sourcePos,
+            ModularCraft.MODULES.get(ModuleKind.STEP_SEQUENCER).get().defaultBlockState(),
+            3);
+    h.getLevel()
+        .setBlock(
+            removedPos,
+            ModularCraft.MODULES.get(ModuleKind.OSCILLATOR).get().defaultBlockState(),
+            3);
+    var source = (ModuleEntity) h.getLevel().getBlockEntity(sourcePos);
+    var removed = (ModuleEntity) h.getLevel().getBlockEntity(removedPos);
+    source.initialize(f.player.getUUID());
+    removed.initialize(f.player.getUUID());
+    f.runtime
+        .state()
+        .connect(
+            f.player.getUUID(),
+            false,
+            new Cable(source.state().id(), Port.CLOCK_OUT, f.module.state().id(), Port.CLOCK_IN),
+            source.state().revision(),
+            f.module.state().revision());
+    f.runtime.attach(f.module);
+    f.runtime
+        .state()
+        .connect(
+            f.player.getUUID(),
+            false,
+            new Cable(f.module.state().id(), Port.CV_OUT, removed.state().id(), Port.PITCH_IN),
+            f.module.state().revision(),
+            removed.state().revision());
+    f.runtime.attach(f.module);
+    f.after(
+        () -> {
+          h.assertTrue(f.checkpoint().external(), "External clock initially connected");
+          h.getLevel().setBlock(removedPos, Blocks.AIR.defaultBlockState(), 3);
+        });
+    f.after(
+        () -> {
+          var patch = f.runtime.currentPatch(f.module.state().id());
+          h.assertTrue(
+              f.checkpoint().external(), "Replacement retains external clock after removal");
+          h.assertTrue(
+              patch.modules().size() == 2 && patch.cables().size() == 1,
+              "Unchanged clock cable survives removal");
+          h.assertTrue(
+              patch.equals(StateCodec.decode(StateCodec.encode(patch))), "Snapshot roundtrip");
+          h.succeed();
+        });
   }
 
   @GameTest(template = "empty", templateNamespace = ModularCraft.ID, timeoutTicks = 200)

@@ -183,6 +183,7 @@ public final class ControlTimeline {
       }
       if (old == null
           || node.lfo != old.lfo
+          || node.steps != old.steps
           || !same(node.clock, old.clock)
           || node.clockPort != old.clockPort
           || !same(node.reset, old.reset)

@@ -5,12 +5,15 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import com.malevolentgods.modularcraft.domain.Cable;
 import com.malevolentgods.modularcraft.domain.ModuleKind;
 import com.malevolentgods.modularcraft.domain.ModuleState;
 import com.malevolentgods.modularcraft.domain.Parameter;
 import com.malevolentgods.modularcraft.domain.PatchSnapshot;
+import com.malevolentgods.modularcraft.domain.Port;
 import com.malevolentgods.modularcraft.domain.StateCodec;
 import com.malevolentgods.modularcraft.domain.StepSequencerSettings;
+import com.malevolentgods.modularcraft.dsp.ControlTimeline;
 import com.malevolentgods.modularcraft.dsp.StepSequencer;
 import java.util.List;
 import java.util.Map;
@@ -138,6 +141,152 @@ class StepSequencerTest {
     seq.connect(false, false, false, 2100);
     advance(seq, 8100);
     assertEquals(1, seq.step());
+  }
+
+  @Test
+  void sameSampleResumePlaysNextNoteAndRestIncludingAfterRecovery() {
+    var settings =
+        StepSequencerSettings.from(
+            module().withValue(Parameter.STEP_1, 60).withValue(Parameter.STEP_2, 67));
+    var seq = new StepSequencer(settings, 0);
+    seq.start(0);
+    advance(seq, 0);
+    var copy = new StepSequencer(settings, seq.checkpoint(0));
+    for (var runtime : List.of(seq, copy)) {
+      runtime.stop(0);
+      runtime.start(0);
+      advance(runtime, 0);
+      assertEquals(1, runtime.step());
+      assertEquals(67, runtime.note(), "Same-sample resume must play the next note");
+      assertTrue(runtime.gate(0));
+      assertEquals(4800, runtime.checkpoint(0).gateEnd());
+      runtime.stop(0);
+      runtime.start(0);
+      advance(runtime, 0);
+      assertEquals(2, runtime.step());
+      assertEquals(67, runtime.note(), "Rest retains pitch");
+      assertFalse(runtime.gate(0));
+    }
+    assertEquals(seq.checkpoint(0), copy.checkpoint(0));
+  }
+
+  @Test
+  void oneStepResumeRetriggersEvenWhenSampleAndStepAreUnchanged() {
+    var settings =
+        StepSequencerSettings.from(
+            module().withValue(Parameter.SEQUENCE_LENGTH, 1).withValue(Parameter.STEP_1, 72));
+    var seq = new StepSequencer(settings, 0);
+    seq.start(0);
+    advance(seq, 0);
+    for (int i = 0; i < 3; i++) {
+      seq.stop(0);
+      assertFalse(seq.gate(0));
+      seq.start(0);
+      advance(seq, 0);
+      assertEquals(0, seq.step());
+      assertTrue(seq.gate(0), "One-step resume must retrigger");
+      assertEquals(72, seq.note());
+      seq.checkpoint(0);
+    }
+  }
+
+  @Test
+  void rejectedExternalClockDoesNotConsumePendingNoteEdit() {
+    var module = module().withValue(Parameter.STEP_1, 60).withValue(Parameter.STEP_2, 62);
+    var seq = new StepSequencer(StepSequencerSettings.from(module), 0);
+    seq.connect(true, false, false, 0);
+    seq.start(0);
+    seq.inputs(true, false, 0);
+    seq.configure(StepSequencerSettings.from(module.withValue(Parameter.STEP_2, 72)), 100);
+    seq.inputs(false, false, 100);
+    seq.inputs(true, false, 200);
+    assertEquals(1, seq.rejectedClocks());
+    assertEquals(0, seq.step());
+    assertEquals(60, seq.note());
+    assertTrue(seq.pending());
+    assertEquals(4800, seq.checkpoint(200).gateEnd());
+    seq.inputs(false, false, 300);
+    seq.inputs(true, false, 1000);
+    assertEquals(72, seq.note());
+    assertFalse(seq.gate(1000));
+    advance(seq, 1001);
+    assertTrue(seq.gate(1001));
+  }
+
+  @Test
+  void replacementRuntimeIsPrimedWithoutPhantomClockOrResetEdges() {
+    var source = module().withValue(Parameter.STEP_1, 60);
+    var follower =
+        ModuleState.create(UUID.randomUUID(), source.owner(), ModuleKind.STEP_SEQUENCER, 1, 64, 0)
+            .withValue(Parameter.STEP_1, 72);
+    var a = new StepSequencer(StepSequencerSettings.from(source), 0);
+    var b = new StepSequencer(StepSequencerSettings.from(follower), 0);
+    var modules = List.of(source, follower);
+    var cables =
+        List.of(
+            new Cable(source.id(), Port.CLOCK_OUT, follower.id(), Port.CLOCK_IN),
+            new Cable(source.id(), Port.GATE_OUT, follower.id(), Port.RESET_IN));
+    var original = timeline(modules, cables, Map.of(source.id(), a, follower.id(), b));
+    original.rewire(null, 0);
+    a.start(0);
+    b.start(0);
+    original.refresh(0);
+    var replacement = new StepSequencer(StepSequencerSettings.from(follower), 0);
+    var rebuilt = timeline(modules, cables, Map.of(source.id(), a, follower.id(), replacement));
+    rebuilt.rewire(original, 0);
+    assertTrue(replacement.external(), "Replacement must retain external-clock mode");
+    replacement.start(0);
+    rebuilt.refresh(0);
+    assertEquals(-1, replacement.step(), "Already-high source must not manufacture an edge");
+    assertFalse(replacement.gate(0));
+    assertTrue(replacement.checkpoint(0).clock().resetHigh());
+    var snapshot =
+        new PatchSnapshot(
+            source.id(),
+            1,
+            1,
+            0,
+            modules,
+            cables,
+            Map.of(),
+            Map.of(),
+            Map.of(),
+            Map.of(),
+            Map.of(),
+            Map.of(source.id(), a.checkpoint(0), follower.id(), replacement.checkpoint(0)));
+    assertEquals(snapshot, StateCodec.decode(StateCodec.encode(snapshot)));
+    rebuilt.advanceTo(6000, 1024);
+    assertEquals(0, replacement.step());
+    assertEquals(72, replacement.note());
+  }
+
+  @Test
+  void retainedRuntimeKeepsPendingClockEdgeAcrossRebuild() {
+    var source = module();
+    var follower =
+        ModuleState.create(UUID.randomUUID(), source.owner(), ModuleKind.STEP_SEQUENCER, 1, 64, 0)
+            .withValue(Parameter.STEP_1, 72);
+    var a = new StepSequencer(StepSequencerSettings.from(source), 0);
+    var b = new StepSequencer(StepSequencerSettings.from(follower), 0);
+    var modules = List.of(source, follower);
+    var cables = List.of(new Cable(source.id(), Port.CLOCK_OUT, follower.id(), Port.CLOCK_IN));
+    var runtimes = Map.of(source.id(), a, follower.id(), b);
+    var original = timeline(modules, cables, runtimes);
+    original.rewire(null, 0);
+    b.start(0);
+    a.start(0);
+    advance(a, 0);
+    var rebuilt = timeline(modules, cables, runtimes);
+    rebuilt.rewire(original, 0);
+    rebuilt.refresh(0);
+    assertEquals(0, b.step(), "Retained runtime must still consume the pending rising edge");
+    assertTrue(b.gate(0));
+  }
+
+  private static ControlTimeline timeline(
+      List<ModuleState> modules, List<Cable> cables, Map<UUID, StepSequencer> runtimes) {
+    return new ControlTimeline(
+        modules, cables, Map.of(), Map.of(), Map.of(), Map.of(), Map.of(), runtimes, 0);
   }
 
   @Test

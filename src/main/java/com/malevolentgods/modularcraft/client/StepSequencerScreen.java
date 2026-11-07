@@ -8,9 +8,11 @@ import com.malevolentgods.modularcraft.domain.StepRecorder;
 import com.malevolentgods.modularcraft.domain.StepSequencerSettings;
 import com.malevolentgods.modularcraft.network.Messages;
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import net.minecraft.client.gui.GuiGraphics;
@@ -36,6 +38,7 @@ public final class StepSequencerScreen extends Screen {
   private final StepRecorder recorder = new StepRecorder();
   private final Set<Integer> held = new HashSet<>();
   private final List<AbstractWidget> editing = new ArrayList<>();
+  private final Map<Parameter, EditBox> fields = new EnumMap<>(Parameter.class);
   private final Button[] cells = new Button[16];
   private Button record, start, stop, redstone;
   private Piano piano;
@@ -66,6 +69,8 @@ public final class StepSequencerScreen extends Screen {
   }
 
   public void accept(ModuleState value, boolean canEdit, String message) {
+    // Other modules can publish ready views before this module's edit is acknowledged.
+    if (awaiting && canEdit && message.equals("ready") && value.revision() <= revision) return;
     boolean accepted =
         awaiting
             && value.revision() > revision
@@ -77,6 +82,10 @@ public final class StepSequencerScreen extends Screen {
     editable = canEdit;
     status = message;
     awaiting = false;
+    fields.forEach(
+        (parameter, field) -> {
+          if (!field.isFocused()) field.setValue(Integer.toString((int) state.value(parameter)));
+        });
     update();
   }
 
@@ -91,6 +100,7 @@ public final class StepSequencerScreen extends Screen {
   @Override
   protected void init() {
     editing.clear();
+    fields.clear();
     panel = Math.min(480, width - 16);
     left = (width - panel) / 2;
     top = Math.max(0, (height - 236) / 2);
@@ -177,6 +187,7 @@ public final class StepSequencerScreen extends Screen {
     field.setTooltip(Tooltip.create(label));
     addRenderableWidget(field);
     editing.add(field);
+    fields.put(p, field);
     button(
         text("set"),
         x + w - 29,

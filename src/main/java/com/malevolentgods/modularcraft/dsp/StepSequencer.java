@@ -82,12 +82,12 @@ public final class StepSequencer {
   }
 
   public void inputs(boolean high, boolean reset, long sample) {
-    long before = clock.lastClock();
+    long before = clock.clockEvents();
     // A reset clears an active note even when no clock edge accompanies it.
     int oldStep = clock.step(0);
     clock.inputs(high, reset, sample);
     if (oldStep != -1 && clock.step(0) == -1) clear();
-    if (clock.lastClock() != before) tick(sample);
+    if (clock.clockEvents() != before) tick(sample);
   }
 
   private void tick(long sample) {
@@ -104,9 +104,9 @@ public final class StepSequencer {
   }
 
   public void advance(long sample) {
-    long before = clock.lastClock();
+    long before = clock.clockEvents();
     clock.advance(sample);
-    if (clock.lastClock() != before) tick(sample);
+    if (clock.clockEvents() != before) tick(sample);
     else if (gateEnd != 0 && gateEnd <= sample) clear();
     if (gateEnd != 0 && gateStart <= sample && gateStart != 0) {
       transitions++;

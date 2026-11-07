@@ -7,6 +7,13 @@
 - Keep saved world/block schema 2; require protocol/snapshot 12 on every client and server.
   Back up worlds before upgrading and restore that backup before downgrading.
 
+### Fix
+
+- Preserve pending Step Sequencer recordings across unrelated state updates and refresh
+  unfocused Length, BPM, and Gate ms fields from accepted edits.
+- Keep replacement Step Sequencer runtimes externally clocked after another patch block
+  is removed, and retrigger melodic playback on same-sample stop/resume.
+
 ## v0.5.0 (2026-11-07)
 
 ### Feat

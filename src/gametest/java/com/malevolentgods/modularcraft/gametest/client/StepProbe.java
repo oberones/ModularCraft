@@ -26,6 +26,8 @@ public final class StepProbe {
       mc.options.hideGui = true;
       mc.resizeDisplay();
     }
+    if (tick == 90) StepReviewProbe.begin();
+    if (tick == 155) StepReviewProbe.timeout();
     if (tick >= 400) {
       if (tick == 400) {
         if (mc.screen instanceof StepSequencerScreen s) s.onClose();
