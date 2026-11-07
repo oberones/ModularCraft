@@ -1047,3 +1047,27 @@ One underrun was reported in each accepted native run; these short screenshot pr
 do not establish sustained performance. Human listening/acoustic, physical-input,
 multiplayer/timing, and prior security/platform/release gates remain **PENDING**.
 No commit, push, play-instance installation, or publication occurred.
+
+## 2026-11-07 — Raise connected patches to 20 modules
+
+Raised the shared server/snapshot/checkpoint module cap to 20 and the derived four-patch
+renderer bound to 80. Retained 24 cables/two Speakers per patch, 64 modules per owner,
+all other quotas and byte limits, schema 2, dependency pins, AGENTS.md and manual worlds.
+Protocol/snapshot 11 requires matching updated clients and server; no save migration.
+
+**PASS:** red–green boundary/transactional/persistence/codec coverage; `make verify`
+(25 launcher tests, 185 JUnit tests, formatting/Checkstyle/PMD, strict dependencies,
+42 packaged GameTests and artifact inspection); documentation/localization consistency
+and diff checks. One earlier packaged run failed existing `sneakremovalthroughgamemode`;
+all 42 passed unchanged in a fresh instance, with cause unestablished and failure retained.
+Self-review PASS. [Evidence](patch-capacity/README.md), [measurements](patch-capacity/results.json).
+
+The 80-module/88-cable/eight-Speaker pure DSP benchmark measured **0.714792 ms p95** and
+**zero steady-state allocated bytes**. The 1,200-tick packaged native Amp load probe
+verified four running sequencers/eight speakers, with server p95 **0.668917 ms** and
+final rolling audio p95 **0.583209 ms**. The initial audio window reached **1.190750 ms**,
+exceeding the 1 ms target; **one underrun** and **15.374667 ms** maximum audio block remain
+explicit. Native performance qualification, 30-minute/two-client/listening and prior
+security/platform/release gates remain **PENDING**. No commit, push, publication or
+play/server installation. Runtime JAR SHA-256:
+`ceeeccb393d3b1d6827ca623e349091260a3deb0fa5ba4bd0fe3bbda208af739`.

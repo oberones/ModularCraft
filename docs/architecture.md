@@ -1,8 +1,9 @@
 # Architecture and ownership
 
-Current saves use schema 2 and network/snapshots use version 10. The
+Current saves use schema 2 and network/snapshots use version 11. The
 [Amp / Speaker contract](#amp--speaker-split-schema-2-protocol-9) and [redstone transport contract](#euclidean-redstone-transport-protocol-10) below supersede
-historical combined-output and restart-disabled details in earlier extension notes.
+historical combined-output and restart-disabled details in earlier extension notes. The
+[patch-capacity contract](#patch-capacity-protocol-11) fixes the current module bound and protocol.
 
 `domain` defines immutable module/control/port snapshots, deterministic graph validation,
 transactional global quotas, and explicit versioned binary codecs. It imports no Minecraft
@@ -201,7 +202,7 @@ bounded per-module sequencer checkpoints and manual/redstone envelope baselines;
 peers are mandatory. The parameter decoder now uses the selected module's bounded control
 count. Legacy oscillator migration and byte-preserving quarantine remain in place.
 
-At most 16 sequencers/64 channels fit one patch and 256/1,024 fit the world; all existing
+At most 20 sequencers/80 channels fit one patch and 256/1,024 fit the world; all existing
 module, cable, speaker, storage, bandwidth, job and audio-queue quotas remain unchanged.
 Clock input accepts at most 50 Hz, with 480-sample output pulses and no pulse overlap.
 Timeline work is capped at 1,024 output transitions per component and 4,096 per server tick;
@@ -326,10 +327,10 @@ bytes. The 4,096-byte record, 1,024-record and 2 MiB world limits are unchanged.
 Block and registry reconciliation share the same decoder. Standalone schema-2 module bytes have an explicit magic/version prefix.
 Network and snapshots use version 9 and refuse older peers. Backups are required for downgrade.
 
-All existing quotas remain: 16 modules / 24 cables / two Speakers per component; four
+Current quotas: 20 modules / 24 cables / two Speakers per component; four
 active patches / eight active Speakers; 32 KiB snapshots, 2 MiB world records; unchanged
 transition and traffic budgets. `qaAmp` supplies a 15-module/17-cable native reference and
-four 16-module/18-cable load patches (64 modules/72 cables/eight Speakers). Existing
+four 20-module/22-cable load patches (80 modules/88 cables/eight Speakers). Existing
 96-cable stress fixtures remain and now route former speaker gain cables to filter
 resonance inputs. Automated performance and native listening evidence remain distinct.
 
@@ -338,7 +339,7 @@ resonance inputs. Automated performance and native listening evidence remain dis
 
 REDSTONE_MODE is the eighteenth named sequencer parameter, a persisted boolean defaulting
 Off. Exact legacy stored sequencer parameter sets gain Off; incomplete or foreign sets
-are still refused/quarantined. World/block schema remains 2. Protocol/snapshots require
+are still refused/quarantined. World/block schema remains 2. This extension introduced
 version 10 and complete parameter sets; no DSP checkpoint fields change.
 
 The logical server samples neighboring power during its existing bounded control update,
@@ -355,3 +356,15 @@ Disabling preserves running state. Start/Stop packets are
 rejected while enabled, but Reset still works. Internal tempo, external clock, pulse
 release and next-step resume semantics are unchanged. Earlier manual-only restart and
 protocol descriptions are superseded by this section.
+
+
+## Patch capacity (protocol 11)
+
+`WorldState.MAX_PATCH_MODULES` fixes each connected patch and each snapshot/checkpoint
+collection at 20 modules. RenderGraph derives its aggregate bound as four times that
+limit (80); the player quota remains 64. Server validation and bounded snapshot decoding
+share this constant. A rejected 21st connection preserves the existing composition and
+revisions. Protocol 11 supersedes the earlier network versions above, refusing old peers
+before they can receive larger snapshots. World/block schema 2, the 32 KiB snapshot bound,
+and all other quotas remain unchanged. Larger saved patches require the updated build;
+restore a pre-upgrade backup when downgrading.

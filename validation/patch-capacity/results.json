@@ -1,0 +1,224 @@
+{
+  "date": "2026-11-07",
+  "status": "implementation_verified_performance_qualification_pending",
+  "environment": {
+    "cpu": "Apple M2 Pro",
+    "memory_bytes": 17179869184,
+    "os": "macOS 26.6.2 (25G83)",
+    "architecture": "aarch64",
+    "java": "Eclipse Adoptium 21.0.12.1+1-LTS",
+    "minecraft": "1.21.1",
+    "neoforge": "21.1.218"
+  },
+  "capacity": {
+    "modules_per_patch": 20,
+    "cables_per_patch": 24,
+    "speakers_per_patch": 2,
+    "active_patches": 4,
+    "active_render_modules": 80,
+    "player_modules": 64,
+    "world_schema": 2,
+    "network_snapshot_protocol": 11
+  },
+  "red_green": {
+    "initial_capacity_tests": {
+      "tests": 5,
+      "failures": 5,
+      "reasons": [
+        "patch_modules:16",
+        "snapshot_bounds",
+        "expected protocol 11 but got 10"
+      ]
+    },
+    "additional_renderer_red": "80-module benchmark rejected with active_modules before derived cap update"
+  },
+  "junit": {
+    "tests": 185,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "launcher_tests": 25,
+  "packaged_gametests": {
+    "tests": 42,
+    "failures": 0,
+    "instance": "run/make/patch-capacity-gametest-confirm",
+    "earlier_failure": "sneakremovalthroughgamemode failed in first instance; all 42 passed unchanged in a fresh instance; cause not established"
+  },
+  "automated_checks": {
+    "make_verify": "PASS",
+    "strict_dependency_verification": "PASS",
+    "format_checkstyle_pmd": "PASS",
+    "artifact_inspection": "PASS",
+    "local_document_links_checked": 22,
+    "localization_generator_consistency": "PASS",
+    "diff_check": "PASS"
+  },
+  "dsp_benchmark": {
+    "modules": 80,
+    "cables": 88,
+    "speakers": 8,
+    "owners": 4,
+    "warmup_blocks": 5000,
+    "measured_blocks": 10000,
+    "frames_per_block": 128,
+    "sample_rate": 48000,
+    "p95_ms": 0.714792,
+    "measured_allocation_bytes": 0,
+    "p95_target_ms": 1,
+    "result": "PASS",
+    "output": "80 module / 88 cable / 8 speaker DSP p95 ms=0.714792, oscillators=[OSCILLATOR, OSCILLATOR, OSCILLATOR, OSCILLATOR, OSCILLATOR, OSCILLATOR, OSCILLATOR, OSCILLATOR, OSCILLATOR, OSCILLATOR, OSCILLATOR, OSCILLATOR, OSCILLATOR, OSCILLATOR, OSCILLATOR, OSCILLATOR], measured allocation bytes=0"
+  },
+  "snapshot_sizes": {
+    "AMP": 5740,
+    "ENVELOPE": 6940,
+    "KEYBOARD": 2460,
+    "EUCLIDEAN_SEQUENCER": 10480,
+    "LFO": 5040
+  },
+  "artifacts": {
+    "modularcraft-0.4.0.jar": {
+      "path": "build/libs/modularcraft-0.4.0.jar",
+      "sha256": "ceeeccb393d3b1d6827ca623e349091260a3deb0fa5ba4bd0fe3bbda208af739"
+    }
+  },
+  "pending": [
+    "30-minute sustained native performance",
+    "two-client multiplayer/timing",
+    "human listening/acoustic acceptance",
+    "earlier security/platform/release gates"
+  ],
+  "native": {
+    "command": "make smoke-load GRADLE_ARGS=-PqaAmp TICKS=1200 QA_DIR=run/make/patch-capacity-native",
+    "exit_code": 0,
+    "instance": "run/make/patch-capacity-native",
+    "ticks": 1200,
+    "duration_note": "about 60 seconds in-world; launcher elapsed 75 seconds",
+    "modules": 80,
+    "cables": 88,
+    "owners": 4,
+    "running_sequencers": 4,
+    "enabled_speakers": 8,
+    "server_p95_ns": 668917,
+    "server_measured_max_ns": 2374917,
+    "server_overall_max_ns": 8002709,
+    "server_p95_target_ns": 2000000,
+    "server_p95_result": "PASS",
+    "audio_windows": [
+      {
+        "p95BlockNs": 1190750,
+        "blocks": 1795,
+        "underruns": 1,
+        "maxBlockNs": 15374667,
+        "peak": 0.14146851003170013,
+        "maxQueued": 12,
+        "failed": false
+      },
+      {
+        "p95BlockNs": 973375,
+        "blocks": 3671,
+        "underruns": 1,
+        "maxBlockNs": 15374667,
+        "peak": 0.14146851003170013,
+        "maxQueued": 12,
+        "failed": false
+      },
+      {
+        "p95BlockNs": 588750,
+        "blocks": 5543,
+        "underruns": 1,
+        "maxBlockNs": 15374667,
+        "peak": 0.14146851003170013,
+        "maxQueued": 12,
+        "failed": false
+      },
+      {
+        "p95BlockNs": 592167,
+        "blocks": 7420,
+        "underruns": 1,
+        "maxBlockNs": 15374667,
+        "peak": 0.14146851003170013,
+        "maxQueued": 12,
+        "failed": false
+      },
+      {
+        "p95BlockNs": 591459,
+        "blocks": 9296,
+        "underruns": 1,
+        "maxBlockNs": 15374667,
+        "peak": 0.14146851003170013,
+        "maxQueued": 12,
+        "failed": false
+      },
+      {
+        "p95BlockNs": 591625,
+        "blocks": 11172,
+        "underruns": 1,
+        "maxBlockNs": 15374667,
+        "peak": 0.14146851003170013,
+        "maxQueued": 12,
+        "failed": false
+      },
+      {
+        "p95BlockNs": 592708,
+        "blocks": 13045,
+        "underruns": 1,
+        "maxBlockNs": 15374667,
+        "peak": 0.14146851003170013,
+        "maxQueued": 12,
+        "failed": false
+      },
+      {
+        "p95BlockNs": 583542,
+        "blocks": 14921,
+        "underruns": 1,
+        "maxBlockNs": 15374667,
+        "peak": 0.14146851003170013,
+        "maxQueued": 12,
+        "failed": false
+      },
+      {
+        "p95BlockNs": 580041,
+        "blocks": 16797,
+        "underruns": 1,
+        "maxBlockNs": 15374667,
+        "peak": 0.14146851003170013,
+        "maxQueued": 12,
+        "failed": false
+      },
+      {
+        "p95BlockNs": 585334,
+        "blocks": 18670,
+        "underruns": 1,
+        "maxBlockNs": 15374667,
+        "peak": 0.14146851003170013,
+        "maxQueued": 12,
+        "failed": false
+      },
+      {
+        "p95BlockNs": 580416,
+        "blocks": 20545,
+        "underruns": 1,
+        "maxBlockNs": 15374667,
+        "peak": 0.14146851003170013,
+        "maxQueued": 12,
+        "failed": false
+      },
+      {
+        "p95BlockNs": 583209,
+        "blocks": 22418,
+        "underruns": 1,
+        "maxBlockNs": 15374667,
+        "peak": 0.14146851003170013,
+        "maxQueued": 12,
+        "failed": false
+      }
+    ],
+    "final_audio_p95_ns": 583209,
+    "largest_audio_window_p95_ns": 1190750,
+    "audio_max_ns": 15374667,
+    "underruns": 1,
+    "audio_p95_target_ns": 1000000,
+    "qualification": "PENDING: initial reported audio p95 exceeds 1 ms, one underrun and tail spikes; subsequent/final windows below 1 ms. No human listening, 30-minute or two-client qualification."
+  }
+}

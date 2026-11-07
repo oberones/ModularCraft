@@ -9,14 +9,18 @@ import com.malevolentgods.modularcraft.domain.Port;
 import com.malevolentgods.modularcraft.game.ModuleEntity;
 import com.malevolentgods.modularcraft.game.ServerRuntime;
 import com.malevolentgods.modularcraft.network.Messages;
+import com.mojang.authlib.GameProfile;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
+import net.neoforged.neoforge.common.util.FakePlayerFactory;
 
-/** Four articulated voices; disposable native UI and 64-module/72-cable load fixture. */
+/** Four articulated voices; disposable native UI and 80-module/88-cable load fixture. */
 public final class NativeAmpFixture {
   private static final List<List<ModuleEntity>> PATCHES = new ArrayList<>();
+  private static final List<ServerPlayer> OWNERS = new ArrayList<>();
   private static final List<Long> TIMES = new ArrayList<>();
 
   private NativeAmpFixture() {}
@@ -27,8 +31,15 @@ public final class NativeAmpFixture {
     boolean load = Boolean.getBoolean("modularcraft.qa.load");
     player.serverLevel().setDayTime(6000);
     for (int patch = 0; patch < (load ? 4 : 1); patch++) {
+      ServerPlayer owner =
+          load
+              ? FakePlayerFactory.get(
+                  player.serverLevel(),
+                  new GameProfile(new UUID(0, 200 + patch), "AmpLoad" + patch))
+              : player;
+      OWNERS.add(owner);
       List<ModuleEntity> modules = new ArrayList<>();
-      for (int i = 0; i < (load ? 16 : 15); i++) {
+      for (int i = 0; i < (load ? 20 : 15); i++) {
         ModuleKind kind =
             i == 0
                 ? ModuleKind.EUCLIDEAN_SEQUENCER
@@ -40,42 +51,47 @@ public final class NativeAmpFixture {
                             ? ModuleKind.MIXER
                             : i == 10 || i == 15 ? ModuleKind.SPEAKER : ModuleKind.FILTER;
         BlockPos pos =
-            new BlockPos(x + patch % 2 * 8 + i % 4 * 2, y, z + patch / 2 * 8 + i / 4 * 2);
+            new BlockPos(x + patch % 2 * 8 + i % 4 * 2, y, z + patch / 2 * 10 + i / 4 * 2);
         player
             .serverLevel()
             .setBlock(pos, ModularCraft.MODULES.get(kind).get().defaultBlockState(), 3);
         ModuleEntity entity = (ModuleEntity) player.serverLevel().getBlockEntity(pos);
-        entity.initialize(player.getUUID());
+        entity.initialize(owner.getUUID());
         modules.add(entity);
-        if (kind.isOscillator()) set(runtime, player, entity, Parameter.FREQUENCY, 110 * i);
+        if (kind.isOscillator()) set(runtime, owner, entity, Parameter.FREQUENCY, 110 * i);
         if (load && kind == ModuleKind.OSCILLATOR)
-          set(runtime, player, entity, Parameter.DETUNE, 100);
+          set(runtime, owner, entity, Parameter.DETUNE, 100);
         if (kind == ModuleKind.AMP) {
-          set(runtime, player, entity, Parameter.ATTACK, .001);
-          set(runtime, player, entity, Parameter.RELEASE, .08);
+          set(runtime, owner, entity, Parameter.ATTACK, .001);
+          set(runtime, owner, entity, Parameter.RELEASE, .08);
         }
-        if (kind == ModuleKind.FILTER) set(runtime, player, entity, Parameter.RESONANCE, 25);
+        if (kind == ModuleKind.FILTER) set(runtime, owner, entity, Parameter.RESONANCE, 25);
       }
       for (int i = 0; i < 4; i++) {
         connect(
             runtime,
-            player,
+            owner,
             modules,
             0,
             List.of(Port.TRIGGER_A, Port.TRIGGER_B, Port.TRIGGER_C, Port.TRIGGER_D).get(i),
             5 + i,
             Port.GATE_IN);
-        connect(runtime, player, modules, 1 + i, Port.AUDIO_OUT, 11 + i, Port.AUDIO_IN);
-        connect(runtime, player, modules, 11 + i, Port.AUDIO_OUT, 5 + i, Port.AUDIO_IN);
-        connect(runtime, player, modules, 5 + i, Port.AUDIO_OUT, 9, MixerSettings.INPUTS.get(i));
+        connect(runtime, owner, modules, 1 + i, Port.AUDIO_OUT, 11 + i, Port.AUDIO_IN);
+        if (load) {
+          connect(runtime, owner, modules, 11 + i, Port.AUDIO_OUT, 16 + i, Port.AUDIO_IN);
+          connect(runtime, owner, modules, 16 + i, Port.AUDIO_OUT, 5 + i, Port.AUDIO_IN);
+        } else {
+          connect(runtime, owner, modules, 11 + i, Port.AUDIO_OUT, 5 + i, Port.AUDIO_IN);
+        }
+        connect(runtime, owner, modules, 5 + i, Port.AUDIO_OUT, 9, MixerSettings.INPUTS.get(i));
       }
-      connect(runtime, player, modules, 9, Port.AUDIO_OUT, 10, Port.AUDIO_IN);
-      if (load) connect(runtime, player, modules, 9, Port.AUDIO_OUT, 15, Port.AUDIO_IN);
+      connect(runtime, owner, modules, 9, Port.AUDIO_OUT, 10, Port.AUDIO_IN);
+      if (load) connect(runtime, owner, modules, 9, Port.AUDIO_OUT, 15, Port.AUDIO_IN);
       for (ModuleEntity module : modules) runtime.attach(module);
       PATCHES.add(modules);
     }
     System.out.println(
-        "MODULARCRAFT_QA amp fixture modules=" + (load ? 64 : 15) + " cables=" + (load ? 72 : 17));
+        "MODULARCRAFT_QA amp fixture modules=" + (load ? 80 : 15) + " cables=" + (load ? 88 : 17));
   }
 
   public static void tick(ServerPlayer player, int tick) {
@@ -84,10 +100,12 @@ public final class NativeAmpFixture {
     boolean load = Boolean.getBoolean("modularcraft.qa.load");
     if (tick >= 40 && tick < 40 + PATCHES.size() * 10 && tick % 10 == 0) {
       ModuleEntity seq = PATCHES.get((tick - 40) / 10).getFirst();
-      view(player, seq);
+      ServerPlayer owner = OWNERS.get((tick - 40) / 10);
+      if (load) owner.setPos(seq.getBlockPos().getCenter());
+      else view(player, seq);
       var m = runtime.state().get(seq.state().id());
       ServerRuntime.enqueue(
-          player,
+          owner,
           new Messages.Control(
               m.id(), m.revision(), Messages.Action.SEQUENCER_START, Parameter.TEMPO, 0));
     }
@@ -106,6 +124,10 @@ public final class NativeAmpFixture {
       long[] times = TIMES.stream().mapToLong(Long::longValue).sorted().toArray();
       long p95 = times[(int) (times.length * .95)];
       for (List<ModuleEntity> patch : PATCHES) {
+        var snapshot = runtime.currentPatch(patch.getFirst().state().id());
+        if (snapshot.modules().size() != (load ? 20 : 15)
+            || snapshot.cables().size() != (load ? 22 : 17))
+          throw new IllegalStateException("Amp fixture capacity mismatch");
         var seq = patch.getFirst().state();
         if (!runtime.currentPatch(seq.id()).sequencers().get(seq.id()).running())
           throw new IllegalStateException("Amp fixture sequencer is not running");

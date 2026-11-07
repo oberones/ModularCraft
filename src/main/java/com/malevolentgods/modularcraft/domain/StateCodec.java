@@ -317,7 +317,7 @@ public final class StateCodec {
         MAX_PATCH,
         out -> {
           out.writeInt(MAGIC);
-          out.writeShort(10);
+          out.writeShort(11);
           uuid(out, p.id());
           out.writeLong(p.revision());
           out.writeLong(p.sequence());
@@ -437,18 +437,18 @@ public final class StateCodec {
 
   public static PatchSnapshot decode(byte[] bytes) {
     try (DataInputStream in = input(bytes, MAX_PATCH)) {
-      if (in.readInt() != MAGIC || in.readUnsignedShort() != 10)
+      if (in.readInt() != MAGIC || in.readUnsignedShort() != 11)
         throw new IllegalArgumentException("protocol");
       UUID id = uuid(in);
       long revision = in.readLong(), sequence = in.readLong(), sample = in.readLong();
       List<ModuleState> modules = new ArrayList<>();
-      int n = count(in, 16);
+      int n = count(in, WorldState.MAX_PATCH_MODULES);
       for (int i = 0; i < n; i++) modules.add(module(in, false, 2));
       List<Cable> cables = new ArrayList<>();
       n = count(in, 24);
       for (int i = 0; i < n; i++) cables.add(cable(in));
       Map<UUID, Envelope.Checkpoint> envelopes = new HashMap<>();
-      n = count(in, 16);
+      n = count(in, WorldState.MAX_PATCH_MODULES);
       for (int i = 0; i < n; i++) {
         UUID module = uuid(in);
         var c =
@@ -467,17 +467,17 @@ public final class StateCodec {
           throw new IllegalArgumentException("duplicate_envelope");
       }
       Map<UUID, KeyboardState> keyboards = new HashMap<>();
-      n = count(in, 16);
+      n = count(in, WorldState.MAX_PATCH_MODULES);
       for (int i = 0; i < n; i++)
         if (keyboards.put(uuid(in), new KeyboardState(in.readUnsignedByte(), in.readBoolean()))
             != null) throw new IllegalArgumentException("duplicate_keyboard");
       Map<UUID, Sequencer.Checkpoint> sequencers = new HashMap<>();
-      n = count(in, 16);
+      n = count(in, WorldState.MAX_PATCH_MODULES);
       for (int i = 0; i < n; i++)
         if (sequencers.put(uuid(in), sequencer(in, sample)) != null)
           throw new IllegalArgumentException("duplicate_sequencer");
       Map<UUID, Lfo.Checkpoint> lfos = new HashMap<>();
-      n = count(in, 16);
+      n = count(in, WorldState.MAX_PATCH_MODULES);
       for (int i = 0; i < n; i++) {
         UUID module = uuid(in);
         Lfo.Checkpoint c =
@@ -497,7 +497,7 @@ public final class StateCodec {
         if (lfos.put(module, c) != null) throw new IllegalArgumentException("duplicate_lfo");
       }
       Map<UUID, Boolean> baseGates = new HashMap<>();
-      n = count(in, 16);
+      n = count(in, WorldState.MAX_PATCH_MODULES);
       for (int i = 0; i < n; i++)
         if (baseGates.put(uuid(in), in.readBoolean()) != null)
           throw new IllegalArgumentException("duplicate_gate");
