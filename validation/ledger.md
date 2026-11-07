@@ -1012,3 +1012,17 @@ Listening/acoustic, two-client timing, sustained/tail/underrun and earlier secur
 release gates remain **PENDING**. Self-review PASS; no release qualification claimed.
 Pins, AGENTS.md and manual worlds preserved. No commit, push, play-instance installation
 or publication. Runtime JAR SHA-256: `9576146785910cba3bea8313fc817818939f5d5c3e3737ab4014c1d4309a2667`.
+
+
+## 2026-11-07 — README and CurseForge player descriptions
+
+Updated README and `docs/curseforge.md` with the ten-block lineup, Amp ADSR/Drone and
+Speaker output roles, playable Amp-to-Speaker wiring, Redstone Mode controls and
+mode-specific reload behavior. Both describe the current player experience without
+migration or historical comparisons. Corrected CurseForge's local-audio settings entry
+to the ModularCraft Audio button.
+
+**PASS:** local document/image links and section anchors; consistency against current
+module ports/defaults, client controls and user guide; `git diff --check`. Self-review PASS.
+Documentation-only changes; runtime suites were not rerun. Prior listening, multiplayer,
+performance and release gates remain PENDING. No commit, push or publication performed.
