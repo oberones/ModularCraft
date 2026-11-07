@@ -1,0 +1,92 @@
+{
+  "date_local": "2026-11-06",
+  "timezone": "America/New_York",
+  "hardware": {
+    "cpu": "Apple M2 Pro",
+    "memory_bytes": 17179869184,
+    "os": "macOS 26.6.2 (25G83)"
+  },
+  "matrix": {
+    "minecraft": "1.21.1",
+    "neoforge": "21.1.218",
+    "java": 21
+  },
+  "runtime_jar": "build/libs/modularcraft-0.2.2.jar",
+  "runtime_sha256": "60847b081a51735244560b75964e3fa503d29050cdf453a29197b985cd309c68",
+  "junit": {
+    "tests": 172,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "packaged_gametests": {
+    "passed": 35,
+    "failed": 0
+  },
+  "make_verify": "PASS",
+  "amp_dsp_benchmark": {
+    "modules": 64,
+    "cables": 72,
+    "speakers": 8,
+    "p95_ms": 0.634958,
+    "allocated_bytes": 0,
+    "warmup_blocks": 5000,
+    "measured_blocks": 10000
+  },
+  "native_ui": {
+    "command_log": "native-final.log",
+    "audio_p95_ns": 97833,
+    "blocks": 11159,
+    "underruns": 1,
+    "audio_max_ns": 25572500,
+    "peak": 0.024683663621544838,
+    "max_queued": 12,
+    "failed": false,
+    "server_p95_ns": 318666,
+    "server_post_warmup_max_ns": 1334000,
+    "server_all_run_max_ns": 5899584,
+    "server_p95_pass": true
+  },
+  "native_capture": {
+    "command_log": "native-capture.log",
+    "audio_p95_ns": 92584,
+    "blocks": 7424,
+    "underruns": 1,
+    "audio_max_ns": 12812875,
+    "peak": 0.024323511868715286,
+    "max_queued": 12,
+    "failed": false,
+    "server_p95_ns": 372167,
+    "server_post_warmup_max_ns": 1511167,
+    "server_all_run_max_ns": 23109917,
+    "server_p95_pass": true
+  },
+  "native_load": {
+    "command_log": "load-final.log",
+    "audio_p95_ns": 516375,
+    "blocks": 22435,
+    "underruns": 1,
+    "audio_max_ns": 12873833,
+    "peak": 0.11877137422561646,
+    "max_queued": 12,
+    "failed": false,
+    "server_p95_ns": 568709,
+    "server_post_warmup_max_ns": 1548792,
+    "server_all_run_max_ns": 13407791,
+    "server_p95_pass": true
+  },
+  "screenshots": [
+    "docs/images/amp-panel.png",
+    "docs/images/speaker-panel.png",
+    "docs/images/four-voice-amp.png"
+  ],
+  "pending": [
+    "human listening and acoustic/click assessment",
+    "native two-client timing/lifecycle acceptance",
+    "30-minute sustained qualification",
+    "underrun and maximum-latency investigation",
+    "previous security/platform/release gates"
+  ],
+  "self_review": "PASS: identity migration, mono/spatial separation, gain precedence, bounded admission, matching peers, test/package isolation and original assets reviewed; no release qualification claimed",
+  "commit_push_publication": "not performed"
+}

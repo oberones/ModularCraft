@@ -93,3 +93,13 @@ Evidence: [LFO review](../../validation/lfo/review.md) and [results](../../valid
 - [x] MX06 Add regression tests, packaged authority/NBT/jack/removal GameTests and native panel/load fixtures.
 - [x] MX07 Document RP-007, compatibility, validation evidence and explicit self-review.
 - [ ] MX08 Human listening/narrator, two-client, disk-restart and 30-minute native qualification; retain prior release gates.
+
+
+## Amp / Speaker extension (AS-001–006)
+
+- [x] Add Amp audio routing, built-in ADSR, external-gain precedence, Drone and smooth transitions.
+- [x] Split spatial Speaker, preserve registry IDs, and implement persisted enable intent/admission/overload latch.
+- [x] Migrate schema-1 blocks and registry records to schema 2; require matching protocol/snapshot 9.
+- [x] Update panels, generated assets, reference patches, native fixtures and package inspection.
+- [x] Add red–green domain/DSP/migration/lifecycle/authority regressions and native screenshots.
+- [ ] Complete human listening, native two-client timing, and sustained 30-minute qualification; see validation/amp.

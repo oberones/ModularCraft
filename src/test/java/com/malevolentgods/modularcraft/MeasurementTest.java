@@ -151,8 +151,8 @@ class MeasurementTest {
             new Cable(
                 modules.get(11 + i / 4).id(),
                 Port.ENVELOPE_OUT,
-                modules.get(dest).id(),
-                dest < 14 ? Port.CUTOFF_IN : Port.GAIN_IN));
+                modules.get(dest < 14 ? dest : dest - 13).id(),
+                dest < 14 ? Port.CUTOFF_IN : Port.RESONANCE_IN));
       }
       patches.add(
           new PatchSnapshot(modules.getFirst().id(), 1, 1, 96000, modules, cables, checkpoints));
@@ -301,7 +301,15 @@ class MeasurementTest {
     Arrays.sort(times);
     double p95 = times[9500] / 1e6;
     System.out.println(
-        "64 module / 96 cable / 8 speaker DSP p95 ms="
+        patches.stream().mapToInt(p -> p.modules().size()).sum()
+            + " module / "
+            + patches.stream().mapToInt(p -> p.cables().size()).sum()
+            + " cable / "
+            + patches.stream()
+                .flatMap(p -> p.modules().stream())
+                .filter(m -> m.kind() == ModuleKind.SPEAKER)
+                .count()
+            + " speaker DSP p95 ms="
             + p95
             + ", oscillators="
             + patches.stream()

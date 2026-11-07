@@ -32,6 +32,13 @@ public final class Smoother {
     left = 0;
   }
 
+  public void copyFrom(Smoother previous) {
+    value = previous.value;
+    target = previous.target;
+    step = previous.step;
+    left = previous.left;
+  }
+
   public double current() {
     return value;
   }

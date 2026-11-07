@@ -55,7 +55,7 @@ public final class ModuleEntity extends BlockEntity {
 
   public void quarantine() {
     refused = new CompoundTag();
-    refused.putInt("Schema", 1);
+    refused.putInt("Schema", 2);
     if (module != null) refused.putByteArray("Module", StateCodec.moduleBytes(module));
     module = null;
     setChanged();
@@ -108,7 +108,7 @@ public final class ModuleEntity extends BlockEntity {
       return;
     }
     if (module != null) {
-      tag.putInt("Schema", 1);
+      tag.putInt("Schema", 2);
       tag.putByteArray("Module", StateCodec.moduleBytes(module));
     }
   }
@@ -117,9 +117,9 @@ public final class ModuleEntity extends BlockEntity {
   protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
     super.loadAdditional(tag, registries);
     try {
-      if (tag.getInt("Schema") != 1 || !tag.contains("Module", 7))
+      if ((tag.getInt("Schema") != 1 && tag.getInt("Schema") != 2) || !tag.contains("Module", 7))
         throw new IllegalArgumentException("schema");
-      ModuleState loaded = StateCodec.moduleBytes(tag.getByteArray("Module"));
+      ModuleState loaded = StateCodec.moduleBytes(tag.getByteArray("Module"), tag.getInt("Schema"));
       if (loaded.kind() != ((ModuleBlock) getBlockState().getBlock()).kind
           || loaded.x() != worldPosition.getX()
           || loaded.y() != worldPosition.getY()

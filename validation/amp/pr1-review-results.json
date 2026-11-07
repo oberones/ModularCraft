@@ -1,0 +1,45 @@
+{
+  "pr": "https://github.com/oberones/ModularCraft/pull/1",
+  "reviewed_head": "38e150a20b805ec4b17c56602dd0998b1f3546fd",
+  "date": "2026-11-07",
+  "addressed_comments": [
+    4500158931,
+    4500158958,
+    4500158989,
+    4500159016,
+    4500159053
+  ],
+  "verify": {
+    "command": "make verify GAMETEST_DIR=run/make/pr1-final",
+    "result": "PASS",
+    "junit": {
+      "tests": 175,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "packaged_gametests": 36
+  },
+  "native_cable_probe": {
+    "command": "make smoke GRADLE_ARGS=-PqaCableRemoval TICKS=280 QA_DIR=run/make/pr1-cable-green",
+    "result": "PASS",
+    "evidence": [
+      "MODULARCRAFT_QA client p95BlockNs=109584 blocks=1821 underruns=1 maxBlockNs=2015709 peak=0.022124724462628365 maxQueued=12 failed=false",
+      "MODULARCRAFT_QA cableRemoval tick=140 cables=3 PASS",
+      "MODULARCRAFT_QA cableRemoval tick=200 cables=4 PASS",
+      "MODULARCRAFT_QA client p95BlockNs=80584 blocks=3693 underruns=1 maxBlockNs=2015709 peak=0.024449516087770462 maxQueued=12 failed=false",
+      "MODULARCRAFT_QA cableRemoval tick=240 cables=3 PASS"
+    ],
+    "screenshots": "run/make/pr1-cable-green/screenshots/"
+  },
+  "artifact_sha256": "6921b1c472e0d88966bb376a17b932bc7661497119eaf5a3b488a5b59e613a3c",
+  "pending": [
+    "listening/acoustic",
+    "native multiplayer",
+    "sustained load and underrun qualification",
+    "existing security/platform/release gates"
+  ],
+  "committed": false,
+  "pushed": false,
+  "posted_to_github": false
+}

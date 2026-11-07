@@ -273,7 +273,10 @@ public final class ControlTimeline {
 
   private static double parameter(Node node, int index, long at) {
     double base = node.module.value(VALUES[index]);
-    double amount = control(node.cv[index], at) * node.module.value(DEPTHS[index]) / 100;
+    double amount =
+        node.cv[index] == null
+            ? 0
+            : control(node.cv[index], at) * node.module.value(DEPTHS[index]) / 100;
     return index == 2
         ? Math.clamp(base / 100 + amount, 0, 1)
         : Math.clamp(base * Math.pow(2, 4 * amount), .001, 10);

@@ -1,5 +1,26 @@
 # 0.1.0 development candidate
 
+Split the combined Amplifier / Speaker into **Amp** (built-in ADSR, Gate In, Drone,
+external gain override, and Audio Out) and a new **Speaker** (Audio In, spatial playback,
+Volume, and remembered enabled switch). New Speakers start enabled. Four sequencer
+voices can feed one Mixer and Speaker without raising the two-Speaker patch limit.
+
+World/block schema 2 migrates existing combined blocks into Amps, preserving identities,
+cables and old Volume as Amp Level, with Drone on. Add new Speakers and wire Amp Audio
+Out to them; no output blocks are inserted automatically. Set migrated Amp Level to 100%
+for the usual new-patch gain arrangement. Back up worlds before upgrading; restore the
+backup to downgrade. Network/snapshot version 9 requires matching client/server builds.
+Speaker overload remains latched until explicit re-enable; normal chunk/world reload
+resumes remembered enabled intent when the complete patch and capacity are available.
+Sequencer transport still requires Start after reload. Earlier restart-disabled and
+combined-speaker descriptions below are historical and superseded.
+
+
+Fixed Amp/Speaker review findings: quarantined legacy records stay opaque after resaving;
+capacity admission immediately broadcasts newly active patches; open panels receive current
+status and edit revisions after automatic admission, unload, or overload suspension.
+Corrected the RP-001 gain connection to Amp and the native probe's four-cable expectation.
+
 Removed the global K shortcut for audio settings so it no longer interrupts gameplay
 or typing in screens. Use the ModularCraft Audio buttons in menus and module panels.
 
@@ -118,6 +139,18 @@ and existing final output protection. World schema 1 retains existing records; n
 and snapshots now require version 8 on every peer. Back up worlds before upgrade; restore
 the backup before downgrade. RP-007 and mixer native/load probes added. Human listening,
 multiplayer and sustained acceptance remain separately tracked; no release is implied.
+
+## v0.3.1 (2026-11-07)
+
+### Fix
+
+- updates based on PR feedback
+
+## v0.3.0 (2026-11-06)
+
+### Feat
+
+- add separate speaker block
 
 ## v0.2.2 (2026-11-06)
 

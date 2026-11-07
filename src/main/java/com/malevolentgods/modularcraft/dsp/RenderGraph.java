@@ -39,6 +39,8 @@ public final class RenderGraph {
     final Smoother cutoffCv = new Smoother(0),
         resonanceCv = new Smoother(0),
         gainCv = new Smoother(1);
+    final Smoother gainTransition = new Smoother(1);
+    double gainFrom, lastGain;
     int audio = -1, control = -1, resonance = -1, pitch = -1, patch;
 
     Node(ModuleState module, Envelope.Checkpoint checkpoint) {
@@ -96,7 +98,7 @@ public final class RenderGraph {
           node.lfo = new Lfo(LfoSettings.from(module), patch.lfos().get(module.id()));
           lfos.put(module.id(), node.lfo);
         }
-        if (module.kind() == ModuleKind.ENVELOPE) envelopes.put(module.id(), node.envelope);
+        if (module.kind().hasEnvelope()) envelopes.put(module.id(), node.envelope);
         if (module.kind() == ModuleKind.EUCLIDEAN_SEQUENCER)
           sequencers.put(
               module.id(),
@@ -154,7 +156,21 @@ public final class RenderGraph {
           node.filter.copyFrom(old.filter);
           node.cutoffCv.reset(old.cutoffCv.current());
           node.resonanceCv.reset(old.resonanceCv.current());
-          node.gainCv.reset(old.gainCv.current());
+          node.gainCv.copyFrom(old.gainCv);
+          node.lastGain = old.lastGain;
+          node.gainFrom = old.gainFrom;
+          node.gainTransition.copyFrom(old.gainTransition);
+          if (node.module.kind() == ModuleKind.AMP) {
+            UUID source = node.control < 0 ? null : nodes[node.control].module.id();
+            UUID oldSource = old.control < 0 ? null : previous.nodes[old.control].module.id();
+            if (!java.util.Objects.equals(source, oldSource)
+                || (source == null
+                    && node.module.value(Parameter.DRONE) != old.module.value(Parameter.DRONE))) {
+              node.gainFrom = old.lastGain;
+              node.gainTransition.reset(0);
+              node.gainTransition.target(1);
+            }
+          }
           for (Parameter p : node.module.kind().parameters) {
             node.parameters[p.ordinal()].reset(old.parameters[p.ordinal()].current());
             node.parameters[p.ordinal()].target(node.module.value(p));
@@ -238,13 +254,20 @@ public final class RenderGraph {
             double value = n.filter.next(audio, cutoff, resonance);
             signals[i] = n.audio < 0 ? 0 : value;
           }
-          case SPEAKER -> {
+          case AMP -> {
             if (n.control >= 0 && nodes[n.control].module.kind() == ModuleKind.ENVELOPE)
               n.gainCv.reset(Math.clamp(control, 0, 1));
-            else n.gainCv.target(n.control < 0 ? 1 : Math.clamp(control, 0, 1));
-            double gain = n.gainCv.next();
+            else if (n.control >= 0) n.gainCv.target(Math.clamp(control, 0, 1));
+            else
+              n.gainCv.reset(
+                  n.module.value(Parameter.DRONE) == 1 ? 1 : n.envelope.value(sample + frame));
+            double mix = n.gainTransition.next();
+            n.lastGain = n.gainFrom * (1 - mix) + n.gainCv.next() * mix;
+            signals[i] = audio * n.next(Parameter.AMP_LEVEL) / 100 * n.lastGain;
+          }
+          case SPEAKER -> {
             signals[i] =
-                timelines[n.patch].overloaded() ? 0 : audio * n.next(Parameter.VOLUME) / 100 * gain;
+                timelines[n.patch].overloaded() ? 0 : audio * n.next(Parameter.VOLUME) / 100;
             left += signals[i] * n.left.next();
             right += signals[i] * n.right.next();
           }

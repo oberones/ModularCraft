@@ -73,8 +73,8 @@ class LfoLoadTest {
       for (int i = 1; i < 4; i++) add(cables, modules, 0, Port.CLOCK_OUT, i, Port.CLOCK_IN);
       add(cables, modules, 0, Port.TRIGGER_A, 12, Port.GATE_IN);
       add(cables, modules, 0, Port.TRIGGER_B, 13, Port.GATE_IN);
-      add(cables, modules, 12, Port.ENVELOPE_OUT, 14, Port.GAIN_IN);
-      add(cables, modules, 13, Port.ENVELOPE_OUT, 15, Port.GAIN_IN);
+      add(cables, modules, 12, Port.ENVELOPE_OUT, 9, Port.RESONANCE_IN);
+      add(cables, modules, 13, Port.ENVELOPE_OUT, 10, Port.RESONANCE_IN);
       for (Port port : List.of(Port.ATTACK_IN, Port.DECAY_IN, Port.SUSTAIN_IN, Port.RELEASE_IN))
         add(cables, modules, 1, Port.CONTROL_OUT, 12, port);
       for (int i = 5; i < 9; i++)

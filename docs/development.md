@@ -302,3 +302,13 @@ Inspect the images before copying them to `docs/images/`; keep original captures
 logs in the generated run directory. The reproducible patch and settings are in the
 [user guide](user-guide.md#showcase-all-nine-blocks-together). This is visual documentation
 evidence, not a listening, multiplayer, or performance qualification run.
+
+
+### Amp / Speaker probes
+
+`make smoke GRADLE_ARGS=-PqaAmp TICKS=600` creates a disposable four-voice patch,
+checks Drone/Hold Gate/Speaker widgets, and captures both panels and the complete rig.
+`make smoke-load GRADLE_ARGS=-PqaAmp TICKS=1200` measures four 16-module/18-cable
+patches with eight default-enabled Speakers. It retains existing DSP/server budgets;
+short runs and screenshots do not establish human listening or sustained acceptance.
+Use a fresh `QA_DIR` for each probe; never use a manual world directory.

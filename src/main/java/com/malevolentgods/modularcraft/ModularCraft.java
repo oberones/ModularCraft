@@ -33,7 +33,7 @@ public final class ModularCraft {
 
   static {
     for (ModuleKind kind : ModuleKind.values()) {
-      String name = kind.name().toLowerCase(java.util.Locale.ROOT);
+      String name = kind.registryName();
       var block =
           BLOCKS.register(
               name,

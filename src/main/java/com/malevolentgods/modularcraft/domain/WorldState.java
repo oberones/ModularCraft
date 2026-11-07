@@ -102,15 +102,72 @@ public final class WorldState {
     bump(cable.destination());
   }
 
-  public void enable(UUID actor, boolean operator, UUID id, long expected, boolean enabled) {
+  /** Change playback intent and report every component affected by capacity admission. */
+  public Set<UUID> enable(UUID actor, boolean operator, UUID id, long expected, boolean enabled) {
     ModuleState m = authorize(actor, operator, id, expected);
     if (m.kind() != ModuleKind.SPEAKER) throw new IllegalArgumentException("not_speaker");
-    for (UUID member : component(id, cables))
-      if (!get(member).loaded()) throw new IllegalArgumentException("patch_unloaded");
-    Map<UUID, ModuleState> next = new LinkedHashMap<>(modules);
-    next.put(id, m.runtime(true, enabled).bump());
-    validate(next, cables);
-    commit(next, cables);
+    modules.put(
+        id,
+        m.withValue(Parameter.SPEAKER_ENABLED, enabled ? 1 : 0)
+            .withValue(Parameter.SPEAKER_SUSPENDED, 0)
+            .runtime(m.loaded(), enabled && m.enabled() && !m.suspended()));
+    revision++;
+    Set<UUID> changed = component(id);
+    changed.addAll(refreshPlayback());
+    return Set.copyOf(changed);
+  }
+
+  /** Admit loaded patches without displacing playback already admitted. Logical server only. */
+  public Set<UUID> refreshPlayback() {
+    Set<UUID> changed = new LinkedHashSet<>();
+    List<Set<UUID>> parts = new ArrayList<>(components());
+    parts.sort(
+        java.util.Comparator.comparing(ids -> ids.stream().min(UUID::compareTo).orElseThrow()));
+    for (Set<UUID> ids : parts) {
+      boolean loaded = ids.stream().allMatch(id -> get(id).loaded());
+      for (UUID id : ids) {
+        ModuleState m = get(id);
+        if (m.enabled() && (!loaded || !m.wantsPlayback() || m.suspended())) {
+          modules.put(id, m.runtime(m.loaded(), false).bump());
+          changed.addAll(ids);
+        }
+      }
+    }
+    int active = 0, speakers = 0;
+    for (Set<UUID> ids : parts) {
+      boolean on = false;
+      for (UUID id : ids)
+        if (get(id).enabled()) {
+          on = true;
+          speakers++;
+        }
+      if (on) active++;
+    }
+    // Extend active patches before admitting waiting patches, with UUID-stable ties.
+    parts.sort(
+        java.util.Comparator.comparing(
+            (Set<UUID> ids) -> ids.stream().noneMatch(id -> get(id).enabled())));
+    for (Set<UUID> ids : parts) {
+      if (ids.stream().anyMatch(id -> !get(id).loaded())) continue;
+      boolean on = ids.stream().anyMatch(id -> get(id).enabled());
+      for (UUID id : ids.stream().sorted().toList()) {
+        ModuleState m = get(id);
+        if (!m.wantsPlayback()
+            || m.suspended()
+            || m.enabled()
+            || speakers >= 8
+            || (!on && active >= 4)) continue;
+        modules.put(id, m.runtime(true, true).bump());
+        speakers++;
+        if (!on) {
+          active++;
+          on = true;
+        }
+        changed.addAll(ids);
+      }
+    }
+    if (!changed.isEmpty()) revision++;
+    return Set.copyOf(changed);
   }
 
   public void remove(UUID id) {
@@ -136,16 +193,23 @@ public final class WorldState {
   public void loaded(UUID id, boolean value) {
     ModuleState m = get(id);
     if (m.loaded() == value) return;
-    if (!value) suspend(component(id, cables));
+    if (!value) deactivate(component(id, cables), false);
     modules.put(id, get(id).runtime(value, false));
     revision++;
   }
 
   public void suspend(Set<UUID> ids) {
+    deactivate(ids, true);
+  }
+
+  private void deactivate(Set<UUID> ids, boolean latch) {
     for (UUID id : ids)
       if (modules.containsKey(id)) {
         ModuleState m = get(id);
-        if (m.enabled()) modules.put(id, m.runtime(m.loaded(), false).bump());
+        if (m.kind() != ModuleKind.SPEAKER) continue;
+        if (latch && !m.suspended()) m = m.withValue(Parameter.SPEAKER_SUSPENDED, 1);
+        if (m.enabled()) m = m.runtime(m.loaded(), false).bump();
+        modules.put(id, m);
       }
   }
 

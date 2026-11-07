@@ -17,12 +17,13 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * Explicit version-one, length-delimited codecs. Unknown world records remain byte-for-byte opaque.
+ * Explicit version-two, length-delimited codecs. Unknown world records remain byte-for-byte opaque.
  * Codec operations run off the audio thread. No Java object serialization is used.
  */
 public final class StateCodec {
   public static final int MAX_WORLD = 2 * 1024 * 1024, MAX_PATCH = 32768;
   private static final int MAGIC = 0x4d435301;
+  private static final int OPAQUE_RECORD = 0x8000, MAX_RECORD = 4096;
 
   public record Stored(WorldState state, List<byte[]> quarantined) {
     public Stored {
@@ -97,9 +98,12 @@ public final class StateCodec {
     out.writeBoolean(runtime && m.enabled());
   }
 
-  private static ModuleState module(DataInputStream in, boolean stored) throws IOException {
+  private static ModuleState module(DataInputStream in, boolean stored, int schema)
+      throws IOException {
     UUID id = uuid(in), owner = uuid(in);
     ModuleKind kind = ModuleKind.valueOf(in.readUTF());
+    boolean legacySpeaker = stored && schema == 1 && kind == ModuleKind.SPEAKER;
+    if (legacySpeaker) kind = ModuleKind.AMP;
     String dim = in.readUTF();
     int x = in.readInt(), y = in.readInt(), z = in.readInt();
     long revision = in.readLong();
@@ -109,7 +113,15 @@ public final class StateCodec {
     for (int i = 0; i < n; i++)
       if (values.put(Parameter.valueOf(in.readUTF()), in.readDouble()) != null)
         throw new IllegalArgumentException("duplicate_parameter");
-    // Only legacy stored saws have this exact two-control schema. Network v8 must be complete.
+    if (legacySpeaker) {
+      if (!values.keySet().equals(java.util.Set.of(Parameter.VOLUME)))
+        throw new IllegalArgumentException("legacy_speaker_parameters");
+      double level = Parameter.VOLUME.validate(values.remove(Parameter.VOLUME));
+      values.putAll(ModuleKind.AMP.defaults());
+      values.put(Parameter.AMP_LEVEL, level);
+      values.put(Parameter.DRONE, 1.0);
+    }
+    // Only legacy stored saws have this exact two-control schema. Network v9 must be complete.
     if (stored
         && kind == ModuleKind.OSCILLATOR
         && values.keySet().equals(java.util.Set.of(Parameter.FREQUENCY, Parameter.LEVEL)))
@@ -146,12 +158,26 @@ public final class StateCodec {
   }
 
   public static byte[] moduleBytes(ModuleState module) {
-    return write(4096, out -> module(out, module, false));
+    return write(
+        4096,
+        out -> {
+          out.writeInt(MAGIC);
+          out.writeShort(2);
+          module(out, module, false);
+        });
   }
 
   public static ModuleState moduleBytes(byte[] bytes) {
+    int schema = bytes.length >= 6 && java.nio.ByteBuffer.wrap(bytes).getInt() == MAGIC ? 2 : 1;
+    return moduleBytes(bytes, schema);
+  }
+
+  public static ModuleState moduleBytes(byte[] bytes, int schema) {
+    if (schema != 1 && schema != 2) throw new IllegalArgumentException("schema");
     try (DataInputStream in = input(bytes, 4096)) {
-      ModuleState m = module(in, true);
+      if (schema == 2 && (in.readInt() != MAGIC || in.readUnsignedShort() != 2))
+        throw new IllegalArgumentException("schema");
+      ModuleState m = module(in, true, schema);
       end(in);
       return m;
     } catch (IOException e) {
@@ -177,17 +203,21 @@ public final class StateCodec {
                 out.writeByte(2);
                 cable(out, c);
               }));
+    // Mark quarantine in the unused high bit of its length prefix. This preserves both the
+    // original bytes/identity and the existing record/world size limits, without nesting.
+    int liveRecords = records.size();
     records.addAll(quarantined);
     if (records.size() > 1024) throw new IllegalArgumentException("record_count");
     return write(
         MAX_WORLD,
         out -> {
           out.writeInt(MAGIC);
-          out.writeShort(1);
+          out.writeShort(2);
           out.writeShort(records.size());
-          for (byte[] record : records) {
-            if (record.length > 4096) throw new IllegalArgumentException("record_size");
-            out.writeShort(record.length);
+          for (int i = 0; i < records.size(); i++) {
+            byte[] record = records.get(i);
+            if (record.length > MAX_RECORD) throw new IllegalArgumentException("record_size");
+            out.writeShort(record.length | (i >= liveRecords ? OPAQUE_RECORD : 0));
             out.write(record);
           }
         });
@@ -200,17 +230,26 @@ public final class StateCodec {
     Map<UUID, byte[]> rawModules = new HashMap<>();
     Map<Cable, byte[]> rawCables = new HashMap<>();
     try (DataInputStream in = input(bytes, MAX_WORLD)) {
-      if (in.readInt() != MAGIC || in.readUnsignedShort() != 1)
+      if (in.readInt() != MAGIC) throw new IllegalArgumentException("unsupported_world_schema");
+      int schema = in.readUnsignedShort();
+      if (schema != 1 && schema != 2)
         throw new IllegalArgumentException("unsupported_world_schema");
       int n = count(in, 1024);
       for (int i = 0; i < n; i++) {
-        int length = count(in, 4096);
+        int framedLength = in.readUnsignedShort();
+        boolean opaque = schema == 2 && (framedLength & OPAQUE_RECORD) != 0;
+        int length = opaque ? framedLength & ~OPAQUE_RECORD : framedLength;
+        if (length > MAX_RECORD) throw new IllegalArgumentException("record_size");
         byte[] raw = in.readNBytes(length);
         if (raw.length != length) throw new IllegalArgumentException("truncated_record");
-        try (DataInputStream record = input(raw, 4096)) {
+        if (opaque) {
+          bad.add(raw);
+          continue;
+        }
+        try (DataInputStream record = input(raw, MAX_RECORD)) {
           int type = record.readUnsignedByte();
           if (type == 1) {
-            ModuleState m = module(record, true);
+            ModuleState m = module(record, true, schema);
             end(record);
             if (rawModules.containsKey(m.id()))
               throw new IllegalArgumentException("duplicate_identity");
@@ -273,7 +312,7 @@ public final class StateCodec {
         MAX_PATCH,
         out -> {
           out.writeInt(MAGIC);
-          out.writeShort(8);
+          out.writeShort(9);
           uuid(out, p.id());
           out.writeLong(p.revision());
           out.writeLong(p.sequence());
@@ -393,13 +432,13 @@ public final class StateCodec {
 
   public static PatchSnapshot decode(byte[] bytes) {
     try (DataInputStream in = input(bytes, MAX_PATCH)) {
-      if (in.readInt() != MAGIC || in.readUnsignedShort() != 8)
+      if (in.readInt() != MAGIC || in.readUnsignedShort() != 9)
         throw new IllegalArgumentException("protocol");
       UUID id = uuid(in);
       long revision = in.readLong(), sequence = in.readLong(), sample = in.readLong();
       List<ModuleState> modules = new ArrayList<>();
       int n = count(in, 16);
-      for (int i = 0; i < n; i++) modules.add(module(in, false));
+      for (int i = 0; i < n; i++) modules.add(module(in, false, 2));
       List<Cable> cables = new ArrayList<>();
       n = count(in, 24);
       for (int i = 0; i < n; i++) cables.add(cable(in));

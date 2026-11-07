@@ -42,9 +42,7 @@ public final class ModuleScreen extends Screen {
   private int scroll, contentBottom, maximumScroll;
 
   public ModuleScreen(ModuleState state, boolean editable, String status) {
-    super(
-        Component.translatable(
-            "block.modularcraft." + state.kind().name().toLowerCase(Locale.ROOT)));
+    super(Component.translatable("block.modularcraft." + state.kind().registryName()));
     this.state = state;
     this.editable = editable;
     this.status = status;
@@ -69,7 +67,10 @@ public final class ModuleScreen extends Screen {
     }
     if (enabled != null)
       enabled.setMessage(
-          Component.translatable(state.enabled() ? "modularcraft.disable" : "modularcraft.enable"));
+          Component.translatable(
+              state.suspended()
+                  ? "modularcraft.reenable"
+                  : state.wantsPlayback() ? "modularcraft.disable" : "modularcraft.enable"));
     selectors.forEach((p, button) -> button.setMessage(choice(p)));
     updateEditing();
     if (!editable) release();
@@ -84,7 +85,10 @@ public final class ModuleScreen extends Screen {
   }
 
   private static boolean categorical(Parameter p) {
-    return p == Parameter.LFO_WAVE || p == Parameter.LFO_POLARITY || p == Parameter.LFO_DIVISION;
+    return p == Parameter.DRONE
+        || p == Parameter.LFO_WAVE
+        || p == Parameter.LFO_POLARITY
+        || p == Parameter.LFO_DIVISION;
   }
 
   private Component choice(Parameter p, int value) {
@@ -117,7 +121,7 @@ public final class ModuleScreen extends Screen {
     selectors.clear();
     positions.clear();
     scrolling =
-        state.kind() == ModuleKind.ENVELOPE
+        state.kind().hasEnvelope()
             || state.kind() == ModuleKind.FILTER
             || state.kind() == ModuleKind.LFO;
     compact = note != null && height < 280;
@@ -125,10 +129,10 @@ public final class ModuleScreen extends Screen {
     headerHeight = compact ? 26 : 30;
     panelHeight =
         headerHeight
-            + state.kind().parameters.size() * rowHeight
+            + state.kind().visibleParameters().size() * rowHeight
             + (note == null ? 0 : compact ? 42 : 48)
             + (scrolling
-                ? state.kind() == ModuleKind.ENVELOPE ? 76 : 50
+                ? state.kind().hasEnvelope() ? 76 : 50
                 : note == null ? 70 : compact ? 56 : 74);
     panelWidth = Math.min(420, width - 16);
     left = (width - panelWidth) / 2;
@@ -137,9 +141,9 @@ public final class ModuleScreen extends Screen {
       panelHeight = Math.min(panelHeight, height - 12);
       top = Math.max(6, (height - panelHeight) / 2);
     }
-    contentBottom = top + panelHeight - (state.kind() == ModuleKind.ENVELOPE ? 76 : 50);
+    contentBottom = top + panelHeight - (state.kind().hasEnvelope() ? 76 : 50);
     int row = top + headerHeight;
-    for (Parameter p : state.kind().parameters) {
+    for (Parameter p : state.kind().visibleParameters()) {
       if (categorical(p)) {
         Button selector =
             Button.builder(
@@ -188,7 +192,7 @@ public final class ModuleScreen extends Screen {
       layoutScroll();
       row = contentBottom + 4;
     }
-    if (state.kind() == ModuleKind.ENVELOPE) {
+    if (state.kind().hasEnvelope()) {
       Button hold =
           Button.builder(Component.translatable("modularcraft.hold_gate"), button -> hold())
               .bounds(left + 10, row, 190, 20)
@@ -201,10 +205,15 @@ public final class ModuleScreen extends Screen {
       enabled =
           Button.builder(
                   Component.translatable(
-                      state.enabled() ? "modularcraft.disable" : "modularcraft.enable"),
+                      state.suspended()
+                          ? "modularcraft.reenable"
+                          : state.wantsPlayback() ? "modularcraft.disable" : "modularcraft.enable"),
                   button ->
                       ClientRuntime.send(
-                          state, Messages.Action.ENABLE, Parameter.VOLUME, state.enabled() ? 0 : 1))
+                          state,
+                          Messages.Action.ENABLE,
+                          Parameter.VOLUME,
+                          state.wantsPlayback() && !state.suspended() ? 0 : 1))
               .bounds(left + 10, row, 190, 20)
               .build();
       enabled.active = editable;
@@ -217,7 +226,7 @@ public final class ModuleScreen extends Screen {
                 button -> minecraft.setScreen(new AudioSettingsScreen(this)))
             .bounds(
                 left + 10,
-                row + (scrolling && state.kind() != ModuleKind.ENVELOPE ? 0 : compact ? 8 : 28),
+                row + (scrolling && !state.kind().hasEnvelope() ? 0 : compact ? 8 : 28),
                 150,
                 20)
             .build());
@@ -225,7 +234,7 @@ public final class ModuleScreen extends Screen {
         Button.builder(Component.translatable("gui.done"), button -> onClose())
             .bounds(
                 left + panelWidth - 90,
-                row + (scrolling && state.kind() != ModuleKind.ENVELOPE ? 0 : compact ? 8 : 28),
+                row + (scrolling && !state.kind().hasEnvelope() ? 0 : compact ? 8 : 28),
                 80,
                 20)
             .build());
@@ -383,7 +392,7 @@ public final class ModuleScreen extends Screen {
       }
     }
     if (key == GLFW.GLFW_KEY_SPACE
-        && state.kind() == ModuleKind.ENVELOPE
+        && state.kind().hasEnvelope()
         && (getFocused() == null || getFocused() == gateButton)) {
       hold();
       return true;
@@ -457,7 +466,7 @@ public final class ModuleScreen extends Screen {
     int row = top + headerHeight - (scrolling ? scroll : 0);
     if (scrolling)
       graphics.enableScissor(left, top + headerHeight, left + panelWidth, contentBottom);
-    for (Parameter p : state.kind().parameters) {
+    for (Parameter p : state.kind().visibleParameters()) {
       graphics.drawString(
           font,
           categorical(p)
@@ -496,8 +505,7 @@ public final class ModuleScreen extends Screen {
     Component message = Component.translatable("modularcraft.error." + status);
     int statusY =
         Math.min(
-            height - 12,
-            row + (scrolling && state.kind() != ModuleKind.ENVELOPE ? 25 : compact ? 34 : 53));
+            height - 12, row + (scrolling && !state.kind().hasEnvelope() ? 25 : compact ? 34 : 53));
     if (note != null)
       graphics.drawWordWrap(font, message, left + 10, statusY, panelWidth - 20, 0xffe2c88c);
     else graphics.drawString(font, message, left + 10, statusY, 0xffe2c88c);

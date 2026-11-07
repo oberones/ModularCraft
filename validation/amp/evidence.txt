@@ -1,0 +1,101 @@
+
+red.log
+
+AmpTest > ampHasGateGainAndAudioOutput() FAILED
+AmpTest > legacySpeakerBecomesAmpWithoutLosingIdentityOrVolume() FAILED
+AmpTest > speakerOnlyAcceptsAudio() FAILED
+3 tests completed, 3 failed
+
+verify-final.log
+
+test_bad_artifact_and_seed_symlink_are_refused (test_run_validation.ValidationRunTest.test_bad_artifact_and_seed_symlink_are_refused) ... Staged modularcraft-0.1.0.jar SHA-256 71120deca0bad815398de2fca6ddc4213952b636cd991e998dc1859f48c11840
+Staged modularcraft-0.1.0.jar SHA-256 71120deca0bad815398de2fca6ddc4213952b636cd991e998dc1859f48c11840
+test_failed_seed_server_never_launches_client (test_run_validation.ValidationRunTest.test_failed_seed_server_never_launches_client) ... Staged modularcraft-0.1.0.jar SHA-256 71120deca0bad815398de2fca6ddc4213952b636cd991e998dc1859f48c11840
+Staged modularcraft-0.1.0.jar SHA-256 71120deca0bad815398de2fca6ddc4213952b636cd991e998dc1859f48c11840
+test_fresh_fixture_never_reuses_a_world (test_run_validation.ValidationRunTest.test_fresh_fixture_never_reuses_a_world) ... Staged modularcraft-0.1.0.jar SHA-256 fcc947dacfada867d76b986fd5a0f54cf2dcc3f66d7f89222f68c00f4466748e
+test_launch_uses_packaged_mode_and_preserves_space_in_path (test_run_validation.ValidationRunTest.test_launch_uses_packaged_mode_and_preserves_space_in_path) ... Staged modularcraft-0.1.0.jar SHA-256 fcc947dacfada867d76b986fd5a0f54cf2dcc3f66d7f89222f68c00f4466748e
+test_refuses_modified_managed_jar_instead_of_overwriting_it (test_run_validation.ValidationRunTest.test_refuses_modified_managed_jar_instead_of_overwriting_it) ... Staged modularcraft-0.1.0.jar SHA-256 fcc947dacfada867d76b986fd5a0f54cf2dcc3f66d7f89222f68c00f4466748e
+test_server_launch_does_not_accept_or_replace_eula (test_run_validation.ValidationRunTest.test_server_launch_does_not_accept_or_replace_eula) ... Staged modularcraft-0.1.0.jar SHA-256 fcc947dacfada867d76b986fd5a0f54cf2dcc3f66d7f89222f68c00f4466748e
+Staged modularcraft-0.1.0.jar SHA-256 fcc947dacfada867d76b986fd5a0f54cf2dcc3f66d7f89222f68c00f4466748e
+test_smoke_bootstraps_seed_then_launches_a_fresh_fixture (test_run_validation.ValidationRunTest.test_smoke_bootstraps_seed_then_launches_a_fresh_fixture) ... Staged modularcraft-0.1.0.jar SHA-256 fcc947dacfada867d76b986fd5a0f54cf2dcc3f66d7f89222f68c00f4466748e
+Staged modularcraft-0.1.0.jar SHA-256 fcc947dacfada867d76b986fd5a0f54cf2dcc3f66d7f89222f68c00f4466748e
+test_stages_exact_runtime_jar_and_preserves_world_on_upgrade (test_run_validation.ValidationRunTest.test_stages_exact_runtime_jar_and_preserves_world_on_upgrade) ... Staged modularcraft-0.1.0.jar SHA-256 fcc947dacfada867d76b986fd5a0f54cf2dcc3f66d7f89222f68c00f4466748e
+Staged modularcraft-0.2.0.jar SHA-256 4c8e0fed71eee4161d2f4117000e87b82329e0a7f936471bccfd28e3468460b1
+BUILD SUCCESSFUL in 51s
+Staged modularcraft-0.2.2.jar SHA-256 60847b081a51735244560b75964e3fa503d29050cdf453a29197b985cd309c68
+[23:33:31] [Server thread/INFO] [minecraft/GameTestServer]: ========= 35 GAME TESTS COMPLETE IN 727.8 ms ======================
+[23:33:31] [Server thread/INFO] [minecraft/GameTestServer]: All 35 required tests passed :)
+BUILD SUCCESSFUL in 8s
+PASS: Java 21 artifacts, ten complete asset sets, no test fixtures or bundled host/runtime libraries.
+
+native-final.log
+
+BUILD SUCCESSFUL in 573ms
+Staged modularcraft-0.2.2.jar SHA-256 60847b081a51735244560b75964e3fa503d29050cdf453a29197b985cd309c68
+MODULARCRAFT_QA amp fixture modules=15 cables=17
+MODULARCRAFT_QA client p95BlockNs=283000 blocks=1786 underruns=1 maxBlockNs=25572500 peak=0.02399023249745369 maxQueued=12 failed=false
+MODULARCRAFT_QA Saved screenshot as amp-amp.png
+MODULARCRAFT_QA amp Drone widget PASS tick=130
+MODULARCRAFT_QA amp Drone widget PASS tick=170
+MODULARCRAFT_QA amp manual gate PASS tick=190
+MODULARCRAFT_QA client p95BlockNs=229333 blocks=3658 underruns=1 maxBlockNs=25572500 peak=0.024683663621544838 maxQueued=12 failed=false
+MODULARCRAFT_QA amp manual gate PASS tick=205
+MODULARCRAFT_QA Saved screenshot as amp-speaker.png
+MODULARCRAFT_QA speaker toggle PASS tick=250
+MODULARCRAFT_QA speaker toggle PASS tick=275
+MODULARCRAFT_QA client p95BlockNs=98875 blocks=5534 underruns=1 maxBlockNs=25572500 peak=0.024683663621544838 maxQueued=12 failed=false
+MODULARCRAFT_QA Saved screenshot as amp-four-voices.png
+MODULARCRAFT_QA client p95BlockNs=95167 blocks=7411 underruns=1 maxBlockNs=25572500 peak=0.024683663621544838 maxQueued=12 failed=false
+MODULARCRAFT_QA client p95BlockNs=97458 blocks=9283 underruns=1 maxBlockNs=25572500 peak=0.024683663621544838 maxQueued=12 failed=false
+MODULARCRAFT_QA amp default-enabled speakers PASS count=1
+MODULARCRAFT_QA amp server p95Ns=318666 maxNs=1334000 target2ms=PASS
+MODULARCRAFT_QA client p95BlockNs=97833 blocks=11159 underruns=1 maxBlockNs=25572500 peak=0.024683663621544838 maxQueued=12 failed=false
+BUILD SUCCESSFUL in 44s
+
+native-capture.log
+
+BUILD SUCCESSFUL in 495ms
+Staged modularcraft-0.2.2.jar SHA-256 60847b081a51735244560b75964e3fa503d29050cdf453a29197b985cd309c68
+MODULARCRAFT_QA amp fixture modules=15 cables=17
+MODULARCRAFT_QA client p95BlockNs=286750 blocks=1803 underruns=1 maxBlockNs=12812875 peak=0.024278683587908745 maxQueued=12 failed=false
+MODULARCRAFT_QA Saved screenshot as amp-amp.png
+MODULARCRAFT_QA amp Drone widget PASS tick=130
+MODULARCRAFT_QA amp Drone widget PASS tick=170
+MODULARCRAFT_QA amp manual gate PASS tick=190
+MODULARCRAFT_QA client p95BlockNs=223500 blocks=3671 underruns=1 maxBlockNs=12812875 peak=0.024323511868715286 maxQueued=12 failed=false
+MODULARCRAFT_QA amp manual gate PASS tick=205
+MODULARCRAFT_QA Saved screenshot as amp-speaker.png
+MODULARCRAFT_QA speaker toggle PASS tick=250
+MODULARCRAFT_QA speaker toggle PASS tick=275
+MODULARCRAFT_QA client p95BlockNs=96875 blocks=5552 underruns=1 maxBlockNs=12812875 peak=0.024323511868715286 maxQueued=12 failed=false
+MODULARCRAFT_QA Saved screenshot as amp-four-voices.png
+MODULARCRAFT_QA amp running sequencers PASS count=1
+MODULARCRAFT_QA amp default-enabled speakers PASS count=1
+MODULARCRAFT_QA amp server p95Ns=372167 maxNs=1511167 target2ms=PASS
+MODULARCRAFT_QA client p95BlockNs=92584 blocks=7424 underruns=1 maxBlockNs=12812875 peak=0.024323511868715286 maxQueued=12 failed=false
+BUILD SUCCESSFUL in 35s
+
+load-final.log
+
+BUILD SUCCESSFUL in 486ms
+Staged modularcraft-0.2.2.jar SHA-256 60847b081a51735244560b75964e3fa503d29050cdf453a29197b985cd309c68
+MODULARCRAFT_QA amp fixture modules=64 cables=72
+MODULARCRAFT_QA client p95BlockNs=904375 blocks=1808 underruns=1 maxBlockNs=12308667 peak=0.11877137422561646 maxQueued=12 failed=false
+MODULARCRAFT_QA client p95BlockNs=736667 blocks=3684 underruns=1 maxBlockNs=12308667 peak=0.11877137422561646 maxQueued=12 failed=false
+MODULARCRAFT_QA client p95BlockNs=524167 blocks=5560 underruns=1 maxBlockNs=12308667 peak=0.11877137422561646 maxQueued=12 failed=false
+MODULARCRAFT_QA client p95BlockNs=521125 blocks=7433 underruns=1 maxBlockNs=12308667 peak=0.11877137422561646 maxQueued=12 failed=false
+MODULARCRAFT_QA client p95BlockNs=521791 blocks=9309 underruns=1 maxBlockNs=12308667 peak=0.11877137422561646 maxQueued=12 failed=false
+MODULARCRAFT_QA client p95BlockNs=522083 blocks=11185 underruns=1 maxBlockNs=12308667 peak=0.11877137422561646 maxQueued=12 failed=false
+MODULARCRAFT_QA client p95BlockNs=523500 blocks=13058 underruns=1 maxBlockNs=12308667 peak=0.11877137422561646 maxQueued=12 failed=false
+MODULARCRAFT_QA client p95BlockNs=522459 blocks=14934 underruns=1 maxBlockNs=12308667 peak=0.11877137422561646 maxQueued=12 failed=false
+MODULARCRAFT_QA client p95BlockNs=518417 blocks=16810 underruns=1 maxBlockNs=12308667 peak=0.11877137422561646 maxQueued=12 failed=false
+MODULARCRAFT_QA client p95BlockNs=518792 blocks=18686 underruns=1 maxBlockNs=12308667 peak=0.11877137422561646 maxQueued=12 failed=false
+MODULARCRAFT_QA client p95BlockNs=517833 blocks=20559 underruns=1 maxBlockNs=12308667 peak=0.11877137422561646 maxQueued=12 failed=false
+MODULARCRAFT_QA amp running sequencers PASS count=4
+MODULARCRAFT_QA amp default-enabled speakers PASS count=8
+MODULARCRAFT_QA amp server p95Ns=568709 maxNs=1548792 target2ms=PASS
+MODULARCRAFT_QA client p95BlockNs=516375 blocks=22435 underruns=1 maxBlockNs=12873833 peak=0.11877137422561646 maxQueued=12 failed=false
+BUILD SUCCESSFUL in 1m 12s
+
+64 module / 72 cable / 8 speaker DSP p95 ms=0.634958, oscillators=[OSCILLATOR, OSCILLATOR, OSCILLATOR, OSCILLATOR, OSCILLATOR, OSCILLATOR, OSCILLATOR, OSCILLATOR, OSCILLATOR, OSCILLATOR, OSCILLATOR, OSCILLATOR, OSCILLATOR, OSCILLATOR, OSCILLATOR, OSCILLATOR], measured allocation bytes=0
+

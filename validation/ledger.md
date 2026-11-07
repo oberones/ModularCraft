@@ -945,3 +945,46 @@ text, and added the all-nine-block showcase wiring. Added an opt-in, test-only
   changes. The native probe is test-only and opt-in.
 - **PENDING unchanged:** Existing multiplayer, listening, hardware, sustained-load,
   security, and release acceptance gates. No commit, push, or publication performed.
+
+## 2026-11-06 — Amp / Speaker split with integrated ADSR
+
+Implemented AS-001–006: old combined blocks become Amp (audio output, integrated ADSR,
+Gate In/Hold Gate/redstone, Drone, external-gain override); new Speaker has spatial
+playback only, defaults enabled, and persists enable intent and overload suspension.
+Preserved registry identity, schema-1 migration and unknown data; writes world/block v2
+and protocol/snapshots v9. Added assets, controls, RP-008, native captures, migration
+instructions and explicit stable playback admission within unchanged quotas.
+
+PASS: `make verify GAMETEST_DIR=run/make/amp-gametest-final`, 172 JUnit / 35 packaged
+GameTests, strict dependency and package checks, formatting/static analysis and launcher
+checks. Red–green baseline and two integration/allocation findings are recorded in
+[the Amp evidence](amp/README.md), with [machine-readable results](amp/results.json).
+Full voice DSP p95 0.634958 ms, zero measured steady allocation. Native UI/400-tick
+capture/1,200-tick load probes passed widgets, manual gate release, screenshots, four
+running sequencers and eight default-enabled Speakers. Native load audio p95 0.516375 ms,
+server p95 0.568709 ms on Apple M2 Pro / 16 GiB / macOS 26.6.2. Local links/diff check pass.
+
+Native probes each recorded one underrun; load maximum audio block 12.873833 ms and
+all-run server maximum 13.407791 ms remain explicit. Listening/acoustic, two-client,
+30-minute sustained, tail/underrun, and earlier security/platform/release gates remain
+PENDING. Self-review PASS for the implemented contracts; no release qualification claimed.
+Pins and manual worlds preserved; no commit, push, play-instance installation or publication.
+Runtime JAR SHA-256: `60847b081a51735244560b75964e3fa503d29050cdf453a29197b985cd309c68`.
+
+
+## 2026-11-07 — PR #1 actionable review feedback
+
+Addressed all five comments on [PR #1](https://github.com/oberones/ModularCraft/pull/1):
+persistent quarantine framing, immediate capacity-admission snapshots, current automatic
+Speaker panel status/revisions, the native four-cable expectation, and RP-001 Amp gain wiring.
+[Review mapping, red–green evidence and self-review](amp/pr1-review.md) and
+[machine-readable results](amp/pr1-review-results.json) record the changes.
+
+PASS: `make verify GAMETEST_DIR=run/make/pr1-final` (175 JUnit / 36 packaged GameTests,
+strict dependencies, formatting/static analysis, launcher and artifact checks). Native
+`qaCableRemoval` probe passed remove/reconnect/remove with exact 3/4/3 cable sets; screenshot
+review passed. Diff and documentation links checked. Full Amp load DSP p95 0.628125 ms,
+zero measured steady allocation. Native probe recorded one underrun and a 2.015709 ms
+maximum block: listening, multiplayer, sustained/tail qualification and earlier release
+gates remain PENDING. Pins/manual worlds preserved. No commit, push, publication or
+remote review-thread mutation performed.

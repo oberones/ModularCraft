@@ -38,7 +38,7 @@ public final class WorldData extends SavedData {
   private static WorldData load(CompoundTag tag, HolderLookup.Provider registries) {
     WorldData data = new WorldData();
     try {
-      if (tag.getInt("Schema") != 1 || !tag.contains("Registry", 7))
+      if ((tag.getInt("Schema") != 1 && tag.getInt("Schema") != 2) || !tag.contains("Registry", 7))
         throw new IllegalArgumentException("schema");
       var stored = StateCodec.load(tag.getByteArray("Registry"));
       data.state = stored.state();
@@ -63,7 +63,7 @@ public final class WorldData extends SavedData {
   @Override
   public CompoundTag save(CompoundTag tag, HolderLookup.Provider registries) {
     if (refused != null) return refused.copy();
-    tag.putInt("Schema", 1);
+    tag.putInt("Schema", 2);
     tag.putByteArray("Registry", StateCodec.save(state, quarantine));
     return tag;
   }

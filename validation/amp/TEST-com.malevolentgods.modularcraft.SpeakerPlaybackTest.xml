@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.malevolentgods.modularcraft.SpeakerPlaybackTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-11-07T04:33:22.766Z" hostname="Calliope.local" time="0.002">
+  <properties/>
+  <testcase name="redundantEnableKeepsItsAdmittedSlot()" classname="com.malevolentgods.modularcraft.SpeakerPlaybackTest" time="0.0"/>
+  <testcase name="defaultEnabledIntentSurvivesSaveAndDisabledChoiceIsRemembered()" classname="com.malevolentgods.modularcraft.SpeakerPlaybackTest" time="0.0"/>
+  <testcase name="allPatchMembersMustBeLoadedBeforeRememberedPlaybackResumes()" classname="com.malevolentgods.modularcraft.SpeakerPlaybackTest" time="0.0"/>
+  <testcase name="waitingSpeakersDoNotDisplaceAdmittedPlayback()" classname="com.malevolentgods.modularcraft.SpeakerPlaybackTest" time="0.0"/>
+  <testcase name="chunkUnloadResumesButOverloadStaysLatchedUntilExplicitEnable()" classname="com.malevolentgods.modularcraft.SpeakerPlaybackTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

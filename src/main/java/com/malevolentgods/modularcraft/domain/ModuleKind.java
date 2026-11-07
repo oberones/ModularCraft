@@ -28,7 +28,9 @@ public enum ModuleKind {
           Port.DECAY_IN,
           Port.SUSTAIN_IN,
           Port.RELEASE_IN)),
-  SPEAKER(List.of(Parameter.VOLUME), List.of(Port.AUDIO_IN, Port.GAIN_IN)),
+  SPEAKER(
+      List.of(Parameter.VOLUME, Parameter.SPEAKER_ENABLED, Parameter.SPEAKER_SUSPENDED),
+      List.of(Port.AUDIO_IN)),
   KEYBOARD(List.of(Parameter.OCTAVE), List.of(Port.CV_OUT, Port.GATE_OUT)),
   EUCLIDEAN_SEQUENCER(
       List.of(
@@ -69,13 +71,39 @@ public enum ModuleKind {
       List.of(Port.CONTROL_OUT, Port.CLOCK_IN)),
   MIXER(
       MixerSettings.PARAMETERS,
-      List.of(Port.AUDIO_IN_1, Port.AUDIO_IN_2, Port.AUDIO_IN_3, Port.AUDIO_IN_4, Port.AUDIO_OUT));
+      List.of(Port.AUDIO_IN_1, Port.AUDIO_IN_2, Port.AUDIO_IN_3, Port.AUDIO_IN_4, Port.AUDIO_OUT)),
+  AMP(
+      List.of(
+          Parameter.AMP_LEVEL,
+          Parameter.ATTACK,
+          Parameter.DECAY,
+          Parameter.SUSTAIN,
+          Parameter.RELEASE,
+          Parameter.DRONE),
+      List.of(Port.AUDIO_IN, Port.GAIN_IN, Port.GATE_IN, Port.AUDIO_OUT));
   public final List<Parameter> parameters;
   public final List<Port> ports;
 
   ModuleKind(List<Parameter> parameters, List<Port> ports) {
     this.parameters = parameters;
     this.ports = ports;
+  }
+
+  public boolean hasEnvelope() {
+    return this == ENVELOPE || this == AMP;
+  }
+
+  /** Stable block/item identifiers; the original combined block becomes Amp. */
+  public String registryName() {
+    return this == AMP
+        ? "speaker"
+        : this == SPEAKER ? "audio_speaker" : name().toLowerCase(java.util.Locale.ROOT);
+  }
+
+  public List<Parameter> visibleParameters() {
+    return parameters.stream()
+        .filter(p -> p != Parameter.SPEAKER_ENABLED && p != Parameter.SPEAKER_SUSPENDED)
+        .toList();
   }
 
   public boolean isOscillator() {

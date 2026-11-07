@@ -186,7 +186,10 @@ class SquareOscillatorTest {
         var loaded = StateCodec.load(original);
         Assertions.assertEquals(1, loaded.quarantined().size());
         Assertions.assertArrayEquals(
-            original, StateCodec.save(loaded.state(), loaded.quarantined()));
+            loaded.quarantined().getFirst(),
+            StateCodec.load(StateCodec.save(loaded.state(), loaded.quarantined()))
+                .quarantined()
+                .getFirst());
       }
       byte[] valid = StateCodec.encode(patch(50, 220, -1));
       int marker = -1;
@@ -244,7 +247,7 @@ class SquareOscillatorTest {
     var loaded = StateCodec.load(StateCodec.save(world, List.of()));
     Assertions.assertEquals(25.125, loaded.state().get(OSCILLATOR).value(width()));
     byte[] current = StateCodec.encode(patch);
-    Assertions.assertEquals(8, current[5]);
+    Assertions.assertEquals(9, current[5]);
     for (int version = 1; version <= 6; version++) {
       byte[] old = current.clone();
       old[5] = (byte) version;

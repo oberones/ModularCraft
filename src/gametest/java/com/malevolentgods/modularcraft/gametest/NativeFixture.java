@@ -46,6 +46,7 @@ public final class NativeFixture {
             NativeShowcaseFixture.tick(performer, ticks);
             return;
           }
+          if (Boolean.getBoolean("modularcraft.qa.amp")) NativeAmpFixture.tick(performer, ticks);
           if (Boolean.getBoolean("modularcraft.qa.mixer"))
             NativeMixerFixture.tick(performer, ticks);
           if (Boolean.getBoolean("modularcraft.qa.lfo")) NativeLfoFixture.tick(performer, ticks);
@@ -134,6 +135,10 @@ public final class NativeFixture {
       for (int z = -2; z < 18; z++)
         level.setBlock(
             new BlockPos(originX + x, y - 1, originZ + z), Blocks.STONE.defaultBlockState(), 3);
+    if (Boolean.getBoolean("modularcraft.qa.amp")) {
+      NativeAmpFixture.build(player, originX, y, originZ);
+      return;
+    }
     if (Boolean.getBoolean("modularcraft.qa.mixer")) {
       NativeMixerFixture.build(player, originX, y, originZ);
       return;
@@ -149,7 +154,7 @@ public final class NativeFixture {
     int patchCount = Boolean.getBoolean("modularcraft.qa.load") ? 4 : 1;
     for (int patch = 0; patch < patchCount; patch++) {
       List<ModuleEntity> modules = new ArrayList<>();
-      int count = patchCount == 4 ? 16 : Boolean.getBoolean("modularcraft.qa.keyboard") ? 5 : 4;
+      int count = patchCount == 4 ? 16 : Boolean.getBoolean("modularcraft.qa.keyboard") ? 6 : 5;
       for (int i = 0; i < count; i++) {
         ModuleKind kind =
             patchCount == 4
@@ -158,7 +163,9 @@ public final class NativeFixture {
                     : i <= 10
                         ? ModuleKind.FILTER
                         : i <= 13 ? ModuleKind.ENVELOPE : ModuleKind.SPEAKER)
-                : ModuleKind.values()[i];
+                : i == 3
+                    ? ModuleKind.AMP
+                    : i == count - 1 ? ModuleKind.SPEAKER : ModuleKind.values()[i];
         if (kind == ModuleKind.OSCILLATOR && Boolean.getBoolean("modularcraft.qa.square"))
           kind = ModuleKind.SQUARE_OSCILLATOR;
         BlockPos pos =
@@ -195,12 +202,14 @@ public final class NativeFixture {
               player,
               modules.get(11 + i / 4),
               Port.ENVELOPE_OUT,
-              modules.get(destinations[i]),
-              destinations[i] < 14 ? Port.CUTOFF_IN : Port.GAIN_IN);
+              modules.get(destinations[i] < 14 ? destinations[i] : destinations[i] - 13),
+              destinations[i] < 14 ? Port.CUTOFF_IN : Port.RESONANCE_IN);
       } else {
         connect(runtime, player, modules.get(0), Port.AUDIO_OUT, modules.get(1), Port.AUDIO_IN);
         connect(runtime, player, modules.get(1), Port.AUDIO_OUT, modules.get(3), Port.AUDIO_IN);
         connect(runtime, player, modules.get(2), Port.ENVELOPE_OUT, modules.get(3), Port.GAIN_IN);
+        connect(
+            runtime, player, modules.get(3), Port.AUDIO_OUT, modules.get(count - 1), Port.AUDIO_IN);
         if (keyboardPosition != null) {
           connect(runtime, player, modules.get(4), Port.CV_OUT, modules.get(0), Port.PITCH_IN);
           connect(runtime, player, modules.get(4), Port.GATE_OUT, modules.get(2), Port.GATE_IN);
@@ -250,13 +259,15 @@ public final class NativeFixture {
       ServerPlayer player, ServerRuntime runtime, int x, int y, int z) {
     var level = player.serverLevel();
     List<ModuleEntity> modules = new ArrayList<>();
-    for (int i = 0; i < 14; i++) {
+    for (int i = 0; i < 16; i++) {
       ModuleKind kind =
           i < 4
               ? ModuleKind.EUCLIDEAN_SEQUENCER
               : i < 6
                   ? ModuleKind.OSCILLATOR
-                  : i < 10 ? ModuleKind.ENVELOPE : i < 12 ? ModuleKind.FILTER : ModuleKind.SPEAKER;
+                  : i < 10
+                      ? ModuleKind.ENVELOPE
+                      : i < 12 ? ModuleKind.FILTER : i < 14 ? ModuleKind.AMP : ModuleKind.SPEAKER;
       BlockPos position =
           i < 4
               ? new BlockPos(x + (i == 1 || i == 2 ? 6 : 0), y, z + (i >= 2 ? 6 : 0))
@@ -315,13 +326,15 @@ public final class NativeFixture {
           Port.ENVELOPE_OUT,
           modules.get(10 + i),
           Port.CUTOFF_IN);
-      var speaker = runtime.state().get(modules.get(12 + i).state().id());
+      connect(
+          runtime, player, modules.get(12 + i), Port.AUDIO_OUT, modules.get(14 + i), Port.AUDIO_IN);
+      var speaker = runtime.state().get(modules.get(14 + i).state().id());
       runtime.state().enable(player.getUUID(), false, speaker.id(), speaker.revision(), true);
     }
     for (ModuleEntity module : modules) runtime.attach(module);
     player.connection.teleport(x + 3.5, y, z + 3.5, 0, 8);
     level.setDayTime(6000);
-    System.out.println("MODULARCRAFT_QA sequencer fixture modules=14 cables=15");
+    System.out.println("MODULARCRAFT_QA sequencer fixture modules=16 cables=17");
   }
 
   private static void cableView(ServerPlayer player, int tick) {

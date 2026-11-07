@@ -899,13 +899,30 @@ public final class ModuleGameTests {
     envelope.initialize(owner);
     speaker.initialize(owner);
     player.setPos(a.getCenter());
+    BlockPos c = h.absolutePos(new BlockPos(3, 1, 1));
+    h.getLevel().setBlock(c, ModularCraft.MODULES.get(ModuleKind.AMP).get().defaultBlockState(), 3);
+    var amp = (ModuleEntity) h.getLevel().getBlockEntity(c);
+    amp.initialize(owner);
     var cable =
         new com.malevolentgods.modularcraft.domain.Cable(
             envelope.state().id(),
             com.malevolentgods.modularcraft.domain.Port.ENVELOPE_OUT,
-            speaker.state().id(),
+            amp.state().id(),
             com.malevolentgods.modularcraft.domain.Port.GAIN_IN);
     runtime.state().connect(owner, false, cable, 0, 0);
+    runtime
+        .state()
+        .connect(
+            owner,
+            false,
+            new com.malevolentgods.modularcraft.domain.Cable(
+                amp.state().id(),
+                com.malevolentgods.modularcraft.domain.Port.AUDIO_OUT,
+                speaker.state().id(),
+                com.malevolentgods.modularcraft.domain.Port.AUDIO_IN),
+            runtime.state().get(amp.state().id()).revision(),
+            0);
+    runtime.attach(amp);
     runtime.attach(envelope);
     runtime.attach(speaker);
     runtime.state().enable(owner, false, speaker.state().id(), speaker.state().revision(), true);
@@ -1012,7 +1029,7 @@ public final class ModuleGameTests {
             false);
     var tag = new net.minecraft.nbt.CompoundTag();
     tag.putString("id", "modularcraft:module");
-    tag.putInt("Schema", 1);
+    tag.putInt("Schema", 2);
     tag.putByteArray(
         "Module", com.malevolentgods.modularcraft.domain.StateCodec.moduleBytes(copied));
     var stack = ModularCraft.MODULES.get(ModuleKind.OSCILLATOR).get().asItem().getDefaultInstance();
