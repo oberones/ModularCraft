@@ -38,7 +38,14 @@ public final class UnisonSaw {
     mix.target(target);
   }
 
-  /** One 48 kHz sample with peak magnitude at most level; side DSP stops at settled zero spread. */
+  /** Set a new concert pitch with the existing 10 ms ramp; audio-owner only. */
+  public void pitch(double hz, double cents) {
+    double ratio = Math.pow(2, cents / 1200);
+    frequencies[0].target(hz);
+    frequencies[1].target(hz / ratio);
+    frequencies[2].target(hz * ratio);
+  }
+
   public double next(double level) {
     double center = voices[0].next(frequencies[0].next(), level);
     double lowHz = frequencies[1].next(), highHz = frequencies[2].next();

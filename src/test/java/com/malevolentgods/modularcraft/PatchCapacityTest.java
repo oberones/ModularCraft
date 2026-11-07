@@ -128,7 +128,7 @@ class PatchCapacityTest {
   void refusesOldProtocolAndOversizedCollectionsBeforeReadingEntries() {
     PatchSnapshot empty = new PatchSnapshot(OWNER, 0, 0, 0, List.of(), List.of(), Map.of());
     byte[] encoded = StateCodec.encode(empty);
-    Assertions.assertEquals(11, ByteBuffer.wrap(encoded).getShort(4));
+    Assertions.assertEquals(12, ByteBuffer.wrap(encoded).getShort(4));
     byte[] old = encoded.clone();
     ByteBuffer.wrap(old).putShort(4, (short) 10);
     Assertions.assertEquals(

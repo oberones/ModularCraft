@@ -58,7 +58,25 @@ public enum Parameter {
   DRONE(0, 1, 0, ""),
   SPEAKER_ENABLED(0, 1, 1, ""),
   SPEAKER_SUSPENDED(0, 1, 0, ""),
-  REDSTONE_MODE(0, 1, 0, "");
+  REDSTONE_MODE(0, 1, 0, ""),
+  SEQUENCE_LENGTH(1, 16, 16, ""),
+  GATE_TIME(1, 2000, 100, "ms"),
+  STEP_1(-1, 127, -1, ""),
+  STEP_2(-1, 127, -1, ""),
+  STEP_3(-1, 127, -1, ""),
+  STEP_4(-1, 127, -1, ""),
+  STEP_5(-1, 127, -1, ""),
+  STEP_6(-1, 127, -1, ""),
+  STEP_7(-1, 127, -1, ""),
+  STEP_8(-1, 127, -1, ""),
+  STEP_9(-1, 127, -1, ""),
+  STEP_10(-1, 127, -1, ""),
+  STEP_11(-1, 127, -1, ""),
+  STEP_12(-1, 127, -1, ""),
+  STEP_13(-1, 127, -1, ""),
+  STEP_14(-1, 127, -1, ""),
+  STEP_15(-1, 127, -1, ""),
+  STEP_16(-1, 127, -1, "");
   public final double min, max, initial;
   public final String unit;
 
@@ -71,7 +89,25 @@ public enum Parameter {
 
   private boolean integer() {
     return switch (this) {
-      case REDSTONE_MODE,
+      case SEQUENCE_LENGTH,
+          GATE_TIME,
+          STEP_1,
+          STEP_2,
+          STEP_3,
+          STEP_4,
+          STEP_5,
+          STEP_6,
+          STEP_7,
+          STEP_8,
+          STEP_9,
+          STEP_10,
+          STEP_11,
+          STEP_12,
+          STEP_13,
+          STEP_14,
+          STEP_15,
+          STEP_16,
+          REDSTONE_MODE,
           DRONE,
           SPEAKER_ENABLED,
           SPEAKER_SUSPENDED,

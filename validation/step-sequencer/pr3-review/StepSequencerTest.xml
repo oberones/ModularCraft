@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.malevolentgods.modularcraft.StepSequencerTest" tests="12" skipped="0" failures="0" errors="0" timestamp="2026-11-07T21:12:42.450Z" hostname="Calliope.local" time="0.005">
+  <properties/>
+  <testcase name="notesRestsAndOverlapRetriggerAtExactSamples()" classname="com.malevolentgods.modularcraft.StepSequencerTest" time="0.001"/>
+  <testcase name="replacementRuntimeIsPrimedWithoutPhantomClockOrResetEdges()" classname="com.malevolentgods.modularcraft.StepSequencerTest" time="0.0"/>
+  <testcase name="malformedGateCheckpointCannotSoundAnUnplayedStep()" classname="com.malevolentgods.modularcraft.StepSequencerTest" time="0.0"/>
+  <testcase name="externalResetClockAndRewiringAreDeterministic()" classname="com.malevolentgods.modularcraft.StepSequencerTest" time="0.0"/>
+  <testcase name="retainedRuntimeKeepsPendingClockEdgeAcrossRebuild()" classname="com.malevolentgods.modularcraft.StepSequencerTest" time="0.0"/>
+  <testcase name="rejectedExternalClockDoesNotConsumePendingNoteEdit()" classname="com.malevolentgods.modularcraft.StepSequencerTest" time="0.0"/>
+  <testcase name="liveSettingsAndCheckpointRecoveryAgree()" classname="com.malevolentgods.modularcraft.StepSequencerTest" time="0.0"/>
+  <testcase name="oneStepRepeatsAndLengthChangesPreserveHiddenNotes()" classname="com.malevolentgods.modularcraft.StepSequencerTest" time="0.0"/>
+  <testcase name="invalidValuesAndMalformedSnapshotsAreRejected()" classname="com.malevolentgods.modularcraft.StepSequencerTest" time="0.001"/>
+  <testcase name="oneStepResumeRetriggersEvenWhenSampleAndStepAreUnchanged()" classname="com.malevolentgods.modularcraft.StepSequencerTest" time="0.0"/>
+  <testcase name="sameSampleResumePlaysNextNoteAndRestIncludingAfterRecovery()" classname="com.malevolentgods.modularcraft.StepSequencerTest" time="0.0"/>
+  <testcase name="separateMelodicModuleHasFivePorts()" classname="com.malevolentgods.modularcraft.StepSequencerTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

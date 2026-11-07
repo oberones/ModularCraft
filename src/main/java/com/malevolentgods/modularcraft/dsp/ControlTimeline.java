@@ -23,6 +23,7 @@ public final class ControlTimeline {
     final Lfo lfo;
     final Node[] cv = new Node[4];
     final Sequencer sequencer;
+    StepSequencer steps;
     final Envelope envelope;
     boolean base, key;
     Node clock, reset, gate;
@@ -38,6 +39,10 @@ public final class ControlTimeline {
 
     boolean output(Port port, long sample) {
       if (port == null) return false;
+      if (steps != null)
+        return port == Port.GATE_OUT
+            ? steps.gate(sample)
+            : port == Port.CLOCK_OUT && steps.clock(sample);
       if (sequencer == null) return port == Port.GATE_OUT && key;
       return sequencer.output(channel(port), sample);
     }
@@ -90,6 +95,19 @@ public final class ControlTimeline {
       Map<UUID, KeyboardState> keyboards,
       Map<UUID, Lfo> lfos,
       long sample) {
+    this(modules, cables, sequencers, envelopes, baseGates, keyboards, lfos, Map.of(), sample);
+  }
+
+  public ControlTimeline(
+      List<ModuleState> modules,
+      List<Cable> cables,
+      Map<UUID, Sequencer> sequencers,
+      Map<UUID, Envelope> envelopes,
+      Map<UUID, Boolean> baseGates,
+      Map<UUID, KeyboardState> keyboards,
+      Map<UUID, Lfo> lfos,
+      Map<UUID, StepSequencer> steps,
+      long sample) {
     List<ModuleState> ordered = Graph.compile(modules, cables);
     this.sample = sample;
     nodes = new Node[ordered.size()];
@@ -101,6 +119,7 @@ public final class ControlTimeline {
               sequencers.get(module.id()),
               envelopes.get(module.id()),
               lfos.get(module.id()));
+      node.steps = steps.get(module.id());
       node.base = baseGates.getOrDefault(module.id(), false);
       node.key = keyboards.containsKey(module.id()) && keyboards.get(module.id()).gate();
       nodes[i] = node;
@@ -156,7 +175,7 @@ public final class ControlTimeline {
    */
   public void rewireAll(List<ControlTimeline> previous, long at) {
     for (Node node : nodes) {
-      if (node.sequencer == null && node.lfo == null) continue;
+      if (node.sequencer == null && node.lfo == null && node.steps == null) continue;
       Node old = null;
       for (ControlTimeline timeline : previous) {
         old = timeline.indices.get(node.id);
@@ -164,12 +183,19 @@ public final class ControlTimeline {
       }
       if (old == null
           || node.lfo != old.lfo
+          || node.steps != old.steps
           || !same(node.clock, old.clock)
           || node.clockPort != old.clockPort
           || !same(node.reset, old.reset)
           || node.resetPort != old.resetPort) {
         if (node.sequencer != null)
           node.sequencer.connect(
+              node.clock != null,
+              signal(node.clock, node.clockPort, at),
+              signal(node.reset, node.resetPort, at),
+              at);
+        if (node.steps != null)
+          node.steps.connect(
               node.clock != null,
               signal(node.clock, node.clockPort, at),
               signal(node.reset, node.resetPort, at),
@@ -206,6 +232,13 @@ public final class ControlTimeline {
         node.sequencer.advance(at);
         transitions += (int) (node.sequencer.transitions() - before);
       }
+      if (node.steps != null) {
+        long before = node.steps.transitions();
+        node.steps.inputs(
+            signal(node.clock, node.clockPort, at), signal(node.reset, node.resetPort, at), at);
+        node.steps.advance(at);
+        transitions += (int) (node.steps.transitions() - before);
+      }
       if (node.lfo != null) node.lfo.input(signal(node.clock, node.clockPort, at), at);
       if (node.envelope != null) {
         boolean boundary = node.envelope.nextEvent() <= at;
@@ -226,6 +259,7 @@ public final class ControlTimeline {
   private void findNext() {
     nextEvent = Long.MAX_VALUE;
     for (Node node : nodes) {
+      if (node.steps != null) nextEvent = Math.min(nextEvent, node.steps.nextEvent());
       if (node.sequencer != null) nextEvent = Math.min(nextEvent, node.sequencer.nextEvent());
       if (node.envelope != null) {
         nextEvent = Math.min(nextEvent, node.envelope.nextEvent());
@@ -259,6 +293,7 @@ public final class ControlTimeline {
   public void suspend(long at) {
     for (Node node : nodes) {
       if (node.sequencer != null) node.sequencer.stop(at);
+      if (node.steps != null) node.steps.stop(at);
       if (node.envelope != null) node.envelope.gate(false, at);
     }
     sample = at;

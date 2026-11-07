@@ -33,7 +33,11 @@ public final class PulseOscillator {
     width.target(duty);
   }
 
-  /** Returns one 48 kHz sample, with magnitude at most the supplied level. */
+  /** Set a new concert pitch with the existing 10 ms ramp; audio-owner only. */
+  public void pitch(double hz) {
+    frequency.target(hz);
+  }
+
   public double next(double level) {
     double dt = frequency.next() / 192000.0;
     double duty = width.next();

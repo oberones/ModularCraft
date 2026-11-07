@@ -60,7 +60,7 @@ public final class Sequencer {
   private boolean running, external, clockHigh, resetHigh;
   private long nextClock = Long.MAX_VALUE, lastClock = -MIN_CLOCK, clockEnd;
   private int remainder, rejectedClocks;
-  private long transitions;
+  private long transitions, clockEvents;
   private final int[] next = new int[4], step = {-1, -1, -1, -1};
   private final long[] ends = new long[4];
 
@@ -166,6 +166,7 @@ public final class Sequencer {
   private void tick(long sample) {
     apply();
     transitions += 5;
+    clockEvents++;
     clockEnd = Math.addExact(sample, PULSE);
     lastClock = sample;
     for (int c = 0; c < 4; c++) {
@@ -205,6 +206,15 @@ public final class Sequencer {
 
   public long transitions() {
     return transitions;
+  }
+
+  /** Local event serial; checkpoint recovery starts a new serial without replaying a tick. */
+  long clockEvents() {
+    return clockEvents;
+  }
+
+  public long lastClock() {
+    return lastClock;
   }
 
   public int step(int channel) {

@@ -73,6 +73,9 @@ public enum ModuleKind {
   MIXER(
       MixerSettings.PARAMETERS,
       List.of(Port.AUDIO_IN_1, Port.AUDIO_IN_2, Port.AUDIO_IN_3, Port.AUDIO_IN_4, Port.AUDIO_OUT)),
+  STEP_SEQUENCER(
+      StepSequencerSettings.PARAMETERS,
+      List.of(Port.CV_OUT, Port.GATE_OUT, Port.CLOCK_IN, Port.RESET_IN, Port.CLOCK_OUT)),
   AMP(
       List.of(
           Parameter.AMP_LEVEL,

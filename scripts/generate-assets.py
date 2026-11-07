@@ -47,10 +47,12 @@ def panel():
  d=Drawing();d.rect(0,0,64,64,'#151b23');d.rect(2,2,60,60,'#34434e');d.rect(4,4,56,56,'#202d37')
  for x,y in [(5,5),(58,5),(5,58),(58,58)]:d.circle(x,y,1,'#b1b9b8');d.rect(x,y,1,1,'#46515b')
  return d
-MODULES=[('mixer','MIX','#65d7e5',['1','2','3','4','AO']),('lfo','LFO','#e5a1e8',['CO','CI']),('square_oscillator','SQR','#65d7e5',['AO','PI']),('oscillator','SAW','#65d7e5',['AO','PI']),('filter','LPF','#91c79a',['AI','CI','AO','RC']),('envelope','ADSR','#ffc36a',['CO','GT','A','D','S','R']),('speaker','AMP','#d69bbd',['AI','GI','GT','AO']),('audio_speaker','SPK','#91c79a',['AI']),('keyboard','KEYS','#b3a3ef',['CV','GO']),('euclidean_sequencer','EUCLID','#65d7e5',['CI','RI','CO','A','B','C','D'])]
+MODULES=[('step_sequencer','STEP','#65d7e5',['CV','GO','CI','RI','CO']),('mixer','MIX','#65d7e5',['1','2','3','4','AO']),('lfo','LFO','#e5a1e8',['CO','CI']),('square_oscillator','SQR','#65d7e5',['AO','PI']),('oscillator','SAW','#65d7e5',['AO','PI']),('filter','LPF','#91c79a',['AI','CI','AO','RC']),('envelope','ADSR','#ffc36a',['CO','GT','A','D','S','R']),('speaker','AMP','#d69bbd',['AI','GI','GT','AO']),('audio_speaker','SPK','#91c79a',['AI']),('keyboard','KEYS','#b3a3ef',['CV','GO']),('euclidean_sequencer','EUCLID','#65d7e5',['CI','RI','CO','A','B','C','D'])]
 for name,title,accent,ports in MODULES:
  d=panel();d.rect(9,8,46,2,accent);d.text(title,20 if name=='euclidean_sequencer' else 12,12 if name=='euclidean_sequencer' else 13,accent,1 if name=='euclidean_sequencer' else 2)
- if name in ('oscillator','square_oscillator'):
+ if name=='step_sequencer':
+  for i in range(16):d.rect(9+(i%8)*6,26+(i//8)*10,4,4,'#101820')
+ elif name in ('oscillator','square_oscillator'):
   d.rect(9,27,27,17,'#101820')
   for x in range(11,34):
    if name=='oscillator':d.rect(x,41-(x-11)%8,1,1,accent)
@@ -228,5 +230,7 @@ errors={
 'settings_write':'Could not save local settings. Check the config directory permissions.',
  'throttled':'Edit rate limited: 20/s per player, 200/s per world. Wait and retry refreshed values.'}
 lang.update({'modularcraft.error.'+k:v for k,v in errors.items()})
+lang['modularcraft.step.rejected']='Clock pulses above 50 Hz ignored: %s'
+lang.update({'block.modularcraft.step_sequencer': 'Step Sequencer', 'parameter.modularcraft.sequence_length': 'Length', 'parameter.modularcraft.gate_time': 'Gate Time (ms)', 'modularcraft.step.record': 'Record', 'modularcraft.step.recording': 'Recording', 'modularcraft.step.rest': 'Rest', 'modularcraft.step.set': 'Set', 'modularcraft.step.power_on': 'Power: On', 'modularcraft.step.power_off': 'Power: Off', 'modularcraft.step.length': 'Length', 'modularcraft.step.tempo': 'BPM', 'modularcraft.step.gate': 'Gate ms', 'modularcraft.step.cell': 'Step %s: %s', 'modularcraft.step.position': 'Edit %s · Play %s · Oct %s', 'parameter.modularcraft.step_1': 'Step 1', 'parameter.modularcraft.step_2': 'Step 2', 'parameter.modularcraft.step_3': 'Step 3', 'parameter.modularcraft.step_4': 'Step 4', 'parameter.modularcraft.step_5': 'Step 5', 'parameter.modularcraft.step_6': 'Step 6', 'parameter.modularcraft.step_7': 'Step 7', 'parameter.modularcraft.step_8': 'Step 8', 'parameter.modularcraft.step_9': 'Step 9', 'parameter.modularcraft.step_10': 'Step 10', 'parameter.modularcraft.step_11': 'Step 11', 'parameter.modularcraft.step_12': 'Step 12', 'parameter.modularcraft.step_13': 'Step 13', 'parameter.modularcraft.step_14': 'Step 14', 'parameter.modularcraft.step_15': 'Step 15', 'parameter.modularcraft.step_16': 'Step 16'})
 p=ASSETS/'lang/en_us.json';p.parent.mkdir(parents=True,exist_ok=True);p.write_text(json.dumps(lang,indent=2,ensure_ascii=False)+'\n')
-print('Wrote ten complete block sets, tool, localization, and editable SVG sources.')
+print('Wrote eleven complete block sets, tool, localization, and editable SVG sources.')

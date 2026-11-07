@@ -127,6 +127,12 @@ public final class ClientRuntime {
               else if (mc.screen instanceof MixerScreen screen
                   && screen.identity().equals(module.id()))
                 screen.accept(module, message.editable(), message.status());
+            } else if (module.kind() == ModuleKind.STEP_SEQUENCER) {
+              if (message.open())
+                mc.setScreen(new StepSequencerScreen(module, message.editable(), message.status()));
+              else if (mc.screen instanceof StepSequencerScreen screen
+                  && screen.identity().equals(module.id()))
+                screen.accept(module, message.editable(), message.status());
             } else if (module.kind() == ModuleKind.EUCLIDEAN_SEQUENCER) {
               if (message.open())
                 mc.setScreen(new SequencerScreen(module, message.editable(), message.status()));

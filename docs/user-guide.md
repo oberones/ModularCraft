@@ -2,12 +2,12 @@
 
 [Back to the project overview](../README.md)
 
-Build a shared modular synthesizer from ten Minecraft blocks: **Saw Oscillator**, **Square Oscillator**,
-**Low-Pass Filter**, **Envelope Generator**, **Amp**, **Speaker**, **Keyboard**, **Euclidean Sequencer**, **LFO**, and **Audio Mixer**. Connect their
+Build a shared modular synthesizer from eleven Minecraft blocks: **Saw Oscillator**, **Square Oscillator**,
+**Low-Pass Filter**, **Envelope Generator**, **Amp**, **Speaker**, **Keyboard**, **Euclidean Sequencer**, **Step Sequencer**, **LFO**, and **Audio Mixer**. Connect their
 ports with the Patching Tool; nearby players synthesize the accepted performance locally.
 No prerecorded loops, accounts, internet audio, external services, or extra audio software
 are required. Creative access is sufficient; there are no survival recipes in this MVP.
-Recording/export and melodic sequencing are not yet supported.
+The Step Sequencer records melodic note/rest patterns. Audio recording and export are not yet supported.
 
 This is a **development candidate**, not an accepted public release. The
 [evidence ledger](../validation/ledger.md) distinguishes automated checks, native engine
@@ -21,11 +21,12 @@ measurements, user-reported listening, and outstanding release acceptance.
 - [Patching, permissions, and saved work](#patching-permissions-and-saved-work)
 - [Troubleshooting](#troubleshooting)
 - [Euclidean rhythms](#euclidean-rhythms-rp-004)
+- [Record a melody](#record-a-melody-rp-009)
 - [Square Oscillator](#square-oscillator--rp-005)
 - [LFO and modulation](#lfo-and-parameter-modulation-rp-006)
 - [Audio Mixer](#audio-mixer-and-rp-007-four-source-blend)
 - [Four-voice Amp patch](#four-voice-amp-patch-rp-008) and [upgrade instructions](#upgrading-existing-patches)
-- [All-ten-block showcase](#showcase-all-ten-blocks-together)
+- [Original ten-block showcase](#showcase-all-ten-blocks-together)
 
 ## Install
 
@@ -202,7 +203,7 @@ across device reopen; it adds no installed dependencies and never keeps notes fr
 MIDI shares the existing traffic limits, including renewals, so dense controller/arpeggiator
 streams can be rejected. Queue overflow stops the session and requires reopening the panel.
 Only supported notes/pedal/reset messages consume the MIDI queue. All clients and the server
-must use protocol **10**; existing world saves remain version **2**. Physical MIDI devices,
+must use protocol **12**; existing world saves remain version **2**. Physical MIDI devices,
 listening, and multiplayer timing still need the acceptance procedure below.
 
 ## Patching, permissions, and saved work
@@ -213,8 +214,8 @@ Ports connect by signal type:
 |---|---|
 | Oscillator, filter, Amp, or mixer Audio Out | Filter, Amp, or Speaker Audio In; mixer inputs 1–4 |
 | Envelope Out or LFO Control Out | Filter cutoff/resonance; envelope A/D/S/R; Amp gain |
-| Keyboard Pitch CV Out | Saw or Square Oscillator Pitch CV In |
-| Keyboard Gate Out; sequencer Clock Out or triggers A–D | Envelope or Amp Gate In; sequencer Clock/Reset In; LFO Clock In |
+| Keyboard or Step Sequencer Pitch CV Out | Saw or Square Oscillator Pitch CV In |
+| Keyboard or Step Sequencer Gate Out; either sequencer’s Clock Out; Euclidean triggers A–D | Envelope or Amp Gate In; either sequencer’s Clock/Reset In; LFO Clock In |
 
 An input has one source; an output can feed four destinations.
 Shift-right-click a destination input to remove exactly that cable. Right-click air or
@@ -248,7 +249,7 @@ Unknown or corrupt records are quarantined and preserved, including connected af
 components. Do not edit the save to guess missing values. Back up the entire world, use
 a compatible mod version or restore a known-good backup, and retain the original data
 for recovery. The global registry is `data/modularcraft.dat`; per-module data is also in
-its owning block entity. World/block saves use schema 2; protocol/snapshots use version 11.
+its owning block entity. World/block saves use schema 2; protocol/snapshots use version 12.
 See [upgrading existing patches](#upgrading-existing-patches) before loading an old world.
 
 
@@ -329,9 +330,10 @@ and follows current power once the complete patch loads; positions still start f
 after reload. Speakers retain their enabled setting.
 Closing the editor, disabling speakers, and local mute leave a loaded sequencer running.
 Existing sequencers migrate with Redstone Mode Off. Back up worlds before upgrading;
-install protocol-v11 builds on every client and server. Restore the backup before downgrading.
-This version does not add presets, manual step editing, swing, probability, variable gate
-lengths, clock division, pitch sequences, MIDI clock, or redstone clock conversion.
+install protocol-v12 builds on every client and server. Restore the backup before downgrading.
+The Euclidean Sequencer does not provide presets, manual step editing, swing, probability,
+variable gate lengths, clock division, pitch sequences, MIDI clock, or redstone clock conversion.
+Use the separate [Step Sequencer](#record-a-melody-rp-009) to record melodies and set gate time.
 
 
 ## Square Oscillator — RP-005
@@ -358,7 +360,7 @@ Amp Gain Control In, using default envelope controls. Disable the speaker or pre
 local mute to stop. Save/reload retains width, frequency, level and cables; Speakers
 retain their enabled setting. Human listening and multiplayer qualification remain separate gates.
 
-The new block requires protocol **10** clients/server. World schema is now **2** and
+The new block requires protocol **12** clients/server. World schema is now **2** and
 existing saw blocks retain their identifiers and sound. Back up worlds before upgrading;
 restore the backup before downgrading to a build that does not know the square block.
 
@@ -414,7 +416,7 @@ Build these RP-006 variations with blocks two blocks apart, all owned by the sam
    needed. All waveforms/settings not changed above retain variation 1 values.
 
 World schema is now **2**; exact legacy filter/envelope records gain zero-valued depths,
-so existing patches keep their settings. Network/snapshot protocol is **10**: update clients
+so existing patches keep their settings. Network/snapshot protocol is **12**: update clients
 and server together. Back up the world before upgrading; restore that backup when returning
 to an older binary, which cannot understand LFO records. Unknown/malformed records remain
 preserved rather than silently repaired. Transient phase is not saved across world/chunk
@@ -452,13 +454,15 @@ should be smooth. An empty soloed channel yields silence. Disconnecting a cable 
 change other levels. Disable the speaker when finished. Further mixers can be chained
 within the existing patch/cable limits; feedback is refused.
 
-World schema is now **2**; network/snapshot protocol is **10**. Update every client and server
+World schema is now **2**; network/snapshot protocol is **12**. Update every client and server
 together. Back up worlds before upgrading and restore the backup for downgrade; older
 builds cannot interpret mixer records. Human RP-007 listening and multiplayer qualification
 remain separate from the automated evidence in [the ledger](../validation/ledger.md).
 
 
-## Showcase: all ten blocks together
+<a id="showcase-all-ten-blocks-together"></a>
+
+## Showcase: the original ten blocks together
 
 The earlier gallery below shows the original nine-block layout before the Amp/Speaker split.
 Add the Amp and its output cable as described here.
@@ -614,7 +618,7 @@ interlock. Keep rotations at 0, trigger mutes off, and Redstone Mode off for thi
 ## Upgrading existing patches
 
 Back up the entire world before installing this version on every client and server.
-Network/snapshot version 11 requires matching peers. World and block saves now use schema 2;
+Network/snapshot version 12 requires matching peers. World and block saves now use schema 2;
 schema-1 records migrate automatically. The increase to 20 modules does not change the save schema.
 Do not load worlds containing 17–20-module patches in builds enforcing the old 16-module limit.
 Downgrade by restoring the backup with the old build.
@@ -629,3 +633,70 @@ The new Speaker adds its own volume stage. A migrated Amp at Level 10% feeding a
 Speaker at Volume 10% is quieter than the old combined block. Set Amp Level to 100%
 for the normal new-patch gain arrangement, keeping Speaker at a conservative volume.
 Unknown/malformed data stays quarantined; retain the original backup for recovery.
+
+
+## Record a melody: RP-009
+
+Place a **Step Sequencer**, **Saw Oscillator** (or Square), **Amp**, and **Speaker**,
+with space between them to reach the front ports. Keep Amp Drone off. Speaker starts
+enabled at Volume 10%; local audio controls still apply.
+
+| From | To | Purpose |
+|---|---|---|
+| Step Sequencer **CV → Pitch CV Out** | Oscillator **PI ← Pitch CV In** | Select the sounding note |
+| Step Sequencer **GO → Gate Out** | Amp **GT ← Gate In** | Start and release the Amp's envelope |
+| Oscillator **AO → Audio Out** | Amp **AI ← Audio In** | Feed the oscillator into the Amp |
+| Amp **AO → Audio Out** | Speaker **AI ← Audio In** | Play the shaped sound into the world |
+
+![Four-block melody patch with Step Sequencer, Saw Oscillator, Amp, and Speaker and all four cables visible](images/example-step-melody.png)
+
+*The Step Sequencer sends two control cables; the two audio cables carry sound through
+Oscillator → Amp → Speaker. No cable goes from the sequencer directly to Speaker.*
+
+1. Right-click the Step Sequencer. Set **Length** to 1–16 (default 16) and press **Set**.
+   For a first melody, choose **4**. Leave BPM at 120, Gate ms at 100, and octave at 4.
+2. Click the step where you want to begin (step 1 for the example), then press **Record**.
+3. Tab to the piano and use **A W S E D F T G Y H U J**, or click a piano key.
+   Each fresh press stores one note and advances after the server accepts it. For the
+   four-step example, press and release **A**, **D**, then **G** to enter **C4, E4, G4**.
+4. Press **Rest** to store a silent step and advance. Use **Octave −/+**, or Left/Right
+   while the piano is focused, for C1–B7 (initially octave 4).
+5. Recording finishes after the last active step. To correct a note, select its cell and
+   press Record again. Press the Recording button to finish editing early.
+6. Press **Start / Resume** to hear the pattern. The four-step example loops
+   **C4, E4, G4, Rest**.
+
+![Step Sequencer editor showing a recorded melody, a rest, the small input piano, orange edit selection, and cyan playback marker](images/step-sequencer-panel.png)
+
+*This screenshot shows a longer 16-step demonstration at 120 BPM and **80 ms** gate time;
+the default gate time is **100 ms**. The orange outline selects the step being edited,
+and the cyan underline tracks playback. The demonstration contains recorded notes and
+a rest; a newly placed block starts with all rests.*
+
+Holding a key, keyboard repeat, and mouse dragging cannot fill additional steps.
+The piano only enters step values: it does not audition
+notes or accept MIDI input. Only the separate Keyboard block accepts MIDI performance.
+
+**Start / Resume** plays the next step; **Stop** releases gates and remembers the next
+position. **Reset** releases gates and arms step one. The cyan underline and the placed
+block's white marker show playback separately from the editing cursor. You can record
+while playing; accepted musical edits become active together on the next clock.
+Shortening Length preserves hidden notes. Closing the panel stops recording, not playback.
+
+**BPM** is 30–300, default 120, with one sixteenth-note step per clock. **Gate ms** is
+1–2000, default 100. A gate ends at its duration or the next step; overlapping repeated
+notes receive a one-sample low gap to retrigger the Amp. Rests lower the gate while
+holding the previous pitch. The Amp's release may continue sounding into a rest.
+Clock Out pulses for 10 ms on every step, including rests. Initial pitch is C4.
+
+Clock In and Reset In use the same rising-edge, 50 Hz limit, connection, and simultaneous
+reset-before-clock rules as the Euclidean Sequencer. Connecting Clock In disables the
+internal clock until disconnected; a stopped source does not cause tempo fallback.
+**Power: On** enables saved Redstone Mode: power resumes playback, loss of power stops
+it, and manual Start/Stop are disabled. Power changes do not themselves clock steps.
+
+Pattern, length, tempo, gate time, octave, and redstone mode survive saves. Playback,
+live gates, and recording cursor do not. After reload, manual mode waits at step one;
+redstone mode follows current power. Requires protocol **12** on every peer; world/block
+schema stays **2**. Preserve a backup before upgrading. No ties, chords, swing, MIDI
+recording, or per-step gate lengths are included.

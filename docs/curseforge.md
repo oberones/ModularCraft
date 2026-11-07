@@ -2,13 +2,13 @@
 
 Build the instrument. Shape the sound. Find your groove.
 
-**ModularCraft brings modular synthesis into Minecraft**, with ten musical blocks you can connect into your own playable instruments. Patch together oscillators, sculpt their sound with filters, build rhythmic patterns, and bring everything to life through speakers in your world.
+**ModularCraft brings modular synthesis into Minecraft**, with eleven musical blocks you can connect into your own playable instruments. Patch together oscillators, sculpt their sound with filters, build rhythmic patterns, and bring everything to life through speakers in your world.
 
 Create a pulsing bass, a thick detuned lead, a slowly evolving drone, or interlocking rhythms. Play with your mouse or computer keyboard—or connect a MIDI controller and bring your real keys into Minecraft.
 
 Every patch starts with a few blocks. Where it goes is up to you.
 
-## Ten blocks. Endless experiments.
+## Eleven blocks. Endless experiments.
 
 - **Saw Oscillator** — Start with a bright, harmonically rich tone. Spread three voices around the center pitch with adjustable unison detune for a thicker sound.
 - **Square Oscillator** — Explore hollow square tones and sharper pulse sounds with adjustable pulse width. Tune by frequency or choose a note and octave.
@@ -18,6 +18,7 @@ Every patch starts with a few blocks. Where it goes is up to you.
 - **Speaker** — Bring your patch into the world with spatial audio and adjustable volume. Connect an Amp or mixer to Audio In. Speakers start enabled at Volume 10% and remember their on/off setting.
 - **Keyboard** — Play notes using an on-screen piano, your computer keyboard, or MIDI input, including sustain-pedal support.
 - **Euclidean Sequencer** — Build four independent rhythmic patterns by spreading hits across up to 16 steps. Adjust their length, rotation, and mute state, then send triggers and clock signals to other modules. Enable Redstone Mode to start and stop playback with power.
+- **Step Sequencer** — Record up to 16 notes or rests one step at a time using a small piano and computer-keyboard shortcuts. Loop the melody with tempo or an external clock, adjust gate time, and use optional redstone start/stop. Its piano only enters notes; MIDI performance belongs to the separate Keyboard block.
 - **LFO** — Add repeating motion with sine, triangle, rising saw, falling saw, and square waves. Run freely or synchronize to the sequencer.
 - **Audio Mixer** — Blend up to four audio sources with individual levels, mute, solo, a master level, and live meters.
 
@@ -33,11 +34,19 @@ Right-click a block to open its controls. Adjust sliders, enter exact values, an
 
 ## Put redstone in charge of the rhythm
 
-Open the Euclidean Sequencer and turn **Redstone Mode** on beside Tempo (it defaults to Off). A lever or another redstone source can control playback: power resumes the pattern from its current position, and removing power stops it.
+Both sequencers support optional redstone start/stop. In the Euclidean Sequencer, turn **Redstone Mode** on beside Tempo. In the Step Sequencer, switch **Power: Off** to **Power: On**. Both default to Off. A lever or another redstone source can control playback: power resumes the pattern from its current position, and removing power stops it.
 
 **Start/Stop gray out while Redstone Mode is on; Reset stays available.** Turning the mode off keeps the current playback state and restores the buttons. Tempo or Clock In still sets the rhythm's speed.
 
 For four independent voices, connect sequencer triggers A–D to four Amp Gate Ins. Route an oscillator through each Amp, blend their outputs in the Audio Mixer, and send the mix to a Speaker. Each Amp gives its voice its own note shape.
+
+## Record a melody
+
+Connect Step Sequencer Pitch CV Out to a Saw or Square Oscillator's Pitch In, and Gate
+Out to an Amp's Gate In. Send Oscillator Audio Out through the Amp to a Speaker.
+Choose up to 16 steps, press Record, and enter each note with the small piano or typing
+shortcuts. Use Rest for silent steps. Recording advances automatically and finishes at
+the last active step. Press Start / Resume to loop the melody, or edit it while it plays.
 
 ## Build something your friends can hear
 
@@ -71,7 +80,7 @@ To remove a cable, **Shift-right-click its destination input** with the Patching
 - For multiplayer, install the same mod version on the server and every client.
 - Blocks are currently available through Creative mode; survival recipes are not included.
 - The Keyboard is currently monophonic. MIDI input works while its panel is open and Minecraft is focused.
-- The sequencer creates rhythms; melodic sequencing and audio recording/export are not currently included.
+- The Euclidean Sequencer creates rhythms; the Step Sequencer records monophonic melodies with notes and rests. Audio recording/export is not included.
 - Speakers remember their on/off setting and resume when the whole patch is loaded and playback capacity is available. Sequencers in manual mode wait for Start after reload; Redstone Mode follows current power once the whole patch is loaded.
 
 ModularCraft is in active development. macOS is the initial playback target; Windows/Linux playback and full multiplayer timing qualification remain pending.

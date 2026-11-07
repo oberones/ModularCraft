@@ -1,0 +1,162 @@
+{
+  "date": "2026-11-07",
+  "machine": {
+    "cpu": "Apple M2 Pro",
+    "memory_bytes": 17179869184,
+    "os": "macOS 26.6.2 arm64",
+    "java": "Eclipse Adoptium 21.0.12.1+1"
+  },
+  "automated": {
+    "launcher_tests": 25,
+    "junit_tests": 196,
+    "packaged_gametests": 48,
+    "make_verify": "PASS"
+  },
+  "native_ui": {
+    "audio_windows": [
+      {
+        "p95_ns": 78500,
+        "blocks": 1799,
+        "underruns": 1,
+        "max_ns": 1906166
+      },
+      {
+        "p95_ns": 64750,
+        "blocks": 3671,
+        "underruns": 1,
+        "max_ns": 1906166
+      },
+      {
+        "p95_ns": 49750,
+        "blocks": 5548,
+        "underruns": 1,
+        "max_ns": 1906166
+      },
+      {
+        "p95_ns": 52416,
+        "blocks": 7424,
+        "underruns": 1,
+        "max_ns": 1906166
+      },
+      {
+        "p95_ns": 47958,
+        "blocks": 9296,
+        "underruns": 1,
+        "max_ns": 1906166
+      }
+    ],
+    "server": {
+      "samples": 380,
+      "p95_ns": 449250,
+      "max_ns": 1008000,
+      "target": "PASS"
+    },
+    "completed": true
+  },
+  "native_load": {
+    "audio_windows": [
+      {
+        "p95_ns": 914583,
+        "blocks": 1821,
+        "underruns": 1,
+        "max_ns": 5038750
+      },
+      {
+        "p95_ns": 520084,
+        "blocks": 3697,
+        "underruns": 1,
+        "max_ns": 5038750
+      },
+      {
+        "p95_ns": 425417,
+        "blocks": 5569,
+        "underruns": 1,
+        "max_ns": 5038750
+      },
+      {
+        "p95_ns": 423417,
+        "blocks": 7446,
+        "underruns": 1,
+        "max_ns": 5038750
+      },
+      {
+        "p95_ns": 420292,
+        "blocks": 9318,
+        "underruns": 1,
+        "max_ns": 5038750
+      },
+      {
+        "p95_ns": 421709,
+        "blocks": 11194,
+        "underruns": 1,
+        "max_ns": 5038750
+      },
+      {
+        "p95_ns": 440750,
+        "blocks": 13071,
+        "underruns": 1,
+        "max_ns": 5038750
+      },
+      {
+        "p95_ns": 450417,
+        "blocks": 14944,
+        "underruns": 1,
+        "max_ns": 5038750
+      },
+      {
+        "p95_ns": 434917,
+        "blocks": 16824,
+        "underruns": 1,
+        "max_ns": 5038750
+      },
+      {
+        "p95_ns": 433042,
+        "blocks": 18696,
+        "underruns": 1,
+        "max_ns": 5038750
+      },
+      {
+        "p95_ns": 432459,
+        "blocks": 20572,
+        "underruns": 1,
+        "max_ns": 5038750
+      },
+      {
+        "p95_ns": 427667,
+        "blocks": 22449,
+        "underruns": 1,
+        "max_ns": 5038750
+      }
+    ],
+    "server": {
+      "samples": 1080,
+      "p95_ns": 641792,
+      "max_ns": 2615041,
+      "target": "PASS"
+    },
+    "completed": true
+  },
+  "load": {
+    "patches": 4,
+    "modules": 80,
+    "cables": 80,
+    "speakers": 4,
+    "ticks": 1200,
+    "bpm": 300,
+    "pattern": "C4 E4 G4 C5 repeated",
+    "oscillators": "four saws with 100-cent detune",
+    "filters": 64
+  },
+  "artifact_sha256": "dec3110a7109045a24b52c1a05c1acd593799c1728883b537d2381f4910cb5df",
+  "pending": [
+    "human listening",
+    "two-client timing and input",
+    "30-minute sustained run",
+    "zero-underrun qualification",
+    "prior security/platform/release gates"
+  ],
+  "notes": [
+    "Native load overlapped the final build/tests initially; final windows were measured after verification completed.",
+    "Earlier GameTest runs had quarantine, sustained-clock timing, and offhand-removal failures; logs retained. Final isolated run passed all 48."
+  ]
+}

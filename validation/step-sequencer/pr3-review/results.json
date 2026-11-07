@@ -1,0 +1,40 @@
+{
+  "base_commit": "5c7ff956ad7c956fcc5c890f99370aff6909c9bd",
+  "uncommitted": true,
+  "date": "2026-11-07",
+  "runtime_sha256": "641c6865da71eaa90061ad0154f7f983347f5e9c03e1184faa631ebcc0dd3d70",
+  "junit": {
+    "tests": 201,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "launcher_tests": 25,
+  "packaged_gametests": 49,
+  "native_editor_checks": 22,
+  "native_ticks": 500,
+  "native_audio": {
+    "final_rolling_p95_ns": 34083,
+    "max_block_ns": 10197458,
+    "underruns": 1
+  },
+  "native_server": {
+    "measurement_samples": 380,
+    "p95_ns": 397959,
+    "measurement_max_ns": 1563542,
+    "broader_max_counter_ns": 43856083
+  },
+  "screenshots": {
+    "step-recorded.png": "ebc1e2f9c52ffbaad1d0a2d550894f450b8a5f4619679afd8dd742c43d9ef721",
+    "step-full.png": "629fb42d41b6c092cda838826dfbbcd854b37f27339511c54caf2fed75893905",
+    "step-world.png": "6fd47316ab4ed881526d5e5c8260e61ceac060b6759804b57154c50843362b39",
+    "step-compact.png": "61b65f119ce6754bc1ce5d1ee884546524eac98ec012144c976523cc5b092f76"
+  },
+  "pending": [
+    "human listening/acoustic",
+    "physical input/two-client",
+    "zero underrun",
+    "30-minute sustained load",
+    "prior security/platform/release gates"
+  ]
+}

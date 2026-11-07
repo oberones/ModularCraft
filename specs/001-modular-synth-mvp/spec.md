@@ -2,9 +2,9 @@
 
 **Current output contract:** AS-001–006 at the end of this specification supersede the
 original combined Amplifier/Speaker and restart-disabled behavior. Amp and Speaker are
-separate; saves use schema 2 and network/snapshots use version 11. EU-009 supersedes earlier
+separate; saves use schema 2 and network/snapshots use version 12. EU-009 supersedes earlier
 sequencer transport/lifecycle statements below. The patch-capacity extension fixes the
-current 20-module cap and protocol 11, superseding earlier protocol statements.
+current 20-module cap; ST-001–006 below define protocol 12, superseding earlier protocol statements.
 
 
 **Feature Branch**: `001-modular-synth-mvp`
@@ -501,3 +501,29 @@ applicable limit. Snapshot module and per-module checkpoint collections use the 
 Network/snapshot protocol 11 requires matching peers. World/block schema 2 and all byte,
 cable, speaker, player, world, transition and traffic limits remain unchanged. Upgrades
 require no save migration; downgrade requires a backup predating patches above 16 modules.
+
+
+## Step Sequencer extension (ST-001–006)
+
+- **ST-001:** Separate `step_sequencer` with pitch/gate outputs and clock/reset inputs,
+  plus clock output. Monophonic length 1–16, default 16 rests, tempo 30–300/default 120,
+  gate 1–2000/default 100 integer milliseconds, octave 1–7/default 4. Persist all sixteen
+  MIDI note integers (0–127, -1 rest); shortening never discards hidden values.
+- **ST-002:** Record explicitly from a selected step; fresh mouse/typing presses and Rest
+  submit one revision-checked edit. Advance only on acceptance; stop recording at the last
+  active step. One pending write, rejection preserves selection, no held-repeat/glissando,
+  no audition or MIDI. Separate edit cursor/playhead, compact and keyboard-accessible UI.
+- **ST-003:** Reuse Euclidean clock/reset/start/stop/redstone semantics. Clock output pulses
+  480 samples each step, including rests. Pitch is concert-tuned like Keyboard; rest retains
+  pitch and releases gate. Overlap forces one sample low before retrigger. Settings activate
+  together on next clock while running. Independent editor, authoritative, audio and visual
+  ownership; no per-step packets required for continuous pitch playback.
+- **ST-004:** Protocol/snapshot 12 includes bounded melodic checkpoints. Schema 2 remains
+  unchanged. Preserve unknown records and old-module migrations. Persist settings only;
+  unload/reload clears transport and gates. Match existing permissions/revisions/rate limits.
+- **ST-005:** Retain 20 modules/24 cables/two speakers per patch and four audible patches,
+  all storage/event/traffic caps, 1 ms DSP p95 and 2 ms server p95 targets. No dependencies.
+- **ST-006:** TDD, malformed/unauthorized/stale edits, NBT and codec round trips, max-size
+  snapshot, sample timing and pitch-render tests, redstone lifecycle GameTests, native UI
+  screenshots and 80-module load fixture. Human listening, two-client and sustained-load
+  acceptance remain separate from automation. Reference patch: RP-009 in the user guide.

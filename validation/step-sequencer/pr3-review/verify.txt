@@ -1,0 +1,255 @@
+"python3" scripts/release.py check
+0.5.0
+"python3" -m unittest discover -s scripts/tests -v
+test_prerelease_bump_updates_gradle_changelog_commit_and_tag (test_commitizen.CommitizenTest.test_prerelease_bump_updates_gradle_changelog_commit_and_tag) ... ok
+test_stable_bump_updates_gradle_changelog_commit_and_tag (test_commitizen.CommitizenTest.test_stable_bump_updates_gradle_changelog_commit_and_tag) ... ok
+test_exact_artifacts_and_embedded_versions (test_release.ReleaseTest.test_exact_artifacts_and_embedded_versions) ... ok
+test_missing_descriptor_artifacts_fail (test_release.ReleaseTest.test_missing_descriptor_artifacts_fail) ... ok
+test_missing_supporting_record_fails_before_staging (test_release.ReleaseTest.test_missing_supporting_record_fails_before_staging) ... ok
+test_publish_rejects_tampered_assets (test_release.ReleaseTest.test_publish_rejects_tampered_assets) ... ok
+test_publish_uses_verified_tag_and_propagates_existing_release_failure (test_release.ReleaseTest.test_publish_uses_verified_tag_and_propagates_existing_release_failure) ... ok
+test_repository_and_tag_must_agree (test_release.ReleaseTest.test_repository_and_tag_must_agree) ... ok
+test_semantic_tags_and_prereleases (test_release.ReleaseTest.test_semantic_tags_and_prereleases) ... ok
+test_stable_publish_is_not_marked_prerelease (test_release.ReleaseTest.test_stable_publish_is_not_marked_prerelease) ... ok
+test_stage_contains_only_selected_assets_and_complete_checksums (test_release.ReleaseTest.test_stage_contains_only_selected_assets_and_complete_checksums) ... ok
+test_stale_descriptor_version_fails (test_release.ReleaseTest.test_stale_descriptor_version_fails) ... ok
+test_wrong_descriptor_path_fails (test_release.ReleaseTest.test_wrong_descriptor_path_fails) ... ok
+test_bad_artifact_and_seed_symlink_are_refused (test_run_validation.ValidationRunTest.test_bad_artifact_and_seed_symlink_are_refused) ... Staged modularcraft-0.1.0.jar SHA-256 d05a2c2df3c063e0b6048330ef1f1cc0cc15df0c2b849f73be9356b878a6f6aa
+Staged modularcraft-0.1.0.jar SHA-256 d05a2c2df3c063e0b6048330ef1f1cc0cc15df0c2b849f73be9356b878a6f6aa
+Validation instance: /private/var/folders/f5/rhvgpl9j7gn7znm94p8jdz080000gn/T/modularcraft launcher l9hgncli/run/make/client with spaces
+ok
+test_ci_keeps_no_daemon_when_user_supplies_gradle_flags (test_run_validation.ValidationRunTest.test_ci_keeps_no_daemon_when_user_supplies_gradle_flags) ... ok
+test_failed_seed_server_never_launches_client (test_run_validation.ValidationRunTest.test_failed_seed_server_never_launches_client) ... Staged modularcraft-0.1.0.jar SHA-256 d05a2c2df3c063e0b6048330ef1f1cc0cc15df0c2b849f73be9356b878a6f6aa
+Validation instance: /private/var/folders/f5/rhvgpl9j7gn7znm94p8jdz080000gn/T/modularcraft launcher kozcbnc0/run/make/client with spaces
+Staged modularcraft-0.1.0.jar SHA-256 d05a2c2df3c063e0b6048330ef1f1cc0cc15df0c2b849f73be9356b878a6f6aa
+Validation instance: /private/var/folders/f5/rhvgpl9j7gn7znm94p8jdz080000gn/T/modularcraft launcher kozcbnc0/run/make/gametest
+ok
+test_fresh_fixture_never_reuses_a_world (test_run_validation.ValidationRunTest.test_fresh_fixture_never_reuses_a_world) ... Staged modularcraft-0.1.0.jar SHA-256 d05a2c2df3c063e0b6048330ef1f1cc0cc15df0c2b849f73be9356b878a6f6aa
+ok
+test_launch_uses_packaged_mode_and_preserves_space_in_path (test_run_validation.ValidationRunTest.test_launch_uses_packaged_mode_and_preserves_space_in_path) ... Staged modularcraft-0.1.0.jar SHA-256 d05a2c2df3c063e0b6048330ef1f1cc0cc15df0c2b849f73be9356b878a6f6aa
+Validation instance: /private/var/folders/f5/rhvgpl9j7gn7znm94p8jdz080000gn/T/modularcraft launcher 322ac2tg/run/make/client with spaces
+ok
+test_refuses_modified_managed_jar_instead_of_overwriting_it (test_run_validation.ValidationRunTest.test_refuses_modified_managed_jar_instead_of_overwriting_it) ... Staged modularcraft-0.1.0.jar SHA-256 d05a2c2df3c063e0b6048330ef1f1cc0cc15df0c2b849f73be9356b878a6f6aa
+ok
+test_refuses_outside_run_root_and_symlinks (test_run_validation.ValidationRunTest.test_refuses_outside_run_root_and_symlinks) ... ok
+test_refuses_unmanaged_nonempty_directory (test_run_validation.ValidationRunTest.test_refuses_unmanaged_nonempty_directory) ... ok
+test_same_instance_cannot_be_launched_concurrently (test_run_validation.ValidationRunTest.test_same_instance_cannot_be_launched_concurrently) ... ok
+test_server_launch_does_not_accept_or_replace_eula (test_run_validation.ValidationRunTest.test_server_launch_does_not_accept_or_replace_eula) ... Staged modularcraft-0.1.0.jar SHA-256 d05a2c2df3c063e0b6048330ef1f1cc0cc15df0c2b849f73be9356b878a6f6aa
+Validation instance: /private/var/folders/f5/rhvgpl9j7gn7znm94p8jdz080000gn/T/modularcraft launcher fr7muvc7/run/make/client with spaces
+Staged modularcraft-0.1.0.jar SHA-256 d05a2c2df3c063e0b6048330ef1f1cc0cc15df0c2b849f73be9356b878a6f6aa
+Validation instance: /private/var/folders/f5/rhvgpl9j7gn7znm94p8jdz080000gn/T/modularcraft launcher fr7muvc7/run/make/client with spaces
+ok
+test_smoke_bootstraps_seed_then_launches_a_fresh_fixture (test_run_validation.ValidationRunTest.test_smoke_bootstraps_seed_then_launches_a_fresh_fixture) ... Staged modularcraft-0.1.0.jar SHA-256 d05a2c2df3c063e0b6048330ef1f1cc0cc15df0c2b849f73be9356b878a6f6aa
+Validation instance: /private/var/folders/f5/rhvgpl9j7gn7znm94p8jdz080000gn/T/modularcraft launcher 3r0jbojp/run/make/client with spaces
+Staged modularcraft-0.1.0.jar SHA-256 d05a2c2df3c063e0b6048330ef1f1cc0cc15df0c2b849f73be9356b878a6f6aa
+Validation instance: /private/var/folders/f5/rhvgpl9j7gn7znm94p8jdz080000gn/T/modularcraft launcher 3r0jbojp/run/make/gametest
+ok
+test_stages_exact_runtime_jar_and_preserves_world_on_upgrade (test_run_validation.ValidationRunTest.test_stages_exact_runtime_jar_and_preserves_world_on_upgrade) ... Staged modularcraft-0.1.0.jar SHA-256 d05a2c2df3c063e0b6048330ef1f1cc0cc15df0c2b849f73be9356b878a6f6aa
+Staged modularcraft-0.2.0.jar SHA-256 7ba544e51c9c2bf7ce7d4951a4efa1384af74f631df2aa340c5c1f5c077c436e
+ok
+
+----------------------------------------------------------------------
+Ran 25 tests in 1.807s
+
+OK
+"./gradlew"  --dependency-verification strict verifyDependencies check build runtimeArtifact
+
+> Task :verifyDependencies
+Verified accessTransformers: 0 files
+Verified additionalRuntimeClasspath: 100 files
+Verified annotationProcessor: 0 files
+Verified checkstyle: 34 files
+Verified clientLegacyClasspath: 100 files
+Verified clientModulesOnly: 8 files
+Verified compileClasspath: 84 files
+Verified devLaunchConfig: 1 files
+Verified formatter: 7 files
+Verified gameTestServerLegacyClasspath: 67 files
+Verified gameTestServerModulesOnly: 8 files
+Verified gametestAnnotationProcessor: 0 files
+Verified gametestCompileClasspath: 84 files
+Verified gametestJarJar: 0 files
+Verified gametestPmdAuxClasspath: 100 files
+Verified gametestRuntimeClasspath: 102 files
+Verified interfaceInjectionData: 0 files
+Verified jarJar: 0 files
+Verified mainPmdAuxClasspath: 100 files
+Verified neoForgeConfigOnly: 1 files
+Verified neoFormRuntimeDependenciesCompileClasspath: 83 files
+Verified neoFormRuntimeDependenciesNeoForgeClasses: 6 files
+Verified neoFormRuntimeDependenciesNeoForgeSources: 1 files
+Verified neoFormRuntimeDependenciesRuntimeClasspath: 100 files
+Verified neoFormRuntimeExternalTools: 29 files
+Verified neoFormRuntimeTool: 1 files
+Verified parchmentData: 0 files
+Verified pmd: 19 files
+Verified runtimeClasspath: 102 files
+Verified serverLegacyClasspath: 67 files
+Verified serverModulesOnly: 8 files
+Verified testAnnotationProcessor: 0 files
+Verified testCompileClasspath: 6 files
+Verified testJarJar: 0 files
+Verified testPmdAuxClasspath: 7 files
+Verified testRuntimeClasspath: 8 files
+
+> Task :createMinecraftArtifacts UP-TO-DATE
+> Task :compileJava UP-TO-DATE
+> Task :processResources UP-TO-DATE
+> Task :classes UP-TO-DATE
+> Task :compileGametestJava UP-TO-DATE
+> Task :processGametestResources UP-TO-DATE
+> Task :gametestClasses UP-TO-DATE
+> Task :compileTestJava UP-TO-DATE
+> Task :processTestResources NO-SOURCE
+> Task :testClasses UP-TO-DATE
+> Task :formatCheck
+> Task :jarJar NO-SOURCE
+> Task :jar UP-TO-DATE
+> Task :sourcesJar
+> Task :checkstyleGametest
+> Task :checkstyleTest
+> Task :pmdTest
+> Task :pmdMain
+> Task :pmdGametest
+> Task :checkstyleMain
+> Task :test
+> Task :check
+> Task :projectSources
+> Task :runtimeArtifact UP-TO-DATE
+> Task :assemble
+> Task :build
+
+[Incubating] Problems report is available at: file:///Users/oberon/Projects/coding/mods/minecraft/ModularCraft/build/reports/problems/problems-report.html
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 9.0.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/8.13/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD SUCCESSFUL in 55s
+19 actionable tasks: 11 executed, 8 up-to-date
+"python3" scripts/run_validation.py gametest --run-dir "run/make/pr3-review-verify"
+Staged modularcraft-0.5.0.jar SHA-256 641c6865da71eaa90061ad0154f7f983347f5e9c03e1184faa631ebcc0dd3d70
+Validation instance: /Users/oberon/Projects/coding/mods/minecraft/ModularCraft/run/make/pr3-review-verify
+> Task :createMinecraftArtifacts UP-TO-DATE
+> Task :compileJava UP-TO-DATE
+> Task :processResources UP-TO-DATE
+> Task :classes UP-TO-DATE
+> Task :compileGametestJava UP-TO-DATE
+> Task :processGametestResources UP-TO-DATE
+> Task :gametestClasses UP-TO-DATE
+> Task :downloadAssets UP-TO-DATE
+> Task :writeGameTestServerLegacyClasspath UP-TO-DATE
+> Task :prepareGameTestServerRun UP-TO-DATE
+
+> Task :runGameTestServer
+WARN StatusConsoleListener Advanced terminal features are not available in this environment
+[16:12:45] [main/INFO] [cp.mo.mo.Launcher/MODLAUNCHER]: ModLauncher running: args [--launchTarget, forgeserverdev, --gameDir, ., --fml.fmlVersion, 4.0.42, --fml.mcVersion, 1.21.1, --fml.neoForgeVersion, 21.1.218, --fml.neoFormVersion, 20240808.144430]
+[16:12:45] [main/INFO] [cp.mo.mo.Launcher/MODLAUNCHER]: JVM identified as Eclipse Adoptium OpenJDK 64-Bit Server VM 21.0.12.1+1-LTS
+[16:12:45] [main/INFO] [cp.mo.mo.Launcher/MODLAUNCHER]: ModLauncher 11.0.5+main.901c6ea8 starting: java version 21.0.12.1 by Eclipse Adoptium; OS Mac OS X arch aarch64 version 26.6.2
+[16:12:45] [main/INFO] [ne.ne.fm.lo.ImmediateWindowHandler/]: ImmediateWindowProvider not loading because launch target is forgeserverdev
+[16:12:45] [main/INFO] [mixin/]: SpongePowered MIXIN Subsystem Version=0.8.7 Source=union:/Users/oberon/.gradle/caches/modules-2/files-2.1/net.fabricmc/sponge-mixin/0.15.2+mixin.0.8.7/2af2f021d8e02a0220dc27a7a72b4666d66d44ca/sponge-mixin-0.15.2+mixin.0.8.7.jar%2394!/ Service=ModLauncher Env=SERVER
+[16:12:45] [main/INFO] [ne.ne.fm.lo.mo.lo.JarInJarDependencyLocator/]: Found 2 dependencies adding them to mods collection
+[16:12:45] [main/INFO] [ne.ne.fm.lo.mo.ModDiscoverer/]: 
+     Mod List:
+		Name Version (Mod Id)
+
+		Minecraft 1.21.1 (minecraft)
+		ModularCraft 0.5.0 (modularcraft)
+		ModularCraft GameTests (development only) 0.5.0 (modularcraft_tests)
+		NeoForge 21.1.218 (neoforge)
+[16:12:45] [main/INFO] [mixin/]: Compatibility level set to JAVA_21
+[16:12:45] [main/INFO] [cp.mo.mo.LaunchServiceHandler/MODLAUNCHER]: Launching target 'forgeserverdev' with arguments [--gameDir, .]
+[16:12:46] [main/INFO] [MixinExtras|Service/]: Initializing MixinExtras via com.llamalad7.mixinextras.service.MixinExtrasServiceImpl(version=0.5.0).
+[16:12:49] [main/WARN] [minecraft/Commands]: Ambiguity between arguments [teleport, location] and [teleport, destination] with inputs: [0.1 -0.5 .9, 0 0 0]
+[16:12:49] [main/WARN] [minecraft/Commands]: Ambiguity between arguments [teleport, location] and [teleport, targets] with inputs: [0.1 -0.5 .9, 0 0 0]
+[16:12:49] [main/WARN] [minecraft/Commands]: Ambiguity between arguments [teleport, destination] and [teleport, targets] with inputs: [Player, 0123, @e, dd12be42-52a9-4a91-a8a1-11c01849e498]
+[16:12:49] [main/WARN] [minecraft/Commands]: Ambiguity between arguments [teleport, targets] and [teleport, destination] with inputs: [Player, 0123, dd12be42-52a9-4a91-a8a1-11c01849e498]
+[16:12:49] [main/WARN] [minecraft/Commands]: Ambiguity between arguments [teleport, targets, location] and [teleport, targets, destination] with inputs: [0.1 -0.5 .9, 0 0 0]
+[16:12:49] [modloading-worker-0/INFO] [ne.ne.ne.co.NeoForgeMod/NEOFORGE-MOD]: NeoForge mod loading, version 21.1.218, for MC 1.21.1
+[16:12:49] [main/ERROR] [minecraft/Settings]: Failed to load properties from file: server.properties
+java.nio.file.NoSuchFileException: server.properties
+	at java.base/sun.nio.fs.UnixException.translateToIOException(UnixException.java:92) ~[?:?] {}
+	at java.base/sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:106) ~[?:?] {}
+	at java.base/sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:111) ~[?:?] {}
+	at java.base/sun.nio.fs.UnixFileSystemProvider.newByteChannel(UnixFileSystemProvider.java:261) ~[?:?] {}
+	at java.base/java.nio.file.Files.newByteChannel(Files.java:380) ~[?:?] {}
+	at java.base/java.nio.file.Files.newByteChannel(Files.java:432) ~[?:?] {}
+	at java.base/java.nio.file.spi.FileSystemProvider.newInputStream(FileSystemProvider.java:420) ~[?:?] {}
+	at java.base/java.nio.file.Files.newInputStream(Files.java:160) ~[?:?] {}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.server.dedicated.Settings.loadFromFile(Settings.java:38) ~[neoforge-21.1.218.jar%23126!/:?] {re:classloading}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.server.dedicated.DedicatedServerProperties.fromFile(DedicatedServerProperties.java:132) ~[neoforge-21.1.218.jar%23126!/:?] {re:classloading}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.server.dedicated.DedicatedServerSettings.<init>(DedicatedServerSettings.java:12) ~[neoforge-21.1.218.jar%23126!/:?] {re:classloading}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.server.Main.main(Main.java:125) ~[neoforge-21.1.218.jar%23126!/:?] {re:classloading}
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103) ~[?:?] {}
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580) ~[?:?] {}
+	at MC-BOOTSTRAP/fml_loader@4.0.42/net.neoforged.fml.loading.targets.CommonLaunchHandler.runTarget(CommonLaunchHandler.java:136) ~[loader-4.0.42.jar%23102!/:4.0] {}
+	at MC-BOOTSTRAP/fml_loader@4.0.42/net.neoforged.fml.loading.targets.CommonLaunchHandler.serverService(CommonLaunchHandler.java:128) ~[loader-4.0.42.jar%23102!/:4.0] {}
+	at MC-BOOTSTRAP/fml_loader@4.0.42/net.neoforged.fml.loading.targets.NeoForgeServerDevLaunchHandler.runService(NeoForgeServerDevLaunchHandler.java:23) ~[loader-4.0.42.jar%23102!/:4.0] {}
+	at MC-BOOTSTRAP/fml_loader@4.0.42/net.neoforged.fml.loading.targets.CommonLaunchHandler.lambda$launchService$4(CommonLaunchHandler.java:118) ~[loader-4.0.42.jar%23102!/:4.0] {}
+	at MC-BOOTSTRAP/cpw.mods.modlauncher@11.0.5/cpw.mods.modlauncher.LaunchServiceHandlerDecorator.launch(LaunchServiceHandlerDecorator.java:30) [modlauncher-11.0.5.jar%2382!/:?] {}
+	at MC-BOOTSTRAP/cpw.mods.modlauncher@11.0.5/cpw.mods.modlauncher.LaunchServiceHandler.launch(LaunchServiceHandler.java:53) [modlauncher-11.0.5.jar%2382!/:?] {}
+	at MC-BOOTSTRAP/cpw.mods.modlauncher@11.0.5/cpw.mods.modlauncher.LaunchServiceHandler.launch(LaunchServiceHandler.java:71) [modlauncher-11.0.5.jar%2382!/:?] {}
+	at MC-BOOTSTRAP/cpw.mods.modlauncher@11.0.5/cpw.mods.modlauncher.Launcher.run(Launcher.java:103) [modlauncher-11.0.5.jar%2382!/:?] {}
+	at MC-BOOTSTRAP/cpw.mods.modlauncher@11.0.5/cpw.mods.modlauncher.Launcher.main(Launcher.java:74) [modlauncher-11.0.5.jar%2382!/:?] {}
+	at MC-BOOTSTRAP/cpw.mods.modlauncher@11.0.5/cpw.mods.modlauncher.BootstrapLaunchConsumer.accept(BootstrapLaunchConsumer.java:26) [modlauncher-11.0.5.jar%2382!/:?] {}
+	at MC-BOOTSTRAP/cpw.mods.modlauncher@11.0.5/cpw.mods.modlauncher.BootstrapLaunchConsumer.accept(BootstrapLaunchConsumer.java:23) [modlauncher-11.0.5.jar%2382!/:?] {}
+	at cpw.mods.bootstraplauncher@2.0.2/cpw.mods.bootstraplauncher.BootstrapLauncher.run(BootstrapLauncher.java:210) [bootstraplauncher-2.0.2.jar:?] {}
+	at cpw.mods.bootstraplauncher@2.0.2/cpw.mods.bootstraplauncher.BootstrapLauncher.main(BootstrapLauncher.java:69) [bootstraplauncher-2.0.2.jar:?] {}
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103) ~[?:?] {}
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580) ~[?:?] {}
+	at net.neoforged.devlaunch.Main.main(Main.java:57) [DevLaunch-1.0.2.jar:?] {}
+[16:12:49] [main/INFO] [mojang/YggdrasilAuthenticationService]: Environment: Environment[sessionHost=https://sessionserver.mojang.com, servicesHost=https://api.minecraftservices.com, name=PROD]
+[16:12:49] [main/WARN] [minecraft/VanillaPackResourcesBuilder]: Assets URL 'union:/Users/oberon/Projects/coding/mods/minecraft/ModularCraft/build/moddev/artifacts/neoforge-21.1.218.jar%23126!/assets/.mcassetsroot' uses unexpected schema
+[16:12:49] [main/WARN] [minecraft/VanillaPackResourcesBuilder]: Assets URL 'union:/Users/oberon/Projects/coding/mods/minecraft/ModularCraft/build/moddev/artifacts/neoforge-21.1.218.jar%23126!/data/.mcassetsroot' uses unexpected schema
+[16:12:49] [main/INFO] [ne.ne.ne.ga.GameTestHooks/]: Enabled Gametest Namespaces: [modularcraft]
+[16:12:49] [main/INFO] [minecraft/RecipeManager]: Loaded 1291 recipes
+[16:12:49] [main/INFO] [minecraft/AdvancementTree]: Loaded 1400 advancements
+[16:12:50] [Server thread/INFO] [minecraft/MinecraftServer]: Preparing start region for dimension minecraft:overworld
+[16:12:50] [worldgen/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 2%
+[16:12:50] [Server thread/INFO] [minecraft/LoggerChunkProgressListener]: Time elapsed: 108 ms
+[16:12:50] [Server thread/INFO] [minecraft/GameTestServer]: Started game test server
+[16:12:50] [Server thread/INFO] [ne.ne.ne.se.pe.PermissionAPI/]: Successfully initialized permission handler neoforge:default_handler
+[16:12:50] [Server thread/INFO] [minecraft/GameTestServer]: 49 tests are now running at position -7519259, -59, -14503633!
+[16:12:50] [Server thread/INFO] [minecraft/GameTestRunner]: Running test batch 'defaultBatch:0' (48 tests)...
+[16:12:51] [Server thread/INFO] [minecraft/GameTestServer]: [                                                 ]
+[16:12:51] [Server thread/INFO] [minecraft/GameTestServer]: [+_++++  ++++++    ++++    +__+    ++__           ]
+MODULARCRAFT_TEST_ARTIFACT union:/Users/oberon/Projects/coding/mods/minecraft/ModularCraft/run/make/pr3-review-verify/mods/modularcraft-0.5.0.jar%23128!/
+[16:12:51] [Server thread/INFO] [minecraft/GameTestServer]: [+++++++++++++++++_+++++++++++++++++++++___+_____ ]
+[16:12:51] [Server thread/INFO] [minecraft/GameTestServer]: [+++++++++++++++++_+++++++++++++++++++++++_++_+__ ]
+[16:12:51] [Server thread/INFO] [minecraft/GameTestServer]: [+++++++++++++++++_++++++++++++++++++++++++++++++ ]
+[16:12:51] [Server thread/INFO] [minecraft/GameTestServer]: [+++++++++++++++++_++++++++++++++++++++++++++++++ ]
+[16:12:51] [Server thread/INFO] [minecraft/GameTestRunner]: Running test batch 'playback_notifications:0' (1 tests)...
+[16:12:51] [Server thread/INFO] [minecraft/GameTestServer]: [++++++++++++++++++++++++++++++++++++++++++++++++ ]
+[16:12:51] [Server thread/INFO] [minecraft/GameTestServer]: [+++++++++++++++++++++++++++++++++++++++++++++++++]
+[16:12:51] [Server thread/INFO] [minecraft/GameTestServer]: ========= 49 GAME TESTS COMPLETE IN 828.5 ms ======================
+[16:12:51] [Server thread/INFO] [minecraft/GameTestServer]: All 49 required tests passed :)
+[16:12:51] [Server thread/INFO] [minecraft/GameTestServer]: ====================================================
+[16:12:51] [Server thread/INFO] [minecraft/MinecraftServer]: Stopping server
+[16:12:51] [Server thread/INFO] [minecraft/MinecraftServer]: Saving players
+[16:12:51] [Server thread/INFO] [minecraft/MinecraftServer]: Saving worlds
+[16:12:51] [Server thread/INFO] [minecraft/MinecraftServer]: Saving chunks for level 'ServerLevel[Test Level]'/minecraft:overworld
+[16:12:51] [Server thread/INFO] [minecraft/MinecraftServer]: Saving chunks for level 'ServerLevel[Test Level]'/minecraft:the_end
+[16:12:51] [Server thread/INFO] [minecraft/MinecraftServer]: Saving chunks for level 'ServerLevel[Test Level]'/minecraft:the_nether
+[16:12:51] [Server thread/INFO] [minecraft/MinecraftServer]: ThreadedAnvilChunkStorage (world): All chunks are saved
+[16:12:51] [Server thread/INFO] [minecraft/MinecraftServer]: ThreadedAnvilChunkStorage (DIM1): All chunks are saved
+[16:12:51] [Server thread/INFO] [minecraft/MinecraftServer]: ThreadedAnvilChunkStorage (DIM-1): All chunks are saved
+[16:12:51] [Server thread/INFO] [minecraft/MinecraftServer]: ThreadedAnvilChunkStorage: All dimensions are saved
+[16:12:51] [Server thread/INFO] [minecraft/GameTestServer]: Game test server shutting down
+
+[Incubating] Problems report is available at: file:///Users/oberon/Projects/coding/mods/minecraft/ModularCraft/build/reports/problems/problems-report.html
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 9.0.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/8.13/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD SUCCESSFUL in 8s
+9 actionable tasks: 1 executed, 8 up-to-date
+"python3" scripts/check-delivery.py
+PASS: Java 21 artifacts, eleven complete asset sets, no test fixtures or bundled host/runtime libraries.
+641c6865da71eaa90061ad0154f7f983347f5e9c03e1184faa631ebcc0dd3d70  modularcraft-0.5.0.jar
+c321311bbbe01cd3d6fcc729b224c40e571788e321487f1f52a67880796f77d1  modularcraft-0.5.0-sources.jar
+c3d185bd2bdd0efea1ca3b29a749bb584d1b8ad1fe2dfbc2cb6725e72d336823  modularcraft-0.5.0-project.zip

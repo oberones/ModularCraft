@@ -35,7 +35,9 @@ class SequencerRedstoneTest {
     for (double value : new double[] {-1, .5, 2, Double.NaN, Double.POSITIVE_INFINITY})
       assertThrows(IllegalArgumentException.class, () -> module.withValue(mode(), value));
     for (ModuleKind kind : ModuleKind.values())
-      assertEquals(kind == ModuleKind.EUCLIDEAN_SEQUENCER, kind.parameters.contains(mode()));
+      assertEquals(
+          kind == ModuleKind.EUCLIDEAN_SEQUENCER || kind == ModuleKind.STEP_SEQUENCER,
+          kind.parameters.contains(mode()));
   }
 
   @Test
@@ -52,7 +54,7 @@ class SequencerRedstoneTest {
     PatchSnapshot patch =
         new PatchSnapshot(module.id(), 0, 0, 0, List.of(module), List.of(), Map.of());
     byte[] bytes = StateCodec.encode(patch);
-    assertEquals(11, bytes[5]);
+    assertEquals(12, bytes[5]);
     assertEquals(patch, StateCodec.decode(bytes));
     bytes[5] = 9;
     assertThrows(IllegalArgumentException.class, () -> StateCodec.decode(bytes));

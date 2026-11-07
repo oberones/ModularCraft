@@ -1071,3 +1071,74 @@ explicit. Native performance qualification, 30-minute/two-client/listening and p
 security/platform/release gates remain **PENDING**. No commit, push, publication or
 play/server installation. Runtime JAR SHA-256:
 `ceeeccb393d3b1d6827ca623e349091260a3deb0fa5ba4bd0fe3bbda208af739`.
+
+## 2026-11-07 — Step Sequencer (ST-001–006)
+
+Implemented a separate 1–16-step note/rest module, acknowledged input-only piano recording,
+independent edit/play cursors, live edits, gate time, tempo/external clock/reset and redstone
+transport. Pitch advances in the shared sample timeline without per-step packets; settings
+persist in schema 2, checkpoints require protocol 12. Pins and existing quotas retained.
+
+**PASS:** `make verify GAMETEST_DIR=run/make/step-tests-20261107-3` (25 launcher,
+196 JUnit, 48 packaged GameTests, strict dependencies, formatting/static analysis and
+artifact inspection); native 500-tick UI/reference patch and 1,200-tick 80-module load.
+Final load audio p95 **0.427667 ms**, server p95 **0.641792 ms**. One underrun,
+**5.038750 ms** max audio and **8.048041 ms** full-run max server work remain explicit.
+Earlier quarantined-world, accelerated-clock and offhand-removal failures are retained;
+final isolated verification passed without relaxing assertions. Native screenshots visually
+reviewed; self-review PASS. [Evidence](step-sequencer/README.md),
+[measurements](step-sequencer/results.json).
+
+**PENDING:** listening/acoustic, physical-input/two-client, zero-underrun, 30-minute load,
+and prior security/platform/release acceptance. No commit, push, publication, or play/server
+installation. JAR SHA-256:
+`dec3110a7109045a24b52c1a05c1acd593799c1728883b537d2381f4910cb5df`.
+
+## 2026-11-07 — Step Sequencer documentation and screenshots
+
+Added three native images: the pedestal portrait, unobstructed recording editor, and
+four-block melody patch. Updated the README gallery, RP-009 wiring/recording walkthrough,
+port table, CurseForge draft, and screenshot reproduction instructions. Existing guide
+anchors and the original ten-module showcase instrument remain intact.
+
+**PASS:** fresh packaged showcase (eleven portraits plus instrument, twelve PNGs) and
+500-tick Step Sequencer capture (recording inputs, compact bounds, four connected modules,
+four cables, running sequence, enabled Speaker and four PNGs). Visually reviewed all
+three documentation captures and the compact editor. Corrected the reproduced missing-Amp
+capture and tooltip obstruction; retained failed attempts and final originals/logs.
+Formatting, Checkstyle and PMD passed. Self-review PASS.
+Local Markdown links, anchors, image paths, block counts and feature claims checked;
+all original guide anchors retained. `make checksums` passed; sources and project archives
+contain all three byte-identical screenshots, with no test fixtures in the runtime JAR.
+[Evidence and reproduction](step-sequencer/documentation/README.md),
+[image hashes and original paths](step-sequencer/documentation/images.json).
+
+Documentation and opt-in QA fixture changes only; gameplay suites were not rerun. The
+runtime JAR hash is unchanged from the Step Sequencer implementation above. Both accepted
+capture runs reported one underrun; these screenshots do not establish audio qualification.
+Listening/acoustic, physical-input, multiplayer/timing, sustained/underrun and all earlier
+release gates remain **PENDING**. No gameplay, API, protocol, save-format, dependency,
+AGENTS.md, or player-world changes. No commit, push, installation or publication.
+
+## 2026-11-07 — PR #3 Step Sequencer review remediation
+
+Addressed all four valid review findings: preserve pending recording across unrelated ready
+views, refresh unfocused numeric fields, prime replacement externally clocked runtimes, and
+identify accepted clock events independently of sample timestamps. Protocol 12, schema 2,
+quotas, dependencies and player worlds are unchanged.
+
+**PASS:** observed red–green DSP/timeline, native editor and packaged block-removal regressions;
+`make verify GAMETEST_DIR=run/make/pr3-review-verify` (25 launcher tests, 201 JUnit tests,
+49 packaged GameTests, strict dependency verification, formatting/static analysis, artifact
+inspection); fresh 500-tick native Step Sequencer probe with 22 added editor checks and all
+existing input/layout/reference-patch checks. Four screenshots visually reviewed; explicit
+self-review PASS. [Evidence and limitations](step-sequencer/pr3-review/README.md).
+The initial different-owner test-fixture error is retained separately from valid red evidence.
+
+The UI response tests use synthetic accepted views with native widgets; they are not
+two-client evidence. Native audio recorded one underrun and a 10.197458 ms maximum block;
+server p95 was 0.397959 ms for the measured window, while the broader maximum counter reached
+43.856083 ms. Listening/acoustic, physical-input/two-client, zero-underrun, sustained-load and
+prior release gates remain **PENDING**. No commit, push, publication, review reply or thread
+resolution. Runtime JAR SHA-256:
+`641c6865da71eaa90061ad0154f7f983347f5e9c03e1184faa631ebcc0dd3d70`.

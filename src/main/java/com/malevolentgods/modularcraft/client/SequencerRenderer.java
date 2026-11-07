@@ -53,7 +53,9 @@ public final class SequencerRenderer {
     VertexConsumer vertices = mc.renderBuffers().bufferSource().getBuffer(LedState.TYPE);
     for (var patch : ClientRuntime.patches())
       for (var module : patch.modules()) {
-        if (module.kind() != ModuleKind.EUCLIDEAN_SEQUENCER || !module.loaded()) continue;
+        if ((module.kind() != ModuleKind.EUCLIDEAN_SEQUENCER
+                && module.kind() != ModuleKind.STEP_SEQUENCER)
+            || !module.loaded()) continue;
         BlockPos position = new BlockPos(module.x(), module.y(), module.z());
         if (camera.distanceToSqr(module.x() + .5, module.y() + .5, module.z() + .5) > 1024
             || !mc.level.hasChunkAt(position)
@@ -61,9 +63,10 @@ public final class SequencerRenderer {
         var block = mc.level.getBlockState(position);
         if (!(block.getBlock()
                 instanceof com.malevolentgods.modularcraft.game.ModuleBlock moduleBlock)
-            || moduleBlock.kind != ModuleKind.EUCLIDEAN_SEQUENCER) continue;
+            || moduleBlock.kind != module.kind()) continue;
         Sequencer seq = SequencerVisuals.get(module.id());
-        if (seq == null) continue;
+        var melody = SequencerVisuals.steps(module.id());
+        if (seq == null && melody == null) continue;
         Direction facing = block.getValue(BlockStateProperties.HORIZONTAL_FACING);
         double front =
             (camera.x - module.x() - .5) * facing.getStepX()
@@ -72,7 +75,19 @@ public final class SequencerRenderer {
         poses.pushPose();
         try {
           poses.translate(module.x() - camera.x, module.y() - camera.y, module.z() - camera.z);
-          for (int c = 0; c < 4; c++) {
+          if (melody != null) {
+            for (int i = 0; i < 16; i++) {
+              double u = (11 + (i % 8) * 6) / 64.0, v = 1 - (28 + (i / 8) * 10) / 64.0;
+              if (i == melody.step())
+                square(vertices, poses, facing, u, v, 2.5 / 64, 0xfff2f5f7, 0);
+              int color =
+                  i >= melody.active().length()
+                      ? 0xff64727c
+                      : melody.active().notes().get(i) < 0 ? 0xff18212a : 0xff65d7e5;
+              square(vertices, poses, facing, u, v, 1.5 / 64, color, .0001);
+            }
+          }
+          for (int c = 0; seq != null && c < 4; c++) {
             var pattern = seq.active().channels().get(c);
             double cx = c % 2 == 0 ? 20 : 44, cy = c < 2 ? 24 : 39;
             // Cover the authored idle ring before drawing a different live length/rotation.

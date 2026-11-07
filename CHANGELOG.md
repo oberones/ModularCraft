@@ -1,3 +1,13 @@
+## v0.6.0 (2026-11-07)
+
+### Feat
+
+- add melodic step sequencer module
+
+### Fix
+
+- address issues based on PR feedback
+
 ## v0.5.0 (2026-11-07)
 
 ### Feat

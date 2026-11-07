@@ -24,7 +24,7 @@ L1 coefficient normalization bounds oscillator peaks at the selected level.
 
 ## Budgets and ordering
 
-Retain every SS-003 quota. Version 2 world saves; version 11 network/snapshots; edits 4 KiB, snapshots 32 KiB,
+Retain every SS-003 quota. Version 2 world saves; version 12 network/snapshots; edits 4 KiB, snapshots 32 KiB,
 world storage 2 MiB. 20 edits/s/player, 200/world; queues 64/player, 256/world.
 Cleanup and gate release bypass ordinary throttling. Outbound 128 KiB/s/listener,
 2 MiB/s/server. One preparation worker, eight pending jobs, 1,024 client events,
@@ -323,3 +323,14 @@ DSP/native load fixtures by one additional series filter per voice. Distinct own
 each patch within the unchanged player quota. Validate with `make verify` and a fresh
 `make smoke-load GRADLE_ARGS=-PqaAmp TICKS=1200`; retain <1 ms DSP p95 and <2 ms server p95.
 Record results and unobserved sustained, multiplayer, listening and release gates separately.
+
+
+## Step Sequencer extension
+
+Implement ST-001–006 with immutable StepSequencerSettings, acknowledged StepRecorder,
+StepSequencer composed with the existing sample clock, and a separate client editor.
+Extend ControlTimeline, RenderGraph pitch targets, visual projection and bounded snapshots.
+Use protocol 12 and existing named schema 2 records; retain pins, quotas, and all prior gates.
+Native fixtures: `make smoke GRADLE_ARGS=-PqaStepSequencer TICKS=500` and
+`make smoke-load GRADLE_ARGS=-PqaStepSequencer TICKS=1200`. Record evidence in
+validation/step-sequencer/ and validation/ledger.md; no commit or publication authorized.

@@ -51,6 +51,7 @@ public final class NativeFixture {
             return;
           }
           if (Boolean.getBoolean("modularcraft.qa.amp")) NativeAmpFixture.tick(performer, ticks);
+          if (Boolean.getBoolean("modularcraft.qa.step")) NativeStepFixture.tick(performer, ticks);
           if (Boolean.getBoolean("modularcraft.qa.mixer"))
             NativeMixerFixture.tick(performer, ticks);
           if (Boolean.getBoolean("modularcraft.qa.lfo")) NativeLfoFixture.tick(performer, ticks);
@@ -153,6 +154,10 @@ public final class NativeFixture {
             new BlockPos(originX + x, y - 1, originZ + z), Blocks.STONE.defaultBlockState(), 3);
     if (Boolean.getBoolean("modularcraft.qa.amp")) {
       NativeAmpFixture.build(player, originX, y, originZ);
+      return;
+    }
+    if (Boolean.getBoolean("modularcraft.qa.step")) {
+      NativeStepFixture.build(player, originX, y, originZ);
       return;
     }
     if (Boolean.getBoolean("modularcraft.qa.mixer")) {
