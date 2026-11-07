@@ -36,12 +36,13 @@ neoForge {
                 systemProperty 'modularcraft.qa.amp', project.hasProperty('qaAmp').toString()
                 systemProperty 'modularcraft.qa.mixer', project.hasProperty('qaMixer').toString()
                 systemProperty 'modularcraft.qa.showcase', project.hasProperty('qaShowcase').toString()
+                systemProperty 'modularcraft.qa.readmeExample', providers.gradleProperty('qaReadmeExample').getOrElse('')
                 systemProperty 'modularcraft.qa.lfo', project.hasProperty('qaLfo').toString()
                 systemProperty 'modularcraft.qa.square', project.hasProperty('qaSquare').toString()
                 systemProperty 'modularcraft.qa.detune', project.hasProperty('qaDetune').toString()
                 systemProperty 'modularcraft.qa.cables', project.hasProperty('qaCables').toString()
                 systemProperty 'modularcraft.qa.cableRemoval', project.hasProperty('qaCableRemoval').toString()
-                if (project.hasProperty('qaCables') || project.hasProperty('qaSequencer') || project.hasProperty('qaShowcase')) {
+                if (project.hasProperty('qaCables') || project.hasProperty('qaSequencer') || project.hasProperty('qaShowcase') || project.hasProperty('qaReadmeExample')) {
                     programArguments.addAll('--width', '1920', '--height', '1080')
                 }
                 programArguments.addAll('--quickPlaySingleplayer', 'ModularCraft-QA')

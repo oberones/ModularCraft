@@ -79,6 +79,44 @@ their on/off setting and resume when the whole patch is loaded and playback capa
 is available. After reloading, sequencers in manual mode wait for Start; those in
 Redstone Mode follow the current power once the whole patch is loaded.
 
+## Example patches
+
+### 1. Your first drone
+
+**4 modules · 3 cables** — Saw → Filter → Amp → Speaker
+
+![A Saw Oscillator, Low-Pass Filter, Amp, and Speaker connected from left to right for a sustained drone](docs/images/example-drone.png)
+
+This is the whole audio path in its simplest useful form: the oscillator creates a tone,
+the filter changes its brightness, the Amp sustains it with **Drone** enabled, and the
+Speaker makes it audible. Start at 220 Hz and move the filter cutoff to hear how much
+character you can get from one oscillator.
+[Build the drone](docs/user-guide.md#example-1-your-first-drone).
+
+### 2. A playable keyboard lead
+
+**5 modules · 5 cables** — Keyboard controls pitch and gate; Square → Filter → Amp → Speaker
+
+![A Keyboard above a Square Oscillator, Low-Pass Filter, Amp, and Speaker, with separate pitch and gate cables](docs/images/example-keyboard-lead.png)
+
+Two control cables turn a sound into a playable instrument. **Pitch** tells the square
+oscillator which note to play; **gate** tells the Amp when to begin and release its
+built-in envelope. Try a short attack for a sharp lead, then lengthen attack and release
+for softer notes—all with the same wiring.
+[Build the keyboard lead](docs/user-guide.md#example-2-a-playable-keyboard-lead).
+
+### 3. Four interlocking rhythms
+
+**15 modules · 17 cables** — Four oscillator/filter/Amp voices → Mixer → Speaker
+
+![Four stepped rows of oscillators, filters, and Amps, triggered by a Euclidean Sequencer and combined through a Mixer into one Speaker](docs/images/example-four-voice-rhythms.png)
+
+Each voice has its own pitch, filter, and envelope, while the sequencer distributes
+**4, 5, 7, and 9 hits across 16 steps**. Their overlapping patterns make a layered rhythmic
+arrangement from simple parts. Solo mixer inputs to hear each rhythm, then bring them
+back together; independent Amps keep each voice's articulation intact before mixing.
+[Build the four-voice patch](docs/user-guide.md#four-voice-amp-patch-rp-008).
+
 ## Keep exploring
 
 - [User guide](docs/user-guide.md): detailed controls, playable patches, MIDI, saving,

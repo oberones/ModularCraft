@@ -42,6 +42,10 @@ public final class NativeFixture {
         (ServerTickEvent.Post event) -> {
           if (performer == null || event.getServer() != performer.getServer()) return;
           if (++ticks == 20) build(performer);
+          if (!System.getProperty("modularcraft.qa.readmeExample", "").isEmpty()) {
+            NativeReadmeFixture.tick(performer, ticks);
+            return;
+          }
           if (Boolean.getBoolean("modularcraft.qa.showcase")) {
             NativeShowcaseFixture.tick(performer, ticks);
             return;
@@ -134,6 +138,10 @@ public final class NativeFixture {
     ServerRuntime runtime = ServerRuntime.get(player.getServer());
     int y = player.blockPosition().getY();
     int originX = player.blockPosition().getX(), originZ = player.blockPosition().getZ() + 4;
+    if (!System.getProperty("modularcraft.qa.readmeExample", "").isEmpty()) {
+      NativeReadmeFixture.build(player, originX, y, originZ);
+      return;
+    }
     if (Boolean.getBoolean("modularcraft.qa.showcase")) {
       NativeShowcaseFixture.build(player, originX, y, originZ);
       return;

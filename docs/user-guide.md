@@ -16,6 +16,7 @@ measurements, user-reported listening, and outstanding release acceptance.
 ## In this guide
 
 - [Install](#install) and [your first instrument](#first-instrument-rp-001)
+- [README example patches](#readme-example-patches)
 - [Keyboard and MIDI](#play-the-keyboard-rp-003)
 - [Patching, permissions, and saved work](#patching-permissions-and-saved-work)
 - [Troubleshooting](#troubleshooting)
@@ -525,6 +526,58 @@ Speaker has only Audio In, Volume (default 10%), and the remembered on/off switc
 It applies spatial playback and listener controls. Its two-per-patch limit does not
 limit the number of Amps. Local mute and Minecraft audio preferences always apply.
 
+## README example patches
+
+These are the exact recipes shown in the README. Place all blocks as the same player,
+with their fronts facing you and two-block horizontal spacing. Use the Patching Tool to
+click each output, then its destination input. Every arrow in the audio paths below
+means **Audio Out → Audio In**. Keep unlisted controls at their defaults.
+
+For all three examples, set oscillator **Level 50%**, Saw **Detune 0**, Amp **Level 100%**,
+and Speaker **Volume 10%, enabled**. Press **M** to mute locally; disable the Speaker to
+silence the patch for everyone.
+
+### Example 1: your first drone
+
+**4 modules / 3 cables.** Place Saw Oscillator, Low-Pass Filter, Amp, and Speaker in a
+single row from left to right, as seen from their fronts.
+
+1. Wire **Saw → Filter → Amp → Speaker**.
+2. Set Saw **Frequency 220 Hz**, Filter **Cutoff 1,000 Hz**, and **Resonance 25%**.
+3. Enable **Drone** on the Amp. Leave its Gain In and Gate In disconnected.
+
+The result is a continuous filtered saw tone. The filter changes the harmonic brightness
+without changing the oscillator's pitch. Sweep cutoff down and up to explore this basic
+subtractive-synthesis technique. Turn Drone off to return to gated notes; the Amp's
+**Hold Gate** control can then audition its envelope.
+
+### Example 2: a playable keyboard lead
+
+**5 modules / 5 cables.** Place Square Oscillator, Low-Pass Filter, Amp, and Speaker in a
+row. Place the Keyboard on a raised support behind the filter so its front stays visible.
+
+| Source | Destination |
+|---|---|
+| Square Audio Out | Filter Audio In |
+| Filter Audio Out | Amp Audio In |
+| Amp Audio Out | Speaker Audio In |
+| Keyboard Pitch CV Out | Square Pitch CV In |
+| Keyboard Gate Out | Amp Gate In |
+
+Set Square **Pulse Width 50%** (saved Frequency **220 Hz**, overridden by keyboard pitch),
+Filter **Cutoff 2,000 Hz**, **Resonance 25%**, and Amp **Drone off**. Use Amp **Attack
+0.010 s**, **Decay 0.200 s**, **Sustain 70%**, **Release 0.300 s**. Leave Gain In disconnected.
+Keep Keyboard at octave **4**; its initial pitch is C4.
+
+Open the Keyboard and play with its on-screen keys or computer shortcuts (**A** plays C4,
+**S** plays D4). Pitch chooses the note while gate shapes its beginning and ending through
+the Amp's ADSR. Release the keys to hear the release tail; closing the panel releases
+held computer/mouse notes too. Short attack gives a sharp entrance; longer attack and
+release soften the articulation. MIDI is optional; see [Keyboard and MIDI](#play-from-a-midi-controller).
+
+The third README example is the filtered, single-Speaker version of
+[RP-008](#four-voice-amp-patch-rp-008) below.
+
 ## Four-voice Amp patch: RP-008
 
 Use one sequencer, four oscillators, four Amps, one Mixer, and one Speaker:
@@ -534,16 +587,29 @@ Use one sequencer, four oscillators, four Amps, one Mixer, and one Speaker:
 1. Connect sequencer triggers A/B/C/D to the four Amp Gate Ins.
 2. Connect each oscillator Audio Out to its Amp Audio In, optionally through a filter.
 3. Connect the four Amp Audio Outs to Mixer inputs 1–4, then Mixer Audio Out to Speaker.
-4. Set oscillator frequencies to 110/220/330/440 Hz and Level 50%; use Amp Level 100%,
+4. Use Saw/Square/Saw/Square oscillators at 110/220/330/440 Hz and Level 50%;
+   Saw Detune 0, Square Pulse Width 50%. For the filtered version, set each filter to
+   Cutoff 5,000 Hz, Resonance 25%, and Cutoff CV Amount 0%. Use Amp Level 100%,
    Drone off, Attack 0.001 s, Decay 0.200 s, Sustain 70%, Release 0.080 s.
 5. Keep mixer inputs at 100%, Master 25%, mute/solo off, Speaker Volume 10%.
    Start the sequencer at 120 BPM with default 4/5/7/9 hits over 16 steps.
 6. Solo each mixer input to hear its independent rhythm. Stop/Resume/Reset, mute each
    trigger, and edit ADSR. Close panels and verify playback continues. Use M to mute locally.
 
+The README screenshot uses **15 modules / 17 cables**, including all four filters and
+one Speaker. Arrange four parallel oscillator → filter → Amp rows on ascending supports,
+with the sequencer to their left and Mixer/Speaker to their right, as viewed from the
+front. Each successive voice row sits one block higher and two blocks farther back.
+Keep every cable within 16 blocks; all filters' CV inputs and all Amps' Gain Ins are unused.
+
+The four patterns share a 16-step cycle but distribute different numbers of hits across
+it. Each Amp articulates its own voice before mixing, so soloing an input reveals that
+voice's independent rhythm. Start with one part, then clear solos to hear how the patterns
+interlock. Keep rotations at 0, trigger mutes off, and Redstone Mode off for this example.
+
 ![Amp controls](images/amp-panel.png)
 ![Speaker controls](images/speaker-panel.png)
-![Four voices through a mixer](images/four-voice-amp.png)
+![Four stepped voice rows with independent sequencer triggers and a shared Mixer and Speaker](images/example-four-voice-rhythms.png)
 
 ## Upgrading existing patches
 

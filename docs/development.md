@@ -290,20 +290,46 @@ listening test, two-client session, real disk restart acceptance or 30-minute lo
 
 ### README showcase screenshots
 
-`make smoke GRADLE_ARGS=-PqaShowcase TICKS=1200` builds a fresh, packaged nine-module,
-ten-cable instrument and captures `synth-setup.png` plus nine individual block PNGs in
+`make smoke GRADLE_ARGS=-PqaShowcase TICKS=1200` builds a fresh, packaged ten-module,
+eleven-cable instrument and captures `synth-setup.png` plus ten individual block PNGs in
 that instance's `screenshots/` directory. Use this flag alone, without other QA variants.
 The test-only fixture sets daylight, clear weather, a neutral platform, spectator camera,
 and hidden HUD. It requests a 1920×1080 window; actual framebuffer dimensions depend on
-the host display. A separate display pedestal cycles through the nine blocks without
-altering the connected instrument. Client assertions require all nine kinds, an enabled
-speaker, a running sequencer, and all ten saved screenshots. Use at least 1200 ticks.
+the host display. A separate display pedestal cycles through the ten blocks without
+altering the connected instrument. Client assertions require all ten kinds, an enabled
+speaker, a running sequencer, and all eleven saved screenshots. Use at least 1200 ticks.
 
 Inspect the images before copying them to `docs/images/`; keep original captures and
 logs in the generated run directory. The reproducible patch and settings are in the
-[user guide](user-guide.md#showcase-all-nine-blocks-together). This is visual documentation
+[user guide](user-guide.md#showcase-all-ten-blocks-together). This is visual documentation
 evidence, not a listening, multiplayer, or performance qualification run.
 
+
+### README example patch screenshots
+
+Run each recipe on its own; the launcher creates a fresh disposable world when `QA_DIR`
+is omitted. Do not combine this selector with other QA flags.
+
+```sh
+make smoke GRADLE_ARGS=-PqaReadmeExample=drone TICKS=600
+make smoke GRADLE_ARGS=-PqaReadmeExample=lead TICKS=600
+make smoke GRADLE_ARGS=-PqaReadmeExample=rhythms TICKS=600
+```
+
+These test-only fixtures build the [README examples](user-guide.md#readme-example-patches)
+with 4/3, 5/5, and 15/17 modules/cables respectively. Client assertions check the complete
+wiring and parameter settings, enabled Speaker, and running rhythm sequencer. The lead
+probe presses C4/D4, checks authoritative pitch and Amp gate, releases D4 back to C4,
+and releases C4 before taking the overview. These are synthetic UI inputs.
+
+Each run requests a 1920×1080 window, fixes daylight and weather, hides the HUD, and
+captures one PNG at tick 350. At tick 400 it verifies the file was written; the console
+reports the actual framebuffer dimensions. Inspect the image before copying it from the
+printed instance's `screenshots/` folder to `docs/images/`. Filenames are
+`example-drone.png`, `example-keyboard-lead.png`, and `example-four-voice-rhythms.png`.
+Keep original captures and logs in the generated instance; record evidence in the ledger.
+The test mod is excluded from the runtime and sources JARs. Screenshot and scripted-input
+checks do not establish human listening, physical-input, or multiplayer acceptance.
 
 ### Amp / Speaker probes
 

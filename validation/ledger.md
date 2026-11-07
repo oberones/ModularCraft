@@ -1026,3 +1026,24 @@ to the ModularCraft Audio button.
 module ports/defaults, client controls and user guide; `git diff --check`. Self-review PASS.
 Documentation-only changes; runtime suites were not rerun. Prior listening, multiplayer,
 performance and release gates remain PENDING. No commit, push or publication performed.
+
+## 2026-11-07 — Three README example patches
+
+Added fresh in-game images and explanatory captions for a four-module drone, five-module
+keyboard lead, and fifteen-module four-voice rhythmic patch, with exact user-guide
+recipes and opt-in `qaReadmeExample=drone|lead|rhythms` capture fixtures. Preserved the
+README hero/gallery, production behavior, dependency pins, AGENTS.md, and manual worlds.
+
+**PASS:** native red–green (expected old-fixture count failure, then all three accepted
+recipes), wiring/settings/Speaker checks, running sequencer, synthetic keyboard
+C4/D4/fallback/release checks, and visual review of all three 1920×1052 captures.
+**PASS:** `make check` (25 launcher tests; 180 unchanged JUnit results reused; formatting,
+Checkstyle, PMD), assembly/artifact inspection, runtime/sources JAR fixture exclusion,
+local documentation links/anchors, and diff checks. Self-review PASS.
+[Evidence and reproduction](showcase/readme-examples/README.md),
+[image hashes and assertions](showcase/readme-examples/results.json).
+
+One underrun was reported in each accepted native run; these short screenshot probes
+do not establish sustained performance. Human listening/acoustic, physical-input,
+multiplayer/timing, and prior security/platform/release gates remain **PENDING**.
+No commit, push, play-instance installation, or publication occurred.

@@ -1,0 +1,96 @@
+{
+  "date": "2026-11-07",
+  "runtime_jar_sha256": "9576146785910cba3bea8313fc817818939f5d5c3e3737ab4014c1d4309a2667",
+  "checks": {
+    "make_check": "PASS (unchanged JUnit results reused by Gradle)",
+    "junit": {
+      "tests": 180,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "launcher_tests": 25,
+    "packaged_native_captures": "PASS",
+    "local_links": "PASS",
+    "artifact_inspection": "PASS",
+    "visual_review": "PASS",
+    "self_review": "PASS"
+  },
+  "red": "README drone expected 4 modules / 3 cables, got 5 / 4",
+  "examples": [
+    {
+      "example": "drone",
+      "modules": 4,
+      "cables": 3,
+      "instance": "run/make/readme-drone-final",
+      "log": "run/make/readme-capture-logs/drone-final.log",
+      "image": "docs/images/example-drone.png",
+      "dimensions": [
+        1920,
+        1052
+      ],
+      "sha256": "18651f4ee9f52f7c8740af5dfea94d081304600c33f410529aeb9d89b2044f37",
+      "assertions": [
+        "MODULARCRAFT_QA readme drone recipe PASS modules=4 cables=3",
+        "MODULARCRAFT_QA readme drone recipe PASS modules=4 cables=3",
+        "MODULARCRAFT_QA readme drone framebuffer=1920x1052",
+        "MODULARCRAFT_QA readme drone screenshot PASS"
+      ],
+      "underruns": 1,
+      "max_audio_block_ns": 5894541
+    },
+    {
+      "example": "lead",
+      "modules": 5,
+      "cables": 5,
+      "instance": "run/make/readme-lead-01",
+      "log": "run/make/readme-capture-logs/lead-01.log",
+      "image": "docs/images/example-keyboard-lead.png",
+      "dimensions": [
+        1920,
+        1052
+      ],
+      "sha256": "29f4b750044f3c172b034beb88a2ff0dec4d5cf35e611fa0f73e886b2776a291",
+      "assertions": [
+        "MODULARCRAFT_QA readme lead recipe PASS modules=5 cables=5",
+        "MODULARCRAFT_QA readme lead keyboard PASS note=60 gate=true",
+        "MODULARCRAFT_QA readme lead keyboard PASS note=62 gate=true",
+        "MODULARCRAFT_QA readme lead keyboard PASS note=60 gate=true",
+        "MODULARCRAFT_QA readme lead keyboard PASS note=60 gate=false",
+        "MODULARCRAFT_QA readme lead recipe PASS modules=5 cables=5",
+        "MODULARCRAFT_QA readme lead framebuffer=1920x1052",
+        "MODULARCRAFT_QA readme lead screenshot PASS"
+      ],
+      "underruns": 1,
+      "max_audio_block_ns": 2382958
+    },
+    {
+      "example": "rhythms",
+      "modules": 15,
+      "cables": 17,
+      "instance": "run/make/readme-rhythms-final-02",
+      "log": "run/make/readme-capture-logs/rhythms-final-02.log",
+      "image": "docs/images/example-four-voice-rhythms.png",
+      "dimensions": [
+        1920,
+        1052
+      ],
+      "sha256": "b23d7594e2b12d66b74f39128865ae28061c30a80524c05e1110af4ee3e96128",
+      "assertions": [
+        "MODULARCRAFT_QA readme rhythms recipe PASS modules=15 cables=17",
+        "MODULARCRAFT_QA readme rhythms recipe PASS modules=15 cables=17",
+        "MODULARCRAFT_QA readme rhythms framebuffer=1920x1052",
+        "MODULARCRAFT_QA readme rhythms screenshot PASS"
+      ],
+      "underruns": 1,
+      "max_audio_block_ns": 5585750
+    }
+  ],
+  "pending": [
+    "Human listening/acoustic acceptance",
+    "Physical keyboard/MIDI input acceptance",
+    "Multiplayer/timing acceptance",
+    "Sustained performance/underrun qualification",
+    "Prior security/platform/release gates"
+  ]
+}
