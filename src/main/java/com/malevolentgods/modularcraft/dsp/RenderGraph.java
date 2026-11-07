@@ -11,6 +11,7 @@ import com.malevolentgods.modularcraft.domain.Parameter;
 import com.malevolentgods.modularcraft.domain.PatchSnapshot;
 import com.malevolentgods.modularcraft.domain.Port;
 import com.malevolentgods.modularcraft.domain.SequencerSettings;
+import com.malevolentgods.modularcraft.domain.WorldState;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -74,7 +75,8 @@ public final class RenderGraph {
       checkpoints.putAll(patch.envelopes());
       sample = Math.max(sample, patch.sample());
     }
-    if (modules.size() > 64) throw new IllegalArgumentException("active_modules");
+    if (modules.size() > 4 * WorldState.MAX_PATCH_MODULES)
+      throw new IllegalArgumentException("active_modules");
     routing = List.copyOf(cables);
     timelines = new ControlTimeline[patches.size()];
     List<ModuleState> ordered = Graph.compile(modules, cables);

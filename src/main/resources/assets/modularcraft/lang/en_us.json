@@ -207,7 +207,7 @@
   "modularcraft.error.world_capacity": "World limit: 256 modules / 512 cables. Remove an unused module or cable.",
   "modularcraft.error.player_modules": "Owner limit: 64 modules. Remove an unused module.",
   "modularcraft.error.player_cables": "Owner limit: 128 cables. Remove an unused cable.",
-  "modularcraft.error.patch_modules": "Patch limit: 16 modules. Split the patch first.",
+  "modularcraft.error.patch_modules": "Patch limit: 20 modules. Split the patch first.",
   "modularcraft.error.patch_cables": "Patch limit: 24 cables. Remove a cable first.",
   "modularcraft.error.patch_speakers": "Patch limit: two speakers. Disconnect a speaker first.",
   "modularcraft.error.active_patches": "World limit: four active patches. Disable another patch first.",

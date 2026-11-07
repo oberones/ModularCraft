@@ -212,7 +212,7 @@ release gates remain applicable until independently observed.
 Run README RP-005 and record width 50/25/5%, filter comparison, keyboard/MIDI pitch,
 width edits while held, CV removal, Level 0, enable/disable/mute, save/reload, chunk unload,
 block removal and reconnect. Confirm saved saw patches retain their original settings/sound.
-On two matching protocol-v10 clients verify shared PWM edits, late join, authority and timing
+On two matching protocol-v11 clients verify shared PWM edits, late join, authority and timing
 against existing SC-003/004 limits. Listen for clicks, stuck tones, harsh aliasing and intended
 pulse-tone changes; automated samples/screenshots do not establish listening acceptance.
 Use a disposable `make smoke GRADLE_ARGS=-PqaSquare TICKS=600` for widgets and screenshots.
@@ -239,7 +239,7 @@ at compact GUI sizes with keyboard navigation and narrator enabled. Reopen after
 settings and verify accepted edits. Save, restart and reload: all mix controls/cables must
 persist, speakers start disabled, and enabling restores the intended blend.
 
-On two protocol-v10 clients verify shared edits, stale/foreign rejection, late join,
+On two protocol-v11 clients verify shared edits, stale/foreign rejection, late join,
 chunk/dimension unload, removal and recovery. Run the mixer load fixture for 30 minutes,
 record hardware, tails, underruns and p95 budgets. Automated probes do not mark these
 listening, multiplayer, disk-restart or sustained gates passed.
@@ -259,8 +259,8 @@ migration on a COPY of a schema-1 world: old combined blocks become Amps, preser
 cables/volume, and need new Speakers. Verify malformed records retain their original data.
 
 Automated probes: `make smoke GRADLE_ARGS=-PqaAmp TICKS=600` and
-`make smoke-load GRADLE_ARGS=-PqaAmp TICKS=1200`. The latter contains four 16-module,
-18-cable, two-Speaker patches. Existing 24-cable fixtures cover aggregate cable bounds;
+`make smoke-load GRADLE_ARGS=-PqaAmp TICKS=1200`. The latter contains four 20-module,
+22-cable, two-Speaker patches with distinct owners (80 modules/88 cables). Existing 24-cable fixtures cover aggregate cable bounds;
 their former Speaker Gain inputs now target filter resonance. Record native screenshots,
 DSP/server p95, allocations and underruns. Human listening, two-client skew, and 30-minute
 sustained testing must be recorded separately; short smoke runs do not establish them.
@@ -278,5 +278,5 @@ resume, gate release and Reset ordering.
 
 Human acceptance remains separate: audition RP-004 with a lever powering the sequencer,
 check pause/resume without stuck gates or clicks, verify mode Off leaves playback unchanged,
-and repeat with external Clock In. On two protocol-10 clients check shared playback,
+and repeat with external Clock In. On two protocol-11 clients check shared playback,
 late join, mode changes and client/server chunk reload. Preserve pending status until observed.

@@ -52,7 +52,7 @@ class SequencerRedstoneTest {
     PatchSnapshot patch =
         new PatchSnapshot(module.id(), 0, 0, 0, List.of(module), List.of(), Map.of());
     byte[] bytes = StateCodec.encode(patch);
-    assertEquals(10, bytes[5]);
+    assertEquals(11, bytes[5]);
     assertEquals(patch, StateCodec.decode(bytes));
     bytes[5] = 9;
     assertThrows(IllegalArgumentException.class, () -> StateCodec.decode(bytes));

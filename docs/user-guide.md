@@ -229,7 +229,7 @@ removes its cables; a replacement at the same position has a new identity and de
 
 | Capacity | Limit |
 |---|---|
-| One connected patch | 16 modules, 24 cables, two speakers |
+| One connected patch | 20 modules, 24 cables, two speakers |
 | One owner, including unloaded modules | 64 modules, 128 cables |
 | Entire world, across dimensions | 256 modules, 512 cables |
 | Active world playback | Four patches, eight speakers |
@@ -248,7 +248,7 @@ Unknown or corrupt records are quarantined and preserved, including connected af
 components. Do not edit the save to guess missing values. Back up the entire world, use
 a compatible mod version or restore a known-good backup, and retain the original data
 for recovery. The global registry is `data/modularcraft.dat`; per-module data is also in
-its owning block entity. World/block saves use schema 2; protocol/snapshots use version 10.
+its owning block entity. World/block saves use schema 2; protocol/snapshots use version 11.
 See [upgrading existing patches](#upgrading-existing-patches) before loading an old world.
 
 
@@ -329,7 +329,7 @@ and follows current power once the complete patch loads; positions still start f
 after reload. Speakers retain their enabled setting.
 Closing the editor, disabling speakers, and local mute leave a loaded sequencer running.
 Existing sequencers migrate with Redstone Mode Off. Back up worlds before upgrading;
-install protocol-v10 builds on every client and server. Restore the backup before downgrading.
+install protocol-v11 builds on every client and server. Restore the backup before downgrading.
 This version does not add presets, manual step editing, swing, probability, variable gate
 lengths, clock division, pitch sequences, MIDI clock, or redstone clock conversion.
 
@@ -614,8 +614,10 @@ interlock. Keep rotations at 0, trigger mutes off, and Redstone Mode off for thi
 ## Upgrading existing patches
 
 Back up the entire world before installing this version on every client and server.
-Network/snapshot version 10 requires matching peers. World and block saves now use schema 2;
-schema-1 records migrate automatically. Downgrade by restoring the backup with the old build.
+Network/snapshot version 11 requires matching peers. World and block saves now use schema 2;
+schema-1 records migrate automatically. The increase to 20 modules does not change the save schema.
+Do not load worlds containing 17–20-module patches in builds enforcing the old 16-module limit.
+Downgrade by restoring the backup with the old build.
 
 Existing Amplifier / Speaker blocks and inventory items become **Amp**. Their UUID,
 owner, position, cables, and former Volume value remain, with Volume becoming Amp Level.

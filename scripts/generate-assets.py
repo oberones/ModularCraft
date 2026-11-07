@@ -176,7 +176,7 @@ errors={
 'world_capacity':'World limit: 256 modules / 512 cables. Remove an unused module or cable.',
 'player_modules':'Owner limit: 64 modules. Remove an unused module.',
 'player_cables':'Owner limit: 128 cables. Remove an unused cable.',
-'patch_modules':'Patch limit: 16 modules. Split the patch first.',
+'patch_modules':'Patch limit: 20 modules. Split the patch first.',
 'patch_cables':'Patch limit: 24 cables. Remove a cable first.',
 'patch_speakers':'Patch limit: two speakers. Disconnect a speaker first.',
 'active_patches':'World limit: four active patches. Disable another patch first.',

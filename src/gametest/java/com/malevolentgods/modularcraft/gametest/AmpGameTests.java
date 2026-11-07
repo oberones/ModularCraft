@@ -26,6 +26,67 @@ public final class AmpGameTests {
   private AmpGameTests() {}
 
   @GameTest(template = "empty", templateNamespace = ModularCraft.ID)
+  public static void twentyModulePatchRejectsTwentyFirstWithoutMutation(GameTestHelper h) {
+    UUID owner = UUID.randomUUID();
+    var runtime = ServerRuntime.get(h.getLevel().getServer());
+    java.util.List<ModuleEntity> modules = new java.util.ArrayList<>();
+    for (int i = 0; i < 21; i++) {
+      BlockPos pos = new BlockPos(1 + i % 3, 1 + i / 9, 1 + i / 3 % 3);
+      h.setBlock(pos, ModularCraft.MODULES.get(ModuleKind.FILTER).get());
+      var entity = (ModuleEntity) h.getLevel().getBlockEntity(h.absolutePos(pos));
+      entity.initialize(owner);
+      modules.add(entity);
+    }
+    for (int i = 1; i < 20; i++) {
+      var a = runtime.state().get(modules.get(i - 1).state().id());
+      var b = runtime.state().get(modules.get(i).state().id());
+      runtime
+          .state()
+          .connect(
+              owner,
+              false,
+              new Cable(a.id(), Port.AUDIO_OUT, b.id(), Port.AUDIO_IN),
+              a.revision(),
+              b.revision());
+    }
+    modules.forEach(runtime::attach);
+    var snapshot = runtime.currentPatch(modules.getFirst().state().id());
+    h.assertTrue(
+        snapshot.modules().size() == 20 && snapshot.cables().size() == 19,
+        "Twenty connected modules are available to the client");
+    h.assertTrue(
+        snapshot.equals(
+            com.malevolentgods.modularcraft.domain.StateCodec.decode(
+                com.malevolentgods.modularcraft.domain.StateCodec.encode(snapshot))),
+        "Twenty-module runtime snapshot roundtrips");
+    var before = runtime.state().modules();
+    var cables = runtime.state().cables();
+    long revision = runtime.state().revision();
+    var a = runtime.state().get(modules.get(19).state().id());
+    var b = runtime.state().get(modules.get(20).state().id());
+    boolean refused = false;
+    try {
+      runtime
+          .state()
+          .connect(
+              owner,
+              false,
+              new Cable(a.id(), Port.AUDIO_OUT, b.id(), Port.AUDIO_IN),
+              a.revision(),
+              b.revision());
+    } catch (IllegalArgumentException expected) {
+      refused = "patch_modules:20".equals(expected.getMessage());
+    }
+    h.assertTrue(refused, "Twenty-first module rejected with the correct limit");
+    h.assertTrue(
+        before.equals(runtime.state().modules())
+            && cables.equals(runtime.state().cables())
+            && revision == runtime.state().revision(),
+        "Rejected connection preserves modules, cables and revisions");
+    h.succeed();
+  }
+
+  @GameTest(template = "empty", templateNamespace = ModularCraft.ID)
   public static void ampAndSpeakerJacksAlignInEveryOrientation(GameTestHelper h) {
     for (ModuleKind kind : java.util.List.of(ModuleKind.AMP, ModuleKind.SPEAKER)) {
       var block = ModularCraft.MODULES.get(kind).get();

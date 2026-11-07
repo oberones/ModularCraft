@@ -85,12 +85,12 @@ class AmpAudioTest {
                 m ->
                     new ModuleState(
                         ids.get(m.id()),
-                        m.owner(),
+                        new UUID(0, patch + 1),
                         m.kind(),
                         m.dimension(),
                         m.x() + patch % 2 * 8,
                         m.y(),
-                        m.z() + patch / 2 * 8,
+                        m.z() + patch / 2 * 10,
                         m.revision(),
                         m.values(),
                         true,
@@ -248,11 +248,11 @@ class AmpAudioTest {
         ModuleState filter =
             ModuleState.create(
                     new UUID(patch + 1, index),
-                    OWNER,
+                    new UUID(0, patch + 1),
                     ModuleKind.FILTER,
                     patch % 2 * 8 + index % 4 * 2,
                     64,
-                    patch / 2 * 8 + index / 4 * 2)
+                    patch / 2 * 10 + index / 4 * 2)
                 .withValue(Parameter.RESONANCE, 25);
         modules.add(filter);
         UUID osc = new UUID(patch + 1, voice + 1), amp = new UUID(patch + 1, voice + 5);
@@ -263,16 +263,33 @@ class AmpAudioTest {
       ModuleState speaker =
           ModuleState.create(
                   new UUID(patch + 1, 15),
-                  OWNER,
+                  new UUID(0, patch + 1),
                   ModuleKind.SPEAKER,
                   patch % 2 * 8 + 6,
                   64,
-                  patch / 2 * 8 + 6)
+                  patch / 2 * 10 + 6)
               .runtime(true, true);
       modules.add(speaker);
       cables.add(new Cable(new UUID(patch + 1, 9), Port.AUDIO_OUT, speaker.id(), Port.AUDIO_IN));
-      Assertions.assertEquals(16, modules.size());
-      Assertions.assertEquals(18, cables.size());
+      for (int voice = 0; voice < 4; voice++) {
+        int index = 16 + voice;
+        ModuleState filter =
+            ModuleState.create(
+                    new UUID(patch + 1, index),
+                    new UUID(0, patch + 1),
+                    ModuleKind.FILTER,
+                    patch % 2 * 8 + voice * 2,
+                    64,
+                    patch / 2 * 10 + 8)
+                .withValue(Parameter.RESONANCE, 25);
+        modules.add(filter);
+        UUID first = new UUID(patch + 1, 11 + voice), amp = new UUID(patch + 1, 5 + voice);
+        cables.remove(new Cable(first, Port.AUDIO_OUT, amp, Port.AUDIO_IN));
+        cables.add(new Cable(first, Port.AUDIO_OUT, filter.id(), Port.AUDIO_IN));
+        cables.add(new Cable(filter.id(), Port.AUDIO_OUT, amp, Port.AUDIO_IN));
+      }
+      Assertions.assertEquals(20, modules.size());
+      Assertions.assertEquals(22, cables.size());
       patches.add(
           new PatchSnapshot(
               original.id(),
@@ -286,6 +303,16 @@ class AmpAudioTest {
               original.sequencers(),
               original.baseGates()));
     }
+    Map<UUID, ModuleState> allModules = new HashMap<>();
+    List<Cable> allCables = new ArrayList<>();
+    for (PatchSnapshot patch : patches) {
+      patch.modules().forEach(m -> allModules.put(m.id(), m));
+      allCables.addAll(patch.cables());
+      Assertions.assertEquals(patch, StateCodec.decode(StateCodec.encode(patch)));
+    }
+    WorldState.validate(allModules, allCables);
+    Assertions.assertEquals(80, allModules.size());
+    Assertions.assertEquals(88, allCables.size());
     MeasurementTest.benchmark(patches);
   }
 

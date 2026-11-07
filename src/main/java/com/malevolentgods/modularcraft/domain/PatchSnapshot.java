@@ -138,13 +138,14 @@ public record PatchSnapshot(
         || revision < 0
         || sequence < 0
         || sample < 0
-        || modules.size() > 16
+        || modules.size() > WorldState.MAX_PATCH_MODULES
         || cables.size() > 24
-        || envelopes.size() > 16
-        || keyboards.size() > 16
-        || sequencers.size() > 16
-        || lfos.size() > 16
-        || baseGates.size() > 16) throw new IllegalArgumentException("snapshot_bounds");
+        || envelopes.size() > WorldState.MAX_PATCH_MODULES
+        || keyboards.size() > WorldState.MAX_PATCH_MODULES
+        || sequencers.size() > WorldState.MAX_PATCH_MODULES
+        || lfos.size() > WorldState.MAX_PATCH_MODULES
+        || baseGates.size() > WorldState.MAX_PATCH_MODULES)
+      throw new IllegalArgumentException("snapshot_bounds");
     java.util.Map<UUID, ModuleState> map = new java.util.HashMap<>();
     for (ModuleState m : modules)
       if (map.put(m.id(), m) != null) throw new IllegalArgumentException("duplicate_identity");

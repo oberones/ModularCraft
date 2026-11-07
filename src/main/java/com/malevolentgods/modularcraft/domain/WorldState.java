@@ -14,6 +14,9 @@ import java.util.UUID;
 
 /** Logical-server-owned transactional registry, including unloaded modules. No world access. */
 public final class WorldState {
+  /** Maximum modules in one connected patch, shared with snapshot validation and decoding. */
+  public static final int MAX_PATCH_MODULES = 20;
+
   private final Map<UUID, ModuleState> modules = new LinkedHashMap<>();
   private final Set<Cable> cables = new LinkedHashSet<>();
   private long revision;
@@ -272,7 +275,8 @@ public final class WorldState {
           loaded &= member.loaded();
         }
         for (Cable c : links) if (ids.contains(c.source())) count++;
-        if (ids.size() > 16) throw new IllegalArgumentException("patch_modules:16");
+        if (ids.size() > MAX_PATCH_MODULES)
+          throw new IllegalArgumentException("patch_modules:" + MAX_PATCH_MODULES);
         if (count > 24) throw new IllegalArgumentException("patch_cables:24");
         if (speakers > 2) throw new IllegalArgumentException("patch_speakers:2");
         if (on && loaded) active++;
