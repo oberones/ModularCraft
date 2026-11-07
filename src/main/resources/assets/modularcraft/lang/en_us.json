@@ -8,7 +8,6 @@
   "block.modularcraft.speaker": "Amplifier / Speaker",
   "item.modularcraft.patching_tool": "Patching Tool",
   "key.modularcraft.mute": "Mute ModularCraft",
-  "key.modularcraft.settings": "ModularCraft Audio Settings",
   "key.categories.modularcraft": "ModularCraft",
   "modularcraft.local_audio": "ModularCraft Audio",
   "modularcraft.local_volume": "Local volume: %s%%",

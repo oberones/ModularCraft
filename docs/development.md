@@ -212,6 +212,10 @@ smoke seed generation always uses the managed `run/make/gametest` seed instance.
 targets do not publish, commit, push, update dependency pins, or delete validation worlds.
 
 
+Keybinding native probe: `make smoke GRADLE_ARGS=-PqaKeybindings TICKS=60` checks that
+K leaves gameplay, chat, and the pause menu unchanged and that the pause menu's
+ModularCraft Audio button still opens settings.
+
 Keyboard native probe: `make smoke GRADLE_ARGS=-PqaKeyboard TICKS=500` builds RP-003
 in a fresh managed world, opens its piano panel, exercises notes/priority/octave/mouse/
 settings return/close, asserts server-accepted note states and captures six screenshots

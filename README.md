@@ -58,10 +58,10 @@ blocks apart and their labeled fronts facing you. Keep their default settings.
 5. Open the envelope and hold **Hold Gate** for a couple of seconds, then release it.
    Your note rises, sustains, and fades. Try changing the filter cutoff to change its tone.
 
-**Press M to mute your own sound immediately.** Press it again to unmute. **K** opens
-local audio settings; Minecraft's Master and Jukebox/Note Blocks volume sliders also
-apply. You can rebind M and K in Minecraft's controls. Local mute does not stop the music
-for other players.
+**Press M to mute your own sound immediately.** Press it again to unmute. Open local
+audio settings with the **ModularCraft Audio** button on the title screen, pause menu,
+or module panels. Minecraft's Master and Jukebox/Note Blocks volume sliders also apply.
+You can rebind M in Minecraft's controls. Local mute does not stop the music for other players.
 
 To remove a cable, hold the Patching Tool and **Shift-right-click its destination input**.
 An input accepts one cable; an output can feed four destinations. Speakers restart

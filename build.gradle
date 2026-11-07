@@ -31,6 +31,7 @@ neoForge {
                 systemProperty 'modularcraft.qa.ticks', providers.gradleProperty('qaTicks').getOrElse('1200')
                 systemProperty 'modularcraft.qa.cycles', providers.gradleProperty('qaCycles').getOrElse('false')
                 systemProperty 'modularcraft.qa.keyboard', project.hasProperty('qaKeyboard').toString()
+                systemProperty 'modularcraft.qa.keybindings', project.hasProperty('qaKeybindings').toString()
                 systemProperty 'modularcraft.qa.sequencer', project.hasProperty('qaSequencer').toString()
                 systemProperty 'modularcraft.qa.mixer', project.hasProperty('qaMixer').toString()
                 systemProperty 'modularcraft.qa.showcase', project.hasProperty('qaShowcase').toString()

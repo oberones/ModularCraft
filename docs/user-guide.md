@@ -39,9 +39,10 @@ Version tags publish the verified JAR and supporting records to
 See [release preparation](development.md#tagged-releases) for Commitizen and tag-push instructions.
 
 Use Minecraft's **Master** and **Jukebox/Note Blocks (Records)** sliders. The mod also has
-independent persistent local volume and mute. Default keys are **M** for mute and **K**
-for audio settings; rebind them under Options → Controls → Key Binds → ModularCraft.
-Audio settings are also available from the title screen, pause menu, and module panels.
+independent persistent local volume and mute. The default mute key is **M**;
+rebind it under Options → Controls → Key Binds → ModularCraft.
+Open audio settings with the **ModularCraft Audio** button on the title screen,
+pause menu, or module panels. There is no audio-settings keyboard shortcut.
 
 ## First instrument: RP-001
 

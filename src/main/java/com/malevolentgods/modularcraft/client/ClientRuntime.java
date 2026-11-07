@@ -50,12 +50,6 @@ public final class ClientRuntime {
           InputConstants.Type.KEYSYM,
           GLFW.GLFW_KEY_M,
           "key.categories.modularcraft");
-  public static final KeyMapping SETTINGS =
-      new KeyMapping(
-          "key.modularcraft.settings",
-          InputConstants.Type.KEYSYM,
-          GLFW.GLFW_KEY_K,
-          "key.categories.modularcraft");
   public static final LocalSettings PREFERENCES = new LocalSettings();
   public static final MidiInput MIDI = new MidiInput();
   private static final Map<UUID, PatchSnapshot> patches = new HashMap<>();
@@ -81,7 +75,6 @@ public final class ClientRuntime {
     bus.addListener(
         (RegisterKeyMappingsEvent event) -> {
           event.register(MUTE);
-          event.register(SETTINGS);
         });
     bus.addListener(
         (RegisterClientReloadListenersEvent event) ->
@@ -108,9 +101,6 @@ public final class ClientRuntime {
         (ScreenEvent.KeyPressed.Pre event) -> {
           if (MUTE.matches(event.getKeyCode(), event.getScanCode())) {
             toggleMute();
-            event.setCanceled(true);
-          } else if (SETTINGS.matches(event.getKeyCode(), event.getScanCode())) {
-            Minecraft.getInstance().setScreen(new AudioSettingsScreen(event.getScreen()));
             event.setCanceled(true);
           }
         });
@@ -342,7 +332,6 @@ public final class ClientRuntime {
     MIDI.tick();
     Minecraft mc = Minecraft.getInstance();
     while (MUTE.consumeClick()) toggleMute();
-    while (SETTINGS.consumeClick()) mc.setScreen(new AudioSettingsScreen(mc.screen));
     if (mc.level == null || mc.player == null) {
       if (!dimension.isEmpty()) clear();
       return;

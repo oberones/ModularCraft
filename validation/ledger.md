@@ -918,3 +918,30 @@ text, and added the all-nine-block showcase wiring. Added an opt-in, test-only
 - **PENDING/BLOCKED unchanged:** listening, hardware, two-client timing, sustained load,
   security and release gates. The capture run had three audio underruns; it is not audio
   or performance acceptance. No commit, push, or publication was performed.
+
+
+## 2026-11-06 — Remove the global audio-settings shortcut
+
+- **CHANGE:** Removed the settings key mapping and both its client-tick and screen-key
+  handlers. K no longer opens audio settings, including with an existing saved binding.
+  Menu/module audio-settings buttons remain available. Updated localization, its asset
+  generator, player documentation, changelog, and native-probe instructions.
+- **PASS — red/green native regression:** On macOS Apple M2 Pro, Java 21,
+  Minecraft 1.21.1 / NeoForge 21.1.218, ran
+  `make smoke GRADLE_ARGS=-PqaKeybindings TICKS=60` against the packaged JAR.
+  Before the fix, `run/make/smoke-t7yqfwqh/logs/latest.log` reports the expected
+  `K replaced screen at 12` failure. After the fix,
+  `run/make/smoke-xktkzd_y/logs/latest.log` reports unchanged screens in gameplay,
+  chat, and pause at ticks 12/22/32, followed by successful menu-button access.
+  The probe injects native key-mapping clicks and screen events; physical keyboard
+  input and every possible third-party screen were not individually tested.
+  Runtime JAR SHA-256:
+  `14ba1e9772ef153fd0f42da575c4324ace56bc7195f9253cf069db194df571da`.
+- **PASS — automated checks:** `make format check` with Java 21 and strict dependency
+  verification: 25 Python tests, 157 JUnit tests, formatting, Checkstyle, and PMD.
+  Localization JSON consistency and `git diff --check` passed.
+- **PASS — self-review:** Both settings activation paths and registration were removed;
+  existing button paths remain. No dependency, protocol, persistence, server, or DSP
+  changes. The native probe is test-only and opt-in.
+- **PENDING unchanged:** Existing multiplayer, listening, hardware, sustained-load,
+  security, and release acceptance gates. No commit, push, or publication performed.

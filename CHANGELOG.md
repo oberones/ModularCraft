@@ -1,5 +1,8 @@
 # 0.1.0 development candidate
 
+Removed the global K shortcut for audio settings so it no longer interrupts gameplay
+or typing in screens. Use the ModularCraft Audio buttons in menus and module panels.
+
 Restored the exact supported NeoForge version to 21.1.218 for Minecraft 1.21.1,
 including its MixinExtras 0.5.0 dependency, superseding the 21.1.234 update.
 Clients and servers must install NeoForge 21.1.218; save and network schemas are
