@@ -15,10 +15,6 @@ IDENTIFIER = r"(?:0|[1-9][0-9]*|[0-9]*[A-Za-z-][0-9A-Za-z-]*)"
 SEMVER = re.compile(NUMBER + r"\." + NUMBER + r"\." + NUMBER
                     + r"(?:-" + IDENTIFIER + r"(?:\." + IDENTIFIER + r")*)?"
                     + r"(?:\+[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*)?")
-SUPPORTING_FILES = (
-    "LICENSE", "THIRD_PARTY_NOTICES.md", "validation/dependencies.json",
-    "validation/licenses.json", "README.md", "CHANGELOG.md", "validation/ledger.md",
-)
 
 
 def normalize_tag(tag):
@@ -95,10 +91,7 @@ def checksums(paths):
 def stage(root, tag):
     check_version(root, tag)
     artifacts = checked_artifacts(root)
-    paths = [artifacts["jar"], *(root / name for name in SUPPORTING_FILES)]
-    for path in paths:
-        if not path.is_file() or path.is_symlink() or not path.stat().st_size:
-            raise ValueError("Missing or invalid release file: " + str(path))
+    paths = [artifacts["jar"], artifacts["sources"]]
     directory = root / "build/release"
     if directory.exists():
         raise ValueError("Release staging directory already exists; use a clean build/release directory")
@@ -112,7 +105,7 @@ def stage(root, tag):
 def publish(root, tag, repository, directory, runner=subprocess.run):
     version = check_version(root, tag)
     jar = directory / ("modularcraft-" + version + ".jar")
-    paths = [jar, *(directory / Path(name).name for name in SUPPORTING_FILES)]
+    paths = [jar, directory / ("modularcraft-" + version + "-sources.jar")]
     checksum_file = directory / "SHA256SUMS"
     expected = {p.name for p in paths} | {"SHA256SUMS"}
     if {p.name for p in directory.iterdir()} != expected:
@@ -126,11 +119,16 @@ def publish(root, tag, repository, directory, runner=subprocess.run):
     notes = ("Built from tag `" + tag + "` after automated verification.\n\n"
              "- [Supported versions and installation](" + base + "README.md)\n"
              "- [Changelog and migration notes](" + base + "CHANGELOG.md)\n"
+             "- [License](" + base + "LICENSE)\n"
+             "- [Third-party notices](" + base + "THIRD_PARTY_NOTICES.md)\n"
+             "- [Dependency inventory](" + base + "validation/dependencies.json)\n"
+             "- [License inventory](" + base + "validation/licenses.json)\n"
              "- [Acceptance procedures](" + base + "docs/acceptance.md)\n"
              "- [Validation results and outstanding gates](" + base + "validation/ledger.md)\n\n"
              "Automated verification does not establish native, listening, multiplayer, "
-             "or security acceptance; see the validation records for their status.")
-    args = ["gh", "release", "create", tag, *(str(p) for p in [*paths, checksum_file]),
+             "or security acceptance; see the validation records for their status.\n\n"
+             "### SHA-256 checksums\n\n```text\n" + checksum_file.read_text() + "```\n")
+    args = ["gh", "release", "create", tag, *(str(p) for p in paths),
             "--repo", repository, "--verify-tag", "--title", "ModularCraft " + version,
             "--generate-notes", "--notes", notes]
     if is_prerelease(version):

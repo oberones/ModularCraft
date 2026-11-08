@@ -30,7 +30,8 @@ class ReleaseTest(unittest.TestCase):
             (self.root / name).write_bytes(b"fixture")
         self.write_descriptor()
         self.jar(self.version)
-        for name in release.SUPPORTING_FILES:
+        for name in ("LICENSE", "THIRD_PARTY_NOTICES.md", "validation/dependencies.json",
+                     "validation/licenses.json", "README.md", "CHANGELOG.md", "validation/ledger.md"):
             path = self.root / name
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_text("supporting record\n")
@@ -89,8 +90,8 @@ class ReleaseTest(unittest.TestCase):
 
     def test_stage_contains_only_selected_assets_and_complete_checksums(self):
         directory = release.stage(self.root, "v" + self.version)
-        expected = {Path(p).name for p in release.SUPPORTING_FILES}
-        expected.add(Path(self.descriptor["jar"]).name)
+        expected = {"modularcraft-" + self.version + suffix
+                    for suffix in (".jar", "-sources.jar")}
         self.assertEqual(expected | {"SHA256SUMS"}, {p.name for p in directory.iterdir()})
         for line in (directory / "SHA256SUMS").read_text().splitlines():
             digest, name = line.split("  ")
@@ -99,8 +100,8 @@ class ReleaseTest(unittest.TestCase):
         with self.assertRaises(ValueError):
             release.stage(self.root, "v" + self.version)
 
-    def test_missing_supporting_record_fails_before_staging(self):
-        (self.root / release.SUPPORTING_FILES[0]).unlink()
+    def test_missing_sources_fail_before_staging(self):
+        (self.root / self.descriptor["sources"]).unlink()
         with self.assertRaises(ValueError):
             release.stage(self.root, "v" + self.version)
         self.assertFalse((self.root / "build/release").exists())
@@ -111,17 +112,34 @@ class ReleaseTest(unittest.TestCase):
         release.publish(self.root, "v" + self.version, "owner/repo", directory, runner=runner)
         args = runner.call_args.args[0]
         self.assertEqual(["gh", "release", "create", "v" + self.version], args[:4])
+        self.assertEqual(
+            [str(directory / ("modularcraft-" + self.version + suffix))
+             for suffix in (".jar", "-sources.jar")],
+            args[4:args.index("--repo")])
         for flag in ("--verify-tag", "--generate-notes", "--prerelease"):
             self.assertIn(flag, args)
         self.assertIn("ModularCraft " + self.version, args)
         self.assertIn("https://github.com/owner/repo/blob/v1.2.3-rc.1%2Bbuild.7/docs/acceptance.md",
                       args[args.index("--notes") + 1])
+        notes = args[args.index("--notes") + 1]
+        self.assertIn((directory / "SHA256SUMS").read_text(), notes)
+        for name in ("LICENSE", "THIRD_PARTY_NOTICES.md", "validation/dependencies.json",
+                     "validation/licenses.json"):
+            self.assertIn("https://github.com/owner/repo/blob/v1.2.3-rc.1%2Bbuild.7/" + name, notes)
         runner.side_effect = subprocess.CalledProcessError(1, args, stderr="release already exists")
         with self.assertRaises(subprocess.CalledProcessError):
             release.publish(self.root, "v" + self.version, "owner/repo", directory, runner=runner)
         self.assertEqual(2, runner.call_count)  # No fallback upload, edit, or clobber.
 
     def test_publish_rejects_tampered_assets(self):
+        directory = release.stage(self.root, self.version)
+        (directory / ("modularcraft-" + self.version + "-sources.jar")).write_bytes(b"tampered")
+        runner = Mock()
+        with self.assertRaises(ValueError):
+            release.publish(self.root, self.version, "owner/repo", directory, runner=runner)
+        runner.assert_not_called()
+
+    def test_publish_rejects_extra_assets(self):
         directory = release.stage(self.root, self.version)
         (directory / "README.md").write_text("tampered")
         runner = Mock()

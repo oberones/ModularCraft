@@ -33,7 +33,7 @@ jobs:
           # Four-part JEP 322 versions require setup-java v6.1.0 or newer for Temurin.
           java-version: '21.0.12.1+1'
       - run: make ci
-      - name: Stage release files
+      - name: Stage mod and sources JARs with verification checksums
         if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
         env:
           RELEASE_TAG: ${{ github.ref_name }}
@@ -63,7 +63,7 @@ jobs:
         with:
           name: release-files
           path: build/release/
-      - name: Publish verified assets
+      - name: Publish only mod and sources JARs
         env:
           GH_TOKEN: ${{ github.token }}
           RELEASE_TAG: ${{ github.ref_name }}

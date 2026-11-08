@@ -1142,3 +1142,24 @@ server p95 was 0.397959 ms for the measured window, while the broader maximum co
 prior release gates remain **PENDING**. No commit, push, publication, review reply or thread
 resolution. Runtime JAR SHA-256:
 `641c6865da71eaa90061ad0154f7f983347f5e9c03e1184faa631ebcc0dd3d70`.
+
+## 2026-11-07 — GitHub release asset selection
+
+Updated the Actions release helper to publish only the versioned runtime JAR and
+sources JAR. Staging retains SHA256SUMS for verification between jobs; the release
+notes include both hashes and tag-specific links to license/notices, inventories,
+compatibility, migration and acceptance records. Documentation/validation files and
+the checksum manifest are no longer separate release assets. Project ZIP generation,
+full CI prerequisites, tag/version checks and refusal to replace releases remain intact.
+
+**PASS:** observed the staging-set and publication-argument regressions fail against
+the previous behavior, then `make test-tools` passed all 26 tests, including 12 release
+tests. Coverage checks exact uploads, complete checksums, missing sources, source
+tampering, extra assets, release notes, prereleases and existing-release failure.
+`git diff --check` passed. Self-review PASS; documentation and linked repository paths
+checked. Workflow edits only rename the two affected steps; actionlint is unavailable.
+
+Publication was tested with a mocked command runner. Hosted Actions/publication remain
+**PENDING**; no commit, push or release was made. Java/gameplay suites were not rerun for
+this release-tooling change; earlier native, listening, multiplayer and release gates
+remain unchanged.

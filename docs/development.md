@@ -158,15 +158,17 @@ review the coordinate/version and configuration changes, then run
 `make verify-dependencies`. CI includes this preflight in `make verify`/`make ci`.
 
 Only a successful full `make ci` run can publish. The build job stages the exact
-runtime JAR selected by `build/runtime-artifact.json`, checks its embedded versions,
-and includes LICENSE, THIRD_PARTY_NOTICES.md, dependencies.json, licenses.json,
-README.md, CHANGELOG.md, ledger.md, and SHA256SUMS. The checksum file covers every
-other release asset; sources JARs and project ZIPs remain local build outputs.
+runtime and sources JARs selected by `build/runtime-artifact.json`, checks the runtime
+JAR's embedded versions, and creates SHA256SUMS covering both JARs. Only
+`modularcraft-<version>.jar` and `modularcraft-<version>-sources.jar` are uploaded
+as release assets; project ZIPs remain local build outputs. SHA256SUMS stays in the
+intermediate Actions artifact, and its contents appear in the release notes.
 The publishing job verifies these checksums and uses GitHub's repository token;
 no personal token is required. The intermediate Actions artifact lasts seven days.
 
 Releases are titled `ModularCraft <version>` and include generated notes plus links
-to compatibility, migration, and acceptance records at the tag. Prerelease suffixes
+to compatibility, migration, license/notices, dependency/license inventories, and
+acceptance records at the tag. Prerelease suffixes
 produce GitHub prereleases. An existing release causes publication to fail without
 replacing assets; use a new version for changed content. In-progress tag releases
 are not canceled by subsequent pushes.
